@@ -58,6 +58,7 @@ namespace RobotAutomationHelper
 
             if (Keywords != null && Keywords.Count != 0)
             {
+                // adds the keywords in the form
                 foreach (Keyword testStep in Keywords)
                 {
                     AddKeywordField(keywordsCounter, initialYValue);
@@ -67,23 +68,29 @@ namespace RobotAutomationHelper
             }
             else
             {
+                // add a single keyword field if no keywords are available
                 AddKeywordField(keywordsCounter, initialYValue);
                 numberOfKeywords++;
             }
 
+            // show the form dialog
             this.StartPosition = FormStartPosition.Manual;
             var dialogResult = this.ShowDialog();
         }
 
         private void ShowAddKeywordForm(object sender, EventArgs e)
         {
-            Keyword keyword = AddCurrentKeywords(sender, e);
+            // get the keyword that will be implemented
+            Keyword keyword = AddCurrentKeywordsToKeywordsList(sender, e);
+            // instantiate the new KeywordAddForm with this parent and Keywords argument
             KeywordAddForm addKeywordForm = new KeywordAddForm(true, Keywords);
+            // add closing event
             addKeywordForm.FormClosing += new FormClosingEventHandler(KeywordAddFormClosing);
             addKeywordForm.ShowKeywordContent(keyword, implementedKeyword - 1);
         }
 
-        private Keyword AddCurrentKeywords(object sender, EventArgs e)
+        //adds the list of keywords ( + unimplemented ones ) to a Keyword and returns it
+        private Keyword AddCurrentKeywordsToKeywordsList(object sender, EventArgs e)
         {
             string path = FilesAndFolderStructure.GetFolder();
             if (!KeywordOutputFile.Text.StartsWith("\\"))
@@ -91,10 +98,12 @@ namespace RobotAutomationHelper
             else
                 path = path.Trim('\\') + KeywordOutputFile.Text;
 
+            // if AddImplementation is pressed a new form should be opened which requires the keyword that it represents
             int keywordIndex = 0;
             if (((Button)sender).Name.Contains("DynamicTestStep"))
                 keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
 
+            // add to the global variable for the form that matches the index of the keyword to implement
             implementedKeyword = keywordIndex;
             if (keywordIndex <= 0) keywordIndex = 1;
 
@@ -143,13 +152,15 @@ namespace RobotAutomationHelper
             this.Close();
         }
 
+        // when save is pressed add all currently listed keywords to the Keywords List and then AddChangesToKeyword
         private void Save_Click(object sender, EventArgs e)
         {
-            AddCurrentKeywords(sender, e);
+            AddCurrentKeywordsToKeywordsList(sender, e);
             AddChangesToKeyword();
             this.Close();
         }
 
+        // adds all field data to parentKeyword or testcaseaddform if not nested
         private void AddChangesToKeyword()
         {
             string finalPath = FilesAndFolderStructure.GetFolder();
@@ -176,6 +187,7 @@ namespace RobotAutomationHelper
             }
         }
 
+        // Adds TextBox / Label / Add implementation / Add and remove keyword
         private void AddKeywordField(int keywordsCounter, int initialYValue)
         {
             FormControls.AddControl("TextBox", "DynamicTestStep" + keywordsCounter + "Name",
