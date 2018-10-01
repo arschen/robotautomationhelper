@@ -4,11 +4,12 @@ namespace RobotAutomationHelper
 {
     public class Keyword
     {
-        private List<Keyword> Keywords;
-        private string Arguments;
+        private readonly List<Keyword> Keywords;
+        private readonly string Arguments;
         private string Name;
-        private string Documentation;
-        private string OutputFilePath;
+        private readonly string Documentation;
+        private readonly string OutputFilePath;
+        private readonly bool implemented = false;
 
         public Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, string OutputFilePath)
         {
@@ -17,6 +18,7 @@ namespace RobotAutomationHelper
             this.Keywords = Keywords;
             this.Arguments = Arguments;
             this.OutputFilePath = OutputFilePath;
+            implemented = true;
         }
 
         public Keyword(string Name, string OutputFilePath)

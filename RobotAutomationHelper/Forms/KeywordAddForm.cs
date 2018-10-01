@@ -61,7 +61,7 @@ namespace RobotAutomationHelper
                 // adds the keywords in the form
                 foreach (Keyword testStep in Keywords)
                 {
-                    AddKeywordField(keywordsCounter, initialYValue);
+                    AddKeywordField(keywordsCounter, testStep.GetKeywordArguments(), initialYValue);
                     keywordsCounter++;
                     numberOfKeywords++;
                 }
@@ -69,7 +69,7 @@ namespace RobotAutomationHelper
             else
             {
                 // add a single keyword field if no keywords are available
-                AddKeywordField(keywordsCounter, initialYValue);
+                AddKeywordField(keywordsCounter, "", initialYValue);
                 numberOfKeywords++;
             }
 
@@ -188,8 +188,14 @@ namespace RobotAutomationHelper
         }
 
         // Adds TextBox / Label / Add implementation / Add and remove keyword
-        private void AddKeywordField(int keywordsCounter, int initialYValue)
+        private void AddKeywordField(int keywordsCounter, string arguments, int initialYValue)
         {
+            string[] args;
+            if (arguments != null)
+                args = arguments.Replace("[Arguments]", "").Trim().Split(' ');
+            else
+                args = new string[0];
+
             FormControls.AddControl("TextBox", "DynamicTestStep" + keywordsCounter + "Name",
                 new System.Drawing.Point(30 - this.HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - this.VerticalScroll.Value),
                 new System.Drawing.Size(280, 20),
@@ -204,6 +210,28 @@ namespace RobotAutomationHelper
                 System.Drawing.Color.Black,
                 null,
                 this);
+            int i = 0;
+            if (args != null && args.Length != 0)
+                foreach (string arg in args)
+                    if (!arg.Trim().Equals(""))
+                    {
+                        FormControls.AddControl("TextBox", "DynamicTestStep" + keywordsCounter + "NameArg",
+                            new System.Drawing.Point(580 + i * 160 - this.HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - this.VerticalScroll.Value),
+                            new System.Drawing.Size(75, 20),
+                            "test name",
+                            System.Drawing.Color.Black,
+                            null,
+                            this);
+                        FormControls.AddControl("Label", "DynamicTestStep" + keywordsCounter + "LabelArg",
+                            new System.Drawing.Point(500 + i * 160 - this.HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - this.VerticalScroll.Value),
+                            new System.Drawing.Size(75, 20),
+                            arg + ":",
+                            System.Drawing.Color.Black,
+                            null,
+                            this);
+                        i++;
+                    }
+
             FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "AddImplementation",
                 new System.Drawing.Point(320 - this.HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - this.VerticalScroll.Value),
                 new System.Drawing.Size(120, 20),
