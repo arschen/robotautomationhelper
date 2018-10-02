@@ -119,6 +119,7 @@
             // 
             // ArgumentType
             // 
+            this.ArgumentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ArgumentType.FormattingEnabled = true;
             this.ArgumentType.Items.AddRange(new object[] {
             "Scalar",
@@ -161,6 +162,7 @@
             // 
             this.KeywordArguments.Location = new System.Drawing.Point(340, 98);
             this.KeywordArguments.Name = "KeywordArguments";
+            this.KeywordArguments.ReadOnly = true;
             this.KeywordArguments.Size = new System.Drawing.Size(280, 20);
             this.KeywordArguments.TabIndex = 19;
             // 
@@ -173,6 +175,7 @@
             this.AddArgument.TabIndex = 21;
             this.AddArgument.Text = "Add";
             this.AddArgument.UseVisualStyleBackColor = true;
+            this.AddArgument.Click += new System.EventHandler(this.AddArgument_Click);
             // 
             // ArgumentName
             // 
@@ -208,6 +211,7 @@
             this.RemoveArgument.TabIndex = 25;
             this.RemoveArgument.Text = "Remove";
             this.RemoveArgument.UseVisualStyleBackColor = true;
+            this.RemoveArgument.Click += new System.EventHandler(this.RemoveArgument_Click);
             // 
             // KeywordAddForm
             // 
