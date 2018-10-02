@@ -139,7 +139,6 @@
             this.TestCaseTags.Name = "TestCaseTags";
             this.TestCaseTags.Size = new System.Drawing.Size(280, 20);
             this.TestCaseTags.TabIndex = 11;
-            this.TestCaseTags.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label2
             // 
