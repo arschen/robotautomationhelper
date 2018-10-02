@@ -254,5 +254,52 @@ namespace RobotAutomationHelper
                 new EventHandler(ShowAddKeywordForm),
                 this);
         }
+
+        // adding argument to the KeywordArguments.Text
+        private void AddArgument_Click(object sender, EventArgs e)
+        {
+            string arg = "";
+            bool add = false;
+            switch (ArgumentType.Text)
+            {
+                case "Scalar": arg = "${"; break;
+                case "Dictionary": arg = "&{"; break;
+                case "List": arg = "@{"; break;
+                default: break;
+            }
+            if (!arg.Equals(""))
+                if (!ArgumentName.Text.Trim().Equals(""))
+                {
+                    arg += ArgumentName.Text + "}";
+                    add = true;
+                }
+            if (add && !KeywordArguments.Text.Contains(arg))
+                if (KeywordArguments.Text.Trim().Equals(""))
+                    KeywordArguments.Text += arg;
+                else
+                    KeywordArguments.Text += "  " + arg;
+        }
+
+        // removing argument from the KeywordArguments.Text
+        private void RemoveArgument_Click(object sender, EventArgs e)
+        {
+            string arg = "";
+            bool remove = false;
+            switch (ArgumentType.Text)
+            {
+                case "Scalar": arg = "${"; break;
+                case "Dictionary": arg = "&{"; break;
+                case "List": arg = "@{"; break;
+                default: break;
+            }
+            if (!arg.Equals(""))
+                if (!ArgumentName.Text.Trim().Equals(""))
+                {
+                    arg += ArgumentName.Text + "}";
+                    remove = true;
+                }
+            if (remove && KeywordArguments.Text.Contains(arg))
+                KeywordArguments.Text = KeywordArguments.Text.Replace(arg, "").Trim();
+        }
     }
 }
