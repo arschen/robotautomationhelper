@@ -37,7 +37,7 @@ namespace RobotAutomationHelper.Scripts
                 {
                     //adds test steps
                     index++;
-                    FileLineAdd(testStep.GetKeywordName(), fileName, index);
+                    FileLineAdd(testStep.GetKeywordName() + testStep.ParamsToString(), fileName, index);
                     AddKeywordToRobot(testStep);
                 }
         }
@@ -54,7 +54,7 @@ namespace RobotAutomationHelper.Scripts
             //Add test case to robot file
             FileLineAdd("", fileName, index);
             index++;
-            FileLineAdd(keywordName.Trim() + keyword.ParamsToString(), fileName, index);
+            FileLineAdd(keywordName.Trim(), fileName, index);
 
             //adds documentation
             if (keywordDocumentation == null)
@@ -79,7 +79,7 @@ namespace RobotAutomationHelper.Scripts
                 {
                     //adds test steps
                     index++;
-                    FileLineAdd(keywordKeyword.GetKeywordName(), fileName, index);
+                    FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
                     AddKeywordToRobot(keywordKeyword);
                 }
         }
