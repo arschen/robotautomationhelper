@@ -13,7 +13,7 @@ namespace RobotAutomationHelper
         private int numberOfKeywords;
         private List<Keyword> parentKeywords;
         private List<Keyword> Keywords;
-        private string Params;
+        private List<Param> Params = new List<Param>();
         private int implementedKeyword;
         private bool nestedKeyword = false;
 
@@ -189,6 +189,27 @@ namespace RobotAutomationHelper
                 finalPath = finalPath + KeywordOutputFile.Text;
             else
                 finalPath = finalPath.Trim('\\') + KeywordOutputFile.Text;
+
+            List<string> args = new List<string>();
+            if (KeywordArguments.Text.Trim() != null)
+                args.AddRange(KeywordArguments.Text.Trim().Split(' '));
+
+            if (args != null)
+                for (int i = 0; i < args.Count; i++)
+                    if (args[i].Equals(""))
+                        args.RemoveAt(i);
+
+            if (args != null)
+                for (int i = 0; i < args.Count; i++)
+                    if (parentKeywords[index].GetKeywordParams() != null)
+                    {
+                        if (parentKeywords[index].GetKeywordParams()[i].GetParamValue() != null)
+                            Params.Add(new Param(args[i], parentKeywords[index].GetKeywordParams()[i].GetParamValue()));
+                        else
+                            Params.Add(new Param(args[i], ""));
+                    }
+                    else
+                        Params.Add(new Param(args[i], ""));
 
             if (!nestedKeyword)
             {

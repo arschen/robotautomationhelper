@@ -1,12 +1,6 @@
 ﻿using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Forms
@@ -14,7 +8,6 @@ namespace RobotAutomationHelper.Forms
     public partial class ParamAddForm : Form
     {
         private bool skip = false;
-        private string Params = "";
         private Keyword keyword;
         private int paramsCount = 0;
 
@@ -36,9 +29,9 @@ namespace RobotAutomationHelper.Forms
             if (keyword.GetKeywordArguments() != null)
                 args.AddRange(keyword.GetKeywordArguments().Replace("[Arguments]", "").Trim().Split(' '));
 
-            List<string> paramsList = new List<string>();
+            List<Param> paramsList = new List<Param>();
             if (keyword.GetKeywordParams() != null)
-                args.AddRange(keyword.GetKeywordParams().Trim().Split(' '));
+                paramsList.AddRange(keyword.GetKeywordParams());
 
             if (keyword.GetKeywordName() != null)
                 KeywordName.Text = keyword.GetKeywordName().Trim();
@@ -64,7 +57,7 @@ namespace RobotAutomationHelper.Forms
                     FormControls.AddControl("TextBox", "DynamicTestStep" + paramsCount + "Value",
                         new System.Drawing.Point(100 - this.HorizontalScroll.Value, 120 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(280, 20),
-                        "",
+                        paramsList[paramsCount - 1].GetParamValue(),
                         System.Drawing.Color.Black,
                         null,
                         this);
@@ -75,9 +68,11 @@ namespace RobotAutomationHelper.Forms
 
         private void Save_Click(object sender, EventArgs e)
         {
+            List<Param> formParams = new List<Param>();
             for (int i = 1; i <= paramsCount; i++)
-                Params = Params + "  " + this.Controls["DynamicTestStep" + i + "Value"].Text;
-            keyword.SetKeywordParams(Params);
+                formParams.Add(new Param(this.Controls["DynamicTestStep" + i + "Name"].Text, this.Controls["DynamicTestStep" + i + "Value"].Text));
+
+            keyword.SetKeywordParams(formParams);
             this.Close();
         }
 

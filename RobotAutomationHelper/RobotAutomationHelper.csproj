@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="Scripts\FilesAndFolderstructure.cs" />
     <Compile Include="Scripts\FormControls.cs" />
+    <Compile Include="Scripts\Param.cs" />
     <Compile Include="Scripts\ReadExcel.cs" />
     <Compile Include="Scripts\Keyword.cs" />
     <Compile Include="Scripts\RobotFileHandler.cs" />

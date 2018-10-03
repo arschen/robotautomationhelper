@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RobotAutomationHelper
 {
@@ -6,13 +7,13 @@ namespace RobotAutomationHelper
     {
         private readonly List<Keyword> Keywords;
         private readonly string Arguments;
-        private string Params;
+        private List<Param> Params;
         private string Name;
         private readonly string Documentation;
         private readonly string OutputFilePath;
         private readonly bool implemented = false;
 
-        public Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, string Params, string OutputFilePath)
+        public Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -26,8 +27,6 @@ namespace RobotAutomationHelper
         public Keyword(string Name, string OutputFilePath)
         {
             this.Name = Name;
-            this.Documentation = "";
-            this.Arguments = "";
             this.OutputFilePath = OutputFilePath;
         }
 
@@ -41,12 +40,12 @@ namespace RobotAutomationHelper
             this.Name = name;
         }
 
-        public string GetKeywordParams()
+        public List<Param> GetKeywordParams()
         {
             return this.Params;
         }
 
-        public void SetKeywordParams(string Params)
+        public void SetKeywordParams(List<Param> Params)
         {
             this.Params = Params;
         }
@@ -69,6 +68,15 @@ namespace RobotAutomationHelper
         public List<Keyword> GetKeywordKeywords()
         {
             return this.Keywords;
+        }
+
+        internal string ParamsToString()
+        {
+            string paramsString = "";
+            if (Params != null)
+                foreach (Param tempParam in Params)
+                    paramsString += "  " + tempParam.GetParamValue();
+            return paramsString;
         }
     }
 }

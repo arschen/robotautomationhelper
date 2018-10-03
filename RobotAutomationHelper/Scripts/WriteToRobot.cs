@@ -54,15 +54,20 @@ namespace RobotAutomationHelper.Scripts
             //Add test case to robot file
             FileLineAdd("", fileName, index);
             index++;
-            FileLineAdd(keywordName.Trim(), fileName, index);
+            FileLineAdd(keywordName.Trim() + keyword.ParamsToString(), fileName, index);
 
             //adds documentation
+            if (keywordDocumentation == null)
+                keywordDocumentation = "";
             if (!keywordDocumentation.Replace("[Documentation]", "").Trim().Equals(""))
             {
                 index++;
                 FileLineAdd(keywordDocumentation, fileName, index);
             }
 
+            //adds arguments
+            if (keywordArguments == null)
+                keywordArguments = "";
             if (!keywordArguments.Replace("[Arguments]", "").Trim().Equals(""))
             {
                 index++;

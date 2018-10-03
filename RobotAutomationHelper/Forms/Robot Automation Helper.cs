@@ -146,13 +146,13 @@ namespace RobotAutomationHelper
                     System.Drawing.Color.Green,
                     null,
                     this);
-            }
 
-            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-            FilesAndFolderStructure.AddFile(TestCases[implementedTest - 1].GetOutputFilePath());
-            if (TestCases[implementedTest - 1].GetTestSteps() != null)
-                foreach (Keyword key in TestCases[implementedTest - 1].GetTestSteps())
-                    RobotFileHandler.AddFilesFromKeywords(key);
+                //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
+                FilesAndFolderStructure.AddFile(TestCases[implementedTest - 1].GetOutputFilePath());
+                if (TestCases[implementedTest - 1].GetTestSteps() != null)
+                    foreach (Keyword key in TestCases[implementedTest - 1].GetTestSteps())
+                        RobotFileHandler.AddFilesFromKeywords(key);
+            }
         }
 
         private void Label1_Click(object sender, EventArgs e)
