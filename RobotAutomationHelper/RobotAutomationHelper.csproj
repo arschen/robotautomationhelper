@@ -59,6 +59,12 @@
     <Compile Include="Forms\KeywordAddForm.Designer.cs">
       <DependentUpon>KeywordAddForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ParamAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ParamAddForm.Designer.cs">
+      <DependentUpon>ParamAddForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Scripts\FilesAndFolderstructure.cs" />
     <Compile Include="Scripts\FormControls.cs" />
     <Compile Include="Scripts\ReadExcel.cs" />
@@ -82,6 +88,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\KeywordAddForm.resx">
       <DependentUpon>KeywordAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ParamAddForm.resx">
+      <DependentUpon>ParamAddForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TestCaseAddForm.resx">
       <DependentUpon>TestCaseAddForm.cs</DependentUpon>

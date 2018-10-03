@@ -1,4 +1,5 @@
-﻿using RobotAutomationHelper.Scripts;
+﻿using RobotAutomationHelper.Forms;
+using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -102,15 +103,15 @@ namespace RobotAutomationHelper
                         new System.Drawing.Size(120, 20),
                         "Add Implementation",
                         System.Drawing.Color.Black,
-                        new EventHandler(ShowAddKeywordForm),
+                        new EventHandler(ShowKeywordAddForm),
                         this);
                     if (args != null && args.Count != 0)
-                        FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Arguments",
+                        FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
                             new System.Drawing.Point(450 - this.HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - this.VerticalScroll.Value),
                             new System.Drawing.Size(75, 20),
-                            "Arguments",
+                            "Params",
                             System.Drawing.Color.Black,
-                            new EventHandler(ShowArgumentsForm),
+                            new EventHandler(ShowParamsAddForm),
                             this);
                     testStepsCounter++;
                 }
@@ -119,7 +120,7 @@ namespace RobotAutomationHelper
             var dialogResult = this.ShowDialog();
         }
 
-        private void ShowAddKeywordForm(object sender, EventArgs e)
+        private void ShowKeywordAddForm(object sender, EventArgs e)
         {
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
             implementedKeyword = keywordIndex;
@@ -131,7 +132,7 @@ namespace RobotAutomationHelper
 
         private void UpdateThisFormAfterImlpementedChildKeyword(object sender, EventArgs e)
         {
-            if (!((KeywordAddForm)sender).SkipValue())
+            if ((sender.GetType().FullName.Contains("KeywordAddForm")) && !((KeywordAddForm)sender).SkipValue())
             {
                 this.Controls["DynamicTestStep" + implementedKeyword + "Name"].Text = Keywords[implementedKeyword - 1].GetKeywordName().Trim();
                 this.Controls["DynamicTestStep" + implementedKeyword + "AddImplementation"].Text = "Edit implementation";
@@ -153,20 +154,20 @@ namespace RobotAutomationHelper
                             args.RemoveAt(i);
                 
                 if (args != null && args.Count != 0)
-                    FormControls.AddControl("Button", "DynamicTestStep" + implementedKeyword + "Arguments",
+                    FormControls.AddControl("Button", "DynamicTestStep" + implementedKeyword + "Params",
                         new System.Drawing.Point(450 - this.HorizontalScroll.Value, 140 + (implementedKeyword - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(75, 20),
-                        "Arguments",
+                        "Params",
                         System.Drawing.Color.Black,
-                        new EventHandler(ShowArgumentsForm),
+                        new EventHandler(ShowParamsAddForm),
                         this);
-            }
 
-            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-            FilesAndFolderStructure.AddFile(Keywords[implementedKeyword - 1].GetOutputFilePath());
-            if (Keywords[implementedKeyword - 1].GetKeywordKeywords() != null)
-                foreach (Keyword key in Keywords[implementedKeyword - 1].GetKeywordKeywords())
-                    RobotFileHandler.AddFilesFromKeywords(key);
+                //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
+                FilesAndFolderStructure.AddFile(Keywords[implementedKeyword - 1].GetOutputFilePath());
+                if (Keywords[implementedKeyword - 1].GetKeywordKeywords() != null)
+                    foreach (Keyword key in Keywords[implementedKeyword - 1].GetKeywordKeywords())
+                        RobotFileHandler.AddFilesFromKeywords(key);
+            }
         }
 
         private void AddChangesToTestCases()
@@ -188,9 +189,14 @@ namespace RobotAutomationHelper
                 finalPath);
         }
 
-        private void ShowArgumentsForm(object sender, EventArgs e)
+        private void ShowParamsAddForm(object sender, EventArgs e)
         {
-            // TODO
+            int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
+            // instantiate the new KeywordAddForm with this parent and Keywords argument
+            ParamAddForm addParamForm = new ParamAddForm();
+            // add closing event
+            addParamForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
+            addParamForm.ShowParamContent(Keywords[keywordIndex - 1]);
         }
     }
 }
