@@ -81,7 +81,7 @@ namespace RobotAutomationHelper
             var dialogResult = this.ShowDialog();
         }
 
-        private void ShowKeywordAddForm(object sender, EventArgs e)
+        private void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
             // get the keyword that will be implemented
             Keyword keyword = AddCurrentKeywordsToKeywordsList(sender, e);
@@ -137,14 +137,7 @@ namespace RobotAutomationHelper
                     null,
                     this);
 
-                List<string> args = new List<string>();
-                if (Keywords[implementedKeyword - 1].GetKeywordArguments() != null)
-                    args.AddRange(Keywords[implementedKeyword - 1].GetKeywordArguments().Replace("[Arguments]", "").Trim().Split(' '));
-
-                if (args != null)
-                    for (int i = 0; i < args.Count; i++)
-                        if (args[i].Equals(""))
-                            args.RemoveAt(i);
+                List<string> args = StringAndListOperations.ReturnListOfArgs(Keywords[implementedKeyword - 1].GetKeywordArguments());
 
                 if (args != null && args.Count != 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + implementedKeyword + "Params",
@@ -237,7 +230,7 @@ namespace RobotAutomationHelper
                 new System.Drawing.Size(120, 20),
                 "Add Implementation",
                 System.Drawing.Color.Black,
-                new EventHandler(ShowKeywordAddForm),
+                new EventHandler(InstantiateKeywordAddForm),
                 this);
             FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "AddKeyword",
                 new System.Drawing.Point(450 - this.HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - this.VerticalScroll.Value),

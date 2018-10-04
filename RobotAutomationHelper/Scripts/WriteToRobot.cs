@@ -8,82 +8,38 @@ namespace RobotAutomationHelper.Scripts
         public static void AddTestCasesToRobot(TestCase testCase)
         {
             string fileName = testCase.GetOutputFilePath();
-            string testCaseName = testCase.GetTestName();
-            List<Keyword> testCaseTestSteps = testCase.GetTestSteps();
-            string testCaseDocumentation = testCase.GetTestDocumentation();
-            string testCaseTags = testCase.GetTestCaseTags();
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
 
             //Add test case to robot file
-            FileLineAdd("", fileName, index);
-            index++;
-            FileLineAdd(testCaseName.Trim(), fileName, index);
+            AddName(testCase.GetTestName().Trim(), fileName, index);
 
             //adds documentation
-            if (!testCaseDocumentation.Replace("[Documentation]","").Trim().Equals(""))
-            {
-                index++;
-                FileLineAdd(testCaseDocumentation, fileName, index);
-            }
+            index = AddTagsDocumentationArguments("[Documentation]", testCase.GetTestDocumentation(), fileName, index);
 
-            if (!testCaseTags.Replace("[Tags]", "").Trim().Equals(""))
-            {
-                index++;
-                FileLineAdd(testCaseTags, fileName, index);
-            }
-            
-            if (testCaseTestSteps != null)
-                foreach (Keyword testStep in testCaseTestSteps)
-                {
-                    //adds test steps
-                    index++;
-                    FileLineAdd(testStep.GetKeywordName() + testStep.ParamsToString(), fileName, index);
-                    AddKeywordToRobot(testStep);
-                }
+            //adds tags
+            index = AddTagsDocumentationArguments("[Tags]", testCase.GetTestCaseTags(), fileName, index);
+
+            index = AddKeyword(testCase.GetTestSteps(), fileName, index);
         }
 
         public static void AddKeywordToRobot(Keyword keyword)
         {
             string fileName = keyword.GetOutputFilePath();
-            string keywordName = keyword.GetKeywordName();
-            List<Keyword> keywordKeywords = keyword.GetKeywordKeywords();
-            string keywordDocumentation = keyword.GetKeywordDocumentation();
-            string keywordArguments = keyword.GetKeywordArguments();
             int index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
 
-            //Add test case to robot file
-            FileLineAdd("", fileName, index);
-            index++;
-            FileLineAdd(keywordName.Trim(), fileName, index);
+            //Add keyword to robot file
+            AddName(keyword.GetKeywordName().Trim(), fileName, index);
 
             //adds documentation
-            if (keywordDocumentation == null)
-                keywordDocumentation = "";
-            if (!keywordDocumentation.Replace("[Documentation]", "").Trim().Equals(""))
-            {
-                index++;
-                FileLineAdd(keywordDocumentation, fileName, index);
-            }
+            index = AddTagsDocumentationArguments("[Documentation]", keyword.GetKeywordDocumentation(), fileName, index);
 
             //adds arguments
-            if (keywordArguments == null)
-                keywordArguments = "";
-            if (!keywordArguments.Replace("[Arguments]", "").Trim().Equals(""))
-            {
-                index++;
-                FileLineAdd(keywordArguments, fileName, index);
-            }
+            index = AddTagsDocumentationArguments("[Arguments]", keyword.GetKeywordArguments(), fileName, index);
 
-            if (keywordKeywords != null)
-                foreach (Keyword keywordKeyword in keywordKeywords)
-                {
-                    //adds test steps
-                    index++;
-                    FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
-                    AddKeywordToRobot(keywordKeyword);
-                }
+            index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index);
         }
 
+        // add newText on new line to file fileName after specified line
         public static void FileLineAdd(string newText, string fileName, int line_to_add_after)
         {
             string[] arrLine;
@@ -91,7 +47,7 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             else
             {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length-1], "");
+                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
                 var myFile = File.Create(fileName);
@@ -104,5 +60,41 @@ namespace RobotAutomationHelper.Scripts
             temp.Insert(line_to_add_after, newText);
             File.WriteAllLines(fileName, temp);
         }
+
+        //adds Tags / Documentation / Arguments
+        private static int AddTagsDocumentationArguments(string type, string addString, string fileName, int index)
+        {
+            if (addString == null)
+                addString = "";
+            if (!addString.Replace(type, "").Trim().Equals(""))
+            {
+                FileLineAdd(addString, fileName, index + 1);
+            }
+            return index;
+        }
+
+        //adds Keywords
+        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index)
+        {
+            if (keywordKeywords != null)
+                foreach (Keyword keywordKeyword in keywordKeywords)
+                {
+                    //adds test steps
+                    index++;
+                    FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
+                    AddKeywordToRobot(keywordKeyword);
+                }
+            return index;
+        }
+
+        //Add test case / keyword name to robot file
+        private static int AddName(string name, string fileName, int index)
+        {
+            FileLineAdd("", fileName, index);
+            index++;
+            FileLineAdd(name, fileName, index);
+            return index;
+        }
+
     }
 }

@@ -17,6 +17,7 @@ namespace RobotAutomationHelper
             InitializeComponent();
         }
 
+        // open file click
         private void ToolStripMenuOpen_Click(object sender, EventArgs e)
         {
             openFileDialog.ShowDialog();
@@ -27,6 +28,7 @@ namespace RobotAutomationHelper
 
         }
 
+        // browse folders for output directory after file has been opened
         private void OpenFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
@@ -98,14 +100,14 @@ namespace RobotAutomationHelper
                         new System.Drawing.Size(120, 20),
                         "Add Implementation",
                         System.Drawing.Color.Black,
-                        new EventHandler(ShowAddTestCaseForm),
+                        new EventHandler(InstantiateAddTestCaseForm),
                         this);
 
                     testCasesCounter++;
                 }
         }
 
-        private void ShowAddTestCaseForm(object sender, EventArgs e)
+        private void InstantiateAddTestCaseForm(object sender, EventArgs e)
         {
             int testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
             implementedTest = testIndex;
@@ -150,36 +152,6 @@ namespace RobotAutomationHelper
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, implementedTest);
             }
-        }
-
-        private void Label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void FileNameLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TestCaseName_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void TextBox1_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         public void ShowTestCasePanels()

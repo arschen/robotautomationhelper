@@ -7,14 +7,8 @@ namespace RobotAutomationHelper.Forms
 {
     public partial class ParamAddForm : Form
     {
-        private bool skip = false;
         private Keyword keyword;
         private int paramsCount = 0;
-
-        internal bool SkipValue()
-        {
-            return skip;
-        }
 
         public ParamAddForm()
         {
@@ -25,23 +19,19 @@ namespace RobotAutomationHelper.Forms
         {
             this.keyword = keyword;
 
-            List<string> args = new List<string>();
-            if (keyword.GetKeywordArguments() != null)
-                args.AddRange(keyword.GetKeywordArguments().Replace("[Arguments]", "").Trim().Split(' '));
+            // set Keyword Name and Documentation field text
+            if (keyword.GetKeywordName() != null)
+                KeywordName.Text = keyword.GetKeywordName().Trim();
 
+            if (keyword.GetKeywordDocumentation() != null)
+                KeywordDocumentation.Text = keyword.GetKeywordDocumentation().Replace("[Documentation]", "").Trim();
+
+            // adds args and paramList to lists for dynamicly adding them to fields
             List<Param> paramsList = new List<Param>();
             if (keyword.GetKeywordParams() != null)
                 paramsList.AddRange(keyword.GetKeywordParams());
 
-            if (keyword.GetKeywordName() != null)
-                KeywordName.Text = keyword.GetKeywordName().Trim();
-            if (keyword.GetKeywordDocumentation() != null)
-                KeywordDocumentation.Text = keyword.GetKeywordDocumentation().Replace("[Documentation]", "").Trim();
-
-            if (args != null)
-                for (int i = 0; i < args.Count; i++)
-                    if (args[i].Equals(""))
-                        args.RemoveAt(i);
+            List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
 
             if (args != null && args.Count != 0)
                 foreach (string arg in args)
@@ -78,7 +68,6 @@ namespace RobotAutomationHelper.Forms
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            skip = true;
             this.Close();
         }
     }
