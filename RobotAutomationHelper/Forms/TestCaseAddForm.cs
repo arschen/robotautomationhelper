@@ -163,10 +163,7 @@ namespace RobotAutomationHelper
                         this);
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-                FilesAndFolderStructure.AddFile(Keywords[implementedKeyword - 1].GetOutputFilePath());
-                if (Keywords[implementedKeyword - 1].GetKeywordKeywords() != null)
-                    foreach (Keyword key in Keywords[implementedKeyword - 1].GetKeywordKeywords())
-                        RobotFileHandler.AddFilesFromKeywords(key);
+                FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
             }
         }
 
@@ -176,11 +173,7 @@ namespace RobotAutomationHelper
                 for (int counter = 1; counter <= ApplicationMain.TestCases[index].GetTestSteps().Count; counter++)
                     Keywords[counter-1].SetKeywordName("\t" + ((TextBox) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
 
-            string finalPath = FilesAndFolderStructure.GetFolder();
-            if (!TestCaseOutputFile.Text.StartsWith("\\"))
-                finalPath = finalPath + TestCaseOutputFile.Text;
-            else
-                finalPath = finalPath.Trim('\\') + TestCaseOutputFile.Text;
+            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 
             ApplicationMain.TestCases[index] = new TestCase(TestCaseName.Text.Trim(),
                 "\t[Documentation]  " + TestCaseDocumentation.Text.Trim(),

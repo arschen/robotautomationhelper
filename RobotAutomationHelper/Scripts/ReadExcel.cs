@@ -6,14 +6,22 @@ namespace RobotAutomationHelper.Scripts
 {
     public static class ReadExcel
     {
+
+        static List<TestCase> TestCases;
+        static List<Keyword> currentTestCaseTestSteps;
+        static string currentTestTags;
+        static string currentTestCaseDocumentation;
+        static string currentTestCase;
+        static string outputFilePath;
+
         public static List<TestCase> ReadAllTestCasesFromExcel(string Filename)
         {
-            List<TestCase> TestCases = new List<TestCase>();
-            List<Keyword> currentTestCaseTestSteps = new List<Keyword>();
-            string currentTestTags = "";
-            string currentTestCaseDocumentation = "";
-            string currentTestCase = "";
-            string outputFilePath = FilesAndFolderStructure.GetFolder();
+            TestCases = new List<TestCase>();
+            currentTestCaseTestSteps = new List<Keyword>();
+            currentTestTags = "";
+            currentTestCaseDocumentation = "";
+            currentTestCase = "";
+            outputFilePath = FilesAndFolderStructure.GetFolder();
 
             var package = new ExcelPackage(new FileInfo(Filename));
             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
@@ -35,13 +43,7 @@ namespace RobotAutomationHelper.Scripts
                             if (!currentTestCase.Equals(""))
                             {
                                 //Setup test creation for previous Test case
-                                if (outputFilePath.Equals(FilesAndFolderStructure.GetFolder()))
-                                    outputFilePath = FilesAndFolderStructure.GetFolder() + "Auto.robot";
-                                TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestTags, currentTestCaseTestSteps, outputFilePath));
-                                currentTestCaseTestSteps = new List<Keyword>();
-                                currentTestTags = "";
-                                currentTestCaseDocumentation = "";
-                                outputFilePath = FilesAndFolderStructure.GetFolder();
+                                AddTestCaseAndResetValues();
                                 if (!currentTestCase.Equals(cellValue))
                                     currentTestCase = cellValue;
                                 else
@@ -64,11 +66,7 @@ namespace RobotAutomationHelper.Scripts
                         }
                         else if (j == 4 && !cellValue.Equals(""))
                         {
-                            outputFilePath = FilesAndFolderStructure.GetFolder();
-                            if (!cellValue.StartsWith("\\"))
-                                outputFilePath = outputFilePath + cellValue;
-                            else
-                                outputFilePath = outputFilePath.Trim('\\') + cellValue;
+                            outputFilePath = FilesAndFolderStructure.ConcatFileNameToFolder(cellValue);
                         }
                         // TODO
                         else if (j == 5 && !cellValue.Equals(""))
@@ -85,17 +83,22 @@ namespace RobotAutomationHelper.Scripts
 
             if (!currentTestCase.Equals(""))
             {
-                if (outputFilePath.Equals(FilesAndFolderStructure.GetFolder()))
-                    outputFilePath = FilesAndFolderStructure.GetFolder() + "Auto.robot";
-                TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestTags, currentTestCaseTestSteps, outputFilePath));
-                currentTestCaseTestSteps = new List<Keyword>();
-                currentTestCaseDocumentation = "";
-                currentTestCase = "";
-                currentTestTags = "";
-                outputFilePath = FilesAndFolderStructure.GetFolder();
+                AddTestCaseAndResetValues();
             }
 
             return TestCases;
+        }
+
+        private static void AddTestCaseAndResetValues()
+        {
+            if (outputFilePath.Equals(FilesAndFolderStructure.GetFolder()))
+                outputFilePath = FilesAndFolderStructure.GetFolder() + "Auto.robot";
+            TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestTags, currentTestCaseTestSteps, outputFilePath));
+            currentTestCaseTestSteps = new List<Keyword>();
+            currentTestCaseDocumentation = "";
+            currentTestCase = "";
+            currentTestTags = "";
+            outputFilePath = FilesAndFolderStructure.GetFolder();
         }
     }
 }

@@ -127,7 +127,7 @@ namespace RobotAutomationHelper
 
             FilesAndFolderStructure.SetFolder(outputFolder);
 
-            RobotFileHandler.FindAllRobotFilesAndAddToStructure();
+            FilesAndFolderStructure.FindAllRobotFilesAndAddToStructure();
 
             TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
             AddTestCasesToMainForm();
@@ -148,10 +148,7 @@ namespace RobotAutomationHelper
                     this);
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-                FilesAndFolderStructure.AddFile(TestCases[implementedTest - 1].GetOutputFilePath());
-                if (TestCases[implementedTest - 1].GetTestSteps() != null)
-                    foreach (Keyword key in TestCases[implementedTest - 1].GetTestSteps())
-                        RobotFileHandler.AddFilesFromKeywords(key);
+                FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, implementedTest);
             }
         }
 

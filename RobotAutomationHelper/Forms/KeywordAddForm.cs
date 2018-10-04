@@ -95,11 +95,7 @@ namespace RobotAutomationHelper
         //adds the list of keywords ( + unimplemented ones ) to a Keyword and returns it
         private Keyword AddCurrentKeywordsToKeywordsList(object sender, EventArgs e)
         {
-            string path = FilesAndFolderStructure.GetFolder();
-            if (!KeywordOutputFile.Text.StartsWith("\\"))
-                path = path + KeywordOutputFile.Text;
-            else
-                path = path.Trim('\\') + KeywordOutputFile.Text;
+            string path = FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text);
 
             // if AddImplementation is pressed a new form should be opened which requires the keyword that it represents
             int keywordIndex = 0;
@@ -160,10 +156,7 @@ namespace RobotAutomationHelper
                         this);
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-                FilesAndFolderStructure.AddFile(Keywords[implementedKeyword - 1].GetOutputFilePath());
-                if (Keywords[implementedKeyword - 1].GetKeywordKeywords() != null)
-                    foreach (Keyword key in Keywords[implementedKeyword - 1].GetKeywordKeywords())
-                        RobotFileHandler.AddFilesFromKeywords(key);
+                FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
             }
         }
 
@@ -184,20 +177,9 @@ namespace RobotAutomationHelper
         // adds all field data to parentKeyword or testcaseaddform if not nested
         private void AddChangesToKeyword()
         {
-            string finalPath = FilesAndFolderStructure.GetFolder();
-            if (!KeywordOutputFile.Text.StartsWith("\\"))
-                finalPath = finalPath + KeywordOutputFile.Text;
-            else
-                finalPath = finalPath.Trim('\\') + KeywordOutputFile.Text;
+            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text);
 
-            List<string> args = new List<string>();
-            if (KeywordArguments.Text.Trim() != null)
-                args.AddRange(KeywordArguments.Text.Trim().Split(' '));
-
-            if (args != null)
-                for (int i = 0; i < args.Count; i++)
-                    if (args[i].Equals(""))
-                        args.RemoveAt(i);
+            List<string> args = StringAndListOperations.ReturnListOfArgs(KeywordArguments.Text);
 
             if (args != null)
                 for (int i = 0; i < args.Count; i++)
@@ -234,14 +216,7 @@ namespace RobotAutomationHelper
         // Adds TextBox / Label / Add implementation / Add and remove keyword
         private void AddKeywordField(int keywordsCounter, string arguments)
         {
-            List<string> args = new List<string>();
-            if (arguments != null)
-                args.AddRange(arguments.Replace("[Arguments]", "").Trim().Split(' '));
-
-            if (args != null)
-                for (int i = 0; i < args.Count; i++)
-                    if (args[i].Equals(""))
-                        args.RemoveAt(i);
+            List<string> args = StringAndListOperations.ReturnListOfArgs(arguments);
 
             FormControls.AddControl("TextBox", "DynamicTestStep" + keywordsCounter + "Name",
                 new System.Drawing.Point(30 - this.HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - this.VerticalScroll.Value),
@@ -274,7 +249,7 @@ namespace RobotAutomationHelper
             FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "RemoveKeyword",
                 new System.Drawing.Point(470 - this.HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - this.VerticalScroll.Value),
                 new System.Drawing.Size(20, 20),
-                "X",
+                "-",
                 System.Drawing.Color.Black,
                 new EventHandler(RemoveKeywordFromThisKeyword),
                 this);

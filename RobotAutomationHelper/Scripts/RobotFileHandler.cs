@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RobotAutomationHelper.Scripts
 {
@@ -73,7 +69,7 @@ namespace RobotAutomationHelper.Scripts
             return index;
         }
 
-        public static int hasTag(string fileName, string type)
+        public static int HasTag(string fileName, string type)
         {
             int index = -1;
 
@@ -94,25 +90,6 @@ namespace RobotAutomationHelper.Scripts
                         index = i;
 
             return index;
-        }
-
-        public static void FindAllRobotFilesAndAddToStructure()
-        {
-            DirectoryInfo d = new DirectoryInfo(FilesAndFolderStructure.GetFolder());
-
-            foreach (var file in d.GetFiles("*.robot",SearchOption.AllDirectories))
-            {
-                FilesAndFolderStructure.AddFile(file.FullName.Replace(FilesAndFolderStructure.GetFolder(), "\\"));
-            }
-        }
-
-        //Goes recursively through all keywords in given keyword
-        public static void AddFilesFromKeywords(Keyword keyword)
-        {
-            FilesAndFolderStructure.AddFile(keyword.GetOutputFilePath());
-            if (keyword.GetKeywordKeywords() != null)
-                foreach (Keyword key in keyword.GetKeywordKeywords())
-                    AddFilesFromKeywords(key);
         }
     }
 }
