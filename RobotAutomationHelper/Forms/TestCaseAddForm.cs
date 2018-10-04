@@ -33,18 +33,18 @@ namespace RobotAutomationHelper
         private void Skip_Click(object sender, EventArgs e)
         {
             skip = true;
-            this.Close();
+            Close();
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
             SaveChangesToTestCases();
-            this.Close();
+            Close();
         }
 
         private void TestCaseAddForm_FormClosing(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void TestCaseAddForm_Load(object sender, EventArgs e)
@@ -78,21 +78,21 @@ namespace RobotAutomationHelper
                     List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
 
                     FormControls.AddControl("TextBox", "DynamicTestStep" + testStepsCounter + "Name",
-                        new System.Drawing.Point(30 - this.HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(30 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                         new System.Drawing.Size(280, 20),
                         testStep.GetKeywordName().Trim(),
                         System.Drawing.Color.Black,
                         null,
                         this);
                     FormControls.AddControl("Label", "DynamicTestStep" + testStepsCounter + "Label",
-                        new System.Drawing.Point(10 - this.HorizontalScroll.Value, 143 + (testStepsCounter - 1) * 30 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(10 - HorizontalScroll.Value, 143 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                         new System.Drawing.Size(20, 20),
                         testStepsCounter + ".",
                         System.Drawing.Color.Black,
                         null,
                         this);
                     FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
-                        new System.Drawing.Point(320 - this.HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(320 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                         new System.Drawing.Size(120, 20),
                         "Add Implementation",
                         System.Drawing.Color.Black,
@@ -100,7 +100,7 @@ namespace RobotAutomationHelper
                         this);
                     if (args != null && args.Count != 0)
                         FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
-                            new System.Drawing.Point(450 - this.HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - this.VerticalScroll.Value),
+                            new System.Drawing.Point(450 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                             new System.Drawing.Size(75, 20),
                             "Params",
                             System.Drawing.Color.Black,
@@ -109,8 +109,8 @@ namespace RobotAutomationHelper
                     testStepsCounter++;
                 }
 
-            this.StartPosition = FormStartPosition.Manual;
-            var dialogResult = this.ShowDialog();
+            StartPosition = FormStartPosition.Manual;
+            var dialogResult = ShowDialog();
         }
 
         private void InstantiateKeywordAddForm(object sender, EventArgs e)
@@ -118,6 +118,7 @@ namespace RobotAutomationHelper
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
             implementedKeyword = keywordIndex;
             Keyword keyword = Keywords[keywordIndex - 1];
+            keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             KeywordAddForm addKeywordForm = new KeywordAddForm(false, Keywords);
             addKeywordForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addKeywordForm.ShowKeywordContent(keyword, keywordIndex - 1);
@@ -127,26 +128,22 @@ namespace RobotAutomationHelper
         {
             if ((sender.GetType().FullName.Contains("KeywordAddForm")) && !((KeywordAddForm)sender).SkipValue())
             {
-                this.Controls["DynamicTestStep" + implementedKeyword + "Name"].Text = Keywords[implementedKeyword - 1].GetKeywordName().Trim();
-                this.Controls["DynamicTestStep" + implementedKeyword + "AddImplementation"].Text = "Edit implementation";
-                FormControls.AddControl("Label", "DynamicTestStep" + implementedKeyword + "ImplementationPanel",
-                    new System.Drawing.Point(535 - this.HorizontalScroll.Value, 140 + (implementedKeyword - 1) * 30 - this.VerticalScroll.Value),
-                    new System.Drawing.Size(20, 20),
-                    "✔",
-                    System.Drawing.Color.Green,
-                    null,
-                    this);
+                Controls["DynamicTestStep" + implementedKeyword + "Name"].Text = Keywords[implementedKeyword - 1].GetKeywordName().Trim();
+                Controls["DynamicTestStep" + implementedKeyword + "AddImplementation"].Text = "Edit implementation";
 
                 List<string> args = StringAndListOperations.ReturnListOfArgs(Keywords[implementedKeyword - 1].GetKeywordArguments());
                 
                 if (args != null && args.Count != 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + implementedKeyword + "Params",
-                        new System.Drawing.Point(450 - this.HorizontalScroll.Value, 140 + (implementedKeyword - 1) * 30 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(450 - HorizontalScroll.Value, 140 + (implementedKeyword - 1) * 30 - VerticalScroll.Value),
                         new System.Drawing.Size(75, 20),
                         "Params",
                         System.Drawing.Color.Black,
                         new EventHandler(InstantiateParamsAddForm),
                         this);
+                else
+                    if (Controls.Find("DynamicTestStep" + implementedKeyword + "Params", false).Length != 0)
+                    Controls.RemoveByKey("DynamicTestStep" + implementedKeyword + "Params");
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
@@ -173,6 +170,7 @@ namespace RobotAutomationHelper
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             ParamAddForm addParamForm = new ParamAddForm();
+            Keywords[keywordIndex - 1].SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             // add closing event
             addParamForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addParamForm.ShowParamContent(Keywords[keywordIndex - 1]);

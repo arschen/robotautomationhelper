@@ -50,12 +50,12 @@ namespace RobotAutomationHelper
             bool cleared = false;
             while (!cleared)
             {
-                foreach (Control tempControl in this.Controls)
+                foreach (Control tempControl in Controls)
                     if (tempControl.Name.ToLower().StartsWith("dynamictest"))
-                        this.Controls.RemoveByKey(tempControl.Name);
+                        Controls.RemoveByKey(tempControl.Name);
 
                 cleared = true;
-                foreach (Control tempControl in this.Controls)
+                foreach (Control tempControl in Controls)
                 {
                     if (tempControl.Name.ToLower().StartsWith("dynamictest"))
                     {
@@ -75,28 +75,28 @@ namespace RobotAutomationHelper
                     string testCaseName = testCase.GetTestName();
 
                     FormControls.AddControl("TextBox", "DynamicTest" + testCasesCounter + "Name",
-                        new System.Drawing.Point(30 - this.HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(30 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                         new System.Drawing.Size(280, 20),
                         testCaseName.Trim(),
                         System.Drawing.Color.Black,
                         null,
                         this);
                     FormControls.AddControl("Label", "DynamicTest" + testCasesCounter + "Label",
-                        new System.Drawing.Point(10 - this.HorizontalScroll.Value, 53 + (testCasesCounter - 1) * 25 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(10 - HorizontalScroll.Value, 53 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                         new System.Drawing.Size(20, 20),
                         testCasesCounter + ".",
                         System.Drawing.Color.Black,
                         null,
                         this);
                     FormControls.AddControl("CheckBox", "DynamicTest" + testCasesCounter + "CheckBox",
-                        new System.Drawing.Point(325 - this.HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(325 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                         new System.Drawing.Size(20, 20),
                         "Add",
                         System.Drawing.Color.Black,
                         null,
                         this);
                     FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddImplementation",
-                        new System.Drawing.Point(345 - this.HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - this.VerticalScroll.Value),
+                        new System.Drawing.Point(345 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                         new System.Drawing.Size(120, 20),
                         "Add Implementation",
                         System.Drawing.Color.Black,
@@ -112,6 +112,7 @@ namespace RobotAutomationHelper
             int testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
             implementedTest = testIndex;
             TestCase testCase = TestCases[testIndex - 1];
+            testCase.SetTestName(Controls["DynamicTest" + testIndex + "Name"].Text);
             TestCaseAddForm testCaseAddForm = new TestCaseAddForm();
             testCaseAddForm.FormClosing += new FormClosingEventHandler(TestCaseAddFormClosing);
             testCaseAddForm.ShowTestCaseContent(testCase, testIndex - 1);
@@ -139,15 +140,8 @@ namespace RobotAutomationHelper
         {
             if (!((TestCaseAddForm) sender).SkipValue())
             {
-                this.Controls["DynamicTest" + implementedTest + "Name"].Text = TestCases[implementedTest - 1].GetTestName();
-                this.Controls["DynamicTest" + implementedTest + "AddImplementation"].Text = "Edit implementation";
-                FormControls.AddControl("Label", "DynamicTest" + implementedTest + "ImplementationPanel",
-                    new System.Drawing.Point(468 - this.HorizontalScroll.Value, 53 + (implementedTest - 1) * 25 - this.VerticalScroll.Value),
-                    new System.Drawing.Size(20, 20),
-                    "✔",
-                    System.Drawing.Color.Green,
-                    null,
-                    this);
+                Controls["DynamicTest" + implementedTest + "Name"].Text = TestCases[implementedTest - 1].GetTestName();
+                Controls["DynamicTest" + implementedTest + "AddImplementation"].Text = "Edit implementation";
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, implementedTest);
@@ -164,7 +158,7 @@ namespace RobotAutomationHelper
         private void saveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<int> testCasesToAdd = new List<int>();
-            foreach (Control tempControl in this.Controls)
+            foreach (Control tempControl in Controls)
                 if (tempControl.Name.EndsWith("CheckBox") && ((CheckBox)tempControl).Checked)
                     testCasesToAdd.Add(int.Parse(tempControl.Name.Replace("CheckBox", "").Replace("DynamicTest", "")));
 

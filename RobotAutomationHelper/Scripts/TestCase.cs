@@ -24,6 +24,11 @@ namespace RobotAutomationHelper
             return this.Name;
         }
 
+        public void SetTestName(string Name)
+        {
+            this.Name = Name;
+        }
+
         public string GetTestDocumentation()
         {
             return this.Documentation;

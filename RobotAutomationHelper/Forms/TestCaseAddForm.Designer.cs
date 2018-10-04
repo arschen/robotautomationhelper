@@ -55,11 +55,9 @@
             // 
             // Skip
             // 
-            this.Skip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Skip.AutoSize = true;
-            this.Skip.Location = new System.Drawing.Point(682, 419);
+            this.Skip.Location = new System.Drawing.Point(626, 92);
             this.Skip.Name = "Skip";
-            this.Skip.Size = new System.Drawing.Size(90, 30);
+            this.Skip.Size = new System.Drawing.Size(100, 30);
             this.Skip.TabIndex = 3;
             this.Skip.Text = "Skip Test Case";
             this.Skip.UseVisualStyleBackColor = true;
@@ -67,9 +65,7 @@
             // 
             // Save
             // 
-            this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.AutoSize = true;
-            this.Save.Location = new System.Drawing.Point(576, 419);
+            this.Save.Location = new System.Drawing.Point(626, 54);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(100, 30);
             this.Save.TabIndex = 2;

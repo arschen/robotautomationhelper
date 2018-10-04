@@ -12,7 +12,7 @@ namespace RobotAutomationHelper.Scripts
 
         public static int GetLineAfterLastTestCase(string fileName)
         {
-            return GetLine(fileName, "testcases");
+            return GetLine(fileName, "test cases");
         }
 
         private static int GetLine(string fileName, string type)
@@ -36,8 +36,8 @@ namespace RobotAutomationHelper.Scripts
                 File.WriteAllLines(fileName, temp);
                 temp.Clear();
                 arrLine = File.ReadAllLines(fileName);
-
             }
+
             bool start = false;
             for (int i = 0; i < arrLine.Length; i++)
             {
@@ -48,10 +48,11 @@ namespace RobotAutomationHelper.Scripts
                         index = i;
                         break;
                     }
-                    if (arrLine[i].ToLower().Replace(" ","").Contains(type))
+                    if (arrLine[i].ToLower().Contains(type))
                         start = true;
                 }
             }
+
             if (!start)
                 if (arrLine.Length - 1 >= 0)
                     index = arrLine.Length;
@@ -86,7 +87,7 @@ namespace RobotAutomationHelper.Scripts
 
             for (int i = 0; i < arrLine.Length; i++)
                 if (arrLine[i].StartsWith("***"))
-                    if (arrLine[i].ToLower().Replace(" ", "").Contains(type))
+                    if (arrLine[i].ToLower().Contains(type.ToLower()))
                         index = i;
 
             return index;

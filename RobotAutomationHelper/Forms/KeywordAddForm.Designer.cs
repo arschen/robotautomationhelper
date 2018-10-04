@@ -95,11 +95,9 @@
             // 
             // Skip
             // 
-            this.Skip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Skip.AutoSize = true;
-            this.Skip.Location = new System.Drawing.Point(682, 419);
+            this.Skip.Location = new System.Drawing.Point(626, 92);
             this.Skip.Name = "Skip";
-            this.Skip.Size = new System.Drawing.Size(90, 30);
+            this.Skip.Size = new System.Drawing.Size(100, 30);
             this.Skip.TabIndex = 15;
             this.Skip.Text = "Skip Keyword";
             this.Skip.UseVisualStyleBackColor = true;
@@ -107,9 +105,7 @@
             // 
             // Save
             // 
-            this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.AutoSize = true;
-            this.Save.Location = new System.Drawing.Point(576, 419);
+            this.Save.Location = new System.Drawing.Point(626, 54);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(100, 30);
             this.Save.TabIndex = 14;
@@ -217,6 +213,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 461);
             this.Controls.Add(this.RemoveArgument);
             this.Controls.Add(this.label2);
