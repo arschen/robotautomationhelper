@@ -26,12 +26,7 @@ namespace RobotAutomationHelper
             initialYValue = 165;
             nestedKeyword = nested;
             this.parentKeywords = parentKeywords;
-            KeywordOutputFile.Items.Clear();
-            KeywordOutputFile.AutoCompleteCustomSource.Clear();
-            KeywordOutputFile.Items.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
-            KeywordOutputFile.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
-            KeywordOutputFile.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            KeywordOutputFile.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            FormControls.UpdateOutputFileSuggestions(KeywordOutputFile);
         }
 
         internal bool SkipValue()
@@ -48,7 +43,7 @@ namespace RobotAutomationHelper
                 KeywordName.Text = keyword.GetKeywordName().Trim();
             if (keyword.GetKeywordDocumentation() != null)
                 KeywordDocumentation.Text = keyword.GetKeywordDocumentation().Replace("[Documentation]", "").Trim();
-            if (keyword.GetOutputFilePath() != null)
+            if (keyword.GetOutputFilePath() != null || !keyword.GetOutputFilePath().Equals(""))
                 KeywordOutputFile.Text = keyword.GetOutputFilePath().Replace(FilesAndFolderStructure.GetFolder(), "\\");
             if (keyword.GetKeywordArguments() != null)
                 KeywordArguments.Text = keyword.GetKeywordArguments().Replace("[Arguments]", "").Trim();
@@ -72,7 +67,7 @@ namespace RobotAutomationHelper
             {
                 // add a single keyword field if no keywords are available
                 Keywords = new List<Keyword>();
-                Keywords.Add(new Keyword("New Keyword", keyword.GetOutputFilePath()));
+                Keywords.Add(new Keyword("New Keyword", parentKeywords[index].GetOutputFilePath()));
                 AddKeywordField(keywordsCounter, "");
                 numberOfKeywords++;
             }
@@ -148,10 +143,12 @@ namespace RobotAutomationHelper
                 else
                     if (Controls.Find("DynamicTestStep" + implementedKeyword + "Params", false).Length != 0)
                         Controls.RemoveByKey("DynamicTestStep" + implementedKeyword + "Params");
-
-                //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-                FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
             }
+
+            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
+            FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
+
+            FormControls.UpdateOutputFileSuggestions(KeywordOutputFile);
         }
 
         private void Skip_Click(object sender, EventArgs e)

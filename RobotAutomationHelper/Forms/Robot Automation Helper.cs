@@ -114,7 +114,7 @@ namespace RobotAutomationHelper
             TestCase testCase = TestCases[testIndex - 1];
             testCase.SetTestName(Controls["DynamicTest" + testIndex + "Name"].Text);
             TestCaseAddForm testCaseAddForm = new TestCaseAddForm();
-            testCaseAddForm.FormClosing += new FormClosingEventHandler(TestCaseAddFormClosing);
+            testCaseAddForm.FormClosing += new FormClosingEventHandler(UpdateThisFormTestCaseAddFormClosing);
             testCaseAddForm.ShowTestCaseContent(testCase, testIndex - 1);
         }
 
@@ -136,16 +136,16 @@ namespace RobotAutomationHelper
             AddTestCasesToMainForm();
         }
 
-        private void TestCaseAddFormClosing(object sender, FormClosingEventArgs e)
+        private void UpdateThisFormTestCaseAddFormClosing(object sender, FormClosingEventArgs e)
         {
             if (!((TestCaseAddForm) sender).SkipValue())
             {
                 Controls["DynamicTest" + implementedTest + "Name"].Text = TestCases[implementedTest - 1].GetTestName();
                 Controls["DynamicTest" + implementedTest + "AddImplementation"].Text = "Edit implementation";
-
-                //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-                FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, implementedTest);
             }
+
+            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
+            FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, implementedTest);
         }
 
         public void ShowTestCasePanels()

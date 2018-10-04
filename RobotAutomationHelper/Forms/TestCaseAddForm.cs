@@ -17,12 +17,7 @@ namespace RobotAutomationHelper
         public TestCaseAddForm()
         {
             InitializeComponent();
-            TestCaseOutputFile.Items.Clear();
-            TestCaseOutputFile.AutoCompleteCustomSource.Clear();
-            TestCaseOutputFile.Items.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
-            TestCaseOutputFile.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
-            TestCaseOutputFile.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            TestCaseOutputFile.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
         }
 
         private void TestCaseLabel_Click(object sender, EventArgs e)
@@ -144,10 +139,12 @@ namespace RobotAutomationHelper
                 else
                     if (Controls.Find("DynamicTestStep" + implementedKeyword + "Params", false).Length != 0)
                     Controls.RemoveByKey("DynamicTestStep" + implementedKeyword + "Params");
-
-                //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-                FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
             }
+
+            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
+            FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
+
+            FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
         }
 
         private void SaveChangesToTestCases()

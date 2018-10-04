@@ -32,5 +32,15 @@ namespace RobotAutomationHelper.Scripts
                 default: owner.Controls.Add((Label)tempControl); break;
             }
         }
+
+        public static void UpdateOutputFileSuggestions(ComboBox comboBox)
+        {
+            comboBox.Items.Clear();
+            comboBox.AutoCompleteCustomSource.Clear();
+            comboBox.Items.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
+            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
+            comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+        }
     }
 }
