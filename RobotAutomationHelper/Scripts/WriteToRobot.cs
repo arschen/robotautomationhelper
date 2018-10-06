@@ -27,16 +27,34 @@ namespace RobotAutomationHelper.Scripts
             string fileName = keyword.GetOutputFilePath();
             int index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
 
-            //Add keyword to robot file
-            index = AddName(keyword.GetKeywordName().Trim(), fileName, index, "keywords");
+            if (keyword.IsSaved())
+            {
+                //Add keyword to robot file
+                index = AddName(keyword.GetKeywordName().Trim(), fileName, index, "keywords");
 
-            //adds documentation
-            index = AddTagsDocumentationArguments("[Documentation]", keyword.GetKeywordDocumentation(), fileName, index);
+                //adds documentation
+                index = AddTagsDocumentationArguments("[Documentation]", keyword.GetKeywordDocumentation(), fileName, index);
 
-            //adds arguments
-            index = AddTagsDocumentationArguments("[Arguments]", keyword.GetKeywordArguments(), fileName, index);
+                //adds arguments
+                index = AddTagsDocumentationArguments("[Arguments]", keyword.GetKeywordArguments(), fileName, index);
+            }
 
             index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index);
+        }
+
+        //adds Keywords
+        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index)
+        {
+            if (keywordKeywords != null)
+                foreach (Keyword keywordKeyword in keywordKeywords)
+                {
+                    //adds test steps
+                    index++;
+                    FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
+
+                    AddKeywordToRobot(keywordKeyword);
+                }
+            return index;
         }
 
         // add newText on new line to file fileName after specified line
@@ -93,20 +111,6 @@ namespace RobotAutomationHelper.Scripts
                 index++;
                 FileLineAdd(addString, fileName, index);
             }
-            return index;
-        }
-
-        //adds Keywords
-        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index)
-        {
-            if (keywordKeywords != null)
-                foreach (Keyword keywordKeyword in keywordKeywords)
-                {
-                    //adds test steps
-                    index++;
-                    FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
-                    AddKeywordToRobot(keywordKeyword);
-                }
             return index;
         }
 
