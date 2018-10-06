@@ -2,7 +2,7 @@
 
 namespace RobotAutomationHelper
 {
-    public class TestCase
+    internal class TestCase
     {
         private List<Keyword> Steps;
         private string Name;
@@ -10,7 +10,7 @@ namespace RobotAutomationHelper
         private string Tags;
         private string outputFilePath;
 
-        public TestCase(string Name, string Documentation, string Tags, List<Keyword> Steps, string outputFilePath)
+        internal TestCase(string Name, string Documentation, string Tags, List<Keyword> Steps, string outputFilePath)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -19,32 +19,32 @@ namespace RobotAutomationHelper
             this.outputFilePath = outputFilePath;
         }
 
-        public string GetTestName()
+        internal string GetTestName()
         {
             return this.Name;
         }
 
-        public void SetTestName(string Name)
+        internal void SetTestName(string Name)
         {
             this.Name = Name;
         }
 
-        public string GetTestDocumentation()
+        internal string GetTestDocumentation()
         {
             return this.Documentation;
         }
 
-        public List<Keyword> GetTestSteps()
+        internal List<Keyword> GetTestSteps()
         {
             return this.Steps;
         }
 
-        public string GetTestCaseTags()
+        internal string GetTestCaseTags()
         {
             return this.Tags;
         }
 
-        public string GetOutputFilePath()
+        internal string GetOutputFilePath()
         {
             return this.outputFilePath;
         }

@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper
 {
-    public partial class KeywordAddForm : Form
+    internal partial class KeywordAddForm : Form
     {
         private bool skip = false;
         private int index;
@@ -20,7 +20,7 @@ namespace RobotAutomationHelper
         //y value for dynamic buttons
         private int initialYValue;
 
-        public KeywordAddForm(bool nested, List<Keyword> parentKeywords)
+        internal KeywordAddForm(bool nested, List<Keyword> parentKeywords)
         {
             InitializeComponent();
             initialYValue = 165;
@@ -199,7 +199,8 @@ namespace RobotAutomationHelper
                 "\t[Arguments]  " + KeywordArguments.Text.Trim(),
                 Params,
                 finalPath, 
-                save);
+                save,
+                KeywordType.CUSTOM);
             }
             else
             {
@@ -209,7 +210,8 @@ namespace RobotAutomationHelper
                 "\t[Arguments]  " + KeywordArguments.Text.Trim(),
                 Params,
                 finalPath,
-                save);
+                save,
+                KeywordType.CUSTOM);
             }
         }
 

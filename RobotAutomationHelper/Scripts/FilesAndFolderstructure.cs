@@ -3,13 +3,13 @@ using System.IO;
 
 namespace RobotAutomationHelper.Scripts
 {
-    public static class FilesAndFolderStructure
+    internal static class FilesAndFolderStructure
     {
         // list of saved files for the drop down menus
         private static List<string> SavedFiles = new List<string>();
         private static string OutputFolder;
 
-        public static bool AddFileToSavedFiles(string filePath)
+        internal static bool AddFileToSavedFiles(string filePath)
         {
             if (!(filePath == null))
             {
@@ -24,17 +24,17 @@ namespace RobotAutomationHelper.Scripts
             return false;
         }
 
-        public static void SetFolder(string outputFolder)
+        internal static void SetFolder(string outputFolder)
         {
             OutputFolder = outputFolder;
         }
 
-        public static string GetFolder()
+        internal static string GetFolder()
         {
             return OutputFolder;
         }
 
-        public static string ConcatFileNameToFolder(string FileName)
+        internal static string ConcatFileNameToFolder(string FileName)
         {
             string outputFilePath = OutputFolder;
             if (!FileName.StartsWith("\\"))
@@ -52,12 +52,12 @@ namespace RobotAutomationHelper.Scripts
             return false;
         }
 
-        public static List<string> GetFilesList()
+        internal static List<string> GetFilesList()
         {
             return SavedFiles;
         }
 
-        public static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> Keywords, int implementedKeyword)
+        internal static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> Keywords, int implementedKeyword)
         {
             AddFileToSavedFiles(Keywords[implementedKeyword - 1].GetOutputFilePath());
             if (Keywords[implementedKeyword - 1].GetKeywordKeywords() != null)
@@ -65,7 +65,7 @@ namespace RobotAutomationHelper.Scripts
                     AddFilesFromKeywords(key);
         }
 
-        public static void AddImplementedTestCasesFilesToSavedFiles(List<TestCase> TestCases, int implementedKeyword)
+        internal static void AddImplementedTestCasesFilesToSavedFiles(List<TestCase> TestCases, int implementedKeyword)
         {
             AddFileToSavedFiles(TestCases[implementedKeyword - 1].GetOutputFilePath());
             if (TestCases[implementedKeyword - 1].GetTestSteps() != null)
@@ -73,7 +73,7 @@ namespace RobotAutomationHelper.Scripts
                     AddFilesFromKeywords(key);
         }
 
-        public static void FindAllRobotFilesAndAddToStructure()
+        internal static void FindAllRobotFilesAndAddToStructure()
         {
             DirectoryInfo d = new DirectoryInfo(GetFolder());
 
@@ -84,7 +84,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         //Goes recursively through all keywords in given keyword
-        public static void AddFilesFromKeywords(Keyword keyword)
+        internal static void AddFilesFromKeywords(Keyword keyword)
         {
             AddFileToSavedFiles(keyword.GetOutputFilePath());
             if (keyword.GetKeywordKeywords() != null)

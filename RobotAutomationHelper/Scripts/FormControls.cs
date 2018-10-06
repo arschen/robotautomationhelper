@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts
 {
-    public static class FormControls
+    internal static class FormControls
     {
-        public static void AddControl(string type, string name, System.Drawing.Point location, System.Drawing.Size size, string text, System.Drawing.Color color, EventHandler eventHandler, Control owner)
+        internal static void AddControl(string type, string name, System.Drawing.Point location, System.Drawing.Size size, string text, System.Drawing.Color color, EventHandler eventHandler, Control owner)
         {
             Control tempControl;
             switch (type.ToLower())
@@ -33,7 +33,7 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        public static void UpdateOutputFileSuggestions(ComboBox comboBox)
+        internal static void UpdateOutputFileSuggestions(ComboBox comboBox)
         {
             comboBox.Items.Clear();
             comboBox.AutoCompleteCustomSource.Clear();

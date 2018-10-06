@@ -9,7 +9,7 @@ namespace RobotAutomationHelper.Scripts
     internal static class StringAndListOperations
     {
 
-        public static List<string> ReturnListOfArgs(string arguments)
+        internal static List<string> ReturnListOfArgs(string arguments)
         {
             List<string> args = new List<string>();
             if (arguments != null)

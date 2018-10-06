@@ -3,14 +3,14 @@ using System.IO;
 
 namespace RobotAutomationHelper.Scripts
 {
-    public static class RobotFileHandler
+    internal static class RobotFileHandler
     {
-        public static int GetLineAfterLastKeyword(string fileName)
+        internal static int GetLineAfterLastKeyword(string fileName)
         {
             return GetLine(fileName, "keywords");
         }
 
-        public static int GetLineAfterLastTestCase(string fileName)
+        internal static int GetLineAfterLastTestCase(string fileName)
         {
             return GetLine(fileName, "test cases");
         }
@@ -70,7 +70,7 @@ namespace RobotAutomationHelper.Scripts
             return index;
         }
 
-        public static int HasTag(string fileName, string type)
+        internal static int HasTag(string fileName, string type)
         {
             int index = -1;
 

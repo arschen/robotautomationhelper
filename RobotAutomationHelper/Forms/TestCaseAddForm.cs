@@ -6,15 +6,15 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper
 {
-    public partial class TestCaseAddForm : Form
+    internal partial class TestCaseAddForm : Form
     {
 
-        public int index;
+        internal int index;
         private bool skip = false;
         private int implementedKeyword = 0;
-        public static List<Keyword> Keywords;
+        internal static List<Keyword> Keywords;
 
-        public TestCaseAddForm()
+        internal TestCaseAddForm()
         {
             InitializeComponent();
             FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);

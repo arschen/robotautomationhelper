@@ -6,13 +6,13 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper
 {
-    public partial class ApplicationMain : Form
+    internal partial class ApplicationMain : Form
     {
-        public static List<TestCase> TestCases;
+        internal static List<TestCase> TestCases;
 
         private int implementedTest = 0;
 
-        public ApplicationMain()
+        internal ApplicationMain()
         {
             InitializeComponent();
         }
@@ -148,7 +148,7 @@ namespace RobotAutomationHelper
             FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, implementedTest);
         }
 
-        public void ShowTestCasePanels()
+        internal void ShowTestCasePanels()
         {
             IndexLabel.Visible = true;
             TestCaseNameLabel.Visible = true;
@@ -168,6 +168,8 @@ namespace RobotAutomationHelper
                 TestCase testCase = TestCases[index - 1];
                 WriteToRobot.AddTestCasesToRobot(testCase);
             }
+
+            WriteToRobot.AddIncludes();
         }
     }
 }

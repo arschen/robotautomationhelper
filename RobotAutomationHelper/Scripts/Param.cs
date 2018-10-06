@@ -1,27 +1,27 @@
 ﻿namespace RobotAutomationHelper
 {
-    public class Param
+    internal class Param
     {
         private string ArgName;
         private string ParamValue;
 
-        public Param(string ArgName, string ParamValue)
+        internal Param(string ArgName, string ParamValue)
         {
             this.ArgName = ArgName;
             this.ParamValue = ParamValue;
         }
 
-        public string GetParamValue()
+        internal string GetParamValue()
         {
             return ParamValue;
         }
 
-        public void SetParamValue(string ParamValue)
+        internal void SetParamValue(string ParamValue)
         {
             this.ParamValue = ParamValue;
         }
 
-        public string GetArgName()
+        internal string GetArgName()
         {
             return ArgName;
         }

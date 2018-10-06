@@ -3,12 +3,20 @@ using System.IO;
 
 namespace RobotAutomationHelper.Scripts
 {
-    public static class WriteToRobot
+
+    internal static class WriteToRobot
     {
-        public static void AddTestCasesToRobot(TestCase testCase)
+
+        private static List<Includes> includes = new List<Includes>();
+
+        internal static void AddTestCasesToRobot(TestCase testCase)
         {
             string fileName = testCase.GetOutputFilePath();
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
+
+            Includes candidate = new Includes(fileName);
+            if (!includes.Contains(candidate))
+                includes.Add(candidate);
 
             //Add test case to robot file
             index = AddName(testCase.GetTestName().Trim(), fileName, index, "test cases");
@@ -22,10 +30,14 @@ namespace RobotAutomationHelper.Scripts
             index = AddKeyword(testCase.GetTestSteps(), fileName, index);
         }
 
-        public static void AddKeywordToRobot(Keyword keyword)
+        internal static void AddKeywordToRobot(Keyword keyword)
         {
             string fileName = keyword.GetOutputFilePath();
             int index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
+
+            Includes candidate = new Includes(fileName);
+            if (!includes.Contains(candidate))
+                includes.Add(candidate);
 
             if (keyword.IsSaved())
             {
@@ -45,9 +57,13 @@ namespace RobotAutomationHelper.Scripts
         //adds Keywords
         private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index)
         {
+            Includes container = new Includes(fileName);
             if (keywordKeywords != null)
                 foreach (Keyword keywordKeyword in keywordKeywords)
                 {
+                    if (keywordKeyword.IsSaved())
+                        includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
+
                     //adds test steps
                     index++;
                     FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
@@ -58,7 +74,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // add newText on new line to file fileName after specified line
-        public static void FileLineAdd(string newText, string fileName, int line_to_add_after)
+        internal static void FileLineAdd(string newText, string fileName, int line_to_add_after)
         {
             string[] arrLine;
             if (File.Exists(fileName))
@@ -80,7 +96,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // add newText on new line to file fileName after specified line
-        public static void FileLineReplace(string newText, string fileName, int line_to_add_after)
+        internal static void FileLineReplace(string newText, string fileName, int line_to_add_after)
         {
             string[] arrLine;
             if (File.Exists(fileName))
@@ -147,5 +163,32 @@ namespace RobotAutomationHelper.Scripts
             return index;
         }
 
+        //Add includes to test case and keywords files
+        internal static void AddIncludes()
+        {
+            int index;
+            string tag = "settings";
+            string fileName;
+
+            foreach (Includes temp in includes)
+            {
+                index = 0;
+                fileName = temp.GetFileName();
+                int tempTagIndex = RobotFileHandler.HasTag(fileName, tag);
+                if (tempTagIndex == -1)
+                {
+                    FileLineAdd("*** Settings ***", fileName, index);
+                    index++;
+                }
+                else
+                    index = tempTagIndex + 1;
+
+                foreach (string path in temp.GetFilesToInclude())
+                {
+                    FileLineAdd("Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName, index);
+                    index++;
+                }
+            }
+        }
     }
 }

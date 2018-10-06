@@ -5,12 +5,12 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Forms
 {
-    public partial class ParamAddForm : Form
+    internal partial class ParamAddForm : Form
     {
         private Keyword keyword;
         private int paramsCount = 0;
 
-        public ParamAddForm()
+        internal ParamAddForm()
         {
             InitializeComponent();
         }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RobotAutomationHelper
 {
-    public class Keyword
+    internal class Keyword
     {
         private readonly List<Keyword> Keywords;
         private readonly string Arguments;
@@ -11,10 +10,11 @@ namespace RobotAutomationHelper
         private string Name;
         private readonly string Documentation;
         private readonly string OutputFilePath;
-        private readonly bool implemented = false;
-        private readonly bool saved = false;
+        private readonly bool Implemented = false;
+        private readonly bool Saved = false;
+        private readonly KeywordType Type;
 
-        public Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool saved)
+        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -22,52 +22,53 @@ namespace RobotAutomationHelper
             this.Arguments = Arguments;
             this.Params = Params;
             this.OutputFilePath = OutputFilePath;
-            implemented = true;
-            this.saved = saved;
+            Implemented = true;
+            this.Saved = Saved;
+            this.Type = Type;
         }
 
-        public Keyword(string Name, string OutputFilePath)
+        internal Keyword(string Name, string OutputFilePath)
         {
             this.Name = Name;
             this.OutputFilePath = OutputFilePath;
         }
 
-        public string GetKeywordName()
+        internal string GetKeywordName()
         {
             return this.Name;
         }
 
-        public void SetKeywordName(string name)
+        internal void SetKeywordName(string name)
         {
             this.Name = name;
         }
 
-        public List<Param> GetKeywordParams()
+        internal List<Param> GetKeywordParams()
         {
             return this.Params;
         }
 
-        public void SetKeywordParams(List<Param> Params)
+        internal void SetKeywordParams(List<Param> Params)
         {
             this.Params = Params;
         }
 
-        public string GetKeywordDocumentation()
+        internal string GetKeywordDocumentation()
         {
             return this.Documentation;
         }
 
-        public string GetKeywordArguments()
+        internal string GetKeywordArguments()
         {
             return this.Arguments;
         }
 
-        public string GetOutputFilePath()
+        internal string GetOutputFilePath()
         {
             return this.OutputFilePath;
         }
 
-        public List<Keyword> GetKeywordKeywords()
+        internal List<Keyword> GetKeywordKeywords()
         {
             return this.Keywords;
         }
@@ -81,14 +82,19 @@ namespace RobotAutomationHelper
             return paramsString;
         }
 
-        public bool IsSaved()
+        internal bool IsSaved()
         {
-            return saved;
+            return Saved;
         }
 
-        public bool IsImplemented()
+        internal bool IsImplemented()
         {
-            return saved;
+            return Implemented;
         }
+    }
+
+    internal enum KeywordType
+    {
+        SELENIUM, BUILT_IN, CUSTOM
     }
 }
