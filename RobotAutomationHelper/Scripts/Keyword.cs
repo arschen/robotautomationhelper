@@ -12,8 +12,9 @@ namespace RobotAutomationHelper
         private readonly string Documentation;
         private readonly string OutputFilePath;
         private readonly bool implemented = false;
+        private readonly bool saved = false;
 
-        public Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath)
+        public Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool saved)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -22,6 +23,7 @@ namespace RobotAutomationHelper
             this.Params = Params;
             this.OutputFilePath = OutputFilePath;
             implemented = true;
+            this.saved = saved;
         }
 
         public Keyword(string Name, string OutputFilePath)
@@ -77,6 +79,16 @@ namespace RobotAutomationHelper
                 foreach (Param tempParam in Params)
                     paramsString += "  " + tempParam.GetParamValue();
             return paramsString;
+        }
+
+        public bool IsSaved()
+        {
+            return saved;
+        }
+
+        public bool IsImplemented()
+        {
+            return saved;
         }
     }
 }

@@ -161,12 +161,12 @@ namespace RobotAutomationHelper
         private void Save_Click(object sender, EventArgs e)
         {
             AddCurrentKeywordsToKeywordsList(sender, e);
-            AddChangesToKeyword();
+            AddChangesToKeyword(true);
             Close();
         }
 
         // adds all field data to parentKeyword or testcaseaddform if not nested
-        private void AddChangesToKeyword()
+        private void AddChangesToKeyword(bool save)
         {
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text);
 
@@ -198,7 +198,8 @@ namespace RobotAutomationHelper
                 Keywords,
                 "\t[Arguments]  " + KeywordArguments.Text.Trim(),
                 Params,
-                finalPath);
+                finalPath, 
+                save);
             }
             else
             {
@@ -207,7 +208,8 @@ namespace RobotAutomationHelper
                 Keywords,
                 "\t[Arguments]  " + KeywordArguments.Text.Trim(),
                 Params,
-                finalPath);
+                finalPath,
+                save);
             }
         }
 
@@ -243,10 +245,13 @@ namespace RobotAutomationHelper
                 System.Drawing.Color.Black,
                 null,
                 this);
+            string buttonImplementation = "Add Implementation";
+            if (Keywords[keywordsCounter - 1].IsImplemented())
+                buttonImplementation = "Edit Implementation";
             FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "AddImplementation",
                 new System.Drawing.Point(320 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new System.Drawing.Size(120, 20),
-                "Add Implementation",
+                buttonImplementation,
                 System.Drawing.Color.Black,
                 new EventHandler(InstantiateKeywordAddForm),
                 this);

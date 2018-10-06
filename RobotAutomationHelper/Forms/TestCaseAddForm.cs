@@ -86,10 +86,13 @@ namespace RobotAutomationHelper
                         System.Drawing.Color.Black,
                         null,
                         this);
+                    string buttonImplementation = "Add Implementation";
+                    if (testStep.IsImplemented())
+                        buttonImplementation = "Edit Implementation";
                     FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
                         new System.Drawing.Point(320 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                         new System.Drawing.Size(120, 20),
-                        "Add Implementation",
+                        buttonImplementation,
                         System.Drawing.Color.Black,
                         new EventHandler(InstantiateKeywordAddForm),
                         this);
