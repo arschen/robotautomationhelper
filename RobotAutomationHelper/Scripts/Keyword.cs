@@ -91,6 +91,11 @@ namespace RobotAutomationHelper
         {
             return Implemented;
         }
+
+        internal KeywordType GetKeywordType()
+        {
+            return Type;
+        }
     }
 
     internal enum KeywordType
