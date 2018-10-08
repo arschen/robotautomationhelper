@@ -1,20 +1,22 @@
 ﻿using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
 namespace RobotAutomationHelper
 {
-    internal partial class ApplicationMain : Form
+    internal partial class RobotAutomationHelper : Form
     {
         internal static List<TestCase> TestCases;
 
         private int implementedTest = 0;
 
-        internal ApplicationMain()
+        internal RobotAutomationHelper()
         {
             InitializeComponent();
+            ActiveControl = TestCaseNameLabel;
         }
 
         // open file click
@@ -75,31 +77,31 @@ namespace RobotAutomationHelper
                     string testCaseName = testCase.GetTestName();
 
                     FormControls.AddControl("TextBox", "DynamicTest" + testCasesCounter + "Name",
-                        new System.Drawing.Point(30 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
-                        new System.Drawing.Size(280, 20),
+                        new Point(30 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                        new Size(280, 20),
                         testCaseName.Trim(),
-                        System.Drawing.Color.Black,
+                        Color.Black,
                         null,
                         this);
                     FormControls.AddControl("Label", "DynamicTest" + testCasesCounter + "Label",
-                        new System.Drawing.Point(10 - HorizontalScroll.Value, 53 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
-                        new System.Drawing.Size(20, 20),
+                        new Point(10 - HorizontalScroll.Value, 53 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                        new Size(20, 20),
                         testCasesCounter + ".",
-                        System.Drawing.Color.Black,
+                        Color.Black,
                         null,
                         this);
                     FormControls.AddControl("CheckBox", "DynamicTest" + testCasesCounter + "CheckBox",
-                        new System.Drawing.Point(325 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
-                        new System.Drawing.Size(20, 20),
+                        new Point(325 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                        new Size(20, 20),
                         "Add",
-                        System.Drawing.Color.Black,
+                        Color.Black,
                         null,
                         this);
                     FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddImplementation",
-                        new System.Drawing.Point(345 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
-                        new System.Drawing.Size(120, 20),
+                        new Point(345 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                        new Size(120, 20),
                         "Add Implementation",
-                        System.Drawing.Color.Black,
+                        Color.Black,
                         new EventHandler(InstantiateAddTestCaseForm),
                         this);
 

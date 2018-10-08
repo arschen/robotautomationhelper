@@ -1,6 +1,6 @@
 ﻿namespace RobotAutomationHelper
 {
-    partial class ApplicationMain
+    partial class RobotAutomationHelper
     {
         /// <summary>
         /// Required designer variable.

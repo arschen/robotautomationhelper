@@ -74,6 +74,7 @@
     <Compile Include="Scripts\RobotFileHandler.cs" />
     <Compile Include="Scripts\StringAndListOperations.cs" />
     <Compile Include="Scripts\TestCase.cs" />
+    <Compile Include="Scripts\TestCasesListOperations.cs" />
     <Compile Include="Scripts\WriteToRobot.cs" />
     <Compile Include="Forms\TestCaseAddForm.cs">
       <SubType>Form</SubType>

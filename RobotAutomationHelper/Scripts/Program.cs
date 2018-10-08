@@ -16,7 +16,7 @@ namespace RobotAutomationHelper
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ApplicationMain());
+            Application.Run(new RobotAutomationHelper());
         }
     }
 }

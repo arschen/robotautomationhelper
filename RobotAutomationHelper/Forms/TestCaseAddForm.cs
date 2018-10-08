@@ -2,6 +2,7 @@
 using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RobotAutomationHelper
@@ -18,6 +19,7 @@ namespace RobotAutomationHelper
         {
             InitializeComponent();
             FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
+            ActiveControl = TestCaseNameLabel;
         }
 
         private void TestCaseLabel_Click(object sender, EventArgs e)
@@ -33,8 +35,11 @@ namespace RobotAutomationHelper
 
         private void Save_Click(object sender, EventArgs e)
         {
-            SaveChangesToTestCases();
-            Close();
+            if (!IsTestCasePresentInFilesOrMemoryTree())
+            {
+                SaveChangesToTestCases();
+                Close();
+            }
         }
 
         private void TestCaseAddForm_FormClosing(object sender, EventArgs e)
@@ -55,7 +60,7 @@ namespace RobotAutomationHelper
         internal void ShowTestCaseContent(TestCase testCase, int testIndex)
         {
             index = testIndex;
-            if (testCase.GetTestName() != null)
+            if (testCase.GetTestName() != null) { }
                 TestCaseName.Text = testCase.GetTestName();
             if (testCase.GetTestDocumentation() != null)
                 TestCaseDocumentation.Text = testCase.GetTestDocumentation().Replace("[Documentation]", "").Trim();
@@ -63,6 +68,7 @@ namespace RobotAutomationHelper
                 TestCaseTags.Text = testCase.GetTestCaseTags().Replace("[Tags]","").Trim();
             if (testCase.GetOutputFilePath() != null)
                 TestCaseOutputFile.Text = testCase.GetOutputFilePath().Replace(FilesAndFolderStructure.GetFolder(),"\\");
+            IsTestCasePresentInFilesOrMemoryTree();
             Keywords = new List<Keyword>();
             Keywords = testCase.GetTestSteps();
 
@@ -152,13 +158,13 @@ namespace RobotAutomationHelper
 
         private void SaveChangesToTestCases()
         {
-            if (ApplicationMain.TestCases[index].GetTestSteps() != null && ApplicationMain.TestCases[index].GetTestSteps().Count > 0)
-                for (int counter = 1; counter <= ApplicationMain.TestCases[index].GetTestSteps().Count; counter++)
+            if (RobotAutomationHelper.TestCases[index].GetTestSteps() != null && RobotAutomationHelper.TestCases[index].GetTestSteps().Count > 0)
+                for (int counter = 1; counter <= RobotAutomationHelper.TestCases[index].GetTestSteps().Count; counter++)
                     Keywords[counter-1].SetKeywordName("\t" + ((TextBox) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
 
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 
-            ApplicationMain.TestCases[index] = new TestCase(TestCaseName.Text.Trim(),
+            RobotAutomationHelper.TestCases[index] = new TestCase(TestCaseName.Text.Trim(),
                 "\t[Documentation]  " + TestCaseDocumentation.Text.Trim(),
                 "\t[Tags]  " + TestCaseTags.Text.Trim(),
                 Keywords,
@@ -174,6 +180,36 @@ namespace RobotAutomationHelper
             // add closing event
             addParamForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addParamForm.ShowParamContent(Keywords[keywordIndex - 1]);
+        }
+
+        private void TestCaseName_TextChanged(object sender, EventArgs e)
+        {
+            IsTestCasePresentInFilesOrMemoryTree();
+        }
+
+        private void TestCaseOutputFile_TextChanged(object sender, EventArgs e)
+        {
+            IsTestCasePresentInFilesOrMemoryTree();
+        }
+
+        private bool IsTestCasePresentInFilesOrMemoryTree()
+        {
+            if (TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
+                FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text),
+                RobotAutomationHelper.TestCases[index]))
+                TestCaseName.ForeColor = Color.Red;
+            else
+            {
+                if (RobotFileHandler.ContainsTestCaseOrKeyword(FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text)
+                    , TestCaseName.Text, "test cases"))
+                    TestCaseName.ForeColor = Color.Red;
+                else
+                {
+                    TestCaseName.ForeColor = Color.Black;
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

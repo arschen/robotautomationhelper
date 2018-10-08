@@ -15,6 +15,7 @@ namespace RobotAutomationHelper.Scripts
             return GetLine(fileName, "test cases");
         }
 
+        // get the index line where to add specific type ( keyword / test cases / settings )
         private static int GetLine(string fileName, string type)
         {
             int index = -1;
@@ -93,6 +94,7 @@ namespace RobotAutomationHelper.Scripts
             return index;
         }
 
+        // returns true if the file contains a keyword / test case with the same name
         internal static bool ContainsTestCaseOrKeyword(string fileName, string name, string type)
         {
             if (File.Exists(fileName))

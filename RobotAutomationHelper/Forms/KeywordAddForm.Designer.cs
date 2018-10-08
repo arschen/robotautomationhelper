@@ -80,6 +80,7 @@
             this.KeywordName.Name = "KeywordName";
             this.KeywordName.Size = new System.Drawing.Size(280, 20);
             this.KeywordName.TabIndex = 10;
+            this.KeywordName.TextChanged += new System.EventHandler(this.KeywordName_TextChanged);
             // 
             // AddKeywordLabel
             // 
@@ -133,6 +134,7 @@
             this.KeywordOutputFile.Name = "KeywordOutputFile";
             this.KeywordOutputFile.Size = new System.Drawing.Size(280, 21);
             this.KeywordOutputFile.TabIndex = 18;
+            this.KeywordOutputFile.TextChanged += new System.EventHandler(this.KeywordOutputFile_TextChanged);
             // 
             // KeywordOutputLabel
             // 
