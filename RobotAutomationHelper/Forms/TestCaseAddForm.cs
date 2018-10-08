@@ -201,7 +201,7 @@ namespace RobotAutomationHelper
             else
             {
                 if (RobotFileHandler.ContainsTestCaseOrKeyword(FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text)
-                    , TestCaseName.Text, "test cases"))
+                    , TestCaseName.Text, "test cases") != -1)
                     TestCaseName.ForeColor = Color.Red;
                 else
                 {

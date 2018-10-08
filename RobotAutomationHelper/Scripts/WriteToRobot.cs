@@ -14,7 +14,7 @@ namespace RobotAutomationHelper.Scripts
             string fileName = testCase.GetOutputFilePath();
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
 
-            bool addTestCase = !RobotFileHandler.ContainsTestCaseOrKeyword(fileName, testCase.GetTestName().Trim(), "test cases");
+            bool addTestCase = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, testCase.GetTestName().Trim(), "test cases") != -1);
             if (addTestCase)
             {
                 Includes candidate = new Includes(fileName);
@@ -46,7 +46,7 @@ namespace RobotAutomationHelper.Scripts
                     includes.Add(candidate);
             }
 
-            bool addKeywordSteps = !RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.GetKeywordName().Trim(), "keyword");
+            bool addKeywordSteps = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.GetKeywordName().Trim(), "keyword") != -1);
             if (keyword.IsSaved() && addKeywordSteps)
             {
                 //Add keyword to robot file
@@ -70,7 +70,7 @@ namespace RobotAutomationHelper.Scripts
                 foreach (Keyword keywordKeyword in keywordKeywords)
                 {
                     if (keywordKeyword.IsSaved() && keywordKeyword.GetKeywordType() == KeywordType.CUSTOM
-                         && RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keywordKeyword.GetKeywordName().Trim(), "keyword"))
+                         && RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keywordKeyword.GetKeywordName().Trim(), "keyword") != -1)
                         includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
 
                     if (addSteps)

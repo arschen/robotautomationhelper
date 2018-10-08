@@ -95,7 +95,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // returns true if the file contains a keyword / test case with the same name
-        internal static bool ContainsTestCaseOrKeyword(string fileName, string name, string type)
+        internal static int ContainsTestCaseOrKeyword(string fileName, string name, string type)
         {
             if (File.Exists(fileName))
             {
@@ -113,13 +113,13 @@ namespace RobotAutomationHelper.Scripts
                                 string[] temp = arrLine[ind].ToLower().Split(new string[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
                                 foreach (string s in temp)
                                     if (s.Equals(name.ToLower()))
-                                        return true;
+                                        return ind;
                             }
                         }
                     }
                 }
             }
-            return false;
+            return -1;
         }
     }
 }
