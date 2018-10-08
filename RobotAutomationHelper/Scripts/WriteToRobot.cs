@@ -14,20 +14,24 @@ namespace RobotAutomationHelper.Scripts
             string fileName = testCase.GetOutputFilePath();
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
 
-            Includes candidate = new Includes(fileName);
-            if (!includes.Contains(candidate))
-                includes.Add(candidate);
+            bool addTestCase = !RobotFileHandler.ContainsTestCaseOrKeyword(fileName, testCase.GetTestName().Trim(), "test cases");
+            if (addTestCase)
+            {
+                Includes candidate = new Includes(fileName);
+                if (!includes.Contains(candidate))
+                    includes.Add(candidate);
 
-            //Add test case to robot file
-            index = AddName(testCase.GetTestName().Trim(), fileName, index, "test cases");
+                //Add test case to robot file
+                index = AddName(testCase.GetTestName().Trim(), fileName, index, "test cases");
 
-            //adds documentation
-            index = AddTagsDocumentationArguments("[Documentation]", testCase.GetTestDocumentation(), fileName, index);
+                //adds documentation
+                index = AddTagsDocumentationArguments("[Documentation]", testCase.GetTestDocumentation(), fileName, index);
 
-            //adds tags
-            index = AddTagsDocumentationArguments("[Tags]", testCase.GetTestCaseTags(), fileName, index);
+                //adds tags
+                index = AddTagsDocumentationArguments("[Tags]", testCase.GetTestCaseTags(), fileName, index);
+            }
 
-            index = AddKeyword(testCase.GetTestSteps(), fileName, index);
+            index = AddKeyword(testCase.GetTestSteps(), fileName, index, addTestCase);
         }
 
         internal static void AddKeywordToRobot(Keyword keyword)
@@ -42,7 +46,8 @@ namespace RobotAutomationHelper.Scripts
                     includes.Add(candidate);
             }
 
-            if (keyword.IsSaved())
+            bool addKeywordSteps = !RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.GetKeywordName().Trim(), "keyword");
+            if (keyword.IsSaved() && addKeywordSteps)
             {
                 //Add keyword to robot file
                 index = AddName(keyword.GetKeywordName().Trim(), fileName, index, "keywords");
@@ -54,22 +59,26 @@ namespace RobotAutomationHelper.Scripts
                 index = AddTagsDocumentationArguments("[Arguments]", keyword.GetKeywordArguments(), fileName, index);
             }
 
-            index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index);
+            index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index, addKeywordSteps);
         }
 
         //adds Keywords
-        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index)
+        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index, bool addSteps)
         {
             Includes container = new Includes(fileName);
             if (keywordKeywords != null)
                 foreach (Keyword keywordKeyword in keywordKeywords)
                 {
-                    if (keywordKeyword.IsSaved() && keywordKeyword.GetKeywordType() == KeywordType.CUSTOM)
+                    if (keywordKeyword.IsSaved() && keywordKeyword.GetKeywordType() == KeywordType.CUSTOM
+                         && RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keywordKeyword.GetKeywordName().Trim(), "keyword"))
                         includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
 
-                    //adds test steps
-                    index++;
-                    FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
+                    if (addSteps)
+                    {
+                        //adds test steps
+                        index++;
+                        FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
+                    }
 
                     AddKeywordToRobot(keywordKeyword);
                 }

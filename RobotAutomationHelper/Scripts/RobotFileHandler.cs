@@ -92,5 +92,32 @@ namespace RobotAutomationHelper.Scripts
 
             return index;
         }
+
+        internal static bool ContainsTestCaseOrKeyword(string fileName, string name, string type)
+        {
+            if (File.Exists(fileName))
+            {
+                int index = HasTag(fileName, type);
+                if (index != -1)
+                {
+                    string[] arrLine;
+                    arrLine = File.ReadAllLines(fileName);
+                    for (int ind = index; ind<arrLine.Length; ind++)
+                    {
+                        if (!arrLine[ind].StartsWith("***"))
+                        {
+                            if (!arrLine[ind].StartsWith(" ") && !arrLine[ind].StartsWith("\\") && !arrLine[ind].StartsWith("."))
+                            {
+                                string[] temp = arrLine[ind].ToLower().Split(new string[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
+                                foreach (string s in temp)
+                                    if (s.Equals(name.ToLower()))
+                                        return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
