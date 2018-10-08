@@ -9,10 +9,15 @@ namespace RobotAutomationHelper
 {
     internal partial class TestCaseAddForm : Form
     {
+        // index of the implemented test case
+        private int IndexOfTheParentTestCase;
 
-        internal int index;
         private bool skip = false;
-        private int implementedKeyword = 0;
+
+        //index of the keyword that will be implemented after Add/Edit implementation
+        private int IndexOfTheKeywordToBeImplemented = 0;
+
+        //current keywords in this test case
         internal static List<Keyword> Keywords;
 
         internal TestCaseAddForm()
@@ -59,7 +64,7 @@ namespace RobotAutomationHelper
 
         internal void ShowTestCaseContent(TestCase testCase, int testIndex)
         {
-            index = testIndex;
+            IndexOfTheParentTestCase = testIndex;
             if (testCase.GetTestName() != null) { }
                 TestCaseName.Text = testCase.GetTestName();
             if (testCase.GetTestDocumentation() != null)
@@ -120,7 +125,7 @@ namespace RobotAutomationHelper
         private void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
-            implementedKeyword = keywordIndex;
+            IndexOfTheKeywordToBeImplemented = keywordIndex;
             Keyword keyword = Keywords[keywordIndex - 1];
             keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             KeywordAddForm addKeywordForm = new KeywordAddForm(false, Keywords);
@@ -132,39 +137,39 @@ namespace RobotAutomationHelper
         {
             if ((sender.GetType().FullName.Contains("KeywordAddForm")) && !((KeywordAddForm)sender).SkipValue())
             {
-                Controls["DynamicTestStep" + implementedKeyword + "Name"].Text = Keywords[implementedKeyword - 1].GetKeywordName().Trim();
-                Controls["DynamicTestStep" + implementedKeyword + "AddImplementation"].Text = "Edit implementation";
+                Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordName().Trim();
+                Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "AddImplementation"].Text = "Edit implementation";
 
-                List<string> args = StringAndListOperations.ReturnListOfArgs(Keywords[implementedKeyword - 1].GetKeywordArguments());
+                List<string> args = StringAndListOperations.ReturnListOfArgs(Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordArguments());
                 
                 if (args != null && args.Count != 0)
-                    FormControls.AddControl("Button", "DynamicTestStep" + implementedKeyword + "Params",
-                        new System.Drawing.Point(450 - HorizontalScroll.Value, 140 + (implementedKeyword - 1) * 30 - VerticalScroll.Value),
+                    FormControls.AddControl("Button", "DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params",
+                        new System.Drawing.Point(450 - HorizontalScroll.Value, 140 + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
                         new System.Drawing.Size(75, 20),
                         "Params",
                         System.Drawing.Color.Black,
                         new EventHandler(InstantiateParamsAddForm),
                         this);
                 else
-                    if (Controls.Find("DynamicTestStep" + implementedKeyword + "Params", false).Length != 0)
-                    Controls.RemoveByKey("DynamicTestStep" + implementedKeyword + "Params");
+                    if (Controls.Find("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length != 0)
+                    Controls.RemoveByKey("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params");
             }
 
             //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-            FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, implementedKeyword);
+            FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, IndexOfTheKeywordToBeImplemented);
 
             FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
         }
 
         private void SaveChangesToTestCases()
         {
-            if (RobotAutomationHelper.TestCases[index].GetTestSteps() != null && RobotAutomationHelper.TestCases[index].GetTestSteps().Count > 0)
-                for (int counter = 1; counter <= RobotAutomationHelper.TestCases[index].GetTestSteps().Count; counter++)
+            if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
+                for (int counter = 1; counter <= RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count; counter++)
                     Keywords[counter-1].SetKeywordName("\t" + ((TextBox) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
 
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 
-            RobotAutomationHelper.TestCases[index] = new TestCase(TestCaseName.Text.Trim(),
+            RobotAutomationHelper.TestCases[IndexOfTheParentTestCase] = new TestCase(TestCaseName.Text.Trim(),
                 "\t[Documentation]  " + TestCaseDocumentation.Text.Trim(),
                 "\t[Tags]  " + TestCaseTags.Text.Trim(),
                 Keywords,
@@ -196,7 +201,7 @@ namespace RobotAutomationHelper
         {
             if (TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text),
-                RobotAutomationHelper.TestCases[index]))
+                RobotAutomationHelper.TestCases[IndexOfTheParentTestCase]))
                 TestCaseName.ForeColor = Color.Red;
             else
             {

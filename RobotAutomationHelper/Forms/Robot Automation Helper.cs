@@ -11,7 +11,8 @@ namespace RobotAutomationHelper
     {
         internal static List<TestCase> TestCases;
 
-        private int implementedTest = 0;
+        // index of the test case to be implemented
+        private int IndexOfTheTestCaseToBeImplemented = 0;
 
         internal RobotAutomationHelper()
         {
@@ -112,7 +113,7 @@ namespace RobotAutomationHelper
         private void InstantiateAddTestCaseForm(object sender, EventArgs e)
         {
             int testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
-            implementedTest = testIndex;
+            IndexOfTheTestCaseToBeImplemented = testIndex;
             TestCase testCase = TestCases[testIndex - 1];
             testCase.SetTestName(Controls["DynamicTest" + testIndex + "Name"].Text);
             TestCaseAddForm testCaseAddForm = new TestCaseAddForm();
@@ -142,12 +143,12 @@ namespace RobotAutomationHelper
         {
             if (!((TestCaseAddForm) sender).SkipValue())
             {
-                Controls["DynamicTest" + implementedTest + "Name"].Text = TestCases[implementedTest - 1].GetTestName();
-                Controls["DynamicTest" + implementedTest + "AddImplementation"].Text = "Edit implementation";
+                Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[IndexOfTheTestCaseToBeImplemented - 1].GetTestName();
+                Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Edit implementation";
             }
 
             //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-            FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, implementedTest);
+            FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, IndexOfTheTestCaseToBeImplemented);
         }
 
         internal void ShowTestCasePanels()
