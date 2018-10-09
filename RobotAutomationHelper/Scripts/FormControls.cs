@@ -7,7 +7,6 @@ namespace RobotAutomationHelper.Scripts
 {
     internal static class FormControls
     {
-
         internal static List<Keyword> Suggestions = new List<Keyword>();
 
         internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
@@ -52,17 +51,19 @@ namespace RobotAutomationHelper.Scripts
 
         private static Keys keyEvent;
         private static bool checkDouble = false;
+        private static int selectionPointer;
 
         internal static void UpdateAutoCompleteComboBox(object sender, EventArgs e)
         {
+            var comboBox = sender as ComboBox;
+            if (comboBox == null)
+                return;
+            selectionPointer = comboBox.SelectionStart;
             //Console.WriteLine(checkDouble);
             if (!checkDouble)
             {
                 if (keyEvent != Keys.Down && keyEvent != Keys.Up)
                 {
-                    var comboBox = sender as ComboBox;
-                    if (comboBox == null)
-                        return;
                     string txt = comboBox.Text;
 
                     List<string> foundItems = new List<string>();
@@ -98,14 +99,14 @@ namespace RobotAutomationHelper.Scripts
                         //Console.WriteLine(comboBox.Text + " | " + txt + " suggestions");
                         if (!comboBox.Text.Equals(txt))
                             comboBox.Text = txt;
-                        comboBox.SelectionStart = txt.Length;
+                        comboBox.SelectionStart = selectionPointer;
+                        Console.WriteLine("Assigned");
                         checkDouble = false;
                         return;
                     }
                     else
                     {
                         comboBox.DroppedDown = false;
-                        comboBox.SelectionStart = txt.Length;
                         //Console.WriteLine(txt + " | " + comboBox.SelectionStart + " no suggestions");
                     }
                 }
@@ -151,6 +152,18 @@ namespace RobotAutomationHelper.Scripts
                 foreach (Keyword key in Suggestions)
                     combo.Items.Add(key.GetKeywordName());
             }
+        }
+
+        internal static KeywordType GetKeywordType(Keyword keyword)
+        {
+            foreach (Keyword seleniumKeywords in HtmlLibsGetter.Selenium)
+            {
+                if (seleniumKeywords.GetKeywordName().ToLower().Equals(keyword.GetKeywordName().ToLower()))
+                {
+                    return KeywordType.SELENIUM;
+                }
+            }
+            return KeywordType.CUSTOM;
         }
     }
 }

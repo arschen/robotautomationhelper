@@ -89,53 +89,59 @@ namespace RobotAutomationHelper
             if (Keywords != null && Keywords.Count != 0)
                 foreach (Keyword testStep in testCase.GetTestSteps())
                 {
-                    List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
-
-                    FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
-                        new Point(30 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
-                        new Size(280, 20),
-                        testStep.GetKeywordName().Trim(),
-                        Color.Black,
-                        null,
-                        this);
-                    ComboBox temp = (ComboBox)Controls["DynamicTestStep" + testStepsCounter + "Name"];
-                    FormControls.AddSuggestionsToComboBox(temp);
-                    temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
-                    temp.KeyDown += FormControls.AutoCompleteComboBoxKeyPress;
-                    temp.MouseClick += FormControls.ComboBoxMouseClick;
-                    temp.MaxDropDownItems = 15;
-                    temp.IntegralHeight = false;
-
-                    FormControls.AddControl("Label", "DynamicTestStep" + testStepsCounter + "Label",
-                        new Point(10 - HorizontalScroll.Value, 143 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
-                        new Size(20, 20),
-                        testStepsCounter + ".",
-                        Color.Black,
-                        null,
-                        this);
-                    string buttonImplementation = "Add Implementation";
-                    if (testStep.IsImplemented())
-                        buttonImplementation = "Edit Implementation";
-                    FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
-                        new Point(320 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
-                        new Size(120, 20),
-                        buttonImplementation,
-                        Color.Black,
-                        new EventHandler(InstantiateKeywordAddForm),
-                        this);
-                    if (args != null && args.Count != 0)
-                        FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
-                            new Point(450 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
-                            new Size(75, 20),
-                            "Params",
-                            Color.Black,
-                            new EventHandler(InstantiateParamsAddForm),
-                            this);
+                    AddKeywordField(testStep, testStepsCounter);
                     testStepsCounter++;
                 }
 
             StartPosition = FormStartPosition.Manual;
             var dialogResult = ShowDialog();
+        }
+
+        private void AddKeywordField(Keyword testStep, int testStepsCounter)
+        {
+            List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
+
+            FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
+                new Point(30 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                new Size(280, 20),
+                testStep.GetKeywordName().Trim(),
+                Color.Black,
+                null,
+                this);
+            ComboBox temp = (ComboBox)Controls["DynamicTestStep" + testStepsCounter + "Name"];
+            FormControls.AddSuggestionsToComboBox(temp);
+            temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
+            temp.KeyDown += FormControls.AutoCompleteComboBoxKeyPress;
+            temp.MouseClick += FormControls.ComboBoxMouseClick;
+            temp.MaxDropDownItems = 15;
+            temp.IntegralHeight = false;
+            temp.SelectedIndexChanged += ChangeTheKeywordField;
+
+            FormControls.AddControl("Label", "DynamicTestStep" + testStepsCounter + "Label",
+                new Point(10 - HorizontalScroll.Value, 143 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                new Size(20, 20),
+                testStepsCounter + ".",
+                Color.Black,
+                null,
+                this);
+            string buttonImplementation = "Add Implementation";
+            if (testStep.IsImplemented())
+                buttonImplementation = "Edit Implementation";
+            FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
+                new Point(320 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                new Size(120, 20),
+                buttonImplementation,
+                Color.Black,
+                new EventHandler(InstantiateKeywordAddForm),
+                this);
+            if (args != null && args.Count != 0)
+                FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
+                    new Point(450 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                    new Size(75, 20),
+                    "Params",
+                    Color.Black,
+                    new EventHandler(InstantiateParamsAddForm),
+                    this);
         }
 
         private void InstantiateKeywordAddForm(object sender, EventArgs e)
@@ -231,6 +237,15 @@ namespace RobotAutomationHelper
                 }
             }
             return true;
+        }
+
+        // change the field when the keyword name is changed
+        private void ChangeTheKeywordField(object sender, EventArgs e)
+        {
+            int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+            Keywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
+            FormControls.GetKeywordType(Keywords[keywordIndex - 1]);
+            Console.WriteLine(FormControls.GetKeywordType(Keywords[keywordIndex - 1]));
         }
     }
 }

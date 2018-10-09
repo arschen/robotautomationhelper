@@ -67,7 +67,7 @@ namespace RobotAutomationHelper
                 // adds the keywords in the form
                 foreach (Keyword testStep in ThisFormKeywords)
                 {
-                    AddKeywordField(keywordsCounter, testStep.GetKeywordArguments());
+                    AddKeywordField(testStep, keywordsCounter);
                     keywordsCounter++;
                     NumberOfKeywordsInThisKeyword++;
                 }
@@ -77,7 +77,7 @@ namespace RobotAutomationHelper
                 // add a single keyword field if no keywords are available
                 ThisFormKeywords = new List<Keyword>();
                 ThisFormKeywords.Add(new Keyword("New Keyword", ParentKeywords[IndexOfTheParentKeyword].GetOutputFilePath()));
-                AddKeywordField(keywordsCounter, "");
+                AddKeywordField(ThisFormKeywords[0], keywordsCounter);
                 NumberOfKeywordsInThisKeyword++;
             }
 
@@ -241,14 +241,14 @@ namespace RobotAutomationHelper
         }
 
         // Adds TextBox / Label / Add implementation / Add and remove keyword / Params
-        private void AddKeywordField(int keywordsCounter, string arguments)
+        private void AddKeywordField(Keyword keyword, int keywordsCounter)
         {
-            List<string> args = StringAndListOperations.ReturnListOfArgs(arguments);
+            List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
 
             FormControls.AddControl("ComboBox", "DynamicTestStep" + keywordsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
-                ThisFormKeywords[keywordsCounter - 1].GetKeywordName().Trim(),
+                keyword.GetKeywordName().Trim(),
                 Color.Black,
                 null,
                 this);
@@ -259,6 +259,7 @@ namespace RobotAutomationHelper
             temp.MouseClick += FormControls.ComboBoxMouseClick;
             temp.MaxDropDownItems = 15;
             temp.IntegralHeight = false;
+            temp.SelectedIndexChanged += ChangeTheKeywordField;
 
             FormControls.AddControl("Label", "DynamicTestStep" + keywordsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
@@ -381,7 +382,7 @@ namespace RobotAutomationHelper
             ThisFormKeywords[keywordIndex] = new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text));
 
             NumberOfKeywordsInThisKeyword++;
-            AddKeywordField(NumberOfKeywordsInThisKeyword, "");
+            AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisKeyword-1], NumberOfKeywordsInThisKeyword);
 
             for (int i = 1; i < NumberOfKeywordsInThisKeyword; i++)
                 Controls["DynamicTestStep" + i + "Name"].Text = ThisFormKeywords[i - 1].GetKeywordName().Trim();
@@ -456,6 +457,15 @@ namespace RobotAutomationHelper
                 }
             }
             return true;
+        }
+
+        // change the field when the keyword name is changed
+        private void ChangeTheKeywordField(object sender, EventArgs e)
+        {
+            int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+            ThisFormKeywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
+            FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]);
+            Console.WriteLine(FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]));
         }
     }
 }
