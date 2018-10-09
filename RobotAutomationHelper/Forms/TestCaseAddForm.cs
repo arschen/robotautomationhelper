@@ -45,6 +45,14 @@ namespace RobotAutomationHelper
                 SaveChangesToTestCases();
                 Close();
             }
+            else
+            {
+                DialogResult result = MessageBox.Show("Is Dot Net Perls awesome?",
+                "Important Question",
+                MessageBoxButtons.YesNo);
+                //result ends up with Yes / No 
+                //TODO
+            }
         }
 
         private void TestCaseAddForm_FormClosing(object sender, EventArgs e)
