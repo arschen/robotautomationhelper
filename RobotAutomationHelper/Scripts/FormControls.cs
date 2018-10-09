@@ -58,6 +58,7 @@ namespace RobotAutomationHelper.Scripts
             var comboBox = sender as ComboBox;
             if (comboBox == null)
                 return;
+
             selectionPointer = comboBox.SelectionStart;
             //Console.WriteLine(checkDouble);
             if (!checkDouble)
@@ -71,7 +72,7 @@ namespace RobotAutomationHelper.Scripts
                         if (!string.IsNullOrEmpty(txt))
                         {
                             bool containsAll = true;
-                            foreach (string temp in txt.ToLower().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries))
+                            foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 if (!keyword.GetKeywordName().ToLower().Contains(temp))
                                 {
@@ -100,8 +101,8 @@ namespace RobotAutomationHelper.Scripts
                         if (!comboBox.Text.Equals(txt))
                             comboBox.Text = txt;
                         comboBox.SelectionStart = selectionPointer;
-                        Console.WriteLine("Assigned");
                         checkDouble = false;
+                        TestCaseAddForm.ChangeTheKeywordField(sender, e);
                         return;
                     }
                     else
@@ -109,6 +110,7 @@ namespace RobotAutomationHelper.Scripts
                         comboBox.DroppedDown = false;
                         //Console.WriteLine(txt + " | " + comboBox.SelectionStart + " no suggestions");
                     }
+
                 }
             }
             checkDouble = false;
@@ -117,8 +119,16 @@ namespace RobotAutomationHelper.Scripts
         internal static void AutoCompleteComboBoxKeyPress(object sender, KeyEventArgs e)
         {
             var comboBox = sender as ComboBox;
+            string txt = comboBox.Text;
+            selectionPointer = comboBox.SelectionStart;
             //Console.WriteLine(e.KeyCode);
             keyEvent = e.KeyCode;
+            if (keyEvent == Keys.Return)
+            {
+                comboBox.DroppedDown = false;
+                comboBox.Text = txt;
+                comboBox.SelectionStart = selectionPointer;
+            }
             /*if (comboBox != null && comboBox.DroppedDown)
             {
                 switch (e.KeyCode)

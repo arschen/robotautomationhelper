@@ -260,6 +260,7 @@ namespace RobotAutomationHelper
             temp.MaxDropDownItems = 15;
             temp.IntegralHeight = false;
             temp.SelectedIndexChanged += ChangeTheKeywordField;
+            temp.Validated += ChangeTheKeywordField;
 
             FormControls.AddControl("Label", "DynamicTestStep" + keywordsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
@@ -462,10 +463,20 @@ namespace RobotAutomationHelper
         // change the field when the keyword name is changed
         private void ChangeTheKeywordField(object sender, EventArgs e)
         {
-            int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
-            ThisFormKeywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
-            FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]);
-            Console.WriteLine(FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]));
+            if ((sender as ComboBox).SelectedIndex != -1)
+            {
+                int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+                ThisFormKeywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
+                FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]);
+                Console.WriteLine(FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]));
+            }
+            else
+            {
+                int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+                ThisFormKeywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Text);
+                FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]);
+                Console.WriteLine(FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]));
+            }
         }
     }
 }

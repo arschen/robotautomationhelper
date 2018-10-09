@@ -116,6 +116,7 @@ namespace RobotAutomationHelper
             temp.MaxDropDownItems = 15;
             temp.IntegralHeight = false;
             temp.SelectedIndexChanged += ChangeTheKeywordField;
+            temp.Validated += ChangeTheKeywordField;
 
             FormControls.AddControl("Label", "DynamicTestStep" + testStepsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, 143 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
@@ -240,12 +241,22 @@ namespace RobotAutomationHelper
         }
 
         // change the field when the keyword name is changed
-        private void ChangeTheKeywordField(object sender, EventArgs e)
+        internal static void ChangeTheKeywordField(object sender, EventArgs e)
         {
-            int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
-            Keywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
-            FormControls.GetKeywordType(Keywords[keywordIndex - 1]);
-            Console.WriteLine(FormControls.GetKeywordType(Keywords[keywordIndex - 1]));
+            if ((sender as ComboBox).SelectedIndex != -1)
+            {
+                int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+                Keywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
+                FormControls.GetKeywordType(Keywords[keywordIndex - 1]);
+                Console.WriteLine(FormControls.GetKeywordType(Keywords[keywordIndex - 1]));
+            }
+            else
+            {
+                int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+                Keywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Text);
+                FormControls.GetKeywordType(Keywords[keywordIndex - 1]);
+                Console.WriteLine(FormControls.GetKeywordType(Keywords[keywordIndex - 1]));
+            }
         }
     }
 }
