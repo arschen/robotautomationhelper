@@ -1,16 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts
 {
     internal static class FormControls
     {
-        internal static void AddControl(string type, string name, System.Drawing.Point location, System.Drawing.Size size, string text, System.Drawing.Color color, EventHandler eventHandler, Control owner)
+
+        internal static List<Keyword> Suggestions = new List<Keyword>();
+
+        internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
             Control tempControl;
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
+                case "combobox": tempControl = new ComboBox(); break;
                 case "checkbox": tempControl = new CheckBox(); ((CheckBox)tempControl).Checked = true; break;
                 case "button": tempControl = new Button(); tempControl.Click += eventHandler; break;
                 default: tempControl = new Label(); break;
@@ -27,6 +33,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": owner.Controls.Add((TextBox)tempControl); break;
+                case "combobox": owner.Controls.Add((ComboBox)tempControl); break;
                 case "checkbox": owner.Controls.Add((CheckBox)tempControl); break;
                 case "button": owner.Controls.Add((Button)tempControl); break;
                 default: owner.Controls.Add((Label)tempControl); break;
@@ -41,6 +48,109 @@ namespace RobotAutomationHelper.Scripts
             comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+        }
+
+        private static Keys keyEvent;
+        private static bool checkDouble = false;
+
+        internal static void UpdateAutoCompleteComboBox(object sender, EventArgs e)
+        {
+            //Console.WriteLine(checkDouble);
+            if (!checkDouble)
+            {
+                if (keyEvent != Keys.Down && keyEvent != Keys.Up)
+                {
+                    var comboBox = sender as ComboBox;
+                    if (comboBox == null)
+                        return;
+                    string txt = comboBox.Text;
+
+                    List<string> foundItems = new List<string>();
+                    foreach (Keyword keyword in Suggestions)
+                        if (!string.IsNullOrEmpty(txt))
+                        {
+                            bool containsAll = true;
+                            foreach (string temp in txt.ToLower().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                if (!keyword.GetKeywordName().ToLower().Contains(temp))
+                                {
+                                    containsAll = false;
+                                    break;
+                                }
+                            }
+                            if (containsAll)
+                            {
+                                //Console.WriteLine(keyword.GetKeywordName().ToLower() + " | ");
+                                //foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                                //    Console.Write(temp + " + ");
+                                foundItems.Add(keyword.GetKeywordName());
+                            }
+                        }
+
+                    if (foundItems.Count > 0 && !foundItems.ToArray().Equals(comboBox.Items))
+                    {
+                        checkDouble = true;
+                        comboBox.Items.Clear();
+                        comboBox.Items.AddRange(foundItems.ToArray());
+                        comboBox.DropDownStyle = ComboBoxStyle.DropDown;
+                        comboBox.DroppedDown = true;
+                        Cursor.Current = Cursors.Default;
+                        //Console.WriteLine(comboBox.Text + " | " + txt + " suggestions");
+                        if (!comboBox.Text.Equals(txt))
+                            comboBox.Text = txt;
+                        comboBox.SelectionStart = txt.Length;
+                        checkDouble = false;
+                        return;
+                    }
+                    else
+                    {
+                        comboBox.DroppedDown = false;
+                        comboBox.SelectionStart = txt.Length;
+                        //Console.WriteLine(txt + " | " + comboBox.SelectionStart + " no suggestions");
+                    }
+                }
+            }
+            checkDouble = false;
+        }
+
+        internal static void AutoCompleteComboBoxKeyPress(object sender, KeyEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            //Console.WriteLine(e.KeyCode);
+            keyEvent = e.KeyCode;
+            /*if (comboBox != null && comboBox.DroppedDown)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Back:
+                        int sStart = comboBox.SelectionStart;
+                        if (sStart > 0)
+                        {
+                            sStart--;
+                            comboBox.Text = sStart == 0 ? "" : comboBox.Text.Substring(0, sStart);
+                        }
+                        e.SuppressKeyPress = true;
+                        break;
+                }
+
+            }*/
+        }
+
+        internal static void AddSuggestionsToComboBox(ComboBox comboBox)
+        {
+            foreach (Keyword key in Suggestions)
+                comboBox.Items.Add(key.GetKeywordName());
+        }
+
+        internal static void ComboBoxMouseClick(object sender, MouseEventArgs e)
+        {
+            var combo = sender as ComboBox;
+            if (combo.Items.Count != Suggestions.Count)
+            {
+                combo.Items.Clear();
+                foreach (Keyword key in Suggestions)
+                    combo.Items.Add(key.GetKeywordName());
+            }
         }
     }
 }

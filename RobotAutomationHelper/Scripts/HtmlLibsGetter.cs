@@ -1,74 +1,100 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
+using System.Reflection;
 
 namespace RobotAutomationHelper.Scripts
 {
     internal static class HtmlLibsGetter
     {
 
-        internal static void GetSeleniumLib()
+        internal static List<Keyword> Selenium;
+        internal static string currentKeywordDocumentation;
+        internal static string currentKeywordName;
+        internal static List<Param> currentKeywordParams;
+
+        internal static void PopulateSeleniumKeywords()
         {
-            string page = DownloadAsString("http://robotframework.org/SeleniumLibrary/SeleniumLibrary.html");
-
-            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-            doc.LoadHtml(page);
-
-            string temp = doc.Text;
-
-            List<List<string>> table = doc.DocumentNode.SelectSingleNode("//div[@id='keywords-container']//table[@class='keywords']")
-                        .Descendants("tr")
-                        .Skip(1)
-                        .Where(tr => tr.Elements("td").Count() > 1)
-                        .Select(tr => tr.Elements("td").Select(td => td.InnerText.Trim()).ToList())
-                        .ToList();
-
-            int a = 1;
+            Selenium = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"RobotKeywords\Selenium.xlsx")
+                , KeywordType.SELENIUM);
+            FormControls.Suggestions.AddRange(Selenium);
         }
 
-        internal static string DownloadAsString(string url)
+        private static List<Keyword> ReadAllKeywordsFromExcel(string Filename, KeywordType type)
         {
-            string pageSource = String.Empty;
-            var req = (HttpWebRequest)WebRequest.Create(url);
-            req.Method = "GET";
-            req.UserAgent = "MyCrawler/1.0";
-            req.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-            var resp = (HttpWebResponse)req.GetResponse();
+            List<Keyword> listKeys = new List<Keyword>();
+            currentKeywordParams = new List<Param>();
+            currentKeywordDocumentation = "";
+            currentKeywordName = "";
 
-            // is this even html and not an image, or video       
-            if (resp.ContentType.Contains("text/html"))
+            var package = new ExcelPackage(new FileInfo(Filename));
+            ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+
+            for (int i = workSheet.Dimension.Start.Row;
+                                    i <= workSheet.Dimension.End.Row;
+                                    i++)
             {
-                var sb = new StringBuilder();
-                var buffer = new char[8192];
-                // get the stream
-                using (var stream = resp.GetResponseStream())
-                using (var sr = new StreamReader(stream, Encoding.UTF8))
+                if (i>1)
+                for (int j = workSheet.Dimension.Start.Column;
+                            j <= workSheet.Dimension.End.Column;
+                            j++)
                 {
-                    // start copying in blocks of 8K
-                    var read = sr.ReadBlock(buffer, 0, buffer.Length);
-                    while (read > 0)
+                    if (workSheet.Cells[i, j].Value != null)
                     {
-                        sb.Append(buffer);
-                        if (!sb.ToString().Contains("<div id=\"keywords - container\"><h2 id=\"Keywords\">Keywords</h2>"))
-                            sb.Clear();
-                        if (sb.ToString().Contains("< div id = \"footer-container\" >< p class=\"footer\">"))
-                            break;
-                        // max allowed chars per source
-                        if (sb.Length > 50000)
+                        string cellValue = workSheet.Cells[i, j].Value.ToString().Trim();
+                        //key column equals test name in robot
+                        if (j == 1 && !cellValue.Equals(""))
                         {
-                            sb.Append(" ... source truncated due to size");
-                            // stop early 
-                            break;
+                            if (!currentKeywordName.Equals(""))
+                            {
+                                //Setup test creation for previous Test case
+                                AddKeywordAndResetValues(listKeys, type);
+                                if (!currentKeywordName.Equals(cellValue))
+                                    currentKeywordName = cellValue;
+                                else
+                                    currentKeywordName = "";
+                            }
+                            else
+                            {
+                                currentKeywordName = cellValue;
+                            }
                         }
-                        read = sr.ReadBlock(buffer, 0, buffer.Length);
+                        //summary column equals documentation in robot
+                        else if (j == 2 && !cellValue.Equals(""))
+                        {
+                            string[] paramString = cellValue.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (string occurrence in paramString)
+                            {
+                                if (occurrence.Contains("="))
+                                    currentKeywordParams.Add(new Param(occurrence.Trim().Split('=')[0], occurrence.Trim().Split('=')[1]));
+                                else
+                                    currentKeywordParams.Add(new Param(occurrence.Trim(), ""));
+                            }
+                        }
+                        //summary column equals documentation in robot
+                        else if (j == 3 && !cellValue.Equals(""))
+                        {
+                            currentKeywordDocumentation = cellValue;
+                        }
                     }
-                    pageSource = sb.ToString();
                 }
             }
-            return pageSource;
+
+            if (!currentKeywordName.Equals(""))
+            {
+                AddKeywordAndResetValues(listKeys, type);
+            }
+
+            return listKeys;
+        }
+
+        private static void AddKeywordAndResetValues(List<Keyword> keywordsList, KeywordType type)
+        {
+            keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type));
+            currentKeywordDocumentation = "";
+            currentKeywordName = "";
+            currentKeywordParams = new List<Param>();
         }
     }
 }

@@ -245,13 +245,21 @@ namespace RobotAutomationHelper
         {
             List<string> args = StringAndListOperations.ReturnListOfArgs(arguments);
 
-            FormControls.AddControl("TextBox", "DynamicTestStep" + keywordsCounter + "Name",
+            FormControls.AddControl("ComboBox", "DynamicTestStep" + keywordsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
                 ThisFormKeywords[keywordsCounter - 1].GetKeywordName().Trim(),
                 Color.Black,
                 null,
                 this);
+            ComboBox temp = (ComboBox)Controls["DynamicTestStep" + keywordsCounter + "Name"];
+            FormControls.AddSuggestionsToComboBox(temp);
+            temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
+            temp.KeyDown += FormControls.AutoCompleteComboBoxKeyPress;
+            temp.MouseClick += FormControls.ComboBoxMouseClick;
+            temp.MaxDropDownItems = 15;
+            temp.IntegralHeight = false;
+
             FormControls.AddControl("Label", "DynamicTestStep" + keywordsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(20, 20),
