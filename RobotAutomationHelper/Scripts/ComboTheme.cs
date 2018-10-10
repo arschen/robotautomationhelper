@@ -26,7 +26,7 @@ namespace RobotAutomationHelper.Scripts
             if (e.Index >= 0)
             {
                 ComboTheme box = ((ComboTheme)sender);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && box.DroppedDown)
                 {
                     e.Graphics.FillRectangle(new SolidBrush(HighlightColor), e.Bounds);
                 }
@@ -37,7 +37,7 @@ namespace RobotAutomationHelper.Scripts
                      new Point(e.Bounds.X, e.Bounds.Y));
                 e.DrawFocusRectangle();
 
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && box.DroppedDown)
                     this.toolTip.Show(((ComboBoxObject)box.Items[e.Index]).Documentation, box, e.Bounds.Right, e.Bounds.Bottom);
                 else
                     this.toolTip.Hide(box);

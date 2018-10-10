@@ -54,6 +54,8 @@ namespace RobotAutomationHelper.Scripts
             comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
         }
 
+        internal static string textBeforeDroppedDown = "";
+
         internal static void UpdateAutoCompleteComboBox(object sender, EventArgs e)
         {
             var comboTheme = sender as ComboTheme;
@@ -90,17 +92,21 @@ namespace RobotAutomationHelper.Scripts
                             }
                         }
 
-                    if (foundItems.Count > 0 && !foundItems.ToArray().Equals(comboTheme.Items))
+                    if (foundItems.Count > 0)
                     {
                         checkDouble = true;
                         comboTheme.Items.Clear();
                         comboTheme.Items.AddRange(foundItems.ToArray());
-                        comboTheme.DropDownStyle = ComboBoxStyle.DropDown;
                         comboTheme.DroppedDown = true;
+                        Console.WriteLine(comboTheme.SelectedIndex + " after /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
                         Cursor.Current = Cursors.Default;
                         //Console.WriteLine(comboBox.Text + " | " + txt + " suggestions");
                         if (!comboTheme.Text.Equals(txt))
+                        {
+                            Console.WriteLine("done");
                             comboTheme.Text = txt;
+                        }
+                        Console.WriteLine("Second pass - /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
                         comboTheme.SelectionStart = selectionPointer;
                         checkDouble = false;
                         return;
@@ -139,23 +145,31 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        internal static KeywordType GetKeywordType(Keyword keyword)
+        internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)
         {
-            foreach (Keyword seleniumKeywords in HtmlLibsGetter.Selenium)
+            bool isFound = false;
+            foreach (Keyword seleniumKeyword in Suggestions)
             {
-                if (seleniumKeywords.GetKeywordName().ToLower().Equals(keyword.GetKeywordName().ToLower()))
+                if (seleniumKeyword.GetKeywordName().ToLower().Equals(name.ToLower()))
                 {
-                    return KeywordType.SELENIUM;
+                    keyword.CopyKeyword(seleniumKeyword);
+                    isFound = true;
+                    break;
                 }
             }
-            foreach (Keyword BuiltIn_Keywords in HtmlLibsGetter.BuiltIn)
-            {
-                if (BuiltIn_Keywords.GetKeywordName().ToLower().Equals(keyword.GetKeywordName().ToLower()))
+            if (!isFound)
+                foreach (Keyword BuiltIn_Keyword in Suggestions)
                 {
-                    return KeywordType.BUILT_IN;
+                    if (BuiltIn_Keyword.GetKeywordName().ToLower().Equals(name.ToLower()))
+                    {
+                        isFound = true;
+                        break;
+                    }
                 }
+            if (!isFound)
+            {
+                keyword.Type = KeywordType.CUSTOM;
             }
-            return KeywordType.CUSTOM;
         }
     }
 }

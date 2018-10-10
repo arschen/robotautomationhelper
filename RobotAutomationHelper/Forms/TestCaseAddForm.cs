@@ -11,7 +11,6 @@ namespace RobotAutomationHelper
     {
         // index of the implemented test case
         private int IndexOfTheParentTestCase;
-
         private bool skip = false;
 
         //index of the keyword that will be implemented after Add/Edit implementation
@@ -20,9 +19,13 @@ namespace RobotAutomationHelper
         //current keywords in this test case
         internal static List<Keyword> Keywords;
 
+        //y value for dynamic buttons
+        internal int initialYValue;
+
         internal TestCaseAddForm()
         {
             InitializeComponent();
+            initialYValue = 140;
             FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
             ActiveControl = TestCaseNameLabel;
         }
@@ -102,7 +105,7 @@ namespace RobotAutomationHelper
             List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
             
             FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
-                new Point(30 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                new Point(30 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
                 testStep.GetKeywordName().Trim(),
                 Color.Black,
@@ -111,20 +114,22 @@ namespace RobotAutomationHelper
             ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + testStepsCounter + "Name"];
             FormControls.AddSuggestionsToComboBox(temp);
             temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
-            temp.ValueMember = "ValueMember";
-            temp.DisplayMember = "Text";
+            temp.DisplayMember = "ValueMember";
             //on key press
-            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, Keywords);
+            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, this, false, Keywords);
             //clicking the drop down control button
+            temp.DropDownStyle = ComboBoxStyle.DropDown;
             temp.MouseClick += FormControls.ComboBoxMouseClick;
             temp.MaxDropDownItems = 15;
             temp.IntegralHeight = false;
             //update the keyword field
-            temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, Keywords);
-            temp.LostFocus += (sender2, e2) =>  BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, Keywords);
+            temp.AutoCompleteMode = AutoCompleteMode.None;
+            temp.AutoCompleteSource = AutoCompleteSource.None;
+            temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, false, Keywords);
+            temp.LostFocus += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, false, Keywords);
 
             FormControls.AddControl("Label", "DynamicTestStep" + testStepsCounter + "Label",
-                new Point(10 - HorizontalScroll.Value, 143 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(20, 20),
                 testStepsCounter + ".",
                 Color.Black,
@@ -134,7 +139,7 @@ namespace RobotAutomationHelper
             if (testStep.IsImplemented())
                 buttonImplementation = "Edit Implementation";
             FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
-                new Point(320 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                new Point(320 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(120, 20),
                 buttonImplementation,
                 Color.Black,
@@ -142,7 +147,7 @@ namespace RobotAutomationHelper
                 this);
             if (args != null && args.Count != 0)
                 FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
-                    new Point(450 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                    new Point(450 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                     new Size(75, 20),
                     "Params",
                     Color.Black,
@@ -150,7 +155,7 @@ namespace RobotAutomationHelper
                     this);
         }
 
-        private void InstantiateKeywordAddForm(object sender, EventArgs e)
+        internal void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
             IndexOfTheKeywordToBeImplemented = keywordIndex;
@@ -172,7 +177,7 @@ namespace RobotAutomationHelper
                 
                 if (args != null && args.Count != 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params",
-                        new Point(450 - HorizontalScroll.Value, 140 + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
+                        new Point(450 - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
                         new Size(75, 20),
                         "Params",
                         Color.Black,

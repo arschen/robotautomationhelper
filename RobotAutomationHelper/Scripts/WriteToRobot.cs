@@ -39,7 +39,7 @@ namespace RobotAutomationHelper.Scripts
             string fileName = keyword.GetOutputFilePath();
             int index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
 
-            if (keyword.GetKeywordType() == KeywordType.CUSTOM)
+            if (keyword.Type == KeywordType.CUSTOM)
             {
                 Includes candidate = new Includes(fileName);
                 if (!includes.Contains(candidate))
@@ -69,7 +69,7 @@ namespace RobotAutomationHelper.Scripts
             if (keywordKeywords != null)
                 foreach (Keyword keywordKeyword in keywordKeywords)
                 {
-                    if (keywordKeyword.IsSaved() && keywordKeyword.GetKeywordType() == KeywordType.CUSTOM
+                    if (keywordKeyword.IsSaved() && keywordKeyword.Type == KeywordType.CUSTOM
                          && RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keywordKeyword.GetKeywordName().Trim(), "keyword") != -1)
                         includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
 

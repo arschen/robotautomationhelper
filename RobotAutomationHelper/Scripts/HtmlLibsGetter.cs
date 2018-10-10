@@ -9,8 +9,8 @@ namespace RobotAutomationHelper.Scripts
     internal static class HtmlLibsGetter
     {
 
-        internal static List<Keyword> Selenium;
-        internal static List<Keyword> BuiltIn;
+        internal static List<Keyword> Selenium = new List<Keyword>();
+        internal static List<Keyword> BuiltIn = new List<Keyword>();
         internal static string currentKeywordDocumentation;
         internal static string currentKeywordName;
         internal static List<Param> currentKeywordParams;
@@ -20,7 +20,10 @@ namespace RobotAutomationHelper.Scripts
             Selenium = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
                 @"RobotKeywords\Selenium.xlsx")
                 , KeywordType.SELENIUM);
-            FormControls.Suggestions.AddRange(Selenium);
+            foreach (Keyword key in Selenium)
+                FormControls.Suggestions.Add(new Keyword(key.GetKeywordName(), key.GetKeywordDocumentation(),
+                    key.GetKeywordKeywords(), key.GetKeywordArguments(), key.GetKeywordParams(),
+                    key.GetOutputFilePath(), key.IsSaved(), key.Type));
         }
 
         internal static void PopulateBuiltInKeywords()
@@ -28,7 +31,10 @@ namespace RobotAutomationHelper.Scripts
             BuiltIn = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 @"RobotKeywords\Built_in.xlsx")
                 , KeywordType.BUILT_IN);
-            FormControls.Suggestions.AddRange(BuiltIn);
+            foreach (Keyword key in BuiltIn)
+                FormControls.Suggestions.Add(new Keyword(key.GetKeywordName(), key.GetKeywordDocumentation(),
+                    key.GetKeywordKeywords(), key.GetKeywordArguments(), key.GetKeywordParams(),
+                    key.GetOutputFilePath(), key.IsSaved(), key.Type));
         }
 
         private static List<Keyword> ReadAllKeywordsFromExcel(string Filename, KeywordType type)

@@ -15,10 +15,10 @@ namespace RobotAutomationHelper
         private int IndexOfTheParentKeyword;
         private List<Keyword> ParentKeywords;
 
-        private int NumberOfKeywordsInThisKeyword;
+        internal int NumberOfKeywordsInThisKeyword { get; set; }
 
         //keywords in this form
-        private List<Keyword> ThisFormKeywords;
+        internal List<Keyword> ThisFormKeywords;
         private List<Param> ThisKeywordParams = new List<Param>();
 
         //index of the keyword to be implemented after Add/Edit Implementation
@@ -26,7 +26,7 @@ namespace RobotAutomationHelper
         private bool nestedKeyword = false;
 
         //y value for dynamic buttons
-        private int initialYValue;
+        internal int initialYValue;
 
         internal KeywordAddForm(bool nested, List<Keyword> parentKeywords)
         {
@@ -86,7 +86,7 @@ namespace RobotAutomationHelper
             var dialogResult = ShowDialog();
         }
 
-        private void InstantiateKeywordAddForm(object sender, EventArgs e)
+        internal void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
             // get the keyword that will be implemented
             Keyword keyword = AddCurrentKeywordsToKeywordsList(sender, e);
@@ -228,7 +228,7 @@ namespace RobotAutomationHelper
         }
 
         // Removes TextBox / Label / Add implementation / Add and remove keyword / Params
-        private void RemoveKeywordField(int keywordIndex, bool removeFromList)
+        internal void RemoveKeywordField(int keywordIndex, bool removeFromList)
         {
             Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "Name");
             Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "Label");
@@ -255,17 +255,19 @@ namespace RobotAutomationHelper
             ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + keywordsCounter + "Name"];
             FormControls.AddSuggestionsToComboBox(temp);
             temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
-            temp.ValueMember = "ValueMember";
-            temp.DisplayMember = "Text";
+            temp.DisplayMember = "ValueMember";
             //on key press
-            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, ThisFormKeywords);
+            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, this, true, ThisFormKeywords);
             //clicking the drop down control button
+            temp.DropDownStyle = ComboBoxStyle.DropDown;
             temp.MouseClick += FormControls.ComboBoxMouseClick;
             temp.MaxDropDownItems = 15;
             temp.IntegralHeight = false;
             //update the keyword field
-            temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, ThisFormKeywords);
-            temp.LostFocus += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, ThisFormKeywords);
+            temp.AutoCompleteMode = AutoCompleteMode.None;
+            temp.AutoCompleteSource = AutoCompleteSource.None;
+            temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, true, ThisFormKeywords);
+            temp.LostFocus += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, true, ThisFormKeywords);
 
             FormControls.AddControl("Label", "DynamicTestStep" + keywordsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
@@ -306,6 +308,33 @@ namespace RobotAutomationHelper
                     Color.Black,
                     new EventHandler(InstantiateParamsAddForm),
                     this);
+        }
+
+        internal void RemoveKeywordFromThisKeyword(object sender, EventArgs e)
+        {
+            if (NumberOfKeywordsInThisKeyword > 1)
+            {
+                int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicTestStep", "").Replace("RemoveKeyword", ""));
+                RemoveKeywordField(NumberOfKeywordsInThisKeyword, false);
+                ThisFormKeywords.RemoveAt(keywordIndex - 1);
+                NumberOfKeywordsInThisKeyword--;
+                List<string> args = new List<string>();
+                for (int i = 1; i <= NumberOfKeywordsInThisKeyword; i++)
+                {
+                    args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[i - 1].GetKeywordArguments());
+                    if (Controls.Find("DynamicTestStep" + i + "Params", false).Length != 0)
+                        Controls.RemoveByKey("DynamicTestStep" + i + "Params");
+                    if (args != null && args.Count != 0)
+                        FormControls.AddControl("Button", "DynamicTestStep" + i + "Params",
+                            new Point(500 - HorizontalScroll.Value, initialYValue + (i - 1) * 30 - VerticalScroll.Value),
+                            new Size(75, 20),
+                            "Params",
+                            Color.Black,
+                            new EventHandler(InstantiateParamsAddForm),
+                            this);
+                    Controls["DynamicTestStep" + i + "Name"].Text = ThisFormKeywords[i - 1].GetKeywordName().Trim();
+                }
+            }
         }
 
         // adding argument to the KeywordArguments.Text
@@ -398,34 +427,7 @@ namespace RobotAutomationHelper
             
         }
 
-        private void RemoveKeywordFromThisKeyword(object sender, EventArgs e)
-        {
-            if (NumberOfKeywordsInThisKeyword > 1)
-            {
-                int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicTestStep", "").Replace("RemoveKeyword", ""));
-                RemoveKeywordField(NumberOfKeywordsInThisKeyword, false);
-                ThisFormKeywords.RemoveAt(keywordIndex - 1);
-                NumberOfKeywordsInThisKeyword--;
-                List<string> args = new List<string>();
-                for (int i = 1; i <= NumberOfKeywordsInThisKeyword; i++)
-                {
-                    args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[i-1].GetKeywordArguments());
-                    if (Controls.Find("DynamicTestStep" + i + "Params", false).Length != 0)
-                        Controls.RemoveByKey("DynamicTestStep" + i + "Params");
-                    if (args != null && args.Count != 0)
-                        FormControls.AddControl("Button", "DynamicTestStep" + i + "Params",
-                            new Point(500 - HorizontalScroll.Value, initialYValue + (i - 1) * 30 - VerticalScroll.Value),
-                            new Size(75, 20),
-                            "Params",
-                            Color.Black,
-                            new EventHandler(InstantiateParamsAddForm),
-                            this);
-                    Controls["DynamicTestStep" + i + "Name"].Text = ThisFormKeywords[i - 1].GetKeywordName().Trim();
-                }
-            }
-        }
-
-        private void InstantiateParamsAddForm(object sender, EventArgs e)
+        internal void InstantiateParamsAddForm(object sender, EventArgs e)
         {
             AddCurrentKeywordsToKeywordsList(sender, e);
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));

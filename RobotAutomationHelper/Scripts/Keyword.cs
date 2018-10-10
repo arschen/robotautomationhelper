@@ -4,15 +4,15 @@ namespace RobotAutomationHelper
 {
     internal class Keyword
     {
-        private readonly List<Keyword> Keywords;
-        private readonly string Arguments;
+        private List<Keyword> Keywords;
+        private string Arguments;
         private List<Param> Params;
         private string Name;
-        private readonly string Documentation;
-        private readonly string OutputFilePath;
-        private readonly bool Implemented = false;
-        private readonly bool Saved = false;
-        private readonly KeywordType Type;
+        private string Documentation;
+        private string OutputFilePath;
+        private bool Implemented = false;
+        private bool Saved = false;
+        internal KeywordType Type { get; set; }
 
         internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type)
         {
@@ -25,6 +25,19 @@ namespace RobotAutomationHelper
             Implemented = true;
             this.Saved = Saved;
             this.Type = Type;
+        }
+
+        internal void CopyKeyword(Keyword keyword)
+        {
+            this.Name = keyword.Name;
+            this.Documentation = keyword.Documentation;
+            this.Keywords = keyword.Keywords;
+            this.Arguments = keyword.Arguments;
+            this.Params = keyword.Params;
+            this.OutputFilePath = keyword.OutputFilePath;
+            Implemented = true;
+            this.Saved = keyword.Saved;
+            this.Type = keyword.Type;
         }
 
         internal Keyword(string Name, string OutputFilePath)
@@ -90,11 +103,6 @@ namespace RobotAutomationHelper
         internal bool IsImplemented()
         {
             return Implemented;
-        }
-
-        internal KeywordType GetKeywordType()
-        {
-            return Type;
         }
 
         public override string ToString()
