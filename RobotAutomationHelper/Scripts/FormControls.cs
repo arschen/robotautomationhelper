@@ -8,7 +8,7 @@ namespace RobotAutomationHelper.Scripts
     internal static class FormControls
     {
         internal static List<Keyword> Suggestions = new List<Keyword>();
-        internal static Keys keyEvent;
+        
         internal static int selectionPointer;
 
         // checks if text update/change is triggered inside UpdateAutoCompleteComboBox recursively
@@ -66,7 +66,7 @@ namespace RobotAutomationHelper.Scripts
             //Console.WriteLine(checkDouble);
             if (!checkDouble)
             {
-                if (keyEvent != Keys.Down && keyEvent != Keys.Up)
+                if (BaseKeywordAddForm.keyEvent != Keys.Down && BaseKeywordAddForm.keyEvent != Keys.Up)
                 {
                     string txt = comboTheme.Text;
 
@@ -77,6 +77,7 @@ namespace RobotAutomationHelper.Scripts
                             bool containsAll = true;
                             foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                             {
+                                //Console.WriteLine(keyword.ToString());
                                 if (!keyword.GetKeywordName().ToLower().Contains(temp))
                                 {
                                     containsAll = false;
@@ -89,6 +90,7 @@ namespace RobotAutomationHelper.Scripts
                                 //foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                                 //    Console.Write(temp + " + ");
                                 foundItems.Add(new ComboBoxObject{Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation()});
+                                //Console.WriteLine("Success: " + keyword.ToString());
                             }
                         }
 
@@ -98,15 +100,18 @@ namespace RobotAutomationHelper.Scripts
                         comboTheme.Items.Clear();
                         comboTheme.Items.AddRange(foundItems.ToArray());
                         comboTheme.DroppedDown = true;
-                        Console.WriteLine(comboTheme.SelectedIndex + " after /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
+                        //Console.WriteLine(comboTheme.SelectedIndex + " after /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
                         Cursor.Current = Cursors.Default;
                         //Console.WriteLine(comboBox.Text + " | " + txt + " suggestions");
                         if (!comboTheme.Text.Equals(txt))
                         {
-                            Console.WriteLine("done");
-                            comboTheme.Text = txt;
+                            //Console.WriteLine("done " + BaseKeywordAddForm.prevEnterKey);
+                            if (!BaseKeywordAddForm.prevEnterKey)
+                                comboTheme.Text = txt;
+                            else
+                                BaseKeywordAddForm.prevEnterKey = true;
                         }
-                        Console.WriteLine("Second pass - /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
+                        //Console.WriteLine("Second pass - /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
                         comboTheme.SelectionStart = selectionPointer;
                         checkDouble = false;
                         return;

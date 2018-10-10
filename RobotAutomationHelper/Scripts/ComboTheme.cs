@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts
@@ -25,8 +26,9 @@ namespace RobotAutomationHelper.Scripts
         {
             if (e.Index >= 0)
             {
+                Console.WriteLine(e.Index);
                 ComboTheme box = ((ComboTheme)sender);
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && box.DroppedDown)
+                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
                 {
                     e.Graphics.FillRectangle(new SolidBrush(HighlightColor), e.Bounds);
                 }

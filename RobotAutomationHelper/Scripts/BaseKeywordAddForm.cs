@@ -8,10 +8,13 @@ namespace RobotAutomationHelper.Scripts
     internal static class BaseKeywordAddForm
     {
 
+        internal static Keys keyEvent;
+        internal static bool prevEnterKey = false;
+
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterSelection(object sender, EventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
         {
-            FormControls.keyEvent = Keys.None;
+            keyEvent = Keys.None;
             if ((sender as ComboTheme).SelectedIndex != -1)
             {
                 ComboTheme combo = sender as ComboTheme;
@@ -42,14 +45,20 @@ namespace RobotAutomationHelper.Scripts
         internal static void AutoCompleteComboBoxKeyPress(object sender, KeyEventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
         {
             var comboTheme = sender as ComboTheme;
-            if (FormControls.keyEvent != Keys.Return)
+            if (keyEvent != Keys.Return)
+            {
                 FormControls.textBeforeDroppedDown = comboTheme.Text;
-            FormControls.keyEvent = e.KeyCode;
-            Console.WriteLine("key down " + e.KeyCode + "\\" + FormControls.textBeforeDroppedDown);
+                prevEnterKey = false;
+            }
+            else
+                if (e.KeyCode != Keys.Return)
+                    prevEnterKey = true;
+            keyEvent = e.KeyCode;
+            //Console.WriteLine("key down " + e.KeyCode + "\\" + FormControls.textBeforeDroppedDown);
             FormControls.selectionPointer = comboTheme.SelectionStart;
             //Console.WriteLine(e.KeyCode);
 
-            if (FormControls.keyEvent == Keys.Return && comboTheme.SelectedIndex == -1)
+            if (keyEvent == Keys.Return && comboTheme.SelectedIndex == -1)
             {
                 comboTheme.DroppedDown = false;
                 comboTheme.Text = FormControls.textBeforeDroppedDown;

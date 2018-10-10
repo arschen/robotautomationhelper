@@ -120,8 +120,8 @@ namespace RobotAutomationHelper
             //clicking the drop down control button
             temp.DropDownStyle = ComboBoxStyle.DropDown;
             temp.MouseClick += FormControls.ComboBoxMouseClick;
+            temp.IntegralHeight = true;
             temp.MaxDropDownItems = 15;
-            temp.IntegralHeight = false;
             //update the keyword field
             temp.AutoCompleteMode = AutoCompleteMode.None;
             temp.AutoCompleteSource = AutoCompleteSource.None;
