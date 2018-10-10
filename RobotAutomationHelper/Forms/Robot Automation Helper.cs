@@ -19,6 +19,7 @@ namespace RobotAutomationHelper
             InitializeComponent();
             ActiveControl = TestCaseNameLabel;
             HtmlLibsGetter.PopulateSeleniumKeywords();
+            HtmlLibsGetter.PopulateBuiltInKeywords();
         }
 
         // open file click

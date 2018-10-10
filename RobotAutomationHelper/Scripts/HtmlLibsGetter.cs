@@ -10,15 +10,25 @@ namespace RobotAutomationHelper.Scripts
     {
 
         internal static List<Keyword> Selenium;
+        internal static List<Keyword> BuiltIn;
         internal static string currentKeywordDocumentation;
         internal static string currentKeywordName;
         internal static List<Param> currentKeywordParams;
 
         internal static void PopulateSeleniumKeywords()
         {
-            Selenium = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"RobotKeywords\Selenium.xlsx")
+            Selenium = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
+                @"RobotKeywords\Selenium.xlsx")
                 , KeywordType.SELENIUM);
             FormControls.Suggestions.AddRange(Selenium);
+        }
+
+        internal static void PopulateBuiltInKeywords()
+        {
+            BuiltIn = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                @"RobotKeywords\Built_in.xlsx")
+                , KeywordType.BUILT_IN);
+            FormControls.Suggestions.AddRange(BuiltIn);
         }
 
         private static List<Keyword> ReadAllKeywordsFromExcel(string Filename, KeywordType type)

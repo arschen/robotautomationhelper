@@ -66,6 +66,12 @@
       <DependentUpon>ParamAddForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Scripts\BaseKeywordAddForm.cs" />
+    <Compile Include="Scripts\ComboBoxObject.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scripts\ComboTheme.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\FilesAndFolderstructure.cs" />
     <Compile Include="Scripts\FormControls.cs" />
     <Compile Include="Scripts\HtmlLibsGetter.cs" />
@@ -123,6 +129,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="RobotKeywords\Built_in.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="RobotKeywords\Selenium.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -20,7 +20,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
-                case "combobox": tempControl = new ComboBox(); break;
+                case "combobox": tempControl = new ComboTheme(); break;
                 case "checkbox": tempControl = new CheckBox(); ((CheckBox)tempControl).Checked = true; break;
                 case "button": tempControl = new Button(); tempControl.Click += eventHandler; break;
                 default: tempControl = new Label(); break;
@@ -37,7 +37,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": owner.Controls.Add((TextBox)tempControl); break;
-                case "combobox": owner.Controls.Add((ComboBox)tempControl); break;
+                case "combobox": owner.Controls.Add((ComboTheme)tempControl); break;
                 case "checkbox": owner.Controls.Add((CheckBox)tempControl); break;
                 case "button": owner.Controls.Add((Button)tempControl); break;
                 default: owner.Controls.Add((Label)tempControl); break;
@@ -56,19 +56,19 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateAutoCompleteComboBox(object sender, EventArgs e)
         {
-            var comboBox = sender as ComboBox;
-            if (comboBox == null)
+            var comboTheme = sender as ComboTheme;
+            if (comboTheme == null)
                 return;
 
-            selectionPointer = comboBox.SelectionStart;
+            selectionPointer = comboTheme.SelectionStart;
             //Console.WriteLine(checkDouble);
             if (!checkDouble)
             {
                 if (keyEvent != Keys.Down && keyEvent != Keys.Up)
                 {
-                    string txt = comboBox.Text;
+                    string txt = comboTheme.Text;
 
-                    List<string> foundItems = new List<string>();
+                    List<Object> foundItems = new List<Object>();
                     foreach (Keyword keyword in Suggestions)
                         if (!string.IsNullOrEmpty(txt))
                         {
@@ -86,28 +86,29 @@ namespace RobotAutomationHelper.Scripts
                                 //Console.WriteLine(keyword.GetKeywordName().ToLower() + " | ");
                                 //foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                                 //    Console.Write(temp + " + ");
-                                foundItems.Add(keyword.GetKeywordName());
+                                foundItems.Add(new ComboBoxObject{Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation()});
                             }
                         }
 
-                    if (foundItems.Count > 0 && !foundItems.ToArray().Equals(comboBox.Items))
+                    if (foundItems.Count > 0 && !foundItems.ToArray().Equals(comboTheme.Items))
                     {
                         checkDouble = true;
-                        comboBox.Items.Clear();
-                        comboBox.Items.AddRange(foundItems.ToArray());
-                        comboBox.DropDownStyle = ComboBoxStyle.DropDown;
-                        comboBox.DroppedDown = true;
+                        comboTheme.Items.Clear();
+                        comboTheme.Items.AddRange(foundItems.ToArray());
+                        comboTheme.DropDownStyle = ComboBoxStyle.DropDown;
+                        comboTheme.DroppedDown = true;
                         Cursor.Current = Cursors.Default;
                         //Console.WriteLine(comboBox.Text + " | " + txt + " suggestions");
-                        if (!comboBox.Text.Equals(txt))
-                            comboBox.Text = txt;
-                        comboBox.SelectionStart = selectionPointer;
+                        if (!comboTheme.Text.Equals(txt))
+                            comboTheme.Text = txt;
+                        comboTheme.SelectionStart = selectionPointer;
                         checkDouble = false;
                         return;
                     }
                     else
                     {
-                        comboBox.DroppedDown = false;
+                        comboTheme.DroppedDown = false;
+                        comboTheme.HideToolTip();
                         //Console.WriteLine(txt + " | " + comboBox.SelectionStart + " no suggestions");
                     }
 
@@ -116,20 +117,25 @@ namespace RobotAutomationHelper.Scripts
             checkDouble = false;
         }
 
-        internal static void AddSuggestionsToComboBox(ComboBox comboBox)
+        internal static void DataChanged(object sender, EventArgs e, string text)
         {
+            (sender as ComboTheme).Text = text;
+        }
+
+        internal static void AddSuggestionsToComboBox(ComboTheme comboBox)
+        {
+            string current = comboBox.Text;
             foreach (Keyword key in Suggestions)
-                comboBox.Items.Add(key.GetKeywordName());
+                comboBox.Items.Add(new ComboBoxObject{ Text = key.ToString(), ValueMember = key.GetKeywordName(), Documentation = key.GetKeywordDocumentation() });
         }
 
         internal static void ComboBoxMouseClick(object sender, MouseEventArgs e)
         {
-            var combo = sender as ComboBox;
+            var combo = sender as ComboTheme;
             if (combo.Items.Count != Suggestions.Count)
             {
                 combo.Items.Clear();
-                foreach (Keyword key in Suggestions)
-                    combo.Items.Add(key.GetKeywordName());
+                AddSuggestionsToComboBox(combo);
             }
         }
 
@@ -140,6 +146,13 @@ namespace RobotAutomationHelper.Scripts
                 if (seleniumKeywords.GetKeywordName().ToLower().Equals(keyword.GetKeywordName().ToLower()))
                 {
                     return KeywordType.SELENIUM;
+                }
+            }
+            foreach (Keyword BuiltIn_Keywords in HtmlLibsGetter.BuiltIn)
+            {
+                if (BuiltIn_Keywords.GetKeywordName().ToLower().Equals(keyword.GetKeywordName().ToLower()))
+                {
+                    return KeywordType.BUILT_IN;
                 }
             }
             return KeywordType.CUSTOM;

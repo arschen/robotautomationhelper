@@ -10,12 +10,15 @@ namespace RobotAutomationHelper.Scripts
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterSelection(object sender, EventArgs e, List<Keyword> Keywords)
         {
-            if ((sender as ComboBox).SelectedIndex != -1)
+            if ((sender as ComboTheme).SelectedIndex != -1)
             {
-                int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
-                Keywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
+                ComboTheme combo = sender as ComboTheme;
+                int keywordIndex = int.Parse(combo.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+                Console.WriteLine(combo.SelectedValue + " sv");
+                Keywords[keywordIndex - 1].SetKeywordName(((ListControl)combo.Items[combo.SelectedIndex]).ValueMember);
                 FormControls.GetKeywordType(Keywords[keywordIndex - 1]);
                 Console.WriteLine(FormControls.GetKeywordType(Keywords[keywordIndex - 1]));
+                combo.HideToolTip();
             }
             else
             {
@@ -26,25 +29,27 @@ namespace RobotAutomationHelper.Scripts
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterKeyPress(object sender, EventArgs e, List<Keyword> Keywords)
         {
-            int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
-            Keywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Text);
+            ComboTheme combo = sender as ComboTheme;
+            int keywordIndex = int.Parse(combo.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+            Keywords[keywordIndex - 1].SetKeywordName(combo.Text);
             FormControls.GetKeywordType(Keywords[keywordIndex - 1]);
             Console.WriteLine(FormControls.GetKeywordType(Keywords[keywordIndex - 1]));
+            combo.HideToolTip();
         }
 
         // handles key press for keyword name input, the case when return/enter is hit
         internal static void AutoCompleteComboBoxKeyPress(object sender, KeyEventArgs e, List<Keyword> Keywords)
         {
-            var comboBox = sender as ComboBox;
-            string txt = comboBox.Text;
-            FormControls.selectionPointer = comboBox.SelectionStart;
+            var comboTheme = sender as ComboTheme;
+            string txt = comboTheme.Text;
+            FormControls.selectionPointer = comboTheme.SelectionStart;
             //Console.WriteLine(e.KeyCode);
             FormControls.keyEvent = e.KeyCode;
             if (FormControls.keyEvent == Keys.Return)
             {
-                comboBox.DroppedDown = false;
-                comboBox.Text = txt;
-                comboBox.SelectionStart = FormControls.selectionPointer;
+                comboTheme.DroppedDown = false;
+                comboTheme.Text = txt;
+                comboTheme.SelectionStart = FormControls.selectionPointer;
                 ChangeTheKeywordFieldAfterKeyPress(sender, e, Keywords);
             }
         }

@@ -96,6 +96,16 @@ namespace RobotAutomationHelper
         {
             return Type;
         }
+
+        public override string ToString()
+        {
+            switch (Type)
+            {
+                case KeywordType.SELENIUM: return "[S] " + Name;
+                case KeywordType.BUILT_IN: return "[B] " + Name;
+            }
+            return Name;
+        }
     }
 
     internal enum KeywordType

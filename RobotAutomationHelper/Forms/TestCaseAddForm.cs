@@ -100,7 +100,7 @@ namespace RobotAutomationHelper
         private void AddKeywordField(Keyword testStep, int testStepsCounter)
         {
             List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
-
+            
             FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, 140 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
@@ -108,9 +108,11 @@ namespace RobotAutomationHelper
                 Color.Black,
                 null,
                 this);
-            ComboBox temp = (ComboBox)Controls["DynamicTestStep" + testStepsCounter + "Name"];
+            ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + testStepsCounter + "Name"];
             FormControls.AddSuggestionsToComboBox(temp);
             temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
+            temp.ValueMember = "ValueMember";
+            temp.DisplayMember = "Text";
             //on key press
             temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, Keywords);
             //clicking the drop down control button
@@ -119,7 +121,7 @@ namespace RobotAutomationHelper
             temp.IntegralHeight = false;
             //update the keyword field
             temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, Keywords);
-            temp.LostFocus += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, Keywords);
+            temp.LostFocus += (sender2, e2) =>  BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, Keywords);
 
             FormControls.AddControl("Label", "DynamicTestStep" + testStepsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, 143 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
@@ -191,7 +193,7 @@ namespace RobotAutomationHelper
         {
             if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
                 for (int counter = 1; counter <= RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count; counter++)
-                    Keywords[counter-1].SetKeywordName("\t" + ((ComboBox) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
+                    Keywords[counter-1].SetKeywordName("\t" + ((ComboTheme) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
 
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 
