@@ -87,13 +87,15 @@ namespace RobotAutomationHelper.Scripts
                 keywordForm);
             }
 
-            List<string> args = new List<string>();
-            args = StringAndListOperations.ReturnListOfArgs(keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordArguments());
-            if (keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "Params", false).Length != 0
-                && (args == null || args.Count == 0))
+            if (keywordForm.ThisFormKeywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
+            {
+                List<string> args = new List<string>();
+                args = StringAndListOperations.ReturnListOfArgs(keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordArguments());
+                if (keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "Params", false).Length != 0
+                    && (args == null || args.Count == 0))
                     keywordForm.Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "Params");
-            else
-                if (args != null && args.Count != 0)
+                else
+                    if (args != null && args.Count != 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + keywordIndex + "Params",
                         new Point(500 - keywordForm.HorizontalScroll.Value, keywordForm.initialYValue + (keywordIndex - 1) * 30 - keywordForm.VerticalScroll.Value),
                         new Size(75, 20),
@@ -101,6 +103,20 @@ namespace RobotAutomationHelper.Scripts
                         Color.Black,
                         new EventHandler(keywordForm.InstantiateParamsAddForm),
                         keywordForm);
+            }
+            else
+            {
+                if (!(keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordParams() == null)
+                    && !(keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordParams().Count == 0))
+                FormControls.AddControl("Button", "DynamicTestStep" + keywordIndex + "Params",
+                    new Point(500 - keywordForm.HorizontalScroll.Value, keywordForm.initialYValue + (keywordIndex - 1) * 30 - keywordForm.VerticalScroll.Value),
+                    new Size(75, 20),
+                    "Params",
+                    Color.Black,
+                    new EventHandler(keywordForm.InstantiateParamsAddForm),
+                    keywordForm);
+            }
+
 
             keywordForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordName().Trim();
         }
