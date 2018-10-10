@@ -8,6 +8,11 @@ namespace RobotAutomationHelper.Scripts
     internal static class FormControls
     {
         internal static List<Keyword> Suggestions = new List<Keyword>();
+        internal static Keys keyEvent;
+        internal static int selectionPointer;
+
+        // checks if text update/change is triggered inside UpdateAutoCompleteComboBox recursively
+        private static bool checkDouble = false;
 
         internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
@@ -48,10 +53,6 @@ namespace RobotAutomationHelper.Scripts
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
         }
-
-        private static Keys keyEvent;
-        private static bool checkDouble = false;
-        private static int selectionPointer;
 
         internal static void UpdateAutoCompleteComboBox(object sender, EventArgs e)
         {
@@ -102,7 +103,6 @@ namespace RobotAutomationHelper.Scripts
                             comboBox.Text = txt;
                         comboBox.SelectionStart = selectionPointer;
                         checkDouble = false;
-                        TestCaseAddForm.ChangeTheKeywordField(sender, e);
                         return;
                     }
                     else
@@ -114,37 +114,6 @@ namespace RobotAutomationHelper.Scripts
                 }
             }
             checkDouble = false;
-        }
-
-        internal static void AutoCompleteComboBoxKeyPress(object sender, KeyEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-            string txt = comboBox.Text;
-            selectionPointer = comboBox.SelectionStart;
-            //Console.WriteLine(e.KeyCode);
-            keyEvent = e.KeyCode;
-            if (keyEvent == Keys.Return)
-            {
-                comboBox.DroppedDown = false;
-                comboBox.Text = txt;
-                comboBox.SelectionStart = selectionPointer;
-            }
-            /*if (comboBox != null && comboBox.DroppedDown)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Back:
-                        int sStart = comboBox.SelectionStart;
-                        if (sStart > 0)
-                        {
-                            sStart--;
-                            comboBox.Text = sStart == 0 ? "" : comboBox.Text.Substring(0, sStart);
-                        }
-                        e.SuppressKeyPress = true;
-                        break;
-                }
-
-            }*/
         }
 
         internal static void AddSuggestionsToComboBox(ComboBox comboBox)

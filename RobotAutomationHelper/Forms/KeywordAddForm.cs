@@ -255,12 +255,15 @@ namespace RobotAutomationHelper
             ComboBox temp = (ComboBox)Controls["DynamicTestStep" + keywordsCounter + "Name"];
             FormControls.AddSuggestionsToComboBox(temp);
             temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
-            temp.KeyDown += FormControls.AutoCompleteComboBoxKeyPress;
+            //on key press
+            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, ThisFormKeywords);
+            //clicking the drop down control button
             temp.MouseClick += FormControls.ComboBoxMouseClick;
             temp.MaxDropDownItems = 15;
             temp.IntegralHeight = false;
-            temp.SelectedIndexChanged += ChangeTheKeywordField;
-            temp.Validated += ChangeTheKeywordField;
+            //update the keyword field
+            temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, ThisFormKeywords);
+            temp.LostFocus += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, ThisFormKeywords);
 
             FormControls.AddControl("Label", "DynamicTestStep" + keywordsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
@@ -354,17 +357,6 @@ namespace RobotAutomationHelper
             } 
         }
 
-        private void InstantiateParamsAddForm(object sender, EventArgs e)
-        {
-            AddCurrentKeywordsToKeywordsList(sender, e);
-            int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
-            // instantiate the new KeywordAddForm with this parent and Keywords argument
-            ParamAddForm addParamForm = new ParamAddForm();
-            // add closing event
-            addParamForm.FormClosing += new FormClosingEventHandler(UpdateParentFormAfterClosing);
-            addParamForm.ShowParamContent(ThisFormKeywords[keywordIndex - 1]);
-        }
-
         private void AddKeywordToThisKeyword(object sender, EventArgs e)
         {
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicTestStep", "").Replace("AddKeyword", ""));
@@ -431,6 +423,17 @@ namespace RobotAutomationHelper
             }
         }
 
+        private void InstantiateParamsAddForm(object sender, EventArgs e)
+        {
+            AddCurrentKeywordsToKeywordsList(sender, e);
+            int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
+            // instantiate the new KeywordAddForm with this parent and Keywords argument
+            ParamAddForm addParamForm = new ParamAddForm();
+            // add closing event
+            addParamForm.FormClosing += new FormClosingEventHandler(UpdateParentFormAfterClosing);
+            addParamForm.ShowParamContent(ThisFormKeywords[keywordIndex - 1]);
+        }
+
         private void KeywordName_TextChanged(object sender, EventArgs e)
         {
             IsKeywordPresentInFilesOrMemoryTree();
@@ -444,7 +447,8 @@ namespace RobotAutomationHelper
         private bool IsKeywordPresentInFilesOrMemoryTree()
         {
             if (TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
-                FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text), ParentKeywords[IndexOfTheParentKeyword]))
+                FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text),
+                ParentKeywords[IndexOfTheParentKeyword]))
                 KeywordName.ForeColor = Color.Red;
             else
             {
@@ -458,25 +462,6 @@ namespace RobotAutomationHelper
                 }
             }
             return true;
-        }
-
-        // change the field when the keyword name is changed
-        private void ChangeTheKeywordField(object sender, EventArgs e)
-        {
-            if ((sender as ComboBox).SelectedIndex != -1)
-            {
-                int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
-                ThisFormKeywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Items[(sender as ComboBox).SelectedIndex].ToString());
-                FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]);
-                Console.WriteLine(FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]));
-            }
-            else
-            {
-                int keywordIndex = int.Parse((sender as ComboBox).Name.Replace("Name", "").Replace("DynamicTestStep", ""));
-                ThisFormKeywords[keywordIndex - 1].SetKeywordName((sender as ComboBox).Text);
-                FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]);
-                Console.WriteLine(FormControls.GetKeywordType(ThisFormKeywords[keywordIndex - 1]));
-            }
         }
     }
 }
