@@ -38,7 +38,9 @@ namespace RobotAutomationHelper.Scripts
         internal static void AddKeywordToRobot(Keyword keyword)
         {
             string fileName = keyword.GetOutputFilePath();
-            int index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
+            int index = 0;
+            if (fileName != "")
+                index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
 
             if (keyword.Type == KeywordType.CUSTOM)
             {
@@ -48,7 +50,7 @@ namespace RobotAutomationHelper.Scripts
             }
 
             bool addKeywordSteps = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.GetKeywordName().Trim(), "keyword") != -1);
-            if (keyword.IsSaved() && addKeywordSteps)
+            if (keyword.IsSaved() && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
             {
                 //Add keyword to robot file
                 index = AddName(keyword.GetKeywordName().Trim(), fileName, index, "keywords");
@@ -80,11 +82,8 @@ namespace RobotAutomationHelper.Scripts
                         index++;
                         FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
                     }
-
-                    if (keywordKeyword.Type == KeywordType.CUSTOM)
-                        AddKeywordToRobot(keywordKeyword);
-                    else
-                        Console.WriteLine(keywordKeyword.GetKeywordName());
+                    
+                    AddKeywordToRobot(keywordKeyword);
                 }
             return index;
         }
