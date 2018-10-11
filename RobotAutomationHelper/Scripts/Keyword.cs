@@ -118,6 +118,6 @@ namespace RobotAutomationHelper
 
     internal enum KeywordType
     {
-        SELENIUM, BUILT_IN, CUSTOM
+        CUSTOM, SELENIUM, BUILT_IN
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RobotAutomationHelper.Scripts
@@ -80,7 +81,10 @@ namespace RobotAutomationHelper.Scripts
                         FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
                     }
 
-                    AddKeywordToRobot(keywordKeyword);
+                    if (keywordKeyword.Type == KeywordType.CUSTOM)
+                        AddKeywordToRobot(keywordKeyword);
+                    else
+                        Console.WriteLine(keywordKeyword.GetKeywordName());
                 }
             return index;
         }

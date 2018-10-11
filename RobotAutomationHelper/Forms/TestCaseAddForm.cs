@@ -135,16 +135,19 @@ namespace RobotAutomationHelper
                 Color.Black,
                 null,
                 this);
-            string buttonImplementation = "Add Implementation";
-            if (testStep.IsImplemented())
-                buttonImplementation = "Edit Implementation";
-            FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
-                new Point(320 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
-                new Size(120, 20),
-                buttonImplementation,
-                Color.Black,
-                new EventHandler(InstantiateKeywordAddForm),
-                this);
+            if (testStep.Type.Equals(KeywordType.CUSTOM))
+            {
+                string buttonImplementation = "Add Implementation";
+                if (testStep.IsImplemented())
+                    buttonImplementation = "Edit Implementation";
+                FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
+                    new Point(320 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
+                    new Size(120, 20),
+                    buttonImplementation,
+                    Color.Black,
+                    new EventHandler(InstantiateKeywordAddForm),
+                    this);
+            }
             if (args != null && args.Count != 0)
                 FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
                     new Point(450 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),

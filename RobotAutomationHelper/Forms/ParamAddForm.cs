@@ -31,16 +31,16 @@ namespace RobotAutomationHelper.Forms
             if (keyword.GetKeywordParams() != null)
                 paramsList.AddRange(keyword.GetKeywordParams());
 
-            List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
+            //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
 
-            if (args != null && args.Count != 0)
-                foreach (string arg in args)
+            if (paramsList != null && paramsList.Count != 0)
+                foreach (Param param in paramsList)
                 {
                     paramsCount++;
                     FormControls.AddControl("Label", "DynamicTestStep" + paramsCount + "Name",
                         new System.Drawing.Point(10 - this.HorizontalScroll.Value, 123 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(80, 20),
-                        arg,
+                        param.GetArgName(),
                         System.Drawing.Color.Black,
                         null,
                         this);

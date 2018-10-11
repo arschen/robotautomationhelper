@@ -109,6 +109,10 @@ namespace RobotAutomationHelper
                 && !((Button)sender).Name.Contains("AddKeyword")
                 && !((Button)sender).Name.Contains("RemoveKeyword"))
                 keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
+            else
+                if (((Button)sender).Name.Contains("DynamicTestStep")
+                && ((Button)sender).Name.Contains("Params"))
+                keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
 
             // add to the global variable for the form that matches the index of the keyword to implement
             IndexOfTheKeywordToBeImplemented = keywordIndex;
@@ -276,16 +280,19 @@ namespace RobotAutomationHelper
                 Color.Black,
                 null,
                 this);
-            string buttonImplementation = "Add Implementation";
-            if (ThisFormKeywords[keywordsCounter - 1].IsImplemented())
-                buttonImplementation = "Edit Implementation";
-            FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "AddImplementation",
-                new Point(320 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                new Size(120, 20),
-                buttonImplementation,
-                Color.Black,
-                new EventHandler(InstantiateKeywordAddForm),
-                this);
+            if (keyword.Type.Equals(KeywordType.CUSTOM))
+            {
+                string buttonImplementation = "Add Implementation";
+                if (ThisFormKeywords[keywordsCounter - 1].IsImplemented())
+                    buttonImplementation = "Edit Implementation";
+                FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "AddImplementation",
+                    new Point(320 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
+                    new Size(120, 20),
+                    buttonImplementation,
+                    Color.Black,
+                    new EventHandler(InstantiateKeywordAddForm),
+                    this);
+            }
             FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "AddKeyword",
                 new Point(450 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(20, 20),
