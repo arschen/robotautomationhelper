@@ -8,7 +8,7 @@ namespace RobotAutomationHelper.Scripts
     internal static class WriteToRobot
     {
 
-        private static List<Includes> includes = new List<Includes>();
+        internal static List<Includes> includes;
 
         internal static void AddTestCasesToRobot(TestCase testCase)
         {

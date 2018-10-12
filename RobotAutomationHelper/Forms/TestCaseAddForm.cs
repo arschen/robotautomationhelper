@@ -102,7 +102,7 @@ namespace RobotAutomationHelper
 
         private void AddKeywordField(Keyword testStep, int testStepsCounter)
         {
-            List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
+            //List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
             
             FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
@@ -148,7 +148,7 @@ namespace RobotAutomationHelper
                     new EventHandler(InstantiateKeywordAddForm),
                     this);
             }
-            if (args != null && args.Count != 0)
+            if (testStep.GetKeywordParams() != null && testStep.GetKeywordParams().Count != 0)
                 FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
                     new Point(450 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                     new Size(75, 20),
@@ -176,9 +176,10 @@ namespace RobotAutomationHelper
                 Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordName().Trim();
                 Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "AddImplementation"].Text = "Edit implementation";
 
-                List<string> args = StringAndListOperations.ReturnListOfArgs(Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordArguments());
+                //List<string> args = StringAndListOperations.ReturnListOfArgs(Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordArguments());
                 
-                if (args != null && args.Count != 0)
+                if (Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordParams() != null &&
+                    Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordParams().Count != 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params",
                         new Point(450 - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
                         new Size(75, 20),
@@ -189,12 +190,11 @@ namespace RobotAutomationHelper
                 else
                     if (Controls.Find("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length != 0)
                     Controls.RemoveByKey("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params");
+
+                //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
+                FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, IndexOfTheKeywordToBeImplemented);
+                FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
             }
-
-            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-            FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, IndexOfTheKeywordToBeImplemented);
-
-            FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
         }
 
         private void SaveChangesToTestCases()

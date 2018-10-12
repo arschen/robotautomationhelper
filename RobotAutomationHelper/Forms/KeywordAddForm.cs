@@ -156,12 +156,11 @@ namespace RobotAutomationHelper
                 else
                     if (Controls.Find("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length != 0)
                         Controls.RemoveByKey("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params");
+
+                //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
+                FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(ThisFormKeywords, IndexOfTheKeywordToBeImplemented);
+                FormControls.UpdateOutputFileSuggestions(KeywordOutputFile);
             }
-
-            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-            FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(ThisFormKeywords, IndexOfTheKeywordToBeImplemented);
-
-            FormControls.UpdateOutputFileSuggestions(KeywordOutputFile);
         }
 
         private void Skip_Click(object sender, EventArgs e)
@@ -247,7 +246,7 @@ namespace RobotAutomationHelper
         // Adds TextBox / Label / Add implementation / Add and remove keyword / Params
         private void AddKeywordField(Keyword keyword, int keywordsCounter)
         {
-            List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
+            //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
 
             FormControls.AddControl("ComboBox", "DynamicTestStep" + keywordsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
@@ -307,7 +306,7 @@ namespace RobotAutomationHelper
                 Color.Black,
                 new EventHandler(RemoveKeywordFromThisKeyword),
                 this);
-            if (args != null && args.Count != 0)
+            if (keyword.GetKeywordParams() != null && keyword.GetKeywordParams().Count != 0)
                 FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "Params",
                     new Point(500 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                     new Size(75, 20),

@@ -26,7 +26,7 @@ namespace RobotAutomationHelper.Scripts
         {
             if (e.Index >= 0)
             {
-                Console.WriteLine(e.Index);
+                //Console.WriteLine(e.Index);
                 ComboTheme box = ((ComboTheme)sender);
                 if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
                 {

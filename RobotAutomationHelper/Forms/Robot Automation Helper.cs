@@ -162,6 +162,7 @@ namespace RobotAutomationHelper
 
         private void saveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            WriteToRobot.includes = new List<Includes>();
             List<int> testCasesToAdd = new List<int>();
             foreach (Control tempControl in Controls)
                 if (tempControl.Name.EndsWith("CheckBox") && ((CheckBox)tempControl).Checked)

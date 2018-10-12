@@ -13,7 +13,7 @@ namespace RobotAutomationHelper.Scripts
         {
             List<string> args = new List<string>();
             if (arguments != null)
-                args.AddRange(arguments.Replace("[Arguments]", "").Trim().Split(' '));
+                args.AddRange(arguments.Replace("[Arguments]", "").Trim().Split(new string[] { "  " },StringSplitOptions.None));
 
             if (args != null)
                 for (int i = 0; i < args.Count; i++)
