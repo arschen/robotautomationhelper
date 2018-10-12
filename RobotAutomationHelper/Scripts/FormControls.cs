@@ -89,7 +89,10 @@ namespace RobotAutomationHelper.Scripts
                                 //Console.WriteLine(keyword.GetKeywordName().ToLower() + " | ");
                                 //foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                                 //    Console.Write(temp + " + ");
-                                foundItems.Add(new ComboBoxObject{Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation()});
+                                if (keyword.Type != KeywordType.CUSTOM)
+                                    foundItems.Add(new ComboBoxObject{Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation()});
+                                else
+                                    foundItems.Add(new ComboBoxObject { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
                                 //Console.WriteLine("Success: " + keyword.ToString());
                             }
                         }
@@ -136,8 +139,11 @@ namespace RobotAutomationHelper.Scripts
         internal static void AddSuggestionsToComboBox(ComboTheme comboBox)
         {
             string current = comboBox.Text;
-            foreach (Keyword key in Suggestions)
-                comboBox.Items.Add(new ComboBoxObject{ Text = key.ToString(), ValueMember = key.GetKeywordName(), Documentation = key.GetKeywordDocumentation() });
+            foreach (Keyword keyword in Suggestions)
+                if (keyword.Type != KeywordType.CUSTOM)
+                    comboBox.Items.Add(new ComboBoxObject { Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation() });
+                else
+                    comboBox.Items.Add(new ComboBoxObject { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
         }
 
         internal static void ComboBoxMouseClick(object sender, MouseEventArgs e)
