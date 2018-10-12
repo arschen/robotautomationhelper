@@ -152,29 +152,13 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)
         {
-            bool isFound = false;
             foreach (Keyword seleniumKeyword in Suggestions)
-            {
                 if (seleniumKeyword.GetKeywordName().ToLower().Equals(name.ToLower()))
                 {
                     keyword.CopyKeyword(seleniumKeyword);
-                    isFound = true;
                     break;
                 }
-            }
-            if (!isFound)
-                foreach (Keyword BuiltIn_Keyword in Suggestions)
-                {
-                    if (BuiltIn_Keyword.GetKeywordName().ToLower().Equals(name.ToLower()))
-                    {
-                        isFound = true;
-                        break;
-                    }
-                }
-            if (!isFound)
-            {
-                keyword.Type = KeywordType.CUSTOM;
-            }
+            keyword.Type = KeywordType.CUSTOM;
         }
     }
 }
