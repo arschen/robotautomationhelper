@@ -10,13 +10,14 @@ namespace RobotAutomationHelper.Scripts
 
         internal Includes(string fileName)
         {
-            this.FileName = fileName;
+            FileName = fileName;
         }
 
         internal void AddToList(string fileName)
         {
-            if (!FilesToInclude.Contains(fileName))
-                FilesToInclude.Add(fileName);
+            if (!FileName.Equals(fileName))
+                if (!FilesToInclude.Contains(fileName))
+                    FilesToInclude.Add(fileName);
         }
 
         internal List<string> GetFilesToInclude()

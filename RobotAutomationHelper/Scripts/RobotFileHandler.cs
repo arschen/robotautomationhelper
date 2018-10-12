@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace RobotAutomationHelper.Scripts
 {
@@ -71,6 +72,7 @@ namespace RobotAutomationHelper.Scripts
             return index;
         }
 
+        // returns the index of the specific tag - keyword / test cases / settings / variables
         internal static int HasTag(string fileName, string type)
         {
             int index = -1;
@@ -94,7 +96,7 @@ namespace RobotAutomationHelper.Scripts
             return index;
         }
 
-        // returns true if the file contains a keyword / test case with the same name
+        // returns index with the line if the file contains a keyword / test case with the same name
         internal static int ContainsTestCaseOrKeyword(string fileName, string name, string type)
         {
             if (File.Exists(fileName))
@@ -108,18 +110,48 @@ namespace RobotAutomationHelper.Scripts
                     {
                         if (!arrLine[ind].StartsWith("***"))
                         {
-                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
+                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
                             {
-                                string[] temp = arrLine[ind].ToLower().Trim().Split(new string[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
+
+                                string[] temp = arrLine[ind].ToLower().Split(new string[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
                                 foreach (string s in temp)
                                     if (s.Equals(name.ToLower()))
+                                    {
+                                        //Console.WriteLine(arrLine[ind].StartsWith("	") + " | " + arrLine[ind]);
                                         return ind;
+                                    }
                             }
                         }
                     }
                 }
             }
             return -1;
+        }
+
+        // returns bool of the line where the specific include is found
+        internal static bool ContainsSettings(string fileName, string name)
+        {
+            if (File.Exists(fileName))
+            {
+                int index = HasTag(fileName, "settings");
+                if (index != -1)
+                {
+                    string[] arrLine;
+                    arrLine = File.ReadAllLines(fileName);
+                    for (int ind = index; ind < arrLine.Length; ind++)
+                    {
+                        if (!arrLine[ind].StartsWith("***"))
+                        {
+                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
+                            {
+                                if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
+                                    return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }

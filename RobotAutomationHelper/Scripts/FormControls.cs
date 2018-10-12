@@ -18,7 +18,10 @@ namespace RobotAutomationHelper.Scripts
         internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
             Control tempControl;
-            Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
+
+            if (owner.Controls.Find(name, false).Length > 1)
+                Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
+
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
@@ -180,14 +183,14 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void RemoveControlByKey(string key, ControlCollection controlCollection)
         {
-            Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
+            //Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
         }
 
         internal static void RemoveControlByKey(string key, Control.ControlCollection controlCollection)
         {
-            Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
+            //Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
         }

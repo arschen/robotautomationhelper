@@ -42,14 +42,16 @@ namespace RobotAutomationHelper.Scripts
             if (fileName != "")
                 index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
 
-            if (keyword.Type == KeywordType.CUSTOM)
-            {
-                Includes candidate = new Includes(fileName);
-                if (!includes.Contains(candidate))
-                    includes.Add(candidate);
-            }
-
             bool addKeywordSteps = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.GetKeywordName().Trim(), "keyword") != -1);
+
+            if (addKeywordSteps)
+                if (keyword.Type == KeywordType.CUSTOM)
+                {
+                    Includes candidate = new Includes(fileName);
+                    if (!includes.Contains(candidate))
+                        includes.Add(candidate);
+                }
+
             if (keyword.IsSaved() && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
             {
                 //Add keyword to robot file
@@ -72,14 +74,14 @@ namespace RobotAutomationHelper.Scripts
             if (keywordKeywords != null)
                 foreach (Keyword keywordKeyword in keywordKeywords)
                 {
-                    if (keywordKeyword.IsSaved() && keywordKeyword.Type == KeywordType.CUSTOM)
-                        includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
-                    else
-                    if (keywordKeyword.Type == KeywordType.SELENIUM)
-                        includes[includes.IndexOf(container)].AddToList("SeleniumLibrary");
-
                     if (addSteps)
                     {
+                        if (keywordKeyword.IsSaved() && keywordKeyword.Type == KeywordType.CUSTOM)
+                            includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
+                        else
+                            if (keywordKeyword.Type == KeywordType.SELENIUM)
+                            includes[includes.IndexOf(container)].AddToList("SeleniumLibrary");
+
                         //adds test steps
                         index++;
                         FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
@@ -203,9 +205,13 @@ namespace RobotAutomationHelper.Scripts
                 foreach (string path in temp.GetFilesToInclude())
                 {
                     if (path.Equals("SeleniumLibrary"))
-                        FileLineAdd("Library  " + path, fileName, index);
+                    {
+                        if (!RobotFileHandler.ContainsSettings(fileName, "Library  " + path))
+                            FileLineAdd("Library  " + path, fileName, index);
+                    }
                     else
-                        FileLineAdd("Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName, index);
+                        if (!RobotFileHandler.ContainsSettings(fileName, "Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), "")))
+                            FileLineAdd("Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName, index);
                     index++;
                 }
             }
