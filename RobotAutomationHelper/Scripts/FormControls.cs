@@ -171,7 +171,7 @@ namespace RobotAutomationHelper.Scripts
             if (!isFound)
                 if (keyword.Type != KeywordType.CUSTOM)
                 {
-                    keyword = new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot");
+                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
                     keyword.Type = KeywordType.CUSTOM;
                 }
                 else
