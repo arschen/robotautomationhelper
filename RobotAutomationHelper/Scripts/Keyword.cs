@@ -13,8 +13,9 @@ namespace RobotAutomationHelper
         private bool Implemented = false;
         private bool Saved = false;
         internal KeywordType Type { get; set; }
+        internal int SuggestionIndex { get; set; }
 
-        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type)
+        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -25,6 +26,7 @@ namespace RobotAutomationHelper
             Implemented = true;
             this.Saved = Saved;
             this.Type = Type;
+            this.SuggestionIndex = SuggestionIndex;
         }
 
         internal void CopyKeyword(Keyword keyword)
@@ -35,15 +37,17 @@ namespace RobotAutomationHelper
             this.Arguments = keyword.Arguments;
             this.Params = keyword.Params;
             this.OutputFilePath = keyword.OutputFilePath;
-            Implemented = true;
+            this.Implemented = keyword.Implemented;
             this.Saved = keyword.Saved;
             this.Type = keyword.Type;
+            this.SuggestionIndex = keyword.SuggestionIndex;
         }
 
         internal Keyword(string Name, string OutputFilePath)
         {
             this.Name = Name;
             this.OutputFilePath = OutputFilePath;
+            SuggestionIndex = -1;
         }
 
         internal string GetKeywordName()

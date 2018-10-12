@@ -57,7 +57,7 @@ namespace RobotAutomationHelper
             {
                 foreach (Control tempControl in Controls)
                     if (tempControl.Name.ToLower().StartsWith("dynamictest"))
-                        Controls.RemoveByKey(tempControl.Name);
+                        FormControls.RemoveControlByKey(tempControl.Name, Controls);
 
                 cleared = true;
                 foreach (Control tempControl in Controls)

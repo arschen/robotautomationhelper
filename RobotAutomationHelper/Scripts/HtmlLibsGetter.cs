@@ -23,7 +23,7 @@ namespace RobotAutomationHelper.Scripts
             foreach (Keyword key in Selenium)
                 FormControls.Suggestions.Add(new Keyword(key.GetKeywordName(), key.GetKeywordDocumentation(),
                     key.GetKeywordKeywords(), key.GetKeywordArguments(), key.GetKeywordParams(),
-                    key.GetOutputFilePath(), key.IsSaved(), key.Type));
+                    key.GetOutputFilePath(), key.IsSaved(), key.Type, key.SuggestionIndex));
         }
 
         internal static void PopulateBuiltInKeywords()
@@ -34,7 +34,7 @@ namespace RobotAutomationHelper.Scripts
             foreach (Keyword key in BuiltIn)
                 FormControls.Suggestions.Add(new Keyword(key.GetKeywordName(), key.GetKeywordDocumentation(),
                     key.GetKeywordKeywords(), key.GetKeywordArguments(), key.GetKeywordParams(),
-                    key.GetOutputFilePath(), key.IsSaved(), key.Type));
+                    key.GetOutputFilePath(), key.IsSaved(), key.Type, key.SuggestionIndex));
         }
 
         private static List<Keyword> ReadAllKeywordsFromExcel(string Filename, KeywordType type)
@@ -107,7 +107,7 @@ namespace RobotAutomationHelper.Scripts
 
         private static void AddKeywordAndResetValues(List<Keyword> keywordsList, KeywordType type)
         {
-            keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type));
+            keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1));
             currentKeywordDocumentation = "";
             currentKeywordName = "";
             currentKeywordParams = new List<Param>();

@@ -189,7 +189,7 @@ namespace RobotAutomationHelper
                         this);
                 else
                     if (Controls.Find("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length != 0)
-                    Controls.RemoveByKey("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params");
+                        FormControls.RemoveControlByKey("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params", Controls);
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(Keywords, IndexOfTheKeywordToBeImplemented);

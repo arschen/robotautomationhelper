@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Windows.Forms.Form;
 
 namespace RobotAutomationHelper.Scripts
 {
@@ -17,6 +18,7 @@ namespace RobotAutomationHelper.Scripts
         internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
             Control tempControl;
+            Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
@@ -89,7 +91,7 @@ namespace RobotAutomationHelper.Scripts
                                 //Console.WriteLine(keyword.GetKeywordName().ToLower() + " | ");
                                 //foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                                 //    Console.Write(temp + " + ");
-                                if (keyword.Type != KeywordType.CUSTOM)
+                               if (keyword.Type != KeywordType.CUSTOM)
                                     foundItems.Add(new ComboBoxObject{Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation()});
                                 else
                                     foundItems.Add(new ComboBoxObject { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
@@ -158,13 +160,36 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)
         {
+            bool isFound = false;
             foreach (Keyword seleniumKeyword in Suggestions)
-                if (seleniumKeyword.GetKeywordName().ToLower().Equals(name.ToLower()))
+                if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower()))
                 {
                     keyword.CopyKeyword(seleniumKeyword);
+                    isFound = true;
                     break;
                 }
-            keyword.Type = KeywordType.CUSTOM;
+            if (!isFound)
+                if (keyword.Type != KeywordType.CUSTOM)
+                {
+                    keyword = new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot");
+                    keyword.Type = KeywordType.CUSTOM;
+                }
+                else
+                    keyword.Type = KeywordType.CUSTOM;
+        }
+
+        internal static void RemoveControlByKey(string key, ControlCollection controlCollection)
+        {
+            Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
+            while (controlCollection.Find(key, false).Length != 0)
+                controlCollection.RemoveByKey(key);
+        }
+
+        internal static void RemoveControlByKey(string key, Control.ControlCollection controlCollection)
+        {
+            Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
+            while (controlCollection.Find(key, false).Length != 0)
+                controlCollection.RemoveByKey(key);
         }
     }
 }

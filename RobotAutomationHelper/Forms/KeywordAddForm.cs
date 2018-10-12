@@ -155,7 +155,7 @@ namespace RobotAutomationHelper
                         this);
                 else
                     if (Controls.Find("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length != 0)
-                        Controls.RemoveByKey("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params");
+                        FormControls.RemoveControlByKey("DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params", Controls);
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(ThisFormKeywords, IndexOfTheKeywordToBeImplemented);
@@ -206,8 +206,12 @@ namespace RobotAutomationHelper
                         else
                             ThisKeywordParams.Add(new Param(args[i], ""));
 
+            bool addToSuggestions = false;
             if (!nestedKeyword)
             {
+                if (TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
+                    addToSuggestions = true;
+
                 TestCaseAddForm.Keywords[IndexOfTheParentKeyword] = new Keyword("\t" + KeywordName.Text.Trim(),
                 "\t[Documentation]  " + KeywordDocumentation.Text.Trim(),
                 ThisFormKeywords,
@@ -215,10 +219,22 @@ namespace RobotAutomationHelper
                 ThisKeywordParams,
                 finalPath, 
                 save,
-                KeywordType.CUSTOM);
+                KeywordType.CUSTOM,
+                TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex);
+
+                if (addToSuggestions)
+                {
+                    TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex = FormControls.Suggestions.Count;
+                    FormControls.Suggestions.Add(TestCaseAddForm.Keywords[IndexOfTheParentKeyword]);
+                }
+                else
+                    FormControls.Suggestions[TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex] = TestCaseAddForm.Keywords[IndexOfTheParentKeyword];
             }
             else
             {
+                if (ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
+                    addToSuggestions = true;
+
                 ParentKeywords[IndexOfTheParentKeyword] = new Keyword("\t" + KeywordName.Text.Trim(),
                 "\t[Documentation]  " + KeywordDocumentation.Text.Trim(),
                 ThisFormKeywords,
@@ -226,19 +242,28 @@ namespace RobotAutomationHelper
                 ThisKeywordParams,
                 finalPath,
                 save,
-                KeywordType.CUSTOM);
+                KeywordType.CUSTOM,
+                ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex);
+
+                if (addToSuggestions)
+                {
+                    ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex = FormControls.Suggestions.Count;
+                    FormControls.Suggestions.Add(ParentKeywords[IndexOfTheParentKeyword]);
+                }
+                else
+                    FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex] = ParentKeywords[IndexOfTheParentKeyword];
             }
         }
 
         // Removes TextBox / Label / Add implementation / Add and remove keyword / Params
         internal void RemoveKeywordField(int keywordIndex, bool removeFromList)
         {
-            Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "Name");
-            Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "Label");
-            Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "AddImplementation");
-            Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "AddKeyword");
-            Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "RemoveKeyword");
-            Controls.RemoveByKey("DynamicTestStep" + keywordIndex + "Params");
+            FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "Name", Controls);
+            FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "Label", Controls);
+            FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "AddImplementation", Controls);
+            FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "AddKeyword", Controls);
+            FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "RemoveKeyword", Controls);
+            FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "Params", Controls);
             if (removeFromList)
                 ThisFormKeywords.RemoveAt(keywordIndex - 1);
         }
@@ -329,7 +354,7 @@ namespace RobotAutomationHelper
                 {
                     args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[i - 1].GetKeywordArguments());
                     if (Controls.Find("DynamicTestStep" + i + "Params", false).Length != 0)
-                        Controls.RemoveByKey("DynamicTestStep" + i + "Params");
+                        FormControls.RemoveControlByKey("DynamicTestStep" + i + "Params", Controls);
                     if (args != null && args.Count != 0)
                         FormControls.AddControl("Button", "DynamicTestStep" + i + "Params",
                             new Point(500 - HorizontalScroll.Value, initialYValue + (i - 1) * 30 - VerticalScroll.Value),
@@ -421,7 +446,7 @@ namespace RobotAutomationHelper
                 if (Controls.Find("DynamicTestStep" + i + "Params", false).Length != 0)
                 {
                     if (i == NumberOfKeywordsInThisKeyword + 1)
-                        Controls.RemoveByKey("DynamicTestStep" + i + "Params");
+                        FormControls.RemoveControlByKey("DynamicTestStep" + i + "Params", Controls);
                     else
                     {
                         Controls["DynamicTestStep" + i + "Params"].Location = new Point(
