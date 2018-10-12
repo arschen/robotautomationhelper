@@ -10,7 +10,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static List<Includes> includes;
 
-        internal static void AddTestCasesToRobot(TestCase testCase)
+        internal static void AddTestCaseToRobot(TestCase testCase)
         {
             string fileName = testCase.GetOutputFilePath();
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
@@ -72,9 +72,11 @@ namespace RobotAutomationHelper.Scripts
             if (keywordKeywords != null)
                 foreach (Keyword keywordKeyword in keywordKeywords)
                 {
-                    if (keywordKeyword.IsSaved() && keywordKeyword.Type == KeywordType.CUSTOM
-                         && RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keywordKeyword.GetKeywordName().Trim(), "keyword") != -1)
+                    if (keywordKeyword.IsSaved() && keywordKeyword.Type == KeywordType.CUSTOM)
                         includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
+                    else
+                    if (keywordKeyword.Type == KeywordType.SELENIUM)
+                        includes[includes.IndexOf(container)].AddToList("SeleniumLibrary");
 
                     if (addSteps)
                     {
@@ -200,7 +202,10 @@ namespace RobotAutomationHelper.Scripts
 
                 foreach (string path in temp.GetFilesToInclude())
                 {
-                    FileLineAdd("Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName, index);
+                    if (path.Equals("SeleniumLibrary"))
+                        FileLineAdd("Library  " + path, fileName, index);
+                    else
+                        FileLineAdd("Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName, index);
                     index++;
                 }
             }

@@ -172,7 +172,7 @@ namespace RobotAutomationHelper
             foreach (int index in testCasesToAdd)
             {
                 TestCase testCase = TestCases[index - 1];
-                WriteToRobot.AddTestCasesToRobot(testCase);
+                WriteToRobot.AddTestCaseToRobot(testCase);
             }
 
             WriteToRobot.AddIncludes();

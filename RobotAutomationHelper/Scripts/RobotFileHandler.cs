@@ -108,7 +108,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         if (!arrLine[ind].StartsWith("***"))
                         {
-                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
+                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
                             {
                                 string[] temp = arrLine[ind].ToLower().Trim().Split(new string[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
                                 foreach (string s in temp)
