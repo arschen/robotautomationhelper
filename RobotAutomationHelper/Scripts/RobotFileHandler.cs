@@ -117,7 +117,7 @@ namespace RobotAutomationHelper.Scripts
                                 foreach (string s in temp)
                                     if (s.Equals(name.ToLower()))
                                     {
-                                        //Console.WriteLine(arrLine[ind].StartsWith("	") + " | " + arrLine[ind]);
+                                        if (RobotAutomationHelper.Log) Console.WriteLine(arrLine[ind].StartsWith("	") + " | " + arrLine[ind]);
                                         return ind;
                                     }
                             }
@@ -142,7 +142,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         if (!arrLine[ind].StartsWith("***"))
                         {
-                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
+                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
                             {
                                 if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
                                     return true;

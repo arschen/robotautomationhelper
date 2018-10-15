@@ -14,7 +14,7 @@ namespace RobotAutomationHelper.Scripts
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterSelection(object sender, EventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
         {
-            Console.WriteLine("ChangeTheKeywordFieldAfterSelection " + (sender as ComboTheme).Name + " " + form.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("ChangeTheKeywordFieldAfterSelection " + (sender as ComboTheme).Name + " " + form.Name);
             keyEvent = Keys.None;
             if ((sender as ComboTheme).SelectedIndex != -1)
             {
@@ -43,7 +43,7 @@ namespace RobotAutomationHelper.Scripts
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterKeyPress(object sender, EventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords, string text)
         {
-            Console.WriteLine("ChangeTheKeywordFieldAfterKeyPress " + form.Name + " " + text);
+            if (RobotAutomationHelper.Log) Console.WriteLine("ChangeTheKeywordFieldAfterKeyPress " + form.Name + " " + text);
             ComboTheme combo = sender as ComboTheme;
             int keywordIndex = int.Parse(combo.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
             FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], text);
@@ -59,7 +59,7 @@ namespace RobotAutomationHelper.Scripts
         internal static void ComboBoxKeyPress(object sender, KeyEventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
         {
             var comboTheme = sender as ComboTheme;
-            Console.WriteLine("ComboBoxKeyPress " + comboTheme.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("ComboBoxKeyPress " + comboTheme.Name);
             if (keyEvent != Keys.Return)
             {
                 FormControls.textBeforeDroppedDown = comboTheme.Text;
@@ -69,9 +69,9 @@ namespace RobotAutomationHelper.Scripts
                 if (e.KeyCode != Keys.Return)
                     prevEnterKey = true;
             keyEvent = e.KeyCode;
-            //Console.WriteLine("key down " + e.KeyCode + "\\" + FormControls.textBeforeDroppedDown);
+            if (RobotAutomationHelper.Log) Console.WriteLine("key down " + e.KeyCode + "\\" + FormControls.textBeforeDroppedDown);
             FormControls.selectionPointer = comboTheme.SelectionStart;
-            //Console.WriteLine(e.KeyCode);
+            if (RobotAutomationHelper.Log) Console.WriteLine(e.KeyCode);
 
             if (keyEvent == Keys.Return && comboTheme.SelectedIndex == -1)
             {
@@ -84,7 +84,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateKeywordInThisKeyword(object sender, EventArgs e, KeywordAddForm keywordForm)
         {
-            Console.WriteLine("UpdateKeywordInThisKeyword " + ((ComboTheme)sender).Name + " " + keywordForm.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateKeywordInThisKeyword " + ((ComboTheme)sender).Name + " " + keywordForm.Name);
             int keywordIndex = int.Parse(((ComboTheme)sender).Name.Replace("DynamicTestStep", "").Replace("Name", "")); 
 
             if (keywordForm.ThisFormKeywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
@@ -93,7 +93,7 @@ namespace RobotAutomationHelper.Scripts
                 if (keywordForm.ThisFormKeywords[keywordIndex - 1].Implemented)
                     buttonImplementation = "Edit Implementation";
 
-                Console.WriteLine("length: " + keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false).Length);
+                if (RobotAutomationHelper.Log) Console.WriteLine("length: " + keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false).Length);
                 if (keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false).Length == 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + keywordIndex + "AddImplementation",
                     new Point(320 - keywordForm.HorizontalScroll.Value, keywordForm.initialYValue + (keywordIndex - 1) * 30 - keywordForm.VerticalScroll.Value),
@@ -149,7 +149,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateKeywordInThisTestCase(object sender, EventArgs e, TestCaseAddForm testCaseAddForm)
         {
-            Console.WriteLine("UpdateKeywordInThisTestCase " + ((ComboTheme)sender).Name + " " + testCaseAddForm.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateKeywordInThisTestCase " + ((ComboTheme)sender).Name + " " + testCaseAddForm.Name);
             int keywordIndex = int.Parse(((ComboTheme)sender).Name.Replace("DynamicTestStep", "").Replace("Name", ""));
 
             if (TestCaseAddForm.Keywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))

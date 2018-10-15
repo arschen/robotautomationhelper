@@ -26,13 +26,18 @@ namespace RobotAutomationHelper.Scripts
                 index = AddName(testCase.GetTestName().Trim(), fileName, index, "test cases");
 
                 //adds documentation
-                index = AddTagsDocumentationArguments("[Documentation]", testCase.GetTestDocumentation(), fileName, index);
+                index = AddTagsDocumentationArguments("[Documentation]", "\t" + testCase.GetTestDocumentation(), fileName, index);
 
                 //adds tags
-                index = AddTagsDocumentationArguments("[Tags]", testCase.GetTestCaseTags(), fileName, index);
-            }
+                index = AddTagsDocumentationArguments("[Tags]", "\t" + testCase.GetTestCaseTags(), fileName, index);
+            }else
+                if (testCase.Overwrite)
+                {
+                //TODO
+                    Console.WriteLine("OverWrite " + testCase.GetTestName());
+                }
 
-            index = AddKeyword(testCase.GetTestSteps(), fileName, index, addTestCase);
+            index = AddKeyword(testCase.GetTestSteps(), fileName, index, addTestCase, testCase.Overwrite);
         }
 
         internal static void AddKeywordToRobot(Keyword keyword)
@@ -50,6 +55,11 @@ namespace RobotAutomationHelper.Scripts
                     Includes candidate = new Includes(fileName);
                     if (!includes.Contains(candidate))
                         includes.Add(candidate);
+                }else
+                if (keyword.Overwrite)
+                {
+                    //TODO
+                    Console.WriteLine("OverWrite " + keyword.GetKeywordName());
                 }
 
             if (keyword.IsSaved() && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
@@ -58,17 +68,22 @@ namespace RobotAutomationHelper.Scripts
                 index = AddName(keyword.GetKeywordName().Trim(), fileName, index, "keywords");
 
                 //adds documentation
-                index = AddTagsDocumentationArguments("[Documentation]", keyword.GetKeywordDocumentation(), fileName, index);
+                index = AddTagsDocumentationArguments("[Documentation]", "\t" + keyword.GetKeywordDocumentation(), fileName, index);
 
                 //adds arguments
-                index = AddTagsDocumentationArguments("[Arguments]", keyword.GetKeywordArguments(), fileName, index);
-            }
+                index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.GetKeywordArguments(), fileName, index);
+            }else
+                if (keyword.Overwrite)
+                {
+                    //TODO
+                    Console.WriteLine("OverWrite " + keyword.GetKeywordName());
+                }
 
-            index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index, addKeywordSteps);
+            index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index, addKeywordSteps, keyword.Overwrite);
         }
 
         //adds Keywords
-        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index, bool addSteps)
+        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index, bool addSteps, bool overwrite)
         {
             Includes container = new Includes(fileName);
             if (keywordKeywords != null)
@@ -84,9 +99,14 @@ namespace RobotAutomationHelper.Scripts
 
                         //adds test steps
                         index++;
-                        FileLineAdd(keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
+                        FileLineAdd("\t" + keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
                     }
-                    
+                    else
+                    if (overwrite)
+                        {
+                            //TODO
+                            Console.WriteLine("OverWrite " + keywordKeyword.GetKeywordName());
+                        }
                     AddKeywordToRobot(keywordKeyword);
                 }
             return index;
@@ -210,8 +230,8 @@ namespace RobotAutomationHelper.Scripts
                             FileLineAdd("Library  " + path, fileName, index);
                     }
                     else
-                        if (!RobotFileHandler.ContainsSettings(fileName, "Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), "")))
-                            FileLineAdd("Resource  \\" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName, index);
+                        if (!RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")))
+                            FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName.Replace('\\','/'), index);
                     index++;
                 }
             }

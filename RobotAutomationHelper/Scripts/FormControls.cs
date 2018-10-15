@@ -17,11 +17,11 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
-            //Console.WriteLine("AddControl " + " " + type + " " + name + " " + text);
+            if (RobotAutomationHelper.Log) Console.WriteLine("AddControl " + " " + type + " " + name + " " + text);
             Control tempControl;
 
             if (owner.Controls.Find(name, false).Length > 1)
-                Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
+                if (RobotAutomationHelper.Log) Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
 
             switch (type.ToLower())
             {
@@ -52,7 +52,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateOutputFileSuggestions(ComboBox comboBox)
         {
-            Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
             comboBox.Items.Clear();
             comboBox.AutoCompleteCustomSource.Clear();
             comboBox.Items.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
@@ -63,15 +63,15 @@ namespace RobotAutomationHelper.Scripts
 
         internal static string textBeforeDroppedDown = "";
 
-        internal static void UpdateAutoCompleteComboBox(object sender, EventArgs e)
+        internal static void UpdateComboBox(object sender, EventArgs e)
         {
-            Console.WriteLine("UpdateAutoCompleteComboBox");
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateAutoCompleteComboBox");
             var comboTheme = sender as ComboTheme;
             if (comboTheme == null)
                 return;
 
             selectionPointer = comboTheme.SelectionStart;
-            //Console.WriteLine(checkDouble);
+            if (RobotAutomationHelper.Log) Console.WriteLine(checkDouble);
             if (!checkDouble)
             {
                 if (BaseKeywordAddForm.keyEvent != Keys.Down && BaseKeywordAddForm.keyEvent != Keys.Up)
@@ -85,7 +85,7 @@ namespace RobotAutomationHelper.Scripts
                             bool containsAll = true;
                             foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                //Console.WriteLine(keyword.ToString());
+                                if (RobotAutomationHelper.Log) Console.WriteLine(keyword.ToString());
                                 if (!keyword.GetKeywordName().ToLower().Contains(temp))
                                 {
                                     containsAll = false;
@@ -94,14 +94,14 @@ namespace RobotAutomationHelper.Scripts
                             }
                             if (containsAll)
                             {
-                                //Console.WriteLine(keyword.GetKeywordName().ToLower() + " | ");
+                                if (RobotAutomationHelper.Log) Console.WriteLine(keyword.GetKeywordName().ToLower() + " | ");
                                 //foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
-                                //    Console.Write(temp + " + ");
+                                //    if (RobotAutomationHelper.Log) Console.Write(temp + " + ");
                                if (keyword.Type != KeywordType.CUSTOM)
                                     foundItems.Add(new ComboBoxObject{Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation()});
                                 else
                                     foundItems.Add(new ComboBoxObject { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
-                                //Console.WriteLine("Success: " + keyword.ToString());
+                                if (RobotAutomationHelper.Log) Console.WriteLine("Success: " + keyword.ToString());
                             }
                         }
 
@@ -111,18 +111,18 @@ namespace RobotAutomationHelper.Scripts
                         comboTheme.Items.Clear();
                         comboTheme.Items.AddRange(foundItems.ToArray());
                         comboTheme.DroppedDown = true;
-                        //Console.WriteLine(comboTheme.SelectedIndex + " after /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
+                        if (RobotAutomationHelper.Log) Console.WriteLine(comboTheme.SelectedIndex + " after /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
                         Cursor.Current = Cursors.Default;
-                        //Console.WriteLine(comboBox.Text + " | " + txt + " suggestions");
+                        if (RobotAutomationHelper.Log) Console.WriteLine(comboTheme.Text + " | " + txt + " suggestions");
                         if (!comboTheme.Text.Equals(txt))
                         {
-                            //Console.WriteLine("done " + BaseKeywordAddForm.prevEnterKey);
+                            if (RobotAutomationHelper.Log) Console.WriteLine("done " + BaseKeywordAddForm.prevEnterKey);
                             if (!BaseKeywordAddForm.prevEnterKey)
                                 comboTheme.Text = txt;
                             else
                                 BaseKeywordAddForm.prevEnterKey = true;
                         }
-                        //Console.WriteLine("Second pass - /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
+                        if (RobotAutomationHelper.Log) Console.WriteLine("Second pass - /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
                         comboTheme.SelectionStart = selectionPointer;
                         checkDouble = false;
                         return;
@@ -131,7 +131,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         comboTheme.DroppedDown = false;
                         comboTheme.HideToolTip();
-                        //Console.WriteLine(txt + " | " + comboBox.SelectionStart + " no suggestions");
+                        if (RobotAutomationHelper.Log) Console.WriteLine(txt + " | " + comboTheme.SelectionStart + " no suggestions");
                     }
 
                 }
@@ -141,13 +141,13 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void DataChanged(object sender, EventArgs e, string text)
         {
-            Console.WriteLine("DataChanged " + (sender as ComboTheme).Name + " " + text);
+            if (RobotAutomationHelper.Log) Console.WriteLine("DataChanged " + (sender as ComboTheme).Name + " " + text);
             (sender as ComboTheme).Text = text;
         }
 
         internal static void AddSuggestionsToComboBox(ComboTheme comboBox)
         {
-            Console.WriteLine("AddSuggestionsToComboBox " + comboBox.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("AddSuggestionsToComboBox " + comboBox.Name);
             string current = comboBox.Text;
             foreach (Keyword keyword in Suggestions)
                 if (keyword.Type != KeywordType.CUSTOM)
@@ -159,7 +159,7 @@ namespace RobotAutomationHelper.Scripts
         internal static void ComboBoxMouseClick(object sender, MouseEventArgs e)
         {
             var combo = sender as ComboTheme;
-            Console.WriteLine("ComboBoxMouseClick " + combo.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("ComboBoxMouseClick " + combo.Name);
             if (combo.Items.Count != Suggestions.Count)
             {
                 combo.Items.Clear();
@@ -169,7 +169,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)
         {
-            Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.GetKeywordName() + " " + name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.GetKeywordName() + " " + name);
             foreach (Keyword seleniumKeyword in Suggestions)
                 if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower()))
                 {
@@ -197,16 +197,16 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void RemoveControlByKey(string key, ControlCollection controlCollection)
         {
-            Console.WriteLine("RemoveControlByKey " + key);
-            //Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
+            if (RobotAutomationHelper.Log) Console.WriteLine("RemoveControlByKey " + key);
+            if (RobotAutomationHelper.Log) Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
         }
 
         internal static void RemoveControlByKey(string key, Control.ControlCollection controlCollection)
         {
-            Console.WriteLine("RemoveControlByKey " + key);
-            //Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
+            if (RobotAutomationHelper.Log) Console.WriteLine("RemoveControlByKey " + key);
+            if (RobotAutomationHelper.Log) Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
         }

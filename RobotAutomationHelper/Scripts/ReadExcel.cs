@@ -57,12 +57,12 @@ namespace RobotAutomationHelper.Scripts
                         //summary column equals documentation in robot
                         else if (j == 2 && !cellValue.Equals(""))
                         {
-                            currentTestCaseDocumentation = "\t[Documentation]  " + cellValue;
+                            currentTestCaseDocumentation = "[Documentation]  " + cellValue;
                         }
                         //test cases column equals test steps ( keywords )
                         else if (j == 3 && !cellValue.Equals(""))
                         {
-                            currentTestCaseTestSteps.Add(new Keyword("\t" + cellValue, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
+                            currentTestCaseTestSteps.Add(new Keyword("" + cellValue, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
                         }
                         else if (j == 4 && !cellValue.Equals(""))
                         {
@@ -73,7 +73,7 @@ namespace RobotAutomationHelper.Scripts
                         {
 
                             string[] tagsStrings = cellValue.Split(',');
-                            currentTestTags = "\t" + "[Tags]";
+                            currentTestTags = "[Tags]";
                             foreach (string tag in tagsStrings)
                                 currentTestTags += "  " + tag.Trim();
                         }

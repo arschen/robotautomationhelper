@@ -11,6 +11,7 @@ namespace RobotAutomationHelper
     {
         internal static List<TestCase> TestCases;
 
+        internal static bool Log = false;
         // index of the test case to be implemented
         private int IndexOfTheTestCaseToBeImplemented = 0;
 

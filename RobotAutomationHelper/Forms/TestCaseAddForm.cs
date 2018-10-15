@@ -24,7 +24,7 @@ namespace RobotAutomationHelper
 
         internal TestCaseAddForm()
         {
-            Console.WriteLine("TestCaseAddForm [Constructor]");
+            if (RobotAutomationHelper.Log) Console.WriteLine("TestCaseAddForm [Constructor]");
             InitializeComponent();
             initialYValue = 140;
             FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
@@ -38,14 +38,14 @@ namespace RobotAutomationHelper
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Skip_Click");
+            if (RobotAutomationHelper.Log) Console.WriteLine("Skip_Click");
             skip = true;
             Close();
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Save_Click");
+            if (RobotAutomationHelper.Log) Console.WriteLine("Save_Click");
             if (!IsTestCasePresentInFilesOrMemoryTree())
             {
                 SaveChangesToTestCases();
@@ -59,7 +59,11 @@ namespace RobotAutomationHelper
                         "Alert",
                         MessageBoxButtons.YesNo);
                     if (result.Equals(DialogResult.Yes))
+                    {
+                        SaveChangesToTestCases();
                         RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].Overwrite = true;
+                        Close();
+                    }
                     else
                         RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].Overwrite = false;
                 }
@@ -69,19 +73,18 @@ namespace RobotAutomationHelper
                         "Alert",
                         MessageBoxButtons.OK);
                 }
-                //TODO
             }
         }
 
         private void TestCaseAddForm_FormClosing(object sender, EventArgs e)
         {
-            Console.WriteLine("TestCaseAddForm_FormClosing");
+            if (RobotAutomationHelper.Log) Console.WriteLine("TestCaseAddForm_FormClosing");
             Close();
         }
 
         private void TestCaseAddForm_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("TestCaseAddForm_Load");
+            if (RobotAutomationHelper.Log) Console.WriteLine("TestCaseAddForm_Load");
         }
 
         internal bool SkipValue()
@@ -91,7 +94,7 @@ namespace RobotAutomationHelper
 
         internal void ShowTestCaseContent(TestCase testCase, int testIndex)
         {
-            Console.WriteLine("ShowTestCaseContent " + testCase.GetTestName() + " " + testIndex);
+            if (RobotAutomationHelper.Log) Console.WriteLine("ShowTestCaseContent " + testCase.GetTestName() + " " + testIndex);
             IndexOfTheParentTestCase = testIndex;
             if (testCase.GetTestName() != null) { }
                 TestCaseName.Text = testCase.GetTestName();
@@ -119,7 +122,7 @@ namespace RobotAutomationHelper
 
         private void AddKeywordField(Keyword step, int testStepsCounter)
         {
-            Console.WriteLine("AddKeywordField " + step.GetKeywordName() + " " + testStepsCounter);
+            if (RobotAutomationHelper.Log) Console.WriteLine("AddKeywordField " + step.GetKeywordName() + " " + testStepsCounter);
             //List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
             
             FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
@@ -131,7 +134,7 @@ namespace RobotAutomationHelper
                 this);
             ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + testStepsCounter + "Name"];
             FormControls.AddSuggestionsToComboBox(temp);
-            temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
+            temp.TextUpdate += FormControls.UpdateComboBox;
             temp.DisplayMember = "ValueMember";
             //on key press
             temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.ComboBoxKeyPress(sender2, e2, this, false, Keywords);
@@ -178,7 +181,7 @@ namespace RobotAutomationHelper
 
         internal void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
-            Console.WriteLine("InstantiateKeywordAddForm " + ((Button)sender).Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateKeywordAddForm " + ((Button)sender).Name);
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
             IndexOfTheKeywordToBeImplemented = keywordIndex;
             Keyword keyword = Keywords[keywordIndex - 1];
@@ -191,7 +194,7 @@ namespace RobotAutomationHelper
 
         private void UpdateThisFormAfterImlpementedChildKeyword(object sender, EventArgs e)
         {
-            Console.WriteLine("UpdateThisFormAfterImlpementedChildKeyword");
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateThisFormAfterImlpementedChildKeyword");
             if ((sender.GetType().FullName.Contains("KeywordAddForm")) && !((KeywordAddForm)sender).SkipValue())
             {
                 Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordName().Trim();
@@ -220,27 +223,27 @@ namespace RobotAutomationHelper
 
         private void SaveChangesToTestCases()
         {
-            Console.WriteLine("SaveChangesToTestCases");
+            if (RobotAutomationHelper.Log) Console.WriteLine("SaveChangesToTestCases");
             /*if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
                 for (int counter = 1; counter <= RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count; counter++)
-                    Keywords[counter-1].SetKeywordName("\t" + ((ComboTheme) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
+                    Keywords[counter-1].SetKeywordName(((ComboTheme) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
             */
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 
             RobotAutomationHelper.TestCases[IndexOfTheParentTestCase] = new TestCase(TestCaseName.Text.Trim(),
-                "\t[Documentation]  " + TestCaseDocumentation.Text.Trim(),
-                "\t[Tags]  " + TestCaseTags.Text.Trim(),
+                "[Documentation]  " + TestCaseDocumentation.Text.Trim(),
+                "[Tags]  " + TestCaseTags.Text.Trim(),
                 Keywords,
                 finalPath);
         }
 
         internal void InstantiateParamsAddForm(object sender, EventArgs e)
         {
-            Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             ParamAddForm addParamForm = new ParamAddForm();
-            Keywords[keywordIndex - 1].SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
+            //Keywords[keywordIndex - 1].SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             // add closing event
             addParamForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addParamForm.ShowParamContent(Keywords[keywordIndex - 1]);
@@ -260,7 +263,7 @@ namespace RobotAutomationHelper
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
-            Console.WriteLine("IsTestCasePresentInFilesOrMemoryTree");
+            if (RobotAutomationHelper.Log) Console.WriteLine("IsTestCasePresentInFilesOrMemoryTree");
             presentInRobotFile = false;
             if (TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text),

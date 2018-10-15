@@ -123,12 +123,12 @@ namespace RobotAutomationHelper
             {
                 ThisFormKeywords = new List<Keyword>();
                 for (int i = 1; i <= NumberOfKeywordsInThisKeyword; i++)
-                    ThisFormKeywords.Add(new Keyword("\t" + Controls["DynamicTestStep" + i + "Name"].Text, path));
+                    ThisFormKeywords.Add(new Keyword(Controls["DynamicTestStep" + i + "Name"].Text, path));
             }
             else
             {
                 for (int i = ThisFormKeywords.Count + 1; i <= NumberOfKeywordsInThisKeyword; i++)
-                    ThisFormKeywords.Add(new Keyword("\t" + Controls["DynamicTestStep" + i + "Name"].Text, path));
+                    ThisFormKeywords.Add(new Keyword(Controls["DynamicTestStep" + i + "Name"].Text, path));
             }
 
             return ThisFormKeywords[keywordIndex - 1];
@@ -184,7 +184,12 @@ namespace RobotAutomationHelper
                         "Alert",
                         MessageBoxButtons.YesNo);
                     if (result.Equals(DialogResult.Yes))
+                    {
+                        AddCurrentKeywordsToKeywordsList(sender, e);
+                        AddChangesToKeyword(true);
                         ParentKeywords[IndexOfTheParentKeyword].Overwrite = true;
+                        Close();
+                    }
                     else
                         ParentKeywords[IndexOfTheParentKeyword].Overwrite = false;
                 }
@@ -194,7 +199,6 @@ namespace RobotAutomationHelper
                         "Alert",
                         MessageBoxButtons.OK);
                 }
-                //TODO
             }
         }
 
@@ -230,10 +234,10 @@ namespace RobotAutomationHelper
                 if (TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
                     addToSuggestions = true;
 
-                TestCaseAddForm.Keywords[IndexOfTheParentKeyword] = new Keyword("\t" + KeywordName.Text.Trim(),
-                "\t[Documentation]  " + KeywordDocumentation.Text.Trim(),
+                TestCaseAddForm.Keywords[IndexOfTheParentKeyword] = new Keyword(KeywordName.Text.Trim(),
+                "[Documentation]  " + KeywordDocumentation.Text.Trim(),
                 ThisFormKeywords,
-                "\t[Arguments]  " + KeywordArguments.Text.Trim(),
+                "[Arguments]  " + KeywordArguments.Text.Trim(),
                 ThisKeywordParams,
                 finalPath, 
                 save,
@@ -253,10 +257,10 @@ namespace RobotAutomationHelper
                 if (ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
                     addToSuggestions = true;
 
-                ParentKeywords[IndexOfTheParentKeyword] = new Keyword("\t" + KeywordName.Text.Trim(),
-                "\t[Documentation]  " + KeywordDocumentation.Text.Trim(),
+                ParentKeywords[IndexOfTheParentKeyword] = new Keyword(KeywordName.Text.Trim(),
+                "[Documentation]  " + KeywordDocumentation.Text.Trim(),
                 ThisFormKeywords,
-                "\t[Arguments]  " + KeywordArguments.Text.Trim(),
+                "[Arguments]  " + KeywordArguments.Text.Trim(),
                 ThisKeywordParams,
                 finalPath,
                 save,
@@ -302,7 +306,7 @@ namespace RobotAutomationHelper
                 this);
             ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + keywordsCounter + "Name"];
             FormControls.AddSuggestionsToComboBox(temp);
-            temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
+            temp.TextUpdate += FormControls.UpdateComboBox;
             temp.DisplayMember = "ValueMember";
             //on key press
             temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.ComboBoxKeyPress(sender2, e2, this, true, ThisFormKeywords);
