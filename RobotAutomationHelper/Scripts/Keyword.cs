@@ -14,6 +14,7 @@ namespace RobotAutomationHelper
         private bool Saved = false;
         internal KeywordType Type { get; set; }
         internal int SuggestionIndex { get; set; }
+        internal bool Overwrite { get; set; }
 
         internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex)
         {
@@ -24,6 +25,7 @@ namespace RobotAutomationHelper
             this.Params = Params;
             this.OutputFilePath = OutputFilePath;
             Implemented = true;
+            Overwrite = false;
             this.Saved = Saved;
             this.Type = Type;
             this.SuggestionIndex = SuggestionIndex;
@@ -41,6 +43,7 @@ namespace RobotAutomationHelper
             this.Saved = keyword.Saved;
             this.Type = keyword.Type;
             this.SuggestionIndex = keyword.SuggestionIndex;
+            this.Overwrite = keyword.Overwrite;
         }
 
         internal Keyword(string Name, string OutputFilePath)

@@ -50,10 +50,22 @@ namespace RobotAutomationHelper
             }
             else
             {
-                DialogResult result = MessageBox.Show("Is Dot Net Perls awesome?",
-                "Important Question",
-                MessageBoxButtons.YesNo);
-                //result ends up with Yes / No 
+                if (presentInRobotFile)
+                {
+                    DialogResult result = MessageBox.Show("Overwrite existing test case in the output file?",
+                        "Alert",
+                        MessageBoxButtons.YesNo);
+                    if (result.Equals(DialogResult.Yes))
+                        RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].Overwrite = true;
+                    else
+                        RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].Overwrite = false;
+                }
+                else
+                {
+                    DialogResult result = MessageBox.Show("Test case with this name has already been implemented in the ouput file.",
+                        "Alert",
+                        MessageBoxButtons.OK);
+                }
                 //TODO
             }
         }
@@ -233,8 +245,11 @@ namespace RobotAutomationHelper
             IsTestCasePresentInFilesOrMemoryTree();
         }
 
+        private bool presentInRobotFile;
+
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
+            presentInRobotFile = false;
             if (TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text),
                 RobotAutomationHelper.TestCases[IndexOfTheParentTestCase]))
@@ -243,7 +258,10 @@ namespace RobotAutomationHelper
             {
                 if (RobotFileHandler.ContainsTestCaseOrKeyword(FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text)
                     , TestCaseName.Text, "test cases") != -1)
+                {
                     TestCaseName.ForeColor = Color.Red;
+                    presentInRobotFile = true;
+                }
                 else
                 {
                     TestCaseName.ForeColor = Color.Black;

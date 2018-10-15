@@ -11,33 +11,39 @@
             return false;
         }
 
-        internal static bool IsPresentInTheKeywordTree(string name, string fileName, Keyword thisKeyword)
+        internal static string IsPresentInTheKeywordTree(string name, string fileName, Keyword thisKeyword)
         {
             foreach (TestCase test in RobotAutomationHelper.TestCases)
-                foreach (Keyword keyword in test.GetTestSteps())
-                {
-                    if (keyword.IsSaved() && keyword != thisKeyword 
-                        && keyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower())
-                        && keyword.GetOutputFilePath().ToLower().Equals(fileName.ToLower()))
-                        return true;
+                if (test.GetTestSteps() != null)
+                    foreach (Keyword keyword in test.GetTestSteps())
+                    {
+                        if (keyword.IsSaved() && keyword != thisKeyword 
+                            && keyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower())
+                            && keyword.GetOutputFilePath().ToLower().Equals(fileName.ToLower()))
+                            return test.GetTestName() + " | " + keyword.GetKeywordName();
 
-                    if (test.GetTestSteps() != null)
-                        foreach (Keyword key in test.GetTestSteps())
-                            IsPresentInChildrenKeywords(name, key, fileName, thisKeyword);
-                }
-            return false;
+                        if (keyword.GetKeywordKeywords() != null)
+                            foreach (Keyword key in keyword.GetKeywordKeywords())
+                            {
+                                string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, test.GetTestName() + " | " + keyword.GetKeywordName().Trim());
+                                if (!temp.Equals(""))
+                                return temp;
+                            }
+                    }
+            return "";
         }
 
-        private static bool IsPresentInChildrenKeywords(string name, Keyword keyword, string fileName, Keyword thisKeyword)
+        private static string IsPresentInChildrenKeywords(string name, Keyword keyword, string fileName, Keyword thisKeyword, string path)
         {
-            if (keyword.IsSaved() && keyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower())
+            if (keyword.IsSaved() && keyword != thisKeyword
+                && keyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower())
                 && keyword.GetOutputFilePath().ToLower().Equals(fileName.ToLower()))
-                return true;
+                return path + " | " + keyword.GetKeywordName().Trim();
 
             if (keyword.GetKeywordKeywords() != null)
                 foreach (Keyword key in keyword.GetKeywordKeywords())
-                    IsPresentInChildrenKeywords(name, key, fileName, thisKeyword);
-            return false;
+                    IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, path + " | " + keyword.GetKeywordName().Trim());
+            return "";
         }
     }
 }

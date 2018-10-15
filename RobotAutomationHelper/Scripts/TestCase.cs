@@ -8,7 +8,8 @@ namespace RobotAutomationHelper
         private string Name;
         private string Documentation;
         private string Tags;
-        private string outputFilePath;
+        private string OutputFilePath;
+        internal bool Overwrite { get; set; }
 
         internal TestCase(string Name, string Documentation, string Tags, List<Keyword> Steps, string outputFilePath)
         {
@@ -16,7 +17,8 @@ namespace RobotAutomationHelper
             this.Documentation = Documentation;
             this.Tags = Tags;
             this.Steps = Steps;
-            this.outputFilePath = outputFilePath;
+            this.OutputFilePath = outputFilePath;
+            Overwrite = false;
         }
 
         internal string GetTestName()
@@ -46,7 +48,7 @@ namespace RobotAutomationHelper
 
         internal string GetOutputFilePath()
         {
-            return this.outputFilePath;
+            return this.OutputFilePath;
         }
     }
 }

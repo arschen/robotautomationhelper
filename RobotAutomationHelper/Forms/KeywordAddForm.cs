@@ -178,6 +178,26 @@ namespace RobotAutomationHelper
                     AddChangesToKeyword(true);
                     Close();
                 }
+            else
+            {
+                if (presentInRobotFile)
+                {
+                    DialogResult result = MessageBox.Show("Overwrite existing keyword in the output file?",
+                        "Alert",
+                        MessageBoxButtons.YesNo);
+                    if (result.Equals(DialogResult.Yes))
+                        ParentKeywords[IndexOfTheParentKeyword].Overwrite = true;
+                    else
+                        ParentKeywords[IndexOfTheParentKeyword].Overwrite = false;
+                }
+                else
+                {
+                    DialogResult result = MessageBox.Show("Keyword with this name has already been implemented in the output file. \n" + memoryPath,
+                        "Alert",
+                        MessageBoxButtons.OK);
+                }
+                //TODO
+            }
         }
 
         // adds all field data to parentKeyword or testcaseaddform if not nested
@@ -207,7 +227,7 @@ namespace RobotAutomationHelper
                             ThisKeywordParams.Add(new Param(args[i], ""));
 
             bool addToSuggestions = false;
-            if (!nestedKeyword)
+            /*if (!nestedKeyword)
             {
                 if (TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
                     addToSuggestions = true;
@@ -231,7 +251,7 @@ namespace RobotAutomationHelper
                     FormControls.Suggestions[TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex] = TestCaseAddForm.Keywords[IndexOfTheParentKeyword];
             }
             else
-            {
+            {*/
                 if (ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
                     addToSuggestions = true;
 
@@ -252,7 +272,7 @@ namespace RobotAutomationHelper
                 }
                 else
                     FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex] = ParentKeywords[IndexOfTheParentKeyword];
-            }
+            //}
         }
 
         // Removes TextBox / Label / Add implementation / Add and remove keyword / Params
@@ -479,17 +499,25 @@ namespace RobotAutomationHelper
             IsKeywordPresentInFilesOrMemoryTree();
         }
 
+        private bool presentInRobotFile;
+        private string memoryPath;
+
         private bool IsKeywordPresentInFilesOrMemoryTree()
         {
-            if (TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
+            memoryPath = TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text),
-                ParentKeywords[IndexOfTheParentKeyword]))
+                ParentKeywords[IndexOfTheParentKeyword]);
+            presentInRobotFile = false;
+            if (!memoryPath.Equals(""))
                 KeywordName.ForeColor = Color.Red;
             else
             {
                 if (RobotFileHandler.ContainsTestCaseOrKeyword(FilesAndFolderStructure.ConcatFileNameToFolder(KeywordOutputFile.Text)
                     , KeywordName.Text, "keyword") != -1)
+                {
                     KeywordName.ForeColor = Color.Red;
+                    presentInRobotFile = true;
+                }
                 else
                 {
                     KeywordName.ForeColor = Color.Black;
