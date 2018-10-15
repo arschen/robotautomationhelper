@@ -231,7 +231,7 @@ namespace RobotAutomationHelper.Scripts
                     }
                     else
                         if (!RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")))
-                            FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), ""), fileName.Replace('\\','/'), index);
+                            FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\','/'), index);
                     index++;
                 }
             }
