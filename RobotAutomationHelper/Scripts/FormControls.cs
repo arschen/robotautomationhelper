@@ -17,6 +17,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
+            //Console.WriteLine("AddControl " + " " + type + " " + name + " " + text);
             Control tempControl;
 
             if (owner.Controls.Find(name, false).Length > 1)
@@ -51,6 +52,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateOutputFileSuggestions(ComboBox comboBox)
         {
+            Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
             comboBox.Items.Clear();
             comboBox.AutoCompleteCustomSource.Clear();
             comboBox.Items.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
@@ -63,6 +65,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateAutoCompleteComboBox(object sender, EventArgs e)
         {
+            Console.WriteLine("UpdateAutoCompleteComboBox");
             var comboTheme = sender as ComboTheme;
             if (comboTheme == null)
                 return;
@@ -138,11 +141,13 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void DataChanged(object sender, EventArgs e, string text)
         {
+            Console.WriteLine("DataChanged " + (sender as ComboTheme).Name + " " + text);
             (sender as ComboTheme).Text = text;
         }
 
         internal static void AddSuggestionsToComboBox(ComboTheme comboBox)
         {
+            Console.WriteLine("AddSuggestionsToComboBox " + comboBox.Name);
             string current = comboBox.Text;
             foreach (Keyword keyword in Suggestions)
                 if (keyword.Type != KeywordType.CUSTOM)
@@ -154,6 +159,7 @@ namespace RobotAutomationHelper.Scripts
         internal static void ComboBoxMouseClick(object sender, MouseEventArgs e)
         {
             var combo = sender as ComboTheme;
+            Console.WriteLine("ComboBoxMouseClick " + combo.Name);
             if (combo.Items.Count != Suggestions.Count)
             {
                 combo.Items.Clear();
@@ -163,26 +169,35 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)
         {
-            bool isFound = false;
+            Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.GetKeywordName() + " " + name);
             foreach (Keyword seleniumKeyword in Suggestions)
                 if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower()))
                 {
                     keyword.CopyKeyword(seleniumKeyword);
-                    isFound = true;
-                    break;
+                    return;
                 }
-            if (!isFound)
-                if (keyword.Type != KeywordType.CUSTOM)
+
+            if (keyword.Type != KeywordType.CUSTOM)
+            {
+                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
+                keyword.Type = KeywordType.CUSTOM;
+                return;
+            }
+
+            foreach (Keyword seleniumKeyword in Suggestions)
+                if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(keyword.GetKeywordName().Trim().ToLower()))
                 {
                     keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
                     keyword.Type = KeywordType.CUSTOM;
+                    return;
                 }
-                else
-                    keyword.Type = KeywordType.CUSTOM;
+
+            keyword.Type = KeywordType.CUSTOM;
         }
 
         internal static void RemoveControlByKey(string key, ControlCollection controlCollection)
         {
+            Console.WriteLine("RemoveControlByKey " + key);
             //Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
@@ -190,6 +205,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void RemoveControlByKey(string key, Control.ControlCollection controlCollection)
         {
+            Console.WriteLine("RemoveControlByKey " + key);
             //Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);

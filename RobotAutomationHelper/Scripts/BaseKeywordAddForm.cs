@@ -14,6 +14,7 @@ namespace RobotAutomationHelper.Scripts
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterSelection(object sender, EventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
         {
+            Console.WriteLine("ChangeTheKeywordFieldAfterSelection " + (sender as ComboTheme).Name + " " + form.Name);
             keyEvent = Keys.None;
             if ((sender as ComboTheme).SelectedIndex != -1)
             {
@@ -23,8 +24,8 @@ namespace RobotAutomationHelper.Scripts
                 // fix bug where if you edit library keyword name to CUSTOM one and then lose focus on textbox, the combo.Text stores the library keyword name
                 if ((sender as ComboBox).Focused)
                 {
-                    Keywords[keywordIndex - 1].SetKeywordName(combo.Text);
                     FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], combo.Text);
+                    Keywords[keywordIndex - 1].SetKeywordName(combo.Text);
                 }
                 else
                     FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], Keywords[keywordIndex - 1].GetKeywordName());
@@ -42,10 +43,11 @@ namespace RobotAutomationHelper.Scripts
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterKeyPress(object sender, EventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords, string text)
         {
+            Console.WriteLine("ChangeTheKeywordFieldAfterKeyPress " + form.Name + " " + text);
             ComboTheme combo = sender as ComboTheme;
             int keywordIndex = int.Parse(combo.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
-            Keywords[keywordIndex - 1].SetKeywordName(text);
             FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], text);
+            Keywords[keywordIndex - 1].SetKeywordName(text);
             combo.HideToolTip();
             if (isKeywordForm)
                 UpdateKeywordInThisKeyword(sender, e, form as KeywordAddForm);
@@ -54,9 +56,10 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // handles key press for keyword name input, the case when return/enter is hit
-        internal static void AutoCompleteComboBoxKeyPress(object sender, KeyEventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
+        internal static void ComboBoxKeyPress(object sender, KeyEventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
         {
             var comboTheme = sender as ComboTheme;
+            Console.WriteLine("ComboBoxKeyPress " + comboTheme.Name);
             if (keyEvent != Keys.Return)
             {
                 FormControls.textBeforeDroppedDown = comboTheme.Text;
@@ -81,14 +84,16 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateKeywordInThisKeyword(object sender, EventArgs e, KeywordAddForm keywordForm)
         {
+            Console.WriteLine("UpdateKeywordInThisKeyword " + ((ComboTheme)sender).Name + " " + keywordForm.Name);
             int keywordIndex = int.Parse(((ComboTheme)sender).Name.Replace("DynamicTestStep", "").Replace("Name", "")); 
 
             if (keywordForm.ThisFormKeywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
             {
                 string buttonImplementation = "Add Implementation";
-                if (keywordForm.ThisFormKeywords[keywordIndex - 1].IsImplemented())
+                if (keywordForm.ThisFormKeywords[keywordIndex - 1].Implemented)
                     buttonImplementation = "Edit Implementation";
 
+                Console.WriteLine("length: " + keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false).Length);
                 if (keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false).Length == 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + keywordIndex + "AddImplementation",
                     new Point(320 - keywordForm.HorizontalScroll.Value, keywordForm.initialYValue + (keywordIndex - 1) * 30 - keywordForm.VerticalScroll.Value),
@@ -97,7 +102,10 @@ namespace RobotAutomationHelper.Scripts
                     Color.Black,
                     new EventHandler(keywordForm.InstantiateKeywordAddForm),
                     keywordForm);
-            }else
+                else
+                    (keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false)[0] as Button).Text = buttonImplementation;
+            }
+            else
                 FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "AddImplementation", keywordForm.Controls);
 
             if (keywordForm.ThisFormKeywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
@@ -141,12 +149,13 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateKeywordInThisTestCase(object sender, EventArgs e, TestCaseAddForm testCaseAddForm)
         {
+            Console.WriteLine("UpdateKeywordInThisTestCase " + ((ComboTheme)sender).Name + " " + testCaseAddForm.Name);
             int keywordIndex = int.Parse(((ComboTheme)sender).Name.Replace("DynamicTestStep", "").Replace("Name", ""));
 
             if (TestCaseAddForm.Keywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
             {
                 string buttonImplementation = "Add Implementation";
-                if (TestCaseAddForm.Keywords[keywordIndex - 1].IsImplemented())
+                if (TestCaseAddForm.Keywords[keywordIndex - 1].Implemented)
                     buttonImplementation = "Edit Implementation";
 
                 if (testCaseAddForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false).Length == 0)
@@ -157,7 +166,10 @@ namespace RobotAutomationHelper.Scripts
                     Color.Black,
                     new EventHandler(testCaseAddForm.InstantiateKeywordAddForm),
                     testCaseAddForm);
-            }else
+                else
+                    (testCaseAddForm.Controls.Find("DynamicTestStep" + keywordIndex + "AddImplementation", false)[0] as Button).Text = buttonImplementation;
+            }
+            else
                 FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "AddImplementation", testCaseAddForm.Controls);
 
             
@@ -178,7 +190,6 @@ namespace RobotAutomationHelper.Scripts
                             testCaseAddForm);
                 }else
                     FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "Params", testCaseAddForm.Controls);
-
             }
             else
             {

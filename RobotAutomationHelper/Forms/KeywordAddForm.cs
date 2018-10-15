@@ -90,6 +90,7 @@ namespace RobotAutomationHelper
         {
             // get the keyword that will be implemented
             Keyword keyword = AddCurrentKeywordsToKeywordsList(sender, e);
+            keyword.Implemented = true;
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             KeywordAddForm addKeywordForm = new KeywordAddForm(true, ThisFormKeywords);
             // add closing event
@@ -126,11 +127,8 @@ namespace RobotAutomationHelper
             }
             else
             {
-                for (int i = 1; i <= NumberOfKeywordsInThisKeyword; i++)
-                    if (i > ThisFormKeywords.Count)
-                        ThisFormKeywords.Add(new Keyword("\t" + Controls["DynamicTestStep" + i + "Name"].Text, path));
-                    else
-                        ThisFormKeywords[i - 1].SetKeywordName("\t" + Controls["DynamicTestStep" + i + "Name"].Text);
+                for (int i = ThisFormKeywords.Count + 1; i <= NumberOfKeywordsInThisKeyword; i++)
+                    ThisFormKeywords.Add(new Keyword("\t" + Controls["DynamicTestStep" + i + "Name"].Text, path));
             }
 
             return ThisFormKeywords[keywordIndex - 1];
@@ -268,10 +266,12 @@ namespace RobotAutomationHelper
                 if (addToSuggestions)
                 {
                     ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex = FormControls.Suggestions.Count;
-                    FormControls.Suggestions.Add(ParentKeywords[IndexOfTheParentKeyword]);
+                    Keyword temp = new Keyword();
+                    temp.CopyKeyword(ParentKeywords[IndexOfTheParentKeyword]);
+                    FormControls.Suggestions.Add(temp);
                 }
                 else
-                    FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex] = ParentKeywords[IndexOfTheParentKeyword];
+                    FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex].CopyKeyword (ParentKeywords[IndexOfTheParentKeyword]);
             //}
         }
 
@@ -305,7 +305,7 @@ namespace RobotAutomationHelper
             temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
             temp.DisplayMember = "ValueMember";
             //on key press
-            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, this, true, ThisFormKeywords);
+            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.ComboBoxKeyPress(sender2, e2, this, true, ThisFormKeywords);
             //clicking the drop down control button
             temp.DropDownStyle = ComboBoxStyle.DropDown;
             temp.MouseClick += FormControls.ComboBoxMouseClick;
@@ -327,7 +327,7 @@ namespace RobotAutomationHelper
             if (keyword.Type.Equals(KeywordType.CUSTOM))
             {
                 string buttonImplementation = "Add Implementation";
-                if (ThisFormKeywords[keywordsCounter - 1].IsImplemented())
+                if (ThisFormKeywords[keywordsCounter - 1].Implemented)
                     buttonImplementation = "Edit Implementation";
                 FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "AddImplementation",
                     new Point(320 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),

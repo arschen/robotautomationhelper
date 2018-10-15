@@ -10,7 +10,7 @@ namespace RobotAutomationHelper
         private string Name;
         private string Documentation;
         private string OutputFilePath;
-        private bool Implemented = false;
+        internal bool Implemented { get; set; }
         private bool Saved = false;
         internal KeywordType Type { get; set; }
         internal int SuggestionIndex { get; set; }
@@ -29,6 +29,10 @@ namespace RobotAutomationHelper
             this.Saved = Saved;
             this.Type = Type;
             this.SuggestionIndex = SuggestionIndex;
+        }
+
+        internal Keyword()
+        {
         }
 
         internal void CopyKeyword(Keyword keyword)
@@ -50,6 +54,7 @@ namespace RobotAutomationHelper
         {
             this.Name = Name;
             this.OutputFilePath = OutputFilePath;
+            Documentation = "";
             SuggestionIndex = -1;
         }
 
@@ -105,11 +110,6 @@ namespace RobotAutomationHelper
         internal bool IsSaved()
         {
             return Saved;
-        }
-
-        internal bool IsImplemented()
-        {
-            return Implemented;
         }
 
         public override string ToString()

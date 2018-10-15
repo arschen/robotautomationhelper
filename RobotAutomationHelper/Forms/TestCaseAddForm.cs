@@ -24,6 +24,7 @@ namespace RobotAutomationHelper
 
         internal TestCaseAddForm()
         {
+            Console.WriteLine("TestCaseAddForm [Constructor]");
             InitializeComponent();
             initialYValue = 140;
             FormControls.UpdateOutputFileSuggestions(TestCaseOutputFile);
@@ -37,12 +38,14 @@ namespace RobotAutomationHelper
 
         private void Skip_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("Skip_Click");
             skip = true;
             Close();
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("Save_Click");
             if (!IsTestCasePresentInFilesOrMemoryTree())
             {
                 SaveChangesToTestCases();
@@ -72,12 +75,13 @@ namespace RobotAutomationHelper
 
         private void TestCaseAddForm_FormClosing(object sender, EventArgs e)
         {
+            Console.WriteLine("TestCaseAddForm_FormClosing");
             Close();
         }
 
         private void TestCaseAddForm_Load(object sender, EventArgs e)
         {
-
+            Console.WriteLine("TestCaseAddForm_Load");
         }
 
         internal bool SkipValue()
@@ -87,6 +91,7 @@ namespace RobotAutomationHelper
 
         internal void ShowTestCaseContent(TestCase testCase, int testIndex)
         {
+            Console.WriteLine("ShowTestCaseContent " + testCase.GetTestName() + " " + testIndex);
             IndexOfTheParentTestCase = testIndex;
             if (testCase.GetTestName() != null) { }
                 TestCaseName.Text = testCase.GetTestName();
@@ -112,14 +117,15 @@ namespace RobotAutomationHelper
             var dialogResult = ShowDialog();
         }
 
-        private void AddKeywordField(Keyword testStep, int testStepsCounter)
+        private void AddKeywordField(Keyword step, int testStepsCounter)
         {
+            Console.WriteLine("AddKeywordField " + step.GetKeywordName() + " " + testStepsCounter);
             //List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
             
             FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
-                testStep.GetKeywordName().Trim(),
+                step.GetKeywordName().Trim(),
                 Color.Black,
                 null,
                 this);
@@ -128,7 +134,7 @@ namespace RobotAutomationHelper
             temp.TextUpdate += FormControls.UpdateAutoCompleteComboBox;
             temp.DisplayMember = "ValueMember";
             //on key press
-            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.AutoCompleteComboBoxKeyPress(sender2, e2, this, false, Keywords);
+            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.ComboBoxKeyPress(sender2, e2, this, false, Keywords);
             //clicking the drop down control button
             temp.DropDownStyle = ComboBoxStyle.DropDown;
             temp.MouseClick += FormControls.ComboBoxMouseClick;
@@ -147,10 +153,10 @@ namespace RobotAutomationHelper
                 Color.Black,
                 null,
                 this);
-            if (testStep.Type.Equals(KeywordType.CUSTOM))
+            if (step.Type.Equals(KeywordType.CUSTOM))
             {
                 string buttonImplementation = "Add Implementation";
-                if (testStep.IsImplemented())
+                if (step.Implemented)
                     buttonImplementation = "Edit Implementation";
                 FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "AddImplementation",
                     new Point(320 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
@@ -160,7 +166,7 @@ namespace RobotAutomationHelper
                     new EventHandler(InstantiateKeywordAddForm),
                     this);
             }
-            if (testStep.GetKeywordParams() != null && testStep.GetKeywordParams().Count != 0)
+            if (step.GetKeywordParams() != null && step.GetKeywordParams().Count != 0)
                 FormControls.AddControl("Button", "DynamicTestStep" + testStepsCounter + "Params",
                     new Point(450 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                     new Size(75, 20),
@@ -172,10 +178,12 @@ namespace RobotAutomationHelper
 
         internal void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
+            Console.WriteLine("InstantiateKeywordAddForm " + ((Button)sender).Name);
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
             IndexOfTheKeywordToBeImplemented = keywordIndex;
             Keyword keyword = Keywords[keywordIndex - 1];
-            keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
+            keyword.Implemented = true;
+            //keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             KeywordAddForm addKeywordForm = new KeywordAddForm(false, Keywords);
             addKeywordForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addKeywordForm.ShowKeywordContent(keyword, keywordIndex - 1);
@@ -183,6 +191,7 @@ namespace RobotAutomationHelper
 
         private void UpdateThisFormAfterImlpementedChildKeyword(object sender, EventArgs e)
         {
+            Console.WriteLine("UpdateThisFormAfterImlpementedChildKeyword");
             if ((sender.GetType().FullName.Contains("KeywordAddForm")) && !((KeywordAddForm)sender).SkipValue())
             {
                 Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = Keywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordName().Trim();
@@ -211,10 +220,11 @@ namespace RobotAutomationHelper
 
         private void SaveChangesToTestCases()
         {
-            if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
+            Console.WriteLine("SaveChangesToTestCases");
+            /*if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
                 for (int counter = 1; counter <= RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count; counter++)
                     Keywords[counter-1].SetKeywordName("\t" + ((ComboTheme) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
-
+            */
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 
             RobotAutomationHelper.TestCases[IndexOfTheParentTestCase] = new TestCase(TestCaseName.Text.Trim(),
@@ -226,6 +236,7 @@ namespace RobotAutomationHelper
 
         internal void InstantiateParamsAddForm(object sender, EventArgs e)
         {
+            Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             ParamAddForm addParamForm = new ParamAddForm();
@@ -249,6 +260,7 @@ namespace RobotAutomationHelper
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
+            Console.WriteLine("IsTestCasePresentInFilesOrMemoryTree");
             presentInRobotFile = false;
             if (TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text),
