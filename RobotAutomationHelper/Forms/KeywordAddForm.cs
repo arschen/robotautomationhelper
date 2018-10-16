@@ -75,8 +75,10 @@ namespace RobotAutomationHelper
             else
             {
                 // add a single keyword field if no keywords are available
-                ThisFormKeywords = new List<Keyword>();
-                ThisFormKeywords.Add(new Keyword("New Keyword", ParentKeywords[IndexOfTheParentKeyword].GetOutputFilePath()));
+                ThisFormKeywords = new List<Keyword>
+                {
+                    new Keyword("New Keyword", ParentKeywords[IndexOfTheParentKeyword].GetOutputFilePath())
+                };
                 AddKeywordField(ThisFormKeywords[0], keywordsCounter);
                 NumberOfKeywordsInThisKeyword++;
             }
@@ -304,20 +306,6 @@ namespace RobotAutomationHelper
                 Color.Black,
                 null,
                 this);
-            ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + keywordsCounter + "Name"];
-            FormControls.AddSuggestionsToComboBox(temp);
-            temp.DisplayMember = "ValueMember";
-            //on key press
-            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.ComboBoxKeyPress(sender2, e2, this, true, ThisFormKeywords);
-            //clicking the drop down control button
-            temp.DropDownStyle = ComboBoxStyle.DropDown;
-            temp.MouseClick += FormControls.ComboBoxMouseClick;
-            temp.IntegralHeight = true;
-            //update the keyword field
-            temp.AutoCompleteMode = AutoCompleteMode.None;
-            temp.AutoCompleteSource = AutoCompleteSource.None;
-            temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, true, ThisFormKeywords);
-            temp.LostFocus += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, true, ThisFormKeywords);
 
             FormControls.AddControl("Label", "DynamicTestStep" + keywordsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
@@ -326,6 +314,7 @@ namespace RobotAutomationHelper
                 Color.Black,
                 null,
                 this);
+
             if (keyword.Type.Equals(KeywordType.CUSTOM))
             {
                 string buttonImplementation = "Add Implementation";

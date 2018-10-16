@@ -21,7 +21,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
-                case "combobox": tempControl = new ComboTheme(); break;
+                case "combobox": tempControl = new TextWithList(owner); break;
                 case "checkbox": tempControl = new CheckBox(); ((CheckBox)tempControl).Checked = true; break;
                 case "button": tempControl = new Button(); tempControl.Click += eventHandler; break;
                 default: tempControl = new Label(); break;
@@ -38,7 +38,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": owner.Controls.Add((TextBox)tempControl); break;
-                case "combobox": owner.Controls.Add((ComboTheme)tempControl); break;
+                case "combobox": owner.Controls.Add((TextWithList)tempControl); break;
                 case "checkbox": owner.Controls.Add((CheckBox)tempControl); break;
                 case "button": owner.Controls.Add((Button)tempControl); break;
                 default: owner.Controls.Add((Label)tempControl); break;
@@ -54,34 +54,6 @@ namespace RobotAutomationHelper.Scripts
             comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        }
-
-        internal static void DataChanged(object sender, EventArgs e, string text)
-        {
-            if (RobotAutomationHelper.Log) Console.WriteLine("DataChanged " + (sender as ComboTheme).Name + " " + text);
-            (sender as ComboTheme).Text = text;
-        }
-
-        internal static void AddSuggestionsToComboBox(ComboTheme comboBox)
-        {
-            if (RobotAutomationHelper.Log) Console.WriteLine("AddSuggestionsToComboBox " + comboBox.Name);
-            string current = comboBox.Text;
-            foreach (Keyword keyword in Suggestions)
-                if (keyword.Type != KeywordType.CUSTOM)
-                    comboBox.Items.Add(new ComboBoxObject { Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation() });
-                else
-                    comboBox.Items.Add(new ComboBoxObject { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
-        }
-
-        internal static void ComboBoxMouseClick(object sender, MouseEventArgs e)
-        {
-            var combo = sender as ComboTheme;
-            if (RobotAutomationHelper.Log) Console.WriteLine("ComboBoxMouseClick " + combo.Name);
-            if (combo.Items.Count != Suggestions.Count)
-            {
-                combo.Items.Clear();
-                AddSuggestionsToComboBox(combo);
-            }
         }
 
         internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)

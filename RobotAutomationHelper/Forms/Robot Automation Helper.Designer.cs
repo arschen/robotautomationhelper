@@ -71,7 +71,7 @@
             this.saveToRobotToolStripMenuItem.Name = "saveToRobotToolStripMenuItem";
             this.saveToRobotToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.saveToRobotToolStripMenuItem.Text = "Save to Robot";
-            this.saveToRobotToolStripMenuItem.Click += new System.EventHandler(this.saveToRobotToolStripMenuItem_Click);
+            this.saveToRobotToolStripMenuItem.Click += new System.EventHandler(this.SaveToRobotToolStripMenuItem_Click);
             // 
             // openFileDialog
             // 

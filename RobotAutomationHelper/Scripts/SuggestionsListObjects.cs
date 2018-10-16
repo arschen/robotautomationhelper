@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts
 {
-    internal class ComboBoxObject : ListControl
+    internal class SuggestionsListObjects : ListControl
     {
         internal string Documentation { get; set; }
 

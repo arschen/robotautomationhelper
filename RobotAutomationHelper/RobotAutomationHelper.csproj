@@ -66,10 +66,16 @@
       <DependentUpon>ParamAddForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Scripts\BaseKeywordAddForm.cs" />
-    <Compile Include="Scripts\ComboBoxObject.cs">
+    <Compile Include="Scripts\SuggestionsList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Scripts\ComboTheme.cs">
+    <Compile Include="Scripts\SuggestionsList.Designer.cs">
+      <DependentUpon>SuggestionsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Scripts\SuggestionsListObjects.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scripts\TextWithList.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Scripts\FilesAndFolderstructure.cs" />

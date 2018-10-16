@@ -132,20 +132,6 @@ namespace RobotAutomationHelper
                 Color.Black,
                 null,
                 this);
-            ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + testStepsCounter + "Name"];
-            FormControls.AddSuggestionsToComboBox(temp);
-            temp.DisplayMember = "ValueMember";
-            //on key press
-            temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.ComboBoxKeyPress(sender2, e2, this, false, Keywords);
-            //clicking the drop down control button
-            temp.DropDownStyle = ComboBoxStyle.DropDown;
-            temp.MouseClick += FormControls.ComboBoxMouseClick;
-            temp.IntegralHeight = true;
-            //update the keyword field
-            temp.AutoCompleteMode = AutoCompleteMode.None;
-            temp.AutoCompleteSource = AutoCompleteSource.None;
-            temp.SelectedIndexChanged += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, false, Keywords);
-            temp.LostFocus += (sender2, e2) => BaseKeywordAddForm.ChangeTheKeywordFieldAfterSelection(sender2, e2, this, false, Keywords);
 
             FormControls.AddControl("Label", "DynamicTestStep" + testStepsCounter + "Label",
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
@@ -224,7 +210,7 @@ namespace RobotAutomationHelper
             if (RobotAutomationHelper.Log) Console.WriteLine("SaveChangesToTestCases");
             /*if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
                 for (int counter = 1; counter <= RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count; counter++)
-                    Keywords[counter-1].SetKeywordName(((ComboTheme) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
+                    Keywords[counter-1].SetKeywordName(((TextWithList) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
             */
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 

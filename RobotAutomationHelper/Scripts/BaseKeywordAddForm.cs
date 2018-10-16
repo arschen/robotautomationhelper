@@ -14,78 +14,51 @@ namespace RobotAutomationHelper.Scripts
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterSelection(object sender, EventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("ChangeTheKeywordFieldAfterSelection " + (sender as ComboTheme).Name + " " + form.Name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("ChangeTheKeywordFieldAfterSelection " + (sender as TextWithList).Name + " " + form.Name);
             keyEvent = Keys.None;
-            if ((sender as ComboTheme).SelectedIndex != -1)
+            if ((sender as SuggestionsList).SelectedIndex != -1)
             {
-                ComboTheme combo = sender as ComboTheme;
-                int keywordIndex = int.Parse(combo.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+                TextWithList textWithList = sender as TextWithList;
+                int keywordIndex = int.Parse(textWithList.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
 
                 // fix bug where if you edit library keyword name to CUSTOM one and then lose focus on textbox, the combo.Text stores the library keyword name
-                if ((sender as ComboBox).Focused)
+                if ((sender as SuggestionsList).Focused)
                 {
-                    FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], combo.Text);
-                    Keywords[keywordIndex - 1].SetKeywordName(combo.Text);
+                    FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], textWithList.Text);
+                    Keywords[keywordIndex - 1].SetKeywordName(textWithList.Text);
                 }
                 else
                     FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], Keywords[keywordIndex - 1].GetKeywordName());
 
-                combo.HideToolTip();
+                (sender as SuggestionsList).HideToolTip();
                 if (isKeywordForm)
                     UpdateKeywordInThisKeyword(sender, e, form as KeywordAddForm);
                 else
                     UpdateKeywordInThisTestCase(sender, e, form as TestCaseAddForm);
             }
             else
-                ChangeTheKeywordFieldAfterKeyPress(sender, e, form, isKeywordForm, Keywords, (sender as ComboTheme).Text);
+                ChangeTheKeywordFieldAfterKeyPress(sender, e, form, isKeywordForm, Keywords, (sender as TextWithList).Text);
         }
 
         // change the field when the keyword name is changed
         internal static void ChangeTheKeywordFieldAfterKeyPress(object sender, EventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords, string text)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("ChangeTheKeywordFieldAfterKeyPress " + form.Name + " " + text);
-            ComboTheme combo = sender as ComboTheme;
-            int keywordIndex = int.Parse(combo.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
+            TextWithList textWithList = sender as TextWithList;
+            int keywordIndex = int.Parse(textWithList.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
             FormControls.CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], text);
             Keywords[keywordIndex - 1].SetKeywordName(text);
-            combo.HideToolTip();
+            (sender as SuggestionsList).HideToolTip();
             if (isKeywordForm)
                 UpdateKeywordInThisKeyword(sender, e, form as KeywordAddForm);
             else
                 UpdateKeywordInThisTestCase(sender, e, form as TestCaseAddForm);
         }
 
-        // handles key press for keyword name input, the case when return/enter is hit
-        internal static void ComboBoxKeyPress(object sender, KeyEventArgs e, Form form, bool isKeywordForm, List<Keyword> Keywords)
-        {
-            var comboTheme = sender as ComboTheme;
-            if (RobotAutomationHelper.Log) Console.WriteLine("ComboBoxKeyPress " + comboTheme.Name);
-            if (keyEvent != Keys.Return)
-            {
-                comboTheme.textBeforeDroppedDown = comboTheme.Text;
-                prevEnterKey = false;
-            }
-            else
-                if (e.KeyCode != Keys.Return)
-                prevEnterKey = true;
-            keyEvent = e.KeyCode;
-            if (RobotAutomationHelper.Log) Console.WriteLine("key down " + e.KeyCode + "\\" + comboTheme.textBeforeDroppedDown);
-            comboTheme.selectionPointer = comboTheme.SelectionStart;
-            if (RobotAutomationHelper.Log) Console.WriteLine(e.KeyCode);
-
-            if (keyEvent == Keys.Return && comboTheme.SelectedIndex == -1)
-            {
-                comboTheme.DroppedDown = false;
-                comboTheme.Text = comboTheme.textBeforeDroppedDown;
-                comboTheme.SelectionStart = comboTheme.selectionPointer;
-                ChangeTheKeywordFieldAfterKeyPress(sender, e, form, isKeywordForm, Keywords, comboTheme.textBeforeDroppedDown);
-            }
-        }
-
         internal static void UpdateKeywordInThisKeyword(object sender, EventArgs e, KeywordAddForm keywordForm)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateKeywordInThisKeyword " + ((ComboTheme)sender).Name + " " + keywordForm.Name);
-            int keywordIndex = int.Parse(((ComboTheme)sender).Name.Replace("DynamicTestStep", "").Replace("Name", "")); 
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateKeywordInThisKeyword " + ((TextWithList)sender).Name + " " + keywordForm.Name);
+            int keywordIndex = int.Parse(((TextWithList)sender).Name.Replace("DynamicTestStep", "").Replace("Name", "")); 
 
             if (keywordForm.ThisFormKeywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
             {
@@ -149,8 +122,8 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void UpdateKeywordInThisTestCase(object sender, EventArgs e, TestCaseAddForm testCaseAddForm)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateKeywordInThisTestCase " + ((ComboTheme)sender).Name + " " + testCaseAddForm.Name);
-            int keywordIndex = int.Parse(((ComboTheme)sender).Name.Replace("DynamicTestStep", "").Replace("Name", ""));
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateKeywordInThisTestCase " + ((TextWithList)sender).Name + " " + testCaseAddForm.Name);
+            int keywordIndex = int.Parse(((TextWithList)sender).Name.Replace("DynamicTestStep", "").Replace("Name", ""));
 
             if (TestCaseAddForm.Keywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
             {

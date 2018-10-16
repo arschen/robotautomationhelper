@@ -161,7 +161,7 @@ namespace RobotAutomationHelper
             AddLabel.Visible = true;
         }
 
-        private void saveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WriteToRobot.includes = new List<Includes>();
             List<int> testCasesToAdd = new List<int>();

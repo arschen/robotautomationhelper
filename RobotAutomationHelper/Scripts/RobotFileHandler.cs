@@ -30,11 +30,13 @@ namespace RobotAutomationHelper.Scripts
                     Directory.CreateDirectory(directory);
                 var myFile = File.Create(fileName);
                 myFile.Close();
-                List<string> temp = new List<string>();
-                temp.Add("*** Settings ***");
-                temp.Add("*** Variables ***");
-                temp.Add("*** Test Cases ***");
-                temp.Add("*** Keywords ***");
+                List<string> temp = new List<string>
+                {
+                    "*** Settings ***",
+                    "*** Variables ***",
+                    "*** Test Cases ***",
+                    "*** Keywords ***"
+                };
                 File.WriteAllLines(fileName, temp);
                 temp.Clear();
                 arrLine = File.ReadAllLines(fileName);
