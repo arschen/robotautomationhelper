@@ -22,6 +22,18 @@ namespace RobotAutomationHelper.Scripts
             toolTip.Hide(this);
         }
 
+        protected override void OnDropDown(EventArgs e)
+        {
+            Console.WriteLine("OnDropDown " +
+                 this.SelectedIndex + " " + this.Text);
+        }
+
+        protected override void OnDropDownClosed(EventArgs e)
+        {
+            Console.WriteLine("OnDropDownClosed " +
+                 this.SelectedIndex + " " + this.Text);
+        }
+
         internal void ComboTheme_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index >= 0)
