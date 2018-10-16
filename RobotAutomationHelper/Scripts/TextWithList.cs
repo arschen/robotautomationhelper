@@ -8,12 +8,13 @@ namespace RobotAutomationHelper.Scripts
     internal class TextWithList : TextBox
     {
 
-        private SuggestionsList SuggestionsList = new SuggestionsList();
+        private SuggestionsList SuggestionsList;
         private Control ParentControl;
 
         internal TextWithList(Control Parent)
         {
-            this.ParentControl = Parent;
+            ParentControl = Parent;
+            SuggestionsList = new SuggestionsList(this);
         }
 
         protected override void OnTextChanged(EventArgs e)
@@ -37,9 +38,9 @@ namespace RobotAutomationHelper.Scripts
                     if (containsAll)
                     {
                         if (keyword.Type != KeywordType.CUSTOM)
-                            foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation() });
+                            foundItems.Add(new SuggestionsListObjects { Text = keyword.GetKeywordName(), ValueMember = keyword.ToString(), Documentation = keyword.GetKeywordDocumentation() });
                         else
-                            foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
+                            foundItems.Add(new SuggestionsListObjects { Text = keyword.GetKeywordName().Trim(), ValueMember = keyword.ToString().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
                     }
                 }
 
@@ -48,11 +49,12 @@ namespace RobotAutomationHelper.Scripts
                 SuggestionsList.Items.Clear();
                 SuggestionsList.Items.AddRange(foundItems.ToArray());
                 SuggestionsList.Visible = true;
-                SuggestionsList.Location = new Point(this.Location.X, this.Location.Y + 20);
-                SuggestionsList.Size = new Size(this.Size.Width, 200);
+                SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
+                SuggestionsList.Size = new Size(Size.Width, 200);
                 SuggestionsList.DisplayMember = "ValueMember";
                 SuggestionsList.IntegralHeight = true;
                 ParentControl.Controls.Add(SuggestionsList);
+                SuggestionsList.BringToFront();
                 return;
             }
             else
@@ -68,6 +70,11 @@ namespace RobotAutomationHelper.Scripts
             SuggestionsList.Visible = false;
             SuggestionsList.HideToolTip();
             ParentControl.Controls.Remove(SuggestionsList);
+        }
+
+        protected override void OnGotFocus(EventArgs e)
+        {
+            OnTextChanged(e);
         }
     }
 }

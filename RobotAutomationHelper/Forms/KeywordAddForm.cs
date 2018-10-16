@@ -91,8 +91,10 @@ namespace RobotAutomationHelper
         internal void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
             // get the keyword that will be implemented
+            int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
             Keyword keyword = AddCurrentKeywordsToKeywordsList(sender, e);
             keyword.Implemented = true;
+            keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             KeywordAddForm addKeywordForm = new KeywordAddForm(true, ThisFormKeywords);
             // add closing event
@@ -231,54 +233,29 @@ namespace RobotAutomationHelper
                             ThisKeywordParams.Add(new Param(args[i], ""));
 
             bool addToSuggestions = false;
-            /*if (!nestedKeyword)
+
+            if (ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
+                addToSuggestions = true;
+
+            ParentKeywords[IndexOfTheParentKeyword] = new Keyword(KeywordName.Text.Trim(),
+            "[Documentation]  " + KeywordDocumentation.Text.Trim(),
+            ThisFormKeywords,
+            "[Arguments]  " + KeywordArguments.Text.Trim(),
+            ThisKeywordParams,
+            finalPath,
+            save,
+            KeywordType.CUSTOM,
+            ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex);
+
+            if (addToSuggestions)
             {
-                if (TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
-                    addToSuggestions = true;
-
-                TestCaseAddForm.Keywords[IndexOfTheParentKeyword] = new Keyword(KeywordName.Text.Trim(),
-                "[Documentation]  " + KeywordDocumentation.Text.Trim(),
-                ThisFormKeywords,
-                "[Arguments]  " + KeywordArguments.Text.Trim(),
-                ThisKeywordParams,
-                finalPath, 
-                save,
-                KeywordType.CUSTOM,
-                TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex);
-
-                if (addToSuggestions)
-                {
-                    TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex = FormControls.Suggestions.Count;
-                    FormControls.Suggestions.Add(TestCaseAddForm.Keywords[IndexOfTheParentKeyword]);
-                }
-                else
-                    FormControls.Suggestions[TestCaseAddForm.Keywords[IndexOfTheParentKeyword].SuggestionIndex] = TestCaseAddForm.Keywords[IndexOfTheParentKeyword];
+                ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex = FormControls.Suggestions.Count;
+                Keyword temp = new Keyword();
+                temp.CopyKeyword(ParentKeywords[IndexOfTheParentKeyword]);
+                FormControls.Suggestions.Add(temp);
             }
             else
-            {*/
-                if (ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex == -1)
-                    addToSuggestions = true;
-
-                ParentKeywords[IndexOfTheParentKeyword] = new Keyword(KeywordName.Text.Trim(),
-                "[Documentation]  " + KeywordDocumentation.Text.Trim(),
-                ThisFormKeywords,
-                "[Arguments]  " + KeywordArguments.Text.Trim(),
-                ThisKeywordParams,
-                finalPath,
-                save,
-                KeywordType.CUSTOM,
-                ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex);
-
-                if (addToSuggestions)
-                {
-                    ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex = FormControls.Suggestions.Count;
-                    Keyword temp = new Keyword();
-                    temp.CopyKeyword(ParentKeywords[IndexOfTheParentKeyword]);
-                    FormControls.Suggestions.Add(temp);
-                }
-                else
-                    FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex].CopyKeyword (ParentKeywords[IndexOfTheParentKeyword]);
-            //}
+                FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex].CopyKeyword (ParentKeywords[IndexOfTheParentKeyword]);
         }
 
         // Removes TextBox / Label / Add implementation / Add and remove keyword / Params
@@ -475,6 +452,7 @@ namespace RobotAutomationHelper
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             ParamAddForm addParamForm = new ParamAddForm();
+            ThisFormKeywords[keywordIndex - 1].SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             // add closing event
             addParamForm.FormClosing += new FormClosingEventHandler(UpdateParentFormAfterClosing);
             addParamForm.ShowParamContent(ThisFormKeywords[keywordIndex - 1]);

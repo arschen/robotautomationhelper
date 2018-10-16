@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,13 +8,15 @@ namespace RobotAutomationHelper.Scripts
     internal partial class SuggestionsList : ListBox
     {
         private Color HighlightColor { get; set; }
+        private TextWithList TextWithListControl;
 
-        internal SuggestionsList()
+        internal SuggestionsList(TextWithList TextWithListControl)
         {
             InitializeComponent();
             this.Name = "SuggesionsList";
             base.DrawMode = DrawMode.OwnerDrawFixed;
             HighlightColor = SystemColors.Highlight;
+            this.TextWithListControl = TextWithListControl;
         }
 
         private ToolTip toolTip = new ToolTip();
@@ -37,13 +40,24 @@ namespace RobotAutomationHelper.Scripts
                         e.Font, new SolidBrush(ForeColor),
                         new Point(e.Bounds.X, e.Bounds.Y));
                 e.DrawFocusRectangle();
-
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
-                    this.toolTip.Show(((SuggestionsListObjects)Items[e.Index]).Documentation, this, e.Bounds.Right, e.Bounds.Bottom);
-                else
-                    this.toolTip.Hide(this);
-                e.DrawFocusRectangle();
             }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            //Get the item
+            int nIdx = IndexFromPoint(e.Location);
+            if ((nIdx >= 0) && (nIdx < Items.Count))
+                toolTip.Show(((SuggestionsListObjects)Items[nIdx]).Documentation, this);
+            else
+                toolTip.Hide(this);
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            int nIdx = IndexFromPoint(e.Location);
+            if ((nIdx >= 0) && (nIdx < Items.Count))
+                TextWithListControl.Text = (((SuggestionsListObjects)Items[nIdx]).Text);
         }
     }
 }

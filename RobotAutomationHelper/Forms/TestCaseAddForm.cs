@@ -170,7 +170,7 @@ namespace RobotAutomationHelper
             IndexOfTheKeywordToBeImplemented = keywordIndex;
             Keyword keyword = Keywords[keywordIndex - 1];
             keyword.Implemented = true;
-            //keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
+            keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             KeywordAddForm addKeywordForm = new KeywordAddForm(false, Keywords);
             addKeywordForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addKeywordForm.ShowKeywordContent(keyword, keywordIndex - 1);
@@ -208,10 +208,10 @@ namespace RobotAutomationHelper
         private void SaveChangesToTestCases()
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("SaveChangesToTestCases");
-            /*if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
+            if (RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps() != null && RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count > 0)
                 for (int counter = 1; counter <= RobotAutomationHelper.TestCases[IndexOfTheParentTestCase].GetTestSteps().Count; counter++)
                     Keywords[counter-1].SetKeywordName(((TextWithList) Controls["DynamicTestStep" + counter + "Name"]).Text.Trim());
-            */
+            
             string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(TestCaseOutputFile.Text);
 
             RobotAutomationHelper.TestCases[IndexOfTheParentTestCase] = new TestCase(TestCaseName.Text.Trim(),
@@ -227,7 +227,7 @@ namespace RobotAutomationHelper
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             ParamAddForm addParamForm = new ParamAddForm();
-            //Keywords[keywordIndex - 1].SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
+            Keywords[keywordIndex - 1].SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
             // add closing event
             addParamForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addParamForm.ShowParamContent(Keywords[keywordIndex - 1]);
