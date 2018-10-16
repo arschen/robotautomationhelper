@@ -62,23 +62,23 @@ namespace RobotAutomationHelper.Scripts
             if (RobotAutomationHelper.Log) Console.WriteLine("ComboBoxKeyPress " + comboTheme.Name);
             if (keyEvent != Keys.Return)
             {
-                FormControls.textBeforeDroppedDown = comboTheme.Text;
+                comboTheme.textBeforeDroppedDown = comboTheme.Text;
                 prevEnterKey = false;
             }
             else
                 if (e.KeyCode != Keys.Return)
-                    prevEnterKey = true;
+                prevEnterKey = true;
             keyEvent = e.KeyCode;
-            if (RobotAutomationHelper.Log) Console.WriteLine("key down " + e.KeyCode + "\\" + FormControls.textBeforeDroppedDown);
-            FormControls.selectionPointer = comboTheme.SelectionStart;
+            if (RobotAutomationHelper.Log) Console.WriteLine("key down " + e.KeyCode + "\\" + comboTheme.textBeforeDroppedDown);
+            comboTheme.selectionPointer = comboTheme.SelectionStart;
             if (RobotAutomationHelper.Log) Console.WriteLine(e.KeyCode);
 
             if (keyEvent == Keys.Return && comboTheme.SelectedIndex == -1)
             {
                 comboTheme.DroppedDown = false;
-                comboTheme.Text = FormControls.textBeforeDroppedDown;
-                comboTheme.SelectionStart = FormControls.selectionPointer;
-                ChangeTheKeywordFieldAfterKeyPress(sender, e, form, isKeywordForm, Keywords, FormControls.textBeforeDroppedDown);
+                comboTheme.Text = comboTheme.textBeforeDroppedDown;
+                comboTheme.SelectionStart = comboTheme.selectionPointer;
+                ChangeTheKeywordFieldAfterKeyPress(sender, e, form, isKeywordForm, Keywords, comboTheme.textBeforeDroppedDown);
             }
         }
 

@@ -9,11 +9,6 @@ namespace RobotAutomationHelper.Scripts
     internal static class FormControls
     {
         internal static List<Keyword> Suggestions = new List<Keyword>();
-        
-        internal static int selectionPointer;
-
-        // checks if text update/change is triggered inside UpdateAutoCompleteComboBox recursively
-        private static bool checkDouble = false;
 
         internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
@@ -59,84 +54,6 @@ namespace RobotAutomationHelper.Scripts
             comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        }
-
-        internal static string textBeforeDroppedDown = "";
-
-        internal static void UpdateComboBox(object sender, EventArgs e)
-        {
-            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateAutoCompleteComboBox");
-            var comboTheme = sender as ComboTheme;
-            if (comboTheme == null)
-                return;
-
-            selectionPointer = comboTheme.SelectionStart;
-            if (RobotAutomationHelper.Log) Console.WriteLine(checkDouble);
-            if (!checkDouble)
-            {
-                if (BaseKeywordAddForm.keyEvent != Keys.Down && BaseKeywordAddForm.keyEvent != Keys.Up)
-                {
-                    string txt = comboTheme.Text;
-
-                    List<Object> foundItems = new List<Object>();
-                    foreach (Keyword keyword in Suggestions)
-                        if (!string.IsNullOrEmpty(txt))
-                        {
-                            bool containsAll = true;
-                            foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                if (RobotAutomationHelper.Log) Console.WriteLine(keyword.ToString());
-                                if (!keyword.GetKeywordName().ToLower().Contains(temp))
-                                {
-                                    containsAll = false;
-                                    break;
-                                }
-                            }
-                            if (containsAll)
-                            {
-                                if (RobotAutomationHelper.Log) Console.WriteLine(keyword.GetKeywordName().ToLower() + " | ");
-                                //foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
-                                //    if (RobotAutomationHelper.Log) Console.Write(temp + " + ");
-                               if (keyword.Type != KeywordType.CUSTOM)
-                                    foundItems.Add(new ComboBoxObject{Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation()});
-                                else
-                                    foundItems.Add(new ComboBoxObject { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
-                                if (RobotAutomationHelper.Log) Console.WriteLine("Success: " + keyword.ToString());
-                            }
-                        }
-
-                    if (foundItems.Count > 0)
-                    {
-                        checkDouble = true;
-                        comboTheme.Items.Clear();
-                        comboTheme.Items.AddRange(foundItems.ToArray());
-                        comboTheme.DroppedDown = true;
-                        if (RobotAutomationHelper.Log) Console.WriteLine(comboTheme.SelectedIndex + " after /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
-                        Cursor.Current = Cursors.Default;
-                        if (RobotAutomationHelper.Log) Console.WriteLine(comboTheme.Text + " | " + txt + " suggestions");
-                        if (!comboTheme.Text.Equals(txt))
-                        {
-                            if (RobotAutomationHelper.Log) Console.WriteLine("done " + BaseKeywordAddForm.prevEnterKey);
-                            if (!BaseKeywordAddForm.prevEnterKey)
-                                comboTheme.Text = txt;
-                            else
-                                BaseKeywordAddForm.prevEnterKey = true;
-                        }
-                        if (RobotAutomationHelper.Log) Console.WriteLine("Second pass - /tb: " + textBeforeDroppedDown + " /txt: " + txt + " /cb: " + comboTheme.Text);
-                        comboTheme.SelectionStart = selectionPointer;
-                        checkDouble = false;
-                        return;
-                    }
-                    else
-                    {
-                        comboTheme.DroppedDown = false;
-                        comboTheme.HideToolTip();
-                        if (RobotAutomationHelper.Log) Console.WriteLine(txt + " | " + comboTheme.SelectionStart + " no suggestions");
-                    }
-
-                }
-            }
-            checkDouble = false;
         }
 
         internal static void DataChanged(object sender, EventArgs e, string text)

@@ -134,7 +134,6 @@ namespace RobotAutomationHelper
                 this);
             ComboTheme temp = (ComboTheme)Controls["DynamicTestStep" + testStepsCounter + "Name"];
             FormControls.AddSuggestionsToComboBox(temp);
-            temp.TextUpdate += FormControls.UpdateComboBox;
             temp.DisplayMember = "ValueMember";
             //on key press
             temp.KeyDown += (sender2, e2) => BaseKeywordAddForm.ComboBoxKeyPress(sender2, e2, this, false, Keywords);
@@ -142,7 +141,6 @@ namespace RobotAutomationHelper
             temp.DropDownStyle = ComboBoxStyle.DropDown;
             temp.MouseClick += FormControls.ComboBoxMouseClick;
             temp.IntegralHeight = true;
-            temp.MaxDropDownItems = 15;
             //update the keyword field
             temp.AutoCompleteMode = AutoCompleteMode.None;
             temp.AutoCompleteSource = AutoCompleteSource.None;
