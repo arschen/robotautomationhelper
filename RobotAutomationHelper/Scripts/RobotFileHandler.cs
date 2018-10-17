@@ -179,26 +179,20 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // add newText on new line to file fileName after specified line
-        internal static void FileLineRemove(string newText, string fileName, int lineToRemove)
+        internal static void TrimFile(string fileName)
         {
-            string[] arrLine;
-            if (File.Exists(fileName))
-                arrLine = File.ReadAllLines(fileName);
-            else
-            {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
-                var myFile = File.Create(fileName);
-                myFile.Close();
-                arrLine = File.ReadAllLines(fileName);
-            }
+            string[] arrLine = File.ReadAllLines(fileName);
 
-            if (lineToRemove < arrLine.Length)
+            if (!(arrLine == null) && !(arrLine.Length == 0))
             {
                 List<string> temp = new List<string>();
-                temp.AddRange(arrLine);
-                temp.RemoveAt(lineToRemove);
+                for (int i = 1; i < arrLine.Length; i++)
+                {
+                    if (!(arrLine[i - 1].Trim().Equals("") && arrLine[i].Trim().Equals("")))
+                        temp.Add(arrLine[i - 1]);
+                    else
+                        Console.WriteLine(i);
+                }
                 File.WriteAllLines(fileName, temp);
             }
         }
@@ -233,12 +227,18 @@ namespace RobotAutomationHelper.Scripts
 
                 while (!endOfTestCaseKeyword)
                 {
-                    temp.RemoveAt(index);
                     if (index < temp.Count)
-                        if ((!temp[index].StartsWith(" ")) && (!temp[index].StartsWith("\t"))
-                            && (!temp[index].StartsWith("\\")) && (!temp[index].StartsWith("."))
-                            && (!temp[index].StartsWith("***")))
-                            endOfTestCaseKeyword = true;
+                        temp.RemoveAt(index);
+                    else
+                        endOfTestCaseKeyword = true;
+
+                    if (index < temp.Count)
+                        if (!temp[index].StartsWith(" "))
+                            if (!temp[index].StartsWith("\t"))
+                                if (!temp[index].StartsWith("\\"))
+                                    if(!temp[index].StartsWith("."))
+                                            if (!temp[index].Equals(""))
+                                                endOfTestCaseKeyword = true;
                 }
 
                 File.WriteAllLines(fileName, temp);

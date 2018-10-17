@@ -6,7 +6,7 @@ namespace RobotAutomationHelper.Scripts
     internal static class FilesAndFolderStructure
     {
         // list of saved files for the drop down menus
-        private static List<string> SavedFiles = new List<string>();
+        internal static List<string> SavedFiles = new List<string>();
         private static string OutputFolder;
 
         internal static bool AddFileToSavedFiles(string filePath)

@@ -175,12 +175,14 @@ namespace RobotAutomationHelper
                 TestCase testCase = TestCases[index - 1];
                 if (testCase.Overwrite)
                     RobotFileHandler.TestCaseKeywordRemove(testCase.GetTestName(), testCase.GetOutputFilePath(), false);
-                foreach (Keyword testStep in testCase.GetTestSteps())
-                {
-                    RemoveKeyword(testStep);
-                    if (testCase.Overwrite)
-                        RobotFileHandler.TestCaseKeywordRemove(testStep.GetKeywordName(), testStep.GetOutputFilePath(), true);
-                }
+
+                if (testCase.GetTestSteps() != null)
+                    foreach (Keyword testStep in testCase.GetTestSteps())
+                    {
+                        RemoveKeyword(testStep);
+                        if (testStep.Overwrite)
+                            RobotFileHandler.TestCaseKeywordRemove(testStep.GetKeywordName(), testStep.GetOutputFilePath(), true);
+                    }
             }
 
             foreach (int index in testCasesToAdd)
@@ -190,16 +192,20 @@ namespace RobotAutomationHelper
             }
 
             WriteToRobot.AddIncludes();
+
+            foreach (string fileName in FilesAndFolderStructure.SavedFiles)
+                RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName));
         }
 
         private void RemoveKeyword(Keyword keyword)
         {
-            foreach (Keyword step in keyword.GetKeywordKeywords())
-            {
-                RemoveKeyword(step);
-                if (keyword.Overwrite)
-                    RobotFileHandler.TestCaseKeywordRemove(step.GetKeywordName(), step.GetOutputFilePath(), true);
-            }
+            if (keyword.GetKeywordKeywords() != null)
+                foreach (Keyword step in keyword.GetKeywordKeywords())
+                {
+                    RemoveKeyword(step);
+                    if (step.Overwrite)
+                        RobotFileHandler.TestCaseKeywordRemove(step.GetKeywordName(), step.GetOutputFilePath(), true);
+                }
         }
     }
 }
