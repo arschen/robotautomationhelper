@@ -8,14 +8,17 @@ namespace RobotAutomationHelper.Scripts
     internal static class BaseKeywordAddForm
     {
         // change the field when the keyword name is changed
-        internal static void ChangeTheKeywordFieldOnUpdate(object sender, Form form, bool isKeywordForm, List<Keyword> Keywords)
+        internal static void ChangeTheKeywordFieldOnUpdate(object sender, Form form, bool isKeywordForm, List<Keyword> Keywords, string textChangePassed)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("ChangeTheKeywordFieldAfterSelection " + (sender as TextWithList).Name + " " + form.Name);
 
             TextWithList textWithList = sender as TextWithList;
             int keywordIndex = int.Parse(textWithList.Name.Replace("Name", "").Replace("DynamicTestStep", ""));
 
-            CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], textWithList.Text);
+            if (textChangePassed.Equals(""))
+                CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], textWithList.Text);
+            else
+                CheckKeywordTypeAndReturnKeyword(Keywords[keywordIndex - 1], textChangePassed);
 
             if (isKeywordForm)
                 UpdateKeywordInThisKeyword(sender, form as KeywordAddForm);
@@ -83,7 +86,9 @@ namespace RobotAutomationHelper.Scripts
                 }else
                     FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "Params", keywordForm.Controls);
             }
-            keywordForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordName().Trim();
+
+            if (keywordForm.Controls["DynamicTestStep" + keywordIndex + "Name"] != null)
+                keywordForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordName().Trim();
         }
 
         internal static void UpdateKeywordInThisTestCase(object sender, TestCaseAddForm testCaseAddForm)
@@ -148,7 +153,8 @@ namespace RobotAutomationHelper.Scripts
                     FormControls.RemoveControlByKey("DynamicTestStep" + keywordIndex + "Params", testCaseAddForm.Controls);
             }
 
-            testCaseAddForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = testCaseAddForm.Keywords[keywordIndex - 1].GetKeywordName().Trim();
+            if (testCaseAddForm.Controls["DynamicTestStep" + keywordIndex + "Name"] != null)
+                testCaseAddForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = testCaseAddForm.Keywords[keywordIndex - 1].GetKeywordName().Trim();
         }
 
         internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)

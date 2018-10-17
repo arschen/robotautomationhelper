@@ -62,8 +62,8 @@ namespace RobotAutomationHelper.Scripts
             if (e.KeyCode == Keys.Enter && e.KeyCode == Keys.Return)
             {
                 SelectionPerformed = true;
-                TextWithListControl.Text = ((SuggestionsListObjects) Items[SelectedIndex]).ValueMember;
                 TextWithListControl.Focus();
+                //TextWithListControl.Text = ((SuggestionsListObjects)Items[SelectedIndex]).ValueMember;
                 TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
             }
             else
@@ -100,13 +100,12 @@ namespace RobotAutomationHelper.Scripts
             if ((nIdx >= 0) && (nIdx < Items.Count))
             {
                 SelectionPerformed = true;
-                TextWithListControl.Text = (((SuggestionsListObjects)Items[nIdx]).ValueMember);
+                TextWithListControl.Focus();
+                //TextWithListControl.Text = (((SuggestionsListObjects)Items[nIdx]).ValueMember);
+                TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
             }
             else
                 toolTip.Hide(this);
-
-            TextWithListControl.Focus();
-            TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
         }
     }
 }
