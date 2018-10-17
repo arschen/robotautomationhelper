@@ -155,5 +155,74 @@ namespace RobotAutomationHelper.Scripts
             }
             return false;
         }
+
+        // add newText on new line to file fileName after specified line
+        internal static void FileLineAdd(string newText, string fileName, int line_to_add_after)
+        {
+            string[] arrLine;
+            if (File.Exists(fileName))
+                arrLine = File.ReadAllLines(fileName);
+            else
+            {
+                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                var myFile = File.Create(fileName);
+                myFile.Close();
+                arrLine = File.ReadAllLines(fileName);
+            }
+
+            List<string> temp = new List<string>();
+            temp.AddRange(arrLine);
+            temp.Insert(line_to_add_after, newText);
+            File.WriteAllLines(fileName, temp);
+        }
+
+        // add newText on new line to file fileName after specified line
+        internal static void FileLineRemove(string newText, string fileName, int lineToRemove)
+        {
+            string[] arrLine;
+            if (File.Exists(fileName))
+                arrLine = File.ReadAllLines(fileName);
+            else
+            {
+                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                var myFile = File.Create(fileName);
+                myFile.Close();
+                arrLine = File.ReadAllLines(fileName);
+            }
+
+            if (lineToRemove < arrLine.Length)
+            {
+                List<string> temp = new List<string>();
+                temp.AddRange(arrLine);
+                temp.RemoveAt(lineToRemove);
+                File.WriteAllLines(fileName, temp);
+            }
+        }
+
+        // add newText on new line to file fileName after specified line
+        internal static void FileLineReplace(string newText, string fileName, int lineToReplace)
+        {
+            string[] arrLine;
+            if (File.Exists(fileName))
+                arrLine = File.ReadAllLines(fileName);
+            else
+            {
+                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                var myFile = File.Create(fileName);
+                myFile.Close();
+                arrLine = File.ReadAllLines(fileName);
+            }
+
+            List<string> temp = new List<string>();
+            temp.AddRange(arrLine);
+            temp[lineToReplace] = newText;
+            File.WriteAllLines(fileName, temp);
+        }
     }
 }

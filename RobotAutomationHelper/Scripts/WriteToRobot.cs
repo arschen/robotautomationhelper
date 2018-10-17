@@ -30,12 +30,7 @@ namespace RobotAutomationHelper.Scripts
 
                 //adds tags
                 index = AddTagsDocumentationArguments("[Tags]", "\t" + testCase.GetTestCaseTags(), fileName, index);
-            }else
-                if (testCase.Overwrite)
-                {
-                //TODO
-                    Console.WriteLine("OverWrite " + testCase.GetTestName());
-                }
+            }
 
             index = AddKeyword(testCase.GetTestSteps(), fileName, index, addTestCase, testCase.Overwrite);
         }
@@ -55,11 +50,6 @@ namespace RobotAutomationHelper.Scripts
                     Includes candidate = new Includes(fileName);
                     if (!includes.Contains(candidate))
                         includes.Add(candidate);
-                }else
-                if (keyword.Overwrite)
-                {
-                    //TODO
-                    Console.WriteLine("OverWrite " + keyword.GetKeywordName());
                 }
 
             if (keyword.IsSaved() && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
@@ -72,12 +62,7 @@ namespace RobotAutomationHelper.Scripts
 
                 //adds arguments
                 index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.GetKeywordArguments(), fileName, index);
-            }else
-                if (keyword.Overwrite)
-                {
-                    //TODO
-                    Console.WriteLine("OverWrite " + keyword.GetKeywordName());
-                }
+            }
 
             index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index, addKeywordSteps, keyword.Overwrite);
         }
@@ -99,62 +84,15 @@ namespace RobotAutomationHelper.Scripts
 
                         //adds test steps
                         index++;
-                        FileLineAdd("\t" + keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
+                        RobotFileHandler.FileLineAdd("\t" + keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
                     }
-                    else
-                    if (overwrite)
-                        {
-                            //TODO
-                            Console.WriteLine("OverWrite " + keywordKeyword.GetKeywordName());
-                        }
+
                     AddKeywordToRobot(keywordKeyword);
                 }
             return index;
         }
 
-        // add newText on new line to file fileName after specified line
-        internal static void FileLineAdd(string newText, string fileName, int line_to_add_after)
-        {
-            string[] arrLine;
-            if (File.Exists(fileName))
-                arrLine = File.ReadAllLines(fileName);
-            else
-            {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
-                var myFile = File.Create(fileName);
-                myFile.Close();
-                arrLine = File.ReadAllLines(fileName);
-            }
 
-            List<string> temp = new List<string>();
-            temp.AddRange(arrLine);
-            temp.Insert(line_to_add_after, newText);
-            File.WriteAllLines(fileName, temp);
-        }
-
-        // add newText on new line to file fileName after specified line
-        internal static void FileLineReplace(string newText, string fileName, int line_to_add_after)
-        {
-            string[] arrLine;
-            if (File.Exists(fileName))
-                arrLine = File.ReadAllLines(fileName);
-            else
-            {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
-                var myFile = File.Create(fileName);
-                myFile.Close();
-                arrLine = File.ReadAllLines(fileName);
-            }
-
-            List<string> temp = new List<string>();
-            temp.AddRange(arrLine);
-            temp[line_to_add_after] = newText;
-            File.WriteAllLines(fileName, temp);
-        }
 
         //adds Tags / Documentation / Arguments
         private static int AddTagsDocumentationArguments(string type, string addString, string fileName, int index)
@@ -164,7 +102,7 @@ namespace RobotAutomationHelper.Scripts
             if (!addString.Replace(type, "").Trim().Equals(""))
             {
                 index++;
-                FileLineAdd(addString, fileName, index);
+                RobotFileHandler.FileLineAdd(addString, fileName, index);
             }
             return index;
         }
@@ -176,7 +114,7 @@ namespace RobotAutomationHelper.Scripts
             if (tempTagIndex == -1)
             {
                 if (tag.Equals("keywords"))
-                    FileLineAdd("*** Keywords ***", fileName, index);
+                    RobotFileHandler.FileLineAdd("*** Keywords ***", fileName, index);
                 else
                 {
                     if (tag.Equals("test cases"))
@@ -184,21 +122,21 @@ namespace RobotAutomationHelper.Scripts
                         int tempKeywordsIndex = RobotFileHandler.HasTag(fileName, "keywords");
                         if (tempKeywordsIndex != -1)
                         {
-                            FileLineAdd("*** Test Cases ***", fileName, tempKeywordsIndex);
+                            RobotFileHandler.FileLineAdd("*** Test Cases ***", fileName, tempKeywordsIndex);
                             index = tempKeywordsIndex;
                         }
                         else
-                            FileLineAdd("*** Test Cases ***", fileName, index);
+                            RobotFileHandler.FileLineAdd("*** Test Cases ***", fileName, index);
                     }
                 }
                 index++;
             }else
                 if (tempTagIndex + 1 != index)
                 {
-                    FileLineAdd("", fileName, index);
+                RobotFileHandler.FileLineAdd("", fileName, index);
                     index++;
                 }
-            FileLineAdd(name, fileName, index);
+            RobotFileHandler.FileLineAdd(name, fileName, index);
             return index;
         }
 
@@ -216,7 +154,7 @@ namespace RobotAutomationHelper.Scripts
                 int tempTagIndex = RobotFileHandler.HasTag(fileName, tag);
                 if (tempTagIndex == -1)
                 {
-                    FileLineAdd("*** Settings ***", fileName, index);
+                    RobotFileHandler.FileLineAdd("*** Settings ***", fileName, index);
                     index++;
                 }
                 else
@@ -227,11 +165,11 @@ namespace RobotAutomationHelper.Scripts
                     if (path.Equals("SeleniumLibrary"))
                     {
                         if (!RobotFileHandler.ContainsSettings(fileName, "Library  " + path))
-                            FileLineAdd("Library  " + path, fileName, index);
+                            RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
                     }
                     else
                         if (!RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")))
-                            FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\','/'), index);
+                            RobotFileHandler.FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\','/'), index);
                     index++;
                 }
             }
