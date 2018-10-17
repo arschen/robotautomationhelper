@@ -17,7 +17,7 @@ namespace RobotAutomationHelper
         private int IndexOfTheKeywordToBeImplemented = 0;
 
         //current keywords in this test case
-        internal static List<Keyword> Keywords;
+        internal List<Keyword> Keywords { get; set; }
 
         //y value for dynamic buttons
         internal int initialYValue;
@@ -125,7 +125,7 @@ namespace RobotAutomationHelper
             if (RobotAutomationHelper.Log) Console.WriteLine("AddKeywordField " + step.GetKeywordName() + " " + testStepsCounter);
             //List<string> args = StringAndListOperations.ReturnListOfArgs(testStep.GetKeywordArguments());
             
-            FormControls.AddControl("ComboBox", "DynamicTestStep" + testStepsCounter + "Name",
+            FormControls.AddControl("TextWithList", "DynamicTestStep" + testStepsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (testStepsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
                 step.GetKeywordName().Trim(),

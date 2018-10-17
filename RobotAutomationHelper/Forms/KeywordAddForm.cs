@@ -276,7 +276,7 @@ namespace RobotAutomationHelper
         {
             //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
 
-            FormControls.AddControl("ComboBox", "DynamicTestStep" + keywordsCounter + "Name",
+            FormControls.AddControl("TextWithList", "DynamicTestStep" + keywordsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
                 keyword.GetKeywordName().Trim(),

@@ -9,14 +9,16 @@ namespace RobotAutomationHelper.Scripts
     {
         private Color HighlightColor { get; set; }
         private TextWithList TextWithListControl;
+        internal bool SelectionPerformed { get; set; }
 
         internal SuggestionsList(TextWithList TextWithListControl)
         {
             InitializeComponent();
-            this.Name = "SuggesionsList";
+            Name = "SuggesionsList";
             base.DrawMode = DrawMode.OwnerDrawFixed;
             HighlightColor = SystemColors.Highlight;
             this.TextWithListControl = TextWithListControl;
+            SelectionPerformed = false;
         }
 
         private ToolTip toolTip = new ToolTip();
@@ -28,6 +30,7 @@ namespace RobotAutomationHelper.Scripts
 
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
+            base.OnDrawItem(e);
             if (e.Index >= 0)
             {
                 if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
@@ -45,19 +48,28 @@ namespace RobotAutomationHelper.Scripts
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            base.OnMouseMove(e);
             //Get the item
             int nIdx = IndexFromPoint(e.Location);
             if ((nIdx >= 0) && (nIdx < Items.Count))
-                toolTip.Show(((SuggestionsListObjects)Items[nIdx]).Documentation, this);
+                toolTip.Show(((SuggestionsListObjects)Items[nIdx]).Documentation, this, e.Location.X + 20, e.Location.Y);
             else
                 toolTip.Hide(this);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            base.OnMouseDown(e);
+            //Get the item
             int nIdx = IndexFromPoint(e.Location);
             if ((nIdx >= 0) && (nIdx < Items.Count))
-                TextWithListControl.Text = (((SuggestionsListObjects)Items[nIdx]).Text);
+            {
+                SelectionPerformed = true;
+                TextWithListControl.Text = (((SuggestionsListObjects)Items[nIdx]).ValueMember);
+            }
+
+            TextWithListControl.Focus();
+            TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
         }
     }
 }

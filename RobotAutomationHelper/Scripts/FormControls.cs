@@ -21,7 +21,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
-                case "combobox": tempControl = new TextWithList(owner); break;
+                case "textwithlist": tempControl = new TextWithList(owner); break;
                 case "checkbox": tempControl = new CheckBox(); ((CheckBox)tempControl).Checked = true; break;
                 case "button": tempControl = new Button(); tempControl.Click += eventHandler; break;
                 default: tempControl = new Label(); break;
@@ -38,7 +38,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": owner.Controls.Add((TextBox)tempControl); break;
-                case "combobox": owner.Controls.Add((TextWithList)tempControl); break;
+                case "textwithlist": owner.Controls.Add((TextWithList)tempControl); break;
                 case "checkbox": owner.Controls.Add((CheckBox)tempControl); break;
                 case "button": owner.Controls.Add((Button)tempControl); break;
                 default: owner.Controls.Add((Label)tempControl); break;
@@ -54,34 +54,6 @@ namespace RobotAutomationHelper.Scripts
             comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        }
-
-        internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)
-        {
-            if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.GetKeywordName() + " " + name);
-            foreach (Keyword seleniumKeyword in Suggestions)
-                if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower()))
-                {
-                    keyword.CopyKeyword(seleniumKeyword);
-                    return;
-                }
-
-            if (keyword.Type != KeywordType.CUSTOM)
-            {
-                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
-                keyword.Type = KeywordType.CUSTOM;
-                return;
-            }
-
-            foreach (Keyword seleniumKeyword in Suggestions)
-                if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(keyword.GetKeywordName().Trim().ToLower()))
-                {
-                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
-                    keyword.Type = KeywordType.CUSTOM;
-                    return;
-                }
-
-            keyword.Type = KeywordType.CUSTOM;
         }
 
         internal static void RemoveControlByKey(string key, ControlCollection controlCollection)
