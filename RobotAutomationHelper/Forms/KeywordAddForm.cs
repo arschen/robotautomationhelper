@@ -135,7 +135,16 @@ namespace RobotAutomationHelper
                     ThisFormKeywords.Add(new Keyword(Controls["DynamicTestStep" + i + "Name"].Text, path));
             }
 
+            AssignThisKeywordNamesFromTextFields();
+
             return ThisFormKeywords[keywordIndex - 1];
+        }
+
+        private void AssignThisKeywordNamesFromTextFields()
+        {
+            for (int i = 1; i <= NumberOfKeywordsInThisKeyword; i++)
+                if (Controls.Find("DynamicTestStep" + i + "Name", false).Length != 0)
+                    ThisFormKeywords[i - 1].SetKeywordName(Controls["DynamicTestStep" + i + "Name"].Text);
         }
 
         private void UpdateParentFormAfterClosing(object sender, EventArgs e)
@@ -331,6 +340,8 @@ namespace RobotAutomationHelper
 
         internal void RemoveKeywordFromThisKeyword(object sender, EventArgs e)
         {
+            AssignThisKeywordNamesFromTextFields();
+
             if (NumberOfKeywordsInThisKeyword > 1)
             {
                 int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicTestStep", "").Replace("RemoveKeyword", ""));
@@ -410,6 +421,8 @@ namespace RobotAutomationHelper
         private void AddKeywordToThisKeyword(object sender, EventArgs e)
         {
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicTestStep", "").Replace("AddKeyword", ""));
+
+            AssignThisKeywordNamesFromTextFields();
 
             if (ThisFormKeywords == null)
             {
