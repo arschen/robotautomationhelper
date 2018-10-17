@@ -67,7 +67,17 @@ namespace RobotAutomationHelper.Scripts
                 if (e.KeyCode == Keys.Down && Parent.Controls.Find("SuggestionsList", false).Length > 0)
                 {
                     ForcedFocusToList = true;
+                    SuggestionsList.SelectedIndex = 0;
                     Parent.Controls["SuggestionsList"].Focus();
+                }
+                else
+                {
+                    if (e.KeyCode == Keys.Up && Parent.Controls.Find("SuggestionsList", false).Length > 0)
+                    {
+                        ForcedFocusToList = true;
+                        SuggestionsList.SelectedIndex = SuggestionsList.Items.Count - 1;
+                        Parent.Controls["SuggestionsList"].Focus();
+                    }
                 }
             }
         }

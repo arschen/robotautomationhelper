@@ -176,6 +176,7 @@ namespace RobotAutomationHelper.Scripts
                     return;
                 }
 
+            keyword.SetKeywordName(name);
             keyword.Type = KeywordType.CUSTOM;
         }
     }

@@ -50,14 +50,9 @@ namespace RobotAutomationHelper.Scripts
         {
             base.OnMouseMove(e);
             //Get the item
-            if (!(SelectedIndex >= 0))
-            {
-                int nIdx = IndexFromPoint(e.Location);
-                if ((nIdx >= 0) && (nIdx < Items.Count))
-                    toolTip.Show(((SuggestionsListObjects)Items[nIdx]).Documentation, this, e.Location.X + 20, e.Location.Y);
-                else
-                    toolTip.Hide(this);
-            }
+            int nIdx = IndexFromPoint(e.Location);
+            if ((nIdx >= 0) && (nIdx < Items.Count))
+                SelectedIndex = nIdx;
         }
 
         //on Enter triggers update and hides suggestions
@@ -91,10 +86,10 @@ namespace RobotAutomationHelper.Scripts
                 toolTip.Hide(this);
         }
 
-        protected override void OnGotFocus(EventArgs e)
+        protected override void OnLostFocus(EventArgs e)
         {
-            base.OnGotFocus(e);
-            SelectedIndex = 0;
+            base.OnLostFocus(e);
+            toolTip.Hide(this);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
