@@ -10,6 +10,7 @@ namespace RobotAutomationHelper.Scripts
 
         private SuggestionsList SuggestionsList;
         private Control ParentControl;
+        private bool ForcedFocusToList { get; set; }
 
         internal TextWithList(Control Parent)
         {
@@ -32,7 +33,7 @@ namespace RobotAutomationHelper.Scripts
                 SuggestionsList.Items.AddRange(foundItems.ToArray());
                 SuggestionsList.Visible = true;
                 SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
-                SuggestionsList.Size = new Size(Size.Width, 200);
+                SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
                 SuggestionsList.IntegralHeight = true;
                 ParentControl.Controls.Add(SuggestionsList);
                 SuggestionsList.BringToFront();
@@ -61,12 +62,22 @@ namespace RobotAutomationHelper.Scripts
                 HideSuggestionsList();
                 TriggerUpdate();
             }
+            else
+            {
+                if (e.KeyCode == Keys.Down && Parent.Controls.Find("SuggestionsList", false).Length > 0)
+                {
+                    ForcedFocusToList = true;
+                    Parent.Controls["SuggestionsList"].Focus();
+                }
+            }
         }
 
         protected override void OnLeave(EventArgs e)
         {
             base.OnLeave(e);
-            HideSuggestionsList();
+            if (!ForcedFocusToList)
+                HideSuggestionsList();
+            ForcedFocusToList = false;
         }
 
         protected override void OnGotFocus(EventArgs e)
@@ -115,7 +126,7 @@ namespace RobotAutomationHelper.Scripts
             BaseKeywordAddForm.ChangeTheKeywordFieldOnUpdate(this, (Parent as Form), isKeywordAddForm, Keywords);
         }
 
-        private void HideSuggestionsList()
+        internal void HideSuggestionsList()
         {
             SuggestionsList.Visible = false;
             SuggestionsList.HideToolTip();
