@@ -204,7 +204,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // add newText on new line to file fileName after specified line
-        internal static void FileLineReplace(string newText, string fileName, int lineToReplace)
+        internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
         {
             string[] arrLine;
             if (File.Exists(fileName))
@@ -219,10 +219,30 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             }
 
-            List<string> temp = new List<string>();
-            temp.AddRange(arrLine);
-            temp[lineToReplace] = newText;
-            File.WriteAllLines(fileName, temp);
+            int index = 0;
+            if (isKeyword)
+                index = ContainsTestCaseOrKeyword(fileName, name, "keywords");
+            else
+                index = ContainsTestCaseOrKeyword(fileName, name, "test cases");
+
+            if (index != -1)
+            {
+                bool endOfTestCaseKeyword = false;
+                List<string> temp = new List<string>();
+                temp.AddRange(arrLine);
+
+                while (!endOfTestCaseKeyword)
+                {
+                    temp.RemoveAt(index);
+                    if (index < temp.Count)
+                        if ((!temp[index].StartsWith(" ")) && (!temp[index].StartsWith("\t"))
+                            && (!temp[index].StartsWith("\\")) && (!temp[index].StartsWith("."))
+                            && (!temp[index].StartsWith("***")))
+                            endOfTestCaseKeyword = true;
+                }
+
+                File.WriteAllLines(fileName, temp);
+            }
         }
     }
 }
