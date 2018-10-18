@@ -1,5 +1,4 @@
-﻿using RobotAutomationHelper.Forms;
-using RobotAutomationHelper.Scripts;
+﻿using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

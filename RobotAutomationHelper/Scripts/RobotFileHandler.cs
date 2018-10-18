@@ -193,6 +193,8 @@ namespace RobotAutomationHelper.Scripts
                     else
                         Console.WriteLine(i);
                 }
+                if (!arrLine[arrLine.Length - 1].Trim().Equals(""))
+                    temp.Add(arrLine[arrLine.Length - 1]);
                 File.WriteAllLines(fileName, temp);
             }
         }
