@@ -55,7 +55,7 @@ namespace RobotAutomationHelper.Scripts
             if (keywordForm.ThisFormKeywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
             {
                 List<string> args = new List<string>();
-                args = StringAndListOperations.ReturnListOfArgs(keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordArguments());
+                args = StringAndListOperations.ReturnListOfArgs(keywordForm.ThisFormKeywords[keywordIndex - 1].Arguments);
 
                 if (args != null && args.Count != 0)
                 {
@@ -72,8 +72,8 @@ namespace RobotAutomationHelper.Scripts
             }
             else
             {
-                if (!(keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordParams() == null)
-                    && !(keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordParams().Count == 0))
+                if (!(keywordForm.ThisFormKeywords[keywordIndex - 1].Params == null)
+                    && !(keywordForm.ThisFormKeywords[keywordIndex - 1].Params.Count == 0))
                 {
                     if (keywordForm.Controls.Find("DynamicTestStep" + keywordIndex + "Params", false).Length == 0)
                         FormControls.AddControl("Button", "DynamicTestStep" + keywordIndex + "Params",
@@ -88,7 +88,7 @@ namespace RobotAutomationHelper.Scripts
             }
 
             if (keywordForm.Controls["DynamicTestStep" + keywordIndex + "Name"] != null)
-                keywordForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = keywordForm.ThisFormKeywords[keywordIndex - 1].GetKeywordName().Trim();
+                keywordForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = keywordForm.ThisFormKeywords[keywordIndex - 1].Name.Trim();
         }
 
         internal static void UpdateKeywordInThisTestCase(object sender, TestCaseAddForm testCaseAddForm)
@@ -120,7 +120,7 @@ namespace RobotAutomationHelper.Scripts
             if (testCaseAddForm.Keywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
             {
                 List<string> args = new List<string>();
-                args = StringAndListOperations.ReturnListOfArgs(testCaseAddForm.Keywords[keywordIndex - 1].GetKeywordArguments());
+                args = StringAndListOperations.ReturnListOfArgs(testCaseAddForm.Keywords[keywordIndex - 1].Arguments);
 
                 if (args != null && args.Count != 0)
                 {
@@ -137,8 +137,8 @@ namespace RobotAutomationHelper.Scripts
             }
             else
             {
-                if (!(testCaseAddForm.Keywords[keywordIndex - 1].GetKeywordParams() == null)
-                    && !(testCaseAddForm.Keywords[keywordIndex - 1].GetKeywordParams().Count == 0))
+                if (!(testCaseAddForm.Keywords[keywordIndex - 1].Params == null)
+                    && !(testCaseAddForm.Keywords[keywordIndex - 1].Params.Count == 0))
                 {
                     if (testCaseAddForm.Controls.Find("DynamicTestStep" + keywordIndex + "Params", false).Length == 0)
                         FormControls.AddControl("Button", "DynamicTestStep" + keywordIndex + "Params",
@@ -154,35 +154,35 @@ namespace RobotAutomationHelper.Scripts
             }
 
             if (testCaseAddForm.Controls["DynamicTestStep" + keywordIndex + "Name"] != null)
-                testCaseAddForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = testCaseAddForm.Keywords[keywordIndex - 1].GetKeywordName().Trim();
+                testCaseAddForm.Controls["DynamicTestStep" + keywordIndex + "Name"].Text = testCaseAddForm.Keywords[keywordIndex - 1].Name.Trim();
         }
 
         internal static void CheckKeywordTypeAndReturnKeyword(Keyword keyword, string name)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.GetKeywordName() + " " + name);
+            if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.Name + " " + name);
             foreach (Keyword seleniumKeyword in FormControls.Suggestions)
-                if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower()))
+                if (seleniumKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
                 {
-                    keyword.CopyKeyword(seleniumKeyword);
+                    keyword.CopyKeyword(seleniumKeyword); //CopyKeyword
                     return;
                 }
 
             if (keyword.Type != KeywordType.CUSTOM)
             {
-                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
+                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot")); //CopyKeyword
                 keyword.Type = KeywordType.CUSTOM;
                 return;
             }
 
             foreach (Keyword seleniumKeyword in FormControls.Suggestions)
-                if (seleniumKeyword.GetKeywordName().Trim().ToLower().Equals(keyword.GetKeywordName().Trim().ToLower()))
+                if (seleniumKeyword.Name.Trim().ToLower().Equals(keyword.Name.Trim().ToLower()))
                 {
-                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot"));
+                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot")); //CopyKeyword
                     keyword.Type = KeywordType.CUSTOM;
                     return;
                 }
 
-            keyword.SetKeywordName(name);
+            keyword.Name = name;
             keyword.Type = KeywordType.CUSTOM;
         }
     }

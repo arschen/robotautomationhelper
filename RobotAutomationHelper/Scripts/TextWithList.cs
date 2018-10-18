@@ -106,13 +106,13 @@ namespace RobotAutomationHelper.Scripts
         {
             List<SuggestionsListObjects> foundItems = new List<SuggestionsListObjects>();
             foreach (Keyword keyword in FormControls.Suggestions)
-            //if (!keyword.GetKeywordName().ToLower().Trim().Equals(txt.ToLower().Trim()))
+            //if (!keyword.Name.ToLower().Trim().Equals(txt.ToLower().Trim()))
             {
                 bool containsAll = true;
                 foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (RobotAutomationHelper.Log) Console.WriteLine(keyword.ToString());
-                    if (!keyword.GetKeywordName().ToLower().Contains(temp))
+                    if (!keyword.Name.ToLower().Contains(temp))
                     {
                         containsAll = false;
                         break;
@@ -121,9 +121,9 @@ namespace RobotAutomationHelper.Scripts
                 if (containsAll)
                 {
                     if (keyword.Type != KeywordType.CUSTOM)
-                        foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString(), ValueMember = keyword.GetKeywordName(), Documentation = keyword.GetKeywordDocumentation() });
+                        foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString(), ValueMember = keyword.Name, Documentation = keyword.Documentation });
                     else
-                        foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString().Trim(), ValueMember = keyword.GetKeywordName().Trim(), Documentation = keyword.GetOutputFilePath() + "\n" + keyword.GetKeywordDocumentation().Trim() });
+                        foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString().Trim(), ValueMember = keyword.Name.Trim(), Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation.Trim() });
                 }
             }
             return foundItems;

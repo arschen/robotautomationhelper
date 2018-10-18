@@ -7,8 +7,8 @@ namespace RobotAutomationHelper.Scripts
         internal static bool IsPresentInTheTestCasesTree(string name, string fileName, TestCase thisTestCase)
         {
             foreach (TestCase test in RobotAutomationHelper.TestCases)
-                if (test.GetTestName().Trim().ToLower().Equals(name.ToLower())
-                    && test != thisTestCase && test.GetOutputFilePath().ToLower().Equals(fileName.ToLower()))
+                if (test.Name.Trim().ToLower().Equals(name.ToLower())
+                    && test != thisTestCase && test.OutputFilePath.ToLower().Equals(fileName.ToLower()))
                     return true;
             return false;
         }
@@ -16,18 +16,18 @@ namespace RobotAutomationHelper.Scripts
         internal static string IsPresentInTheKeywordTree(string name, string fileName, Keyword thisKeyword)
         {
             foreach (TestCase test in RobotAutomationHelper.TestCases)
-                if (test.GetTestSteps() != null)
-                    foreach (Keyword keyword in test.GetTestSteps())
+                if (test.Steps != null)
+                    foreach (Keyword keyword in test.Steps)
                     {
-                        if (keyword.IsSaved() && keyword != thisKeyword
-                            && keyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower())
-                            && keyword.GetOutputFilePath().ToLower().Equals(fileName.ToLower()))
-                            return test.GetTestName() + " | " + keyword.GetKeywordName().Trim();
+                        if (keyword.Saved && keyword != thisKeyword
+                            && keyword.Name.Trim().ToLower().Equals(name.ToLower())
+                            && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
+                            return test.Name + " | " + keyword.Name.Trim();
 
-                        if (keyword.GetKeywordKeywords() != null)
-                            foreach (Keyword key in keyword.GetKeywordKeywords())
+                        if (keyword.Keywords != null)
+                            foreach (Keyword key in keyword.Keywords)
                             {
-                                string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, test.GetTestName() + " | " + keyword.GetKeywordName().Trim());
+                                string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, test.Name + " | " + keyword.Name.Trim());
                                 if (!temp.Equals(""))
                                     return temp;
                             }
@@ -38,14 +38,14 @@ namespace RobotAutomationHelper.Scripts
         private static string IsPresentInChildrenKeywords(string name, Keyword keyword, string fileName, Keyword thisKeyword, string path)
         {
             if (keyword != thisKeyword && keyword.Implemented
-                && keyword.GetKeywordName().Trim().ToLower().Equals(name.ToLower())
-                && keyword.GetOutputFilePath().ToLower().Equals(fileName.ToLower()))
-                return path + " | " + keyword.GetKeywordName().Trim();
+                && keyword.Name.Trim().ToLower().Equals(name.ToLower())
+                && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
+                return path + " | " + keyword.Name.Trim();
 
-            if (keyword.GetKeywordKeywords() != null)
-                foreach (Keyword key in keyword.GetKeywordKeywords())
+            if (keyword.Keywords != null)
+                foreach (Keyword key in keyword.Keywords)
                 {
-                    string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, path + " | " + keyword.GetKeywordName().Trim());
+                    string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, path + " | " + keyword.Name.Trim());
                     if (!temp.Equals(""))
                         return temp;
                 }

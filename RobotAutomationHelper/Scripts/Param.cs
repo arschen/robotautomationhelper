@@ -2,28 +2,13 @@
 {
     internal class Param
     {
-        private string ArgName;
-        private string ParamValue;
+        internal string Name { get; }
+        internal string Value { get; }
 
-        internal Param(string ArgName, string ParamValue)
+        internal Param(string Name, string Value)
         {
-            this.ArgName = ArgName;
-            this.ParamValue = ParamValue;
-        }
-
-        internal string GetParamValue()
-        {
-            return ParamValue;
-        }
-
-        internal void SetParamValue(string ParamValue)
-        {
-            this.ParamValue = ParamValue;
-        }
-
-        internal string GetArgName()
-        {
-            return ArgName;
+            this.Name = Name;
+            this.Value = Value;
         }
     }
 }

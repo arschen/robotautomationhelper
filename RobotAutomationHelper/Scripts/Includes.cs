@@ -5,12 +5,13 @@ namespace RobotAutomationHelper.Scripts
 {
     class Includes : IEquatable<Includes>
     {
-        private string FileName;
-        private List<string> FilesToInclude = new List<string>();
+        internal string FileName { get; }
+        internal List<string> FilesToInclude { get; }
 
         internal Includes(string fileName)
         {
             FileName = fileName;
+            FilesToInclude = new List<string>();
         }
 
         internal void AddToList(string fileName)
@@ -20,19 +21,9 @@ namespace RobotAutomationHelper.Scripts
                     FilesToInclude.Add(fileName);
         }
 
-        internal List<string> GetFilesToInclude()
-        {
-            return FilesToInclude;
-        }
-
-        internal string GetFileName()
-        {
-            return FileName;
-        }
-
         public bool Equals(Includes other)
         {
-            if (other.GetFileName().Equals(FileName))
+            if (other.FileName.Equals(FileName))
                 return true;
             return false;
         }

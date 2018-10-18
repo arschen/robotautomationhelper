@@ -59,17 +59,17 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> Keywords, int implementedKeyword)
         {
-            AddFileToSavedFiles(Keywords[implementedKeyword - 1].GetOutputFilePath());
-            if (Keywords[implementedKeyword - 1].GetKeywordKeywords() != null)
-                foreach (Keyword key in Keywords[implementedKeyword - 1].GetKeywordKeywords())
+            AddFileToSavedFiles(Keywords[implementedKeyword - 1].OutputFilePath);
+            if (Keywords[implementedKeyword - 1].Keywords != null)
+                foreach (Keyword key in Keywords[implementedKeyword - 1].Keywords)
                     AddFilesFromKeywords(key);
         }
 
         internal static void AddImplementedTestCasesFilesToSavedFiles(List<TestCase> TestCases, int implementedKeyword)
         {
-            AddFileToSavedFiles(TestCases[implementedKeyword - 1].GetOutputFilePath());
-            if (TestCases[implementedKeyword - 1].GetTestSteps() != null)
-                foreach (Keyword key in TestCases[implementedKeyword - 1].GetTestSteps())
+            AddFileToSavedFiles(TestCases[implementedKeyword - 1].OutputFilePath);
+            if (TestCases[implementedKeyword - 1].Steps != null)
+                foreach (Keyword key in TestCases[implementedKeyword - 1].Steps)
                     AddFilesFromKeywords(key);
         }
 
@@ -86,9 +86,9 @@ namespace RobotAutomationHelper.Scripts
         //Goes recursively through all keywords in given keyword
         internal static void AddFilesFromKeywords(Keyword keyword)
         {
-            AddFileToSavedFiles(keyword.GetOutputFilePath());
-            if (keyword.GetKeywordKeywords() != null)
-                foreach (Keyword key in keyword.GetKeywordKeywords())
+            AddFileToSavedFiles(keyword.OutputFilePath);
+            if (keyword.Keywords != null)
+                foreach (Keyword key in keyword.Keywords)
                     AddFilesFromKeywords(key);
         }
 

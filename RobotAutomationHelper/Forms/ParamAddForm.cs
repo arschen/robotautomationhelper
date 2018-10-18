@@ -20,18 +20,18 @@ namespace RobotAutomationHelper.Forms
             this.keyword = keyword;
 
             // set Keyword Name and Documentation field text
-            if (keyword.GetKeywordName() != null)
-                KeywordName.Text = keyword.GetKeywordName().Trim();
+            if (keyword.Name != null)
+                KeywordName.Text = keyword.Name.Trim();
 
-            if (keyword.GetKeywordDocumentation() != null)
-                KeywordDocumentation.Text = keyword.GetKeywordDocumentation().Replace("[Documentation]", "").Trim();
+            if (keyword.Documentation != null)
+                KeywordDocumentation.Text = keyword.Documentation.Replace("[Documentation]", "").Trim();
 
             // adds args and paramList to lists for dynamicly adding them to fields
             List<Param> paramsList = new List<Param>();
-            if (keyword.GetKeywordParams() != null)
-                paramsList.AddRange(keyword.GetKeywordParams());
+            if (keyword.Params != null)
+                paramsList.AddRange(keyword.Params);
 
-            //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
+            //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.Arguments);
 
             if (paramsList != null && paramsList.Count != 0)
                 foreach (Param param in paramsList)
@@ -40,14 +40,14 @@ namespace RobotAutomationHelper.Forms
                     FormControls.AddControl("Label", "DynamicTestStep" + paramsCount + "Name",
                         new System.Drawing.Point(10 - this.HorizontalScroll.Value, 123 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(80, 20),
-                        param.GetArgName(),
+                        param.Name,
                         System.Drawing.Color.Black,
                         null,
                         this);
                     FormControls.AddControl("TextBox", "DynamicTestStep" + paramsCount + "Value",
                         new System.Drawing.Point(100 - this.HorizontalScroll.Value, 120 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(280, 20),
-                        paramsList[paramsCount - 1].GetParamValue(),
+                        paramsList[paramsCount - 1].Value,
                         System.Drawing.Color.Black,
                         null,
                         this);
@@ -62,7 +62,7 @@ namespace RobotAutomationHelper.Forms
             for (int i = 1; i <= paramsCount; i++)
                 formParams.Add(new Param(this.Controls["DynamicTestStep" + i + "Name"].Text, this.Controls["DynamicTestStep" + i + "Value"].Text));
 
-            keyword.SetKeywordParams(formParams);
+            keyword.Params = formParams;
             this.Close();
         }
 

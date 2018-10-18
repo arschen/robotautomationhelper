@@ -75,6 +75,7 @@
     <Compile Include="Scripts\SuggestionsListObjects.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Scripts\Suite Settings.cs" />
     <Compile Include="Scripts\TextWithList.cs">
       <SubType>Component</SubType>
     </Compile>

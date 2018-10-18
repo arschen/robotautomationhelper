@@ -21,9 +21,9 @@ namespace RobotAutomationHelper.Scripts
                 @"RobotKeywords\Selenium.xlsx")
                 , KeywordType.SELENIUM);
             foreach (Keyword key in Selenium)
-                FormControls.Suggestions.Add(new Keyword(key.GetKeywordName(), key.GetKeywordDocumentation(),
-                    key.GetKeywordKeywords(), key.GetKeywordArguments(), key.GetKeywordParams(),
-                    key.GetOutputFilePath(), key.IsSaved(), key.Type, key.SuggestionIndex));
+                FormControls.Suggestions.Add(new Keyword(key.Name, key.Documentation,
+                    key.Keywords, key.Arguments, key.Params,
+                    key.OutputFilePath, key.Saved, key.Type, key.SuggestionIndex));
         }
 
         internal static void PopulateBuiltInKeywords()
@@ -32,9 +32,9 @@ namespace RobotAutomationHelper.Scripts
                 @"RobotKeywords\Built_in.xlsx")
                 , KeywordType.BUILT_IN);
             foreach (Keyword key in BuiltIn)
-                FormControls.Suggestions.Add(new Keyword(key.GetKeywordName(), key.GetKeywordDocumentation(),
-                    key.GetKeywordKeywords(), key.GetKeywordArguments(), key.GetKeywordParams(),
-                    key.GetOutputFilePath(), key.IsSaved(), key.Type, key.SuggestionIndex));
+                FormControls.Suggestions.Add(new Keyword(key.Name, key.Documentation,
+                    key.Keywords, key.Arguments, key.Params,
+                    key.OutputFilePath, key.Saved, key.Type, key.SuggestionIndex));
         }
 
         private static List<Keyword> ReadAllKeywordsFromExcel(string Filename, KeywordType type)

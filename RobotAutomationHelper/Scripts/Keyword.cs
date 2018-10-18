@@ -4,14 +4,14 @@ namespace RobotAutomationHelper
 {
     internal class Keyword
     {
-        private List<Keyword> Keywords;
-        private string Arguments;
-        private List<Param> Params;
-        private string Name;
-        private string Documentation;
-        private string OutputFilePath;
+        internal List<Keyword> Keywords { get; private set; }
+        internal string Arguments { get; private set; }
+        internal List<Param> Params { get; set; }
+        internal string Name { get; set; }
+        internal string Documentation { get; private set; }
+        internal string OutputFilePath { get; private set; }
         internal bool Implemented { get; set; }
-        private bool Saved = false;
+        internal bool Saved { get; private set; }
         internal KeywordType Type { get; set; }
         internal int SuggestionIndex { get; set; }
         internal bool Overwrite { get; set; }
@@ -37,17 +37,17 @@ namespace RobotAutomationHelper
 
         internal void CopyKeyword(Keyword keyword)
         {
-            this.Name = keyword.Name;
-            this.Documentation = keyword.Documentation;
-            this.Keywords = keyword.Keywords;
-            this.Arguments = keyword.Arguments;
-            this.Params = keyword.Params;
-            this.OutputFilePath = keyword.OutputFilePath;
-            this.Implemented = keyword.Implemented;
-            this.Saved = keyword.Saved;
-            this.Type = keyword.Type;
-            this.SuggestionIndex = keyword.SuggestionIndex;
-            this.Overwrite = keyword.Overwrite;
+            Name = keyword.Name;
+            Documentation = keyword.Documentation;
+            Keywords = keyword.Keywords;
+            Arguments = keyword.Arguments;
+            Params = keyword.Params;
+            OutputFilePath = keyword.OutputFilePath;
+            Implemented = keyword.Implemented;
+            Saved = keyword.Saved;
+            Type = keyword.Type;
+            SuggestionIndex = keyword.SuggestionIndex;
+            Overwrite = keyword.Overwrite;
         }
 
         internal Keyword(string Name, string OutputFilePath)
@@ -58,58 +58,13 @@ namespace RobotAutomationHelper
             SuggestionIndex = -1;
         }
 
-        internal string GetKeywordName()
-        {
-            return this.Name;
-        }
-
-        internal void SetKeywordName(string name)
-        {
-            this.Name = name;
-        }
-
-        internal List<Param> GetKeywordParams()
-        {
-            return this.Params;
-        }
-
-        internal void SetKeywordParams(List<Param> Params)
-        {
-            this.Params = Params;
-        }
-
-        internal string GetKeywordDocumentation()
-        {
-            return this.Documentation;
-        }
-
-        internal string GetKeywordArguments()
-        {
-            return this.Arguments;
-        }
-
-        internal string GetOutputFilePath()
-        {
-            return this.OutputFilePath;
-        }
-
-        internal List<Keyword> GetKeywordKeywords()
-        {
-            return this.Keywords;
-        }
-
         internal string ParamsToString()
         {
             string paramsString = "";
             if (Params != null)
                 foreach (Param tempParam in Params)
-                    paramsString += "  " + tempParam.GetParamValue();
+                    paramsString += "  " + tempParam.Value;
             return paramsString;
-        }
-
-        internal bool IsSaved()
-        {
-            return Saved;
         }
 
         public override string ToString()

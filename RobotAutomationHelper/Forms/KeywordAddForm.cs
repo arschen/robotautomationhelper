@@ -48,16 +48,16 @@ namespace RobotAutomationHelper
             //index variable gets the keyword index coming from the parent form
             IndexOfTheParentKeyword = keywordIndex;
 
-            if (keyword.GetKeywordName() != null)
-                KeywordName.Text = keyword.GetKeywordName().Trim();
-            if (keyword.GetKeywordDocumentation() != null)
-                KeywordDocumentation.Text = keyword.GetKeywordDocumentation().Replace("[Documentation]", "").Trim();
-            if (keyword.GetOutputFilePath() != null || !keyword.GetOutputFilePath().Equals(""))
-                KeywordOutputFile.Text = keyword.GetOutputFilePath().Replace(FilesAndFolderStructure.GetFolder(), "\\");
-            if (keyword.GetKeywordArguments() != null)
-                KeywordArguments.Text = keyword.GetKeywordArguments().Replace("[Arguments]", "").Trim();
+            if (keyword.Name != null)
+                KeywordName.Text = keyword.Name.Trim();
+            if (keyword.Documentation != null)
+                KeywordDocumentation.Text = keyword.Documentation.Replace("[Documentation]", "").Trim();
+            if (keyword.OutputFilePath != null || !keyword.OutputFilePath.Equals(""))
+                KeywordOutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(), "\\");
+            if (keyword.Arguments != null)
+                KeywordArguments.Text = keyword.Arguments.Replace("[Arguments]", "").Trim();
             IsKeywordPresentInFilesOrMemoryTree();
-            ThisFormKeywords = keyword.GetKeywordKeywords();
+            ThisFormKeywords = keyword.Keywords;
 
             int keywordsCounter = 1;
             NumberOfKeywordsInThisKeyword = 0;
@@ -77,7 +77,7 @@ namespace RobotAutomationHelper
                 // add a single keyword field if no keywords are available
                 ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("New Keyword", ParentKeywords[IndexOfTheParentKeyword].GetOutputFilePath())
+                    new Keyword("New Keyword", ParentKeywords[IndexOfTheParentKeyword].OutputFilePath)
                 };
                 AddKeywordField(ThisFormKeywords[0], keywordsCounter);
                 NumberOfKeywordsInThisKeyword++;
@@ -94,7 +94,7 @@ namespace RobotAutomationHelper
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTestStep", ""));
             Keyword keyword = AddCurrentKeywordsToKeywordsList(sender, e);
             keyword.Implemented = true;
-            keyword.SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
+            keyword.Name = Controls["DynamicTestStep" + keywordIndex + "Name"].Text;
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             KeywordAddForm addKeywordForm = new KeywordAddForm(true, ThisFormKeywords);
             // add closing event
@@ -144,17 +144,17 @@ namespace RobotAutomationHelper
         {
             for (int i = 1; i <= NumberOfKeywordsInThisKeyword; i++)
                 if (Controls.Find("DynamicTestStep" + i + "Name", false).Length != 0)
-                    ThisFormKeywords[i - 1].SetKeywordName(Controls["DynamicTestStep" + i + "Name"].Text);
+                    ThisFormKeywords[i - 1].Name = Controls["DynamicTestStep" + i + "Name"].Text;
         }
 
         private void UpdateParentFormAfterClosing(object sender, EventArgs e)
         {
             if ((sender.GetType().FullName.Contains("KeywordAddForm")) && !((KeywordAddForm)sender).SkipValue())
             {
-                Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordName().Trim();
+                Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].Name.Trim();
                 Controls["DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "AddImplementation"].Text = "Edit implementation";
 
-                List<string> args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].GetKeywordArguments());
+                List<string> args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].Arguments);
 
                 if (args != null && args.Count != 0)
                     FormControls.AddControl("Button", "DynamicTestStep" + IndexOfTheKeywordToBeImplemented + "Params",
@@ -224,12 +224,12 @@ namespace RobotAutomationHelper
 
             if (args != null)
                 for (int i = 0; i < args.Count; i++)
-                    if (ParentKeywords[IndexOfTheParentKeyword].GetKeywordParams() != null
-                        && (ParentKeywords[IndexOfTheParentKeyword].GetKeywordParams().Count > 0))
+                    if (ParentKeywords[IndexOfTheParentKeyword].Params != null
+                        && (ParentKeywords[IndexOfTheParentKeyword].Params.Count > 0))
                         {
                             bool foundMatch = false;
-                            foreach (Param parentParam in ParentKeywords[IndexOfTheParentKeyword].GetKeywordParams())
-                                if (parentParam.GetArgName().Equals(args[i]))
+                            foreach (Param parentParam in ParentKeywords[IndexOfTheParentKeyword].Params)
+                                if (parentParam.Name.Equals(args[i]))
                                 {
                                     ThisKeywordParams.Add(parentParam);
                                     foundMatch = true;
@@ -260,11 +260,11 @@ namespace RobotAutomationHelper
             {
                 ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex = FormControls.Suggestions.Count;
                 Keyword temp = new Keyword();
-                temp.CopyKeyword(ParentKeywords[IndexOfTheParentKeyword]);
+                temp.CopyKeyword(ParentKeywords[IndexOfTheParentKeyword]); //CopyKeyword
                 FormControls.Suggestions.Add(temp);
             }
             else
-                FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex].CopyKeyword (ParentKeywords[IndexOfTheParentKeyword]);
+                FormControls.Suggestions[ParentKeywords[IndexOfTheParentKeyword].SuggestionIndex].CopyKeyword(ParentKeywords[IndexOfTheParentKeyword]); //CopyKeyword
         }
 
         // Removes TextBox / Label / Add implementation / Add and remove keyword / Params
@@ -283,12 +283,12 @@ namespace RobotAutomationHelper
         // Adds TextBox / Label / Add implementation / Add and remove keyword / Params
         private void AddKeywordField(Keyword keyword, int keywordsCounter)
         {
-            //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.GetKeywordArguments());
+            //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.Arguments);
 
             FormControls.AddControl("TextWithList", "DynamicTestStep" + keywordsCounter + "Name",
                 new Point(30 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
-                keyword.GetKeywordName().Trim(),
+                keyword.Name.Trim(),
                 Color.Black,
                 null,
                 this);
@@ -328,7 +328,7 @@ namespace RobotAutomationHelper
                 Color.Black,
                 new EventHandler(RemoveKeywordFromThisKeyword),
                 this);
-            if (keyword.GetKeywordParams() != null && keyword.GetKeywordParams().Count != 0)
+            if (keyword.Params != null && keyword.Params.Count != 0)
                 FormControls.AddControl("Button", "DynamicTestStep" + keywordsCounter + "Params",
                     new Point(500 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                     new Size(75, 20),
@@ -351,7 +351,7 @@ namespace RobotAutomationHelper
                 List<string> args = new List<string>();
                 for (int i = 1; i <= NumberOfKeywordsInThisKeyword; i++)
                 {
-                    args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[i - 1].GetKeywordArguments());
+                    args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[i - 1].Arguments);
                     if (Controls.Find("DynamicTestStep" + i + "Params", false).Length != 0)
                         FormControls.RemoveControlByKey("DynamicTestStep" + i + "Params", Controls);
                     if (args != null && args.Count != 0)
@@ -362,7 +362,7 @@ namespace RobotAutomationHelper
                             Color.Black,
                             new EventHandler(InstantiateParamsAddForm),
                             this);
-                    Controls["DynamicTestStep" + i + "Name"].Text = ThisFormKeywords[i - 1].GetKeywordName().Trim();
+                    Controls["DynamicTestStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();
                 }
             }
         }
@@ -441,7 +441,7 @@ namespace RobotAutomationHelper
             AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisKeyword-1], NumberOfKeywordsInThisKeyword);
 
             for (int i = 1; i < NumberOfKeywordsInThisKeyword; i++)
-                Controls["DynamicTestStep" + i + "Name"].Text = ThisFormKeywords[i - 1].GetKeywordName().Trim();
+                Controls["DynamicTestStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();
 
             for (int i = NumberOfKeywordsInThisKeyword; i > keywordIndex; i--)
                 if (Controls.Find("DynamicTestStep" + i + "Params", false).Length != 0)
@@ -465,7 +465,7 @@ namespace RobotAutomationHelper
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicTestStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
             ParamAddForm addParamForm = new ParamAddForm();
-            ThisFormKeywords[keywordIndex - 1].SetKeywordName(Controls["DynamicTestStep" + keywordIndex + "Name"].Text);
+            ThisFormKeywords[keywordIndex - 1].Name = Controls["DynamicTestStep" + keywordIndex + "Name"].Text;
             // add closing event
             addParamForm.FormClosing += new FormClosingEventHandler(UpdateParentFormAfterClosing);
             addParamForm.ShowParamContent(ThisFormKeywords[keywordIndex - 1]);

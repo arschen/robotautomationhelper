@@ -23,15 +23,15 @@ namespace RobotAutomationHelper
             HtmlLibsGetter.PopulateBuiltInKeywords();
         }
 
+        private void ApplicationMain_Load(object sender, EventArgs e)
+        {
+
+        }
+
         // open file click
         private void ToolStripMenuOpen_Click(object sender, EventArgs e)
         {
             openFileDialog.ShowDialog();
-        }
-
-        private void ApplicationMain_Load(object sender, EventArgs e)
-        {
-
         }
 
         // browse folders for output directory after file has been opened
@@ -78,7 +78,7 @@ namespace RobotAutomationHelper
             if (TestCases != null && TestCases.Count != 0)
                 foreach (TestCase testCase in TestCases)
                 {
-                    string testCaseName = testCase.GetTestName();
+                    string testCaseName = testCase.Name;
 
                     FormControls.AddControl("TextBox", "DynamicTest" + testCasesCounter + "Name",
                         new Point(30 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
@@ -118,7 +118,7 @@ namespace RobotAutomationHelper
             int testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
             IndexOfTheTestCaseToBeImplemented = testIndex;
             TestCase testCase = TestCases[testIndex - 1];
-            testCase.SetTestName(Controls["DynamicTest" + testIndex + "Name"].Text);
+            testCase.Name = Controls["DynamicTest" + testIndex + "Name"].Text;
             TestCaseAddForm testCaseAddForm = new TestCaseAddForm();
             testCaseAddForm.FormClosing += new FormClosingEventHandler(UpdateThisFormTestCaseAddFormClosing);
             testCaseAddForm.ShowTestCaseContent(testCase, testIndex - 1);
@@ -146,7 +146,7 @@ namespace RobotAutomationHelper
         {
             if (!((TestCaseAddForm) sender).SkipValue())
             {
-                Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[IndexOfTheTestCaseToBeImplemented - 1].GetTestName();
+                Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[IndexOfTheTestCaseToBeImplemented - 1].Name;
                 Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Edit implementation";
             }
 
@@ -174,14 +174,14 @@ namespace RobotAutomationHelper
             {
                 TestCase testCase = TestCases[index - 1];
                 if (testCase.Overwrite)
-                    RobotFileHandler.TestCaseKeywordRemove(testCase.GetTestName(), testCase.GetOutputFilePath(), false);
+                    RobotFileHandler.TestCaseKeywordRemove(testCase.Name, testCase.OutputFilePath, false);
 
-                if (testCase.GetTestSteps() != null)
-                    foreach (Keyword testStep in testCase.GetTestSteps())
+                if (testCase.Steps != null)
+                    foreach (Keyword testStep in testCase.Steps)
                     {
-                        RemoveKeyword(testStep);
+                        WriteToRobot.RemoveKeyword(testStep);
                         if (testStep.Overwrite)
-                            RobotFileHandler.TestCaseKeywordRemove(testStep.GetKeywordName(), testStep.GetOutputFilePath(), true);
+                            RobotFileHandler.TestCaseKeywordRemove(testStep.Name, testStep.OutputFilePath, true);
                     }
             }
 
@@ -195,17 +195,6 @@ namespace RobotAutomationHelper
 
             foreach (string fileName in FilesAndFolderStructure.SavedFiles)
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName));
-        }
-
-        private void RemoveKeyword(Keyword keyword)
-        {
-            if (keyword.GetKeywordKeywords() != null)
-                foreach (Keyword step in keyword.GetKeywordKeywords())
-                {
-                    RemoveKeyword(step);
-                    if (step.Overwrite)
-                        RobotFileHandler.TestCaseKeywordRemove(step.GetKeywordName(), step.GetOutputFilePath(), true);
-                }
         }
     }
 }

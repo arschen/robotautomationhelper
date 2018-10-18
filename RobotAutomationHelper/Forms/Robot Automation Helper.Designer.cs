@@ -37,13 +37,20 @@
             this.TestCaseNameLabel = new System.Windows.Forms.Label();
             this.AddLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addTestSetupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addSuiteSetupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addSuiteTeardownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addSuiteDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainMenu
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem1,
+            this.settingsToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(784, 24);
@@ -62,14 +69,14 @@
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(147, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "Open";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.ToolStripMenuOpen_Click);
             // 
             // saveToRobotToolStripMenuItem
             // 
             this.saveToRobotToolStripMenuItem.Name = "saveToRobotToolStripMenuItem";
-            this.saveToRobotToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.saveToRobotToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToRobotToolStripMenuItem.Text = "Save to Robot";
             this.saveToRobotToolStripMenuItem.Click += new System.EventHandler(this.SaveToRobotToolStripMenuItem_Click);
             // 
@@ -111,7 +118,49 @@
             // 
             this.folderBrowserDialog1.Description = "Choose Robot Output Folder";
             // 
-            // ApplicationMain
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addTestSetupToolStripMenuItem,
+            this.addTestToolStripMenuItem,
+            this.addSuiteSetupToolStripMenuItem,
+            this.addSuiteTeardownToolStripMenuItem,
+            this.addSuiteDocumentationToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // addTestSetupToolStripMenuItem
+            // 
+            this.addTestSetupToolStripMenuItem.Name = "addTestSetupToolStripMenuItem";
+            this.addTestSetupToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.addTestSetupToolStripMenuItem.Text = "Add Test Setup";
+            // 
+            // addTestToolStripMenuItem
+            // 
+            this.addTestToolStripMenuItem.Name = "addTestToolStripMenuItem";
+            this.addTestToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.addTestToolStripMenuItem.Text = "Add Test Teardown";
+            // 
+            // addSuiteSetupToolStripMenuItem
+            // 
+            this.addSuiteSetupToolStripMenuItem.Name = "addSuiteSetupToolStripMenuItem";
+            this.addSuiteSetupToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.addSuiteSetupToolStripMenuItem.Text = "Add Suite Setup";
+            // 
+            // addSuiteTeardownToolStripMenuItem
+            // 
+            this.addSuiteTeardownToolStripMenuItem.Name = "addSuiteTeardownToolStripMenuItem";
+            this.addSuiteTeardownToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.addSuiteTeardownToolStripMenuItem.Text = "Add Suite Teardown";
+            // 
+            // addSuiteDocumentationToolStripMenuItem
+            // 
+            this.addSuiteDocumentationToolStripMenuItem.Name = "addSuiteDocumentationToolStripMenuItem";
+            this.addSuiteDocumentationToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.addSuiteDocumentationToolStripMenuItem.Text = "Add Suite Documentation";
+            // 
+            // RobotAutomationHelper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -122,7 +171,7 @@
             this.Controls.Add(this.IndexLabel);
             this.Controls.Add(this.MainMenu);
             this.MainMenuStrip = this.MainMenu;
-            this.Name = "ApplicationMain";
+            this.Name = "RobotAutomationHelper";
             this.Text = "Robot Automation Helper";
             this.Load += new System.EventHandler(this.ApplicationMain_Load);
             this.MainMenu.ResumeLayout(false);
@@ -143,6 +192,12 @@
         private System.Windows.Forms.Label AddLabel;
         private System.Windows.Forms.ToolStripMenuItem saveToRobotToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addTestSetupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addTestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addSuiteSetupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addSuiteTeardownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addSuiteDocumentationToolStripMenuItem;
     }
 }
 

@@ -10,10 +10,10 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void AddTestCaseToRobot(TestCase testCase)
         {
-            string fileName = testCase.GetOutputFilePath();
+            string fileName = testCase.OutputFilePath;
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
 
-            bool addTestCase = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, testCase.GetTestName().Trim(), "test cases") != -1);
+            bool addTestCase = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, testCase.Name.Trim(), "test cases") != -1);
             if (addTestCase)
             {
                 Includes candidate = new Includes(fileName);
@@ -21,26 +21,26 @@ namespace RobotAutomationHelper.Scripts
                     includes.Add(candidate);
 
                 //Add test case to robot file
-                index = AddName(testCase.GetTestName().Trim(), fileName, index, "test cases");
+                index = AddName(testCase.Name.Trim(), fileName, index, "test cases");
 
                 //adds documentation
-                index = AddTagsDocumentationArguments("[Documentation]", "\t" + testCase.GetTestDocumentation(), fileName, index);
+                index = AddTagsDocumentationArguments("[Documentation]", "\t" + testCase.Documentation, fileName, index);
 
                 //adds tags
-                index = AddTagsDocumentationArguments("[Tags]", "\t" + testCase.GetTestCaseTags(), fileName, index);
+                index = AddTagsDocumentationArguments("[Tags]", "\t" + testCase.Tags, fileName, index);
             }
 
-            index = AddKeyword(testCase.GetTestSteps(), fileName, index, addTestCase, testCase.Overwrite);
+            index = AddKeyword(testCase.Steps, fileName, index, addTestCase, testCase.Overwrite);
         }
 
         internal static void AddKeywordToRobot(Keyword keyword)
         {
-            string fileName = keyword.GetOutputFilePath();
+            string fileName = keyword.OutputFilePath;
             int index = 0;
             if (fileName != "")
                 index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
 
-            bool addKeywordSteps = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.GetKeywordName().Trim(), "keyword") != -1);
+            bool addKeywordSteps = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.Name.Trim(), "keyword") != -1);
 
             if (addKeywordSteps)
                 if (keyword.Type == KeywordType.CUSTOM)
@@ -50,19 +50,19 @@ namespace RobotAutomationHelper.Scripts
                         includes.Add(candidate);
                 }
 
-            if (keyword.IsSaved() && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
+            if (keyword.Saved && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
             {
                 //Add keyword to robot file
-                index = AddName(keyword.GetKeywordName().Trim(), fileName, index, "keywords");
+                index = AddName(keyword.Name.Trim(), fileName, index, "keywords");
 
                 //adds documentation
-                index = AddTagsDocumentationArguments("[Documentation]", "\t" + keyword.GetKeywordDocumentation(), fileName, index);
+                index = AddTagsDocumentationArguments("[Documentation]", "\t" + keyword.Documentation, fileName, index);
 
                 //adds arguments
-                index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.GetKeywordArguments(), fileName, index);
+                index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.Arguments, fileName, index);
             }
 
-            index = AddKeyword(keyword.GetKeywordKeywords(), fileName, index, addKeywordSteps, keyword.Overwrite);
+            index = AddKeyword(keyword.Keywords, fileName, index, addKeywordSteps, keyword.Overwrite);
         }
 
         //adds Keywords
@@ -74,15 +74,15 @@ namespace RobotAutomationHelper.Scripts
                 {
                     if (addSteps)
                     {
-                        if (keywordKeyword.IsSaved() && keywordKeyword.Type == KeywordType.CUSTOM)
-                            includes[includes.IndexOf(container)].AddToList(keywordKeyword.GetOutputFilePath());
+                        if (keywordKeyword.Saved && keywordKeyword.Type == KeywordType.CUSTOM)
+                            includes[includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
                         else
                             if (keywordKeyword.Type == KeywordType.SELENIUM)
                             includes[includes.IndexOf(container)].AddToList("SeleniumLibrary");
 
                         //adds test steps
                         index++;
-                        RobotFileHandler.FileLineAdd("\t" + keywordKeyword.GetKeywordName() + keywordKeyword.ParamsToString(), fileName, index);
+                        RobotFileHandler.FileLineAdd("\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
                     }
 
                     AddKeywordToRobot(keywordKeyword);
@@ -148,7 +148,7 @@ namespace RobotAutomationHelper.Scripts
             foreach (Includes temp in includes)
             {
                 index = 0;
-                fileName = temp.GetFileName();
+                fileName = temp.FileName;
                 int tempTagIndex = RobotFileHandler.HasTag(fileName, tag);
                 if (tempTagIndex == -1)
                 {
@@ -158,7 +158,7 @@ namespace RobotAutomationHelper.Scripts
                 else
                     index = tempTagIndex + 1;
 
-                foreach (string path in temp.GetFilesToInclude())
+                foreach (string path in temp.FilesToInclude)
                 {
                     if (path.Equals("SeleniumLibrary"))
                     {
@@ -171,6 +171,17 @@ namespace RobotAutomationHelper.Scripts
                     index++;
                 }
             }
+        }
+
+        internal static void RemoveKeyword(Keyword keyword)
+        {
+            if (keyword.Keywords != null)
+                foreach (Keyword step in keyword.Keywords)
+                {
+                    RemoveKeyword(step);
+                    if (step.Overwrite)
+                        RobotFileHandler.TestCaseKeywordRemove(step.Name, step.OutputFilePath, true);
+                }
         }
     }
 }
