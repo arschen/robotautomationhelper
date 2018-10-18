@@ -90,10 +90,10 @@ namespace RobotAutomationHelper.Forms
                 if (temp.ToString().Equals(OutputFile.Text))
                 {
                     temp.Documentation = "[Documentation]  " + SuiteDocumentation.Text;
-                    temp.TestSetup.CopyKeyword(CurrentSuiteSettings.TestSetup);
-                    temp.TestTeardown.CopyKeyword(CurrentSuiteSettings.TestTeardown);
-                    temp.SuiteSetup.CopyKeyword(CurrentSuiteSettings.SuiteSetup);
-                    temp.SuiteTeardown.CopyKeyword(CurrentSuiteSettings.SuiteTeardown);
+                    temp.TestSetup.CopyKeyword(ThisFormKeywords[0]);
+                    temp.TestTeardown.CopyKeyword(ThisFormKeywords[1]);
+                    temp.SuiteSetup.CopyKeyword(ThisFormKeywords[2]);
+                    temp.SuiteTeardown.CopyKeyword(ThisFormKeywords[3]);
                     break;
                 }
             }
