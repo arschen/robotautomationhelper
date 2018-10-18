@@ -36,7 +36,7 @@
             this.Skip = new System.Windows.Forms.Button();
             this.Save = new System.Windows.Forms.Button();
             this.ArgumentType = new System.Windows.Forms.ComboBox();
-            this.KeywordOutputFile = new System.Windows.Forms.ComboBox();
+            this.OutputFile = new System.Windows.Forms.ComboBox();
             this.KeywordOutputLabel = new System.Windows.Forms.Label();
             this.KeywordArgumentsLabel = new System.Windows.Forms.Label();
             this.KeywordArguments = new System.Windows.Forms.TextBox();
@@ -127,14 +127,14 @@
             this.ArgumentType.Size = new System.Drawing.Size(121, 21);
             this.ArgumentType.TabIndex = 16;
             // 
-            // KeywordOutputFile
+            // OutputFile
             // 
-            this.KeywordOutputFile.FormattingEnabled = true;
-            this.KeywordOutputFile.Location = new System.Drawing.Point(30, 98);
-            this.KeywordOutputFile.Name = "KeywordOutputFile";
-            this.KeywordOutputFile.Size = new System.Drawing.Size(280, 21);
-            this.KeywordOutputFile.TabIndex = 18;
-            this.KeywordOutputFile.TextChanged += new System.EventHandler(this.KeywordOutputFile_TextChanged);
+            this.OutputFile.FormattingEnabled = true;
+            this.OutputFile.Location = new System.Drawing.Point(30, 98);
+            this.OutputFile.Name = "OutputFile";
+            this.OutputFile.Size = new System.Drawing.Size(280, 21);
+            this.OutputFile.TabIndex = 18;
+            this.OutputFile.TextChanged += new System.EventHandler(this.KeywordOutputFile_TextChanged);
             // 
             // KeywordOutputLabel
             // 
@@ -224,7 +224,7 @@
             this.Controls.Add(this.AddArgument);
             this.Controls.Add(this.KeywordArgumentsLabel);
             this.Controls.Add(this.KeywordArguments);
-            this.Controls.Add(this.KeywordOutputFile);
+            this.Controls.Add(this.OutputFile);
             this.Controls.Add(this.KeywordOutputLabel);
             this.Controls.Add(this.ArgumentType);
             this.Controls.Add(this.Skip);
@@ -251,7 +251,7 @@
         private System.Windows.Forms.Button Skip;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.ComboBox ArgumentType;
-        private System.Windows.Forms.ComboBox KeywordOutputFile;
+        private System.Windows.Forms.ComboBox OutputFile;
         private System.Windows.Forms.Label KeywordOutputLabel;
         private System.Windows.Forms.Label KeywordArgumentsLabel;
         private System.Windows.Forms.TextBox KeywordArguments;

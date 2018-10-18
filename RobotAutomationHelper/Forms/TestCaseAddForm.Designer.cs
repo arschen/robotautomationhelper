@@ -39,7 +39,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.TestCaseTags = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.TestCaseOutputFile = new System.Windows.Forms.ComboBox();
+            this.OutputFile = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // TestCaseNameLabel
@@ -51,7 +51,6 @@
             this.TestCaseNameLabel.Size = new System.Drawing.Size(89, 13);
             this.TestCaseNameLabel.TabIndex = 4;
             this.TestCaseNameLabel.Text = "Test Case Name:";
-            this.TestCaseNameLabel.Click += new System.EventHandler(this.TestCaseLabel_Click);
             // 
             // Skip
             // 
@@ -147,14 +146,14 @@
             this.label2.TabIndex = 14;
             this.label2.Text = "Test Case Output File:";
             // 
-            // TestCaseOutputFile
+            // OutputFile
             // 
-            this.TestCaseOutputFile.FormattingEnabled = true;
-            this.TestCaseOutputFile.Location = new System.Drawing.Point(30, 98);
-            this.TestCaseOutputFile.Name = "TestCaseOutputFile";
-            this.TestCaseOutputFile.Size = new System.Drawing.Size(280, 21);
-            this.TestCaseOutputFile.TabIndex = 15;
-            this.TestCaseOutputFile.TextChanged += new System.EventHandler(this.TestCaseOutputFile_TextChanged);
+            this.OutputFile.FormattingEnabled = true;
+            this.OutputFile.Location = new System.Drawing.Point(30, 98);
+            this.OutputFile.Name = "OutputFile";
+            this.OutputFile.Size = new System.Drawing.Size(280, 21);
+            this.OutputFile.TabIndex = 15;
+            this.OutputFile.TextChanged += new System.EventHandler(this.TestCaseOutputFile_TextChanged);
             // 
             // TestCaseAddForm
             // 
@@ -162,7 +161,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 461);
-            this.Controls.Add(this.TestCaseOutputFile);
+            this.Controls.Add(this.OutputFile);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TestCaseTags);
@@ -176,7 +175,6 @@
             this.Controls.Add(this.TestCaseAddLabel);
             this.Name = "TestCaseAddForm";
             this.Text = "Edit Test Case";
-            this.Load += new System.EventHandler(this.TestCaseAddForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -194,6 +192,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox TestCaseTags;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox TestCaseOutputFile;
+        private System.Windows.Forms.ComboBox OutputFile;
     }
 }

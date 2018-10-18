@@ -37,14 +37,14 @@ namespace RobotAutomationHelper.Forms
                 foreach (Param param in paramsList)
                 {
                     paramsCount++;
-                    FormControls.AddControl("Label", "DynamicTestStep" + paramsCount + "Name",
+                    FormControls.AddControl("Label", "DynamicStep" + paramsCount + "Name",
                         new System.Drawing.Point(10 - this.HorizontalScroll.Value, 123 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(80, 20),
                         param.Name,
                         System.Drawing.Color.Black,
                         null,
                         this);
-                    FormControls.AddControl("TextBox", "DynamicTestStep" + paramsCount + "Value",
+                    FormControls.AddControl("TextBox", "DynamicStep" + paramsCount + "Value",
                         new System.Drawing.Point(100 - this.HorizontalScroll.Value, 120 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(280, 20),
                         paramsList[paramsCount - 1].Value,
@@ -60,7 +60,7 @@ namespace RobotAutomationHelper.Forms
         {
             List<Param> formParams = new List<Param>();
             for (int i = 1; i <= paramsCount; i++)
-                formParams.Add(new Param(this.Controls["DynamicTestStep" + i + "Name"].Text, this.Controls["DynamicTestStep" + i + "Value"].Text));
+                formParams.Add(new Param(this.Controls["DynamicStep" + i + "Name"].Text, this.Controls["DynamicStep" + i + "Value"].Text));
 
             keyword.Params = formParams;
             this.Close();

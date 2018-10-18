@@ -133,13 +133,7 @@ namespace RobotAutomationHelper.Scripts
         {
             bool isKeywordAddForm = (ParentControl as Form).Name.Contains("Keyword");
 
-            List<Keyword> Keywords = new List<Keyword>();
-            if (isKeywordAddForm)
-                Keywords = (ParentControl as KeywordAddForm).ThisFormKeywords;
-            else
-                Keywords = (ParentControl as TestCaseAddForm).Keywords;
-
-            BaseKeywordAddForm.ChangeTheKeywordFieldOnUpdate(this, (ParentControl as Form), isKeywordAddForm, Keywords, textChangedPassed);
+            (ParentControl as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
         }
 
         internal void HideSuggestionsList()

@@ -144,7 +144,7 @@ namespace RobotAutomationHelper
 
         private void UpdateThisFormTestCaseAddFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!((TestCaseAddForm) sender).SkipValue())
+            if (!((TestCaseAddForm) sender).skip)
             {
                 Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[IndexOfTheTestCaseToBeImplemented - 1].Name;
                 Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Edit implementation";
