@@ -136,8 +136,15 @@ namespace RobotAutomationHelper.Scripts
             if (ParentControl.Name.Contains("Keyword"))
                 (ParentControl as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
             else
+            {
                 if (ParentControl.Name.Contains("Settings"))
+                {
                     (ParentControl as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                }
+                else
+                    if (ParentControl.Name.Contains("TestCase"))
+                        (ParentControl as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+            }
         }
 
         internal void HideSuggestionsList()
