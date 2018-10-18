@@ -74,13 +74,18 @@ namespace RobotAutomationHelper.Scripts
                 if (args != null && args.Count != 0)
                 {
                     if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
+                    {
+                        int ParamsButtonX = 450;
+                        if (IsKeyword) ParamsButtonX = 500;
+
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
-                        new Point(500 - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
-                        new Size(75, 20),
-                        "Params",
-                        Color.Black,
-                        new EventHandler(InstantiateParamsAddForm),
-                        this);
+                            new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
+                            new Size(75, 20),
+                            "Params",
+                            Color.Black,
+                            new EventHandler(InstantiateParamsAddForm),
+                            this);
+                    }
                 }else
                     FormControls.RemoveControlByKey("DynamicStep" + keywordIndex + "Params", Controls);
             }
@@ -89,9 +94,12 @@ namespace RobotAutomationHelper.Scripts
                 if (!(ThisFormKeywords[keywordIndex - 1].Params == null)
                     && !(ThisFormKeywords[keywordIndex - 1].Params.Count == 0))
                 {
+                    int ParamsButtonX = 450;
+                    if (IsKeyword) ParamsButtonX = 500;
+
                     if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
-                            new Point(500 - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
+                            new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
                             new Size(75, 20),
                             "Params",
                             Color.Black,
@@ -215,16 +223,23 @@ namespace RobotAutomationHelper.Scripts
                 Controls["DynamicStep" + IndexOfTheKeywordToBeImplemented + "AddImplementation"].Text = "Edit implementation";
 
                 //List<string> args = StringAndListOperations.ReturnListOfArgs(Keywords[IndexOfTheKeywordToBeImplemented - 1].Arguments);
-
                 if (ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].Params != null &&
                     ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].Params.Count != 0)
-                    FormControls.AddControl("Button", "DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params",
-                        new Point(500 - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
-                        new Size(75, 20),
-                        "Params",
-                        Color.Black,
-                        new EventHandler(InstantiateParamsAddForm),
-                        this);
+                {
+                    if (Controls.Find("DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length == 0)
+                    {
+                        int ParamsButtonX = 450;
+                        if (IsKeyword) ParamsButtonX = 500;
+
+                        FormControls.AddControl("Button", "DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params",
+                            new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
+                            new Size(75, 20),
+                            "Params",
+                            Color.Black,
+                            new EventHandler(InstantiateParamsAddForm),
+                            this);
+                    }
+                }
                 else
                     if (Controls.Find("DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length != 0)
                     FormControls.RemoveControlByKey("DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params", Controls);

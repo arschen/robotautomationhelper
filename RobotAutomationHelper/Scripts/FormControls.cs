@@ -15,8 +15,9 @@ namespace RobotAutomationHelper.Scripts
             if (RobotAutomationHelper.Log) Console.WriteLine("AddControl " + " " + type + " " + name + " " + text);
             Control tempControl;
 
-            if (owner.Controls.Find(name, false).Length > 1)
-                if (RobotAutomationHelper.Log) Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
+            if (owner.Controls.Find(name, false).Length > 0)
+                //if (RobotAutomationHelper.Log) 
+                Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
 
             switch (type.ToLower())
             {
