@@ -7,9 +7,10 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper
 {
-    internal partial class RobotAutomationHelper : Form
+    internal partial class RobotAutomationHelper : BaseKeywordAddForm
     {
-        internal static List<TestCase> TestCases;
+        internal static List<TestCase> TestCases = new List<TestCase>();
+        internal static List<SuiteSettings> SuiteSettingsList = new List<SuiteSettings>();
 
         internal static bool Log = false;
         // index of the test case to be implemented
@@ -46,6 +47,7 @@ namespace RobotAutomationHelper
         private void BrowseFolderButton_Click()
         {
             ClearDynamicElements();
+            settingsToolStripMenuItem.Visible = true;
             SetStructureFolder();
             ShowTestCasePanels();
         }
@@ -113,17 +115,6 @@ namespace RobotAutomationHelper
                 }
         }
 
-        private void InstantiateAddTestCaseForm(object sender, EventArgs e)
-        {
-            int testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
-            IndexOfTheTestCaseToBeImplemented = testIndex;
-            TestCase testCase = TestCases[testIndex - 1];
-            testCase.Name = Controls["DynamicTest" + testIndex + "Name"].Text;
-            TestCaseAddForm testCaseAddForm = new TestCaseAddForm();
-            testCaseAddForm.FormClosing += new FormClosingEventHandler(UpdateThisFormTestCaseAddFormClosing);
-            testCaseAddForm.ShowTestCaseContent(testCase, testIndex - 1);
-        }
-
         private void SetStructureFolder()
         {
             
@@ -140,6 +131,17 @@ namespace RobotAutomationHelper
 
             TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
             AddTestCasesToMainForm();
+        }
+
+        protected void InstantiateAddTestCaseForm(object sender, EventArgs e)
+        {
+            int testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
+            IndexOfTheTestCaseToBeImplemented = testIndex;
+            TestCase testCase = TestCases[testIndex - 1];
+            testCase.Name = Controls["DynamicTest" + testIndex + "Name"].Text;
+            TestCaseAddForm testCaseAddForm = new TestCaseAddForm();
+            testCaseAddForm.FormClosing += new FormClosingEventHandler(UpdateThisFormTestCaseAddFormClosing);
+            testCaseAddForm.ShowTestCaseContent(testCase, testIndex - 1);
         }
 
         private void UpdateThisFormTestCaseAddFormClosing(object sender, FormClosingEventArgs e)
@@ -163,6 +165,7 @@ namespace RobotAutomationHelper
 
         private void SaveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            settingsToolStripMenuItem.Visible = false;
             WriteToRobot.includes = new List<Includes>();
             List<int> testCasesToAdd = new List<int>();
             foreach (Control tempControl in Controls)
@@ -195,6 +198,18 @@ namespace RobotAutomationHelper
 
             foreach (string fileName in FilesAndFolderStructure.SavedFiles)
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName));
+        }
+
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (FilesAndFolderStructure.SavedFiles != null && FilesAndFolderStructure.SavedFiles.Count > 0)
+                InstantiateSettingsAddForm(sender, e);
+            else
+            {
+                DialogResult result = MessageBox.Show("You haven't saved any keywords or test cases to files yet.",
+                "Alert",
+                MessageBoxButtons.OK);
+            }
         }
     }
 }

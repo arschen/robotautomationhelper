@@ -103,7 +103,7 @@
             // 
             this.TestStepsLabel.AutoSize = true;
             this.TestStepsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TestStepsLabel.Location = new System.Drawing.Point(10, 125);
+            this.TestStepsLabel.Location = new System.Drawing.Point(10, 122);
             this.TestStepsLabel.Name = "TestStepsLabel";
             this.TestStepsLabel.Size = new System.Drawing.Size(61, 13);
             this.TestStepsLabel.TabIndex = 7;

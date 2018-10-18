@@ -52,11 +52,6 @@ namespace RobotAutomationHelper.Scripts
             return false;
         }
 
-        internal static List<string> GetFilesList()
-        {
-            return SavedFiles;
-        }
-
         internal static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> Keywords, int implementedKeyword)
         {
             AddFileToSavedFiles(Keywords[implementedKeyword - 1].OutputFilePath);

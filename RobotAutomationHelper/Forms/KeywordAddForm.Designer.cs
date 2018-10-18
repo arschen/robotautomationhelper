@@ -45,6 +45,7 @@
             this.ArgumentTypeLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.RemoveArgument = new System.Windows.Forms.Button();
+            this.KeywordStepsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // KeywordDocumentationLabel
@@ -211,12 +212,23 @@
             this.RemoveArgument.UseVisualStyleBackColor = true;
             this.RemoveArgument.Click += new System.EventHandler(this.RemoveArgument_Click);
             // 
+            // KeywordStepsLabel
+            // 
+            this.KeywordStepsLabel.AutoSize = true;
+            this.KeywordStepsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KeywordStepsLabel.Location = new System.Drawing.Point(12, 162);
+            this.KeywordStepsLabel.Name = "KeywordStepsLabel";
+            this.KeywordStepsLabel.Size = new System.Drawing.Size(81, 13);
+            this.KeywordStepsLabel.TabIndex = 26;
+            this.KeywordStepsLabel.Text = "Keyword Steps:";
+            // 
             // KeywordAddForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 461);
+            this.Controls.Add(this.KeywordStepsLabel);
             this.Controls.Add(this.RemoveArgument);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ArgumentTypeLabel);
@@ -260,5 +272,6 @@
         private System.Windows.Forms.Label ArgumentTypeLabel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button RemoveArgument;
+        private System.Windows.Forms.Label KeywordStepsLabel;
     }
 }

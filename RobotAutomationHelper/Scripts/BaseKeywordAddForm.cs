@@ -8,6 +8,7 @@ namespace RobotAutomationHelper.Scripts
 {
     internal class BaseKeywordAddForm : Form
     {
+        Form Parent;
         protected bool IsKeyword;
         // index and keywords of the parent
         protected int ImplementationIndexFromTheParent;
@@ -106,6 +107,7 @@ namespace RobotAutomationHelper.Scripts
 
         protected void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
+            Parent = this;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateKeywordAddForm " + ((Button)sender).Name);
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicStep", ""));
             IndexOfTheKeywordToBeImplemented = keywordIndex;
@@ -117,8 +119,18 @@ namespace RobotAutomationHelper.Scripts
             addKeywordForm.ShowKeywordContent(keyword, keywordIndex - 1);
         }
 
+        protected void InstantiateSettingsAddForm(object sender, EventArgs e)
+        {
+            Parent = this;
+            if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateSettingsAddForm " + ((Button)sender).Name);
+            SettingsAddForm AddSettingsForm = new SettingsAddForm();
+            //AddSettingsForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
+            AddSettingsForm.ShowSettingsContent();
+        }
+
         internal void InstantiateParamsAddForm(object sender, EventArgs e)
         {
+            Parent = this;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
             if (IsKeyword)
                 (this as KeywordAddForm).AddCurrentKeywordsToKeywordsList(sender, e);
@@ -219,7 +231,9 @@ namespace RobotAutomationHelper.Scripts
 
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(ThisFormKeywords, IndexOfTheKeywordToBeImplemented);
-                FormControls.UpdateOutputFileSuggestions(this.Controls["OutputFile"] as ComboBox);
+                //update suggestion when not navigating to "Settings" form
+                if (!Parent.Name.Contains("Settings"))
+                    FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox);
             }
         }
 

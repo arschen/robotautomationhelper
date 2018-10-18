@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RobotAutomationHelper.Forms;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -132,8 +133,11 @@ namespace RobotAutomationHelper.Scripts
         private void TriggerUpdate(string textChangedPassed)
         {
             bool isKeywordAddForm = (ParentControl as Form).Name.Contains("Keyword");
-
-            (ParentControl as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+            if (ParentControl.Name.Contains("Keyword"))
+                (ParentControl as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+            else
+                if (ParentControl.Name.Contains("Settings"))
+                    (ParentControl as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
         }
 
         internal void HideSuggestionsList()

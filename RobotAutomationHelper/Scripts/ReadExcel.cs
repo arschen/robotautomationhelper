@@ -7,12 +7,12 @@ namespace RobotAutomationHelper.Scripts
     internal static class ReadExcel
     {
 
-        static List<TestCase> TestCases;
-        static List<Keyword> currentTestCaseTestSteps;
-        static string currentTestTags;
-        static string currentTestCaseDocumentation;
-        static string currentTestCase;
-        static string outputFilePath;
+        private static List<TestCase> TestCases;
+        private static List<Keyword> currentTestCaseTestSteps;
+        private static string currentTestTags;
+        private static string currentTestCaseDocumentation;
+        private static string currentTestCase;
+        private static string outputFilePath;
 
         internal static List<TestCase> ReadAllTestCasesFromExcel(string Filename)
         {

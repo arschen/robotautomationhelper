@@ -50,10 +50,11 @@ namespace RobotAutomationHelper.Scripts
             if (RobotAutomationHelper.Log) Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
             comboBox.Items.Clear();
             comboBox.AutoCompleteCustomSource.Clear();
-            comboBox.Items.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
-            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetFilesList().ToArray());
+            comboBox.Items.AddRange(FilesAndFolderStructure.SavedFiles.ToArray());
+            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.SavedFiles.ToArray());
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            if (comboBox.DropDownStyle != ComboBoxStyle.DropDownList)
+                comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
         }
 
         internal static void RemoveControlByKey(string key, ControlCollection controlCollection)

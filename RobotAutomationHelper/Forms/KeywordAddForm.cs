@@ -18,7 +18,7 @@ namespace RobotAutomationHelper
         internal KeywordAddForm(List<Keyword> parentKeywords)
         {
             InitializeComponent();
-            initialYValue = 165;
+            initialYValue = 185;
             ParentKeywords = parentKeywords;
             FormControls.UpdateOutputFileSuggestions(OutputFile);
             ActiveControl = KeywordNameLabel;
