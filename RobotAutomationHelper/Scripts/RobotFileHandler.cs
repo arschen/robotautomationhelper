@@ -30,6 +30,7 @@ namespace RobotAutomationHelper.Scripts
                     Directory.CreateDirectory(directory);
                 var myFile = File.Create(fileName);
                 myFile.Close();
+                /*
                 List<string> temp = new List<string>
                 {
                     "*** Settings ***",
@@ -40,36 +41,41 @@ namespace RobotAutomationHelper.Scripts
                 File.WriteAllLines(fileName, temp);
                 temp.Clear();
                 arrLine = File.ReadAllLines(fileName);
+                */
+                arrLine = new string[0];
             }
 
-            bool start = false;
-            for (int i = 0; i < arrLine.Length; i++)
+            if (arrLine.Length != 0)
             {
-                if (arrLine[i].StartsWith("***"))
+                bool start = false;
+                for (int i = 0; i < arrLine.Length; i++)
                 {
-                    if (start)
+                    if (arrLine[i].StartsWith("***"))
                     {
-                        index = i;
-                        break;
+                        if (start)
+                        {
+                            index = i;
+                            break;
+                        }
+                        if (arrLine[i].ToLower().Contains(type))
+                            start = true;
                     }
-                    if (arrLine[i].ToLower().Contains(type))
-                        start = true;
                 }
-            }
 
-            if (!start)
-                if (arrLine.Length - 1 >= 0)
-                    index = arrLine.Length;
+                if (!start)
+                    if (arrLine.Length - 1 >= 0)
+                        index = arrLine.Length;
+                    else
+                        index = 0;
                 else
-                    index = 0;
-            else
-                if (index == -1)
+                    if (index == -1)
                 {
                     if (arrLine.Length - 1 >= 0)
                         index = arrLine.Length;
                     else
                         index = 0;
                 }
+            }
 
             return index;
         }

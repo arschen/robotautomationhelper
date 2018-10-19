@@ -12,6 +12,7 @@ namespace RobotAutomationHelper.Scripts
         {
             string fileName = testCase.OutputFilePath;
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
+            if (index < 0) index = 0;
 
             bool addTestCase = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, testCase.Name.Trim(), "test cases") != -1);
             if (addTestCase)
@@ -39,6 +40,8 @@ namespace RobotAutomationHelper.Scripts
             int index = 0;
             if (fileName != "")
                 index = RobotFileHandler.GetLineAfterLastKeyword(fileName);
+
+            if (index < 0) index = 0;
 
             bool addKeywordSteps = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.Name.Trim(), "keyword") != -1);
 
@@ -147,28 +150,31 @@ namespace RobotAutomationHelper.Scripts
 
             foreach (Includes temp in includes)
             {
-                index = 0;
-                fileName = temp.FileName;
-                int tempTagIndex = RobotFileHandler.HasTag(fileName, tag);
-                if (tempTagIndex == -1)
+                if (temp.FilesToInclude.Count > 0)
                 {
-                    RobotFileHandler.FileLineAdd("*** Settings ***", fileName, index);
-                    index++;
-                }
-                else
-                    index = tempTagIndex + 1;
-
-                foreach (string path in temp.FilesToInclude)
-                {
-                    if (path.Equals("SeleniumLibrary"))
+                    index = 0;
+                    fileName = temp.FileName;
+                    int tempTagIndex = RobotFileHandler.HasTag(fileName, tag);
+                    if (tempTagIndex == -1)
                     {
-                        if (RobotFileHandler.ContainsSettings(fileName, "Library  " + path).Equals(""))
-                            RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
+                        RobotFileHandler.FileLineAdd("*** Settings ***", fileName, index);
+                        index++;
                     }
                     else
-                        if (RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")).Equals(""))
-                            RobotFileHandler.FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\','/'), index);
-                    index++;
+                        index = tempTagIndex + 1;
+
+                    foreach (string path in temp.FilesToInclude)
+                    {
+                        if (path.Equals("SeleniumLibrary"))
+                        {
+                            if (RobotFileHandler.ContainsSettings(fileName, "Library  " + path).Equals(""))
+                                RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
+                        }
+                        else
+                            if (RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")).Equals(""))
+                            RobotFileHandler.FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\', '/'), index);
+                        index++;
+                    }
                 }
             }
         }

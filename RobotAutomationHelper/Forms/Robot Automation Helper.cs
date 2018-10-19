@@ -165,7 +165,6 @@ namespace RobotAutomationHelper
 
         private void SaveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            settingsToolStripMenuItem.Visible = false;
             WriteToRobot.includes = new List<Includes>();
             List<int> testCasesToAdd = new List<int>();
             foreach (Control tempControl in Controls)
