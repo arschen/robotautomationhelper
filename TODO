@@ -1,0 +1,9 @@
+Write / Overwrite logic for Settings
+Read Keywords from files
+Support for For loops and conditional statements
+Python libraries implementation
+Easy implementation of other robot framework libraries
+Tooltip on Param names for visibility
+BugFixes:
+  Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
+  Resource includes added twice ( no repro )
