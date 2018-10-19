@@ -73,7 +73,21 @@ namespace RobotAutomationHelper
                         break;
                     }
                 }
-                Arguments = KeywordString.Replace(splitKeyword[0], "");
+                for (int i = 1; i < splitKeyword.Length; i++)
+                {
+                    if (!splitKeyword[i].Contains("="))
+                        Params[i - 1].Value = splitKeyword[i];
+                    else
+                    {
+                        // check if after spliting the first string matches any param name
+                        string[] temp = splitKeyword[i].Split('=');
+                        foreach (Param tempParam in Params)
+                        {
+                            if (tempParam.Name.ToLower().Trim().Equals(temp[0].ToLower().Trim()))
+                                tempParam.Value = splitKeyword[i].Replace(temp[0] + "=", "");
+                        }
+                    }
+                }
             }
             else
             {

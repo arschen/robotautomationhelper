@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RobotAutomationHelper.Scripts
 {
@@ -14,7 +15,7 @@ namespace RobotAutomationHelper.Scripts
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
             if (index < 0) index = 0;
 
-            bool addTestCase = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, testCase.Name.Trim(), "test cases") != -1);
+            bool addTestCase = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, testCase.Name.Trim(), "test cases") != -1);
             if (addTestCase)
             {
                 Includes candidate = new Includes(fileName);
@@ -43,7 +44,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (index < 0) index = 0;
 
-            bool addKeywordSteps = !(RobotFileHandler.ContainsTestCaseOrKeyword(fileName, keyword.Name.Trim(), "keyword") != -1);
+            bool addKeywordSteps = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), "keyword") != -1);
 
             if (addKeywordSteps)
                 if (keyword.Type == KeywordType.CUSTOM)
@@ -131,18 +132,19 @@ namespace RobotAutomationHelper.Scripts
                     }
                 }
                 index++;
-            }else
+            }
+            else
                 if (tempTagIndex + 1 != index)
-                {
+            {
                 RobotFileHandler.FileLineAdd("", fileName, index);
-                    index++;
-                }
+                index++;
+            }
             RobotFileHandler.FileLineAdd(name, fileName, index);
             return index;
         }
 
         //Add includes to test case and keywords files
-        internal static void AddIncludes()
+        internal static void WriteIncludesToRobotFiles()
         {
             int index;
             string tag = "settings";
@@ -167,16 +169,62 @@ namespace RobotAutomationHelper.Scripts
                     {
                         if (path.Equals("SeleniumLibrary"))
                         {
-                            if (RobotFileHandler.ContainsSettings(fileName, "Library  " + path).Equals(""))
+                            if (RobotFileHandler.OccuranceInSettings(fileName, "Library  " + path).Equals(""))
                                 RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
                         }
                         else
-                            if (RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")).Equals(""))
+                            if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")).Equals(""))
                             RobotFileHandler.FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\', '/'), index);
                         index++;
                     }
                 }
             }
+        }
+
+        internal static void WriteSuiteSettingsListToRobot()
+        {
+            foreach (SuiteSettings suiteSettings in RobotAutomationHelper.SuiteSettingsList)
+                if (suiteSettings.Overwrite)
+                {
+                    if (suiteSettings.Documentation != "")
+                        ReplaceInSettings("Documentation  " + suiteSettings.Documentation, "Documentation",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                    else
+                        RemoveFromSettings("Documentation",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+
+                    if (suiteSettings.TestSetup.Name != "")
+                        ReplaceInSettings("Test Setup  " + suiteSettings.TestSetup.Name + suiteSettings.TestSetup.ParamsToString()
+                            , "Test Setup",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                    else
+                        RemoveFromSettings("Test Setup",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+
+                    if (suiteSettings.TestTeardown.Name != "")
+                        ReplaceInSettings("Test Teardown  " + suiteSettings.TestTeardown.Name + suiteSettings.TestTeardown.ParamsToString()
+                            , "Test Teardown",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                    else
+                        RemoveFromSettings("Test Teardown",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+
+                    if (suiteSettings.TestSetup.Name != "")
+                        ReplaceInSettings("Suite Setup  " + suiteSettings.SuiteSetup.Name + suiteSettings.SuiteSetup.ParamsToString()
+                            , "Suite Setup",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                    else
+                        RemoveFromSettings("Suite Setup",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+
+                    if (suiteSettings.SuiteTeardown.Name != "")
+                        ReplaceInSettings("Suite Teardown  " + suiteSettings.SuiteTeardown.Name + suiteSettings.SuiteTeardown.ParamsToString()
+                            , "Suite Teardown",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                    else
+                        RemoveFromSettings("Suite Teardown",
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                }
         }
 
         internal static void RemoveKeyword(Keyword keyword)
@@ -188,6 +236,36 @@ namespace RobotAutomationHelper.Scripts
                     if (step.Overwrite)
                         RobotFileHandler.TestCaseKeywordRemove(step.Name, step.OutputFilePath, true);
                 }
+        }
+
+        // replaces tags and text when writing settings to the files
+        private static void ReplaceInSettings(string replacementText, string tag, string outputFileName)
+        {
+            List<int> location = RobotFileHandler.LocationInSettings(outputFileName, tag);
+
+            //Add settings tag if not present in the file
+            if (RobotFileHandler.HasTag(outputFileName , "Settings") == -1)
+                RobotFileHandler.FileLineAdd(replacementText
+                    , outputFileName
+                    , 0);
+
+            if (location[0] == -1)
+                RobotFileHandler.FileLineAdd(replacementText
+                    , outputFileName
+                    , 1);
+            else
+                RobotFileHandler.FileLineReplace(replacementText
+                    , outputFileName
+                    , location);
+        }
+
+        // replaces tags and text when writing settings to the files
+        private static void RemoveFromSettings(string tag, string outputFileName)
+        {
+            List<int> location = RobotFileHandler.LocationInSettings(outputFileName, tag);
+            if (location[0] != -1)
+                RobotFileHandler.FileLineRemove(outputFileName
+                                , location);
         }
     }
 }

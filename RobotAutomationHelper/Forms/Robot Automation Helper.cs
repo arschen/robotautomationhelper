@@ -193,7 +193,9 @@ namespace RobotAutomationHelper
                 WriteToRobot.AddTestCaseToRobot(testCase);
             }
 
-            WriteToRobot.AddIncludes();
+            WriteToRobot.WriteIncludesToRobotFiles();
+            //TODO
+            //WriteToRobot.WriteSuiteSettingsListToRobot();
 
             foreach (string fileName in FilesAndFolderStructure.SavedFiles)
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName));

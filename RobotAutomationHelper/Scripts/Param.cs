@@ -3,7 +3,7 @@
     internal class Param
     {
         internal string Name { get; }
-        internal string Value { get; }
+        internal string Value { get; set; }
 
         internal Param(string Name, string Value)
         {

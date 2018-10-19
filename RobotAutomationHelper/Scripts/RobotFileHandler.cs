@@ -8,16 +8,16 @@ namespace RobotAutomationHelper.Scripts
     {
         internal static int GetLineAfterLastKeyword(string fileName)
         {
-            return GetLine(fileName, "keywords");
+            return GetLocationOfType(fileName, "keywords");
         }
 
         internal static int GetLineAfterLastTestCase(string fileName)
         {
-            return GetLine(fileName, "test cases");
+            return GetLocationOfType(fileName, "test cases");
         }
 
         // get the index line where to add specific type ( keyword / test cases / settings )
-        private static int GetLine(string fileName, string type)
+        private static int GetLocationOfType(string fileName, string type)
         {
             int index = -1;
             string[] arrLine;
@@ -105,7 +105,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // returns index with the line if the file contains a keyword / test case with the same name
-        internal static int ContainsTestCaseOrKeyword(string fileName, string name, string type)
+        internal static int LocationOfTestCaseOrKeywordInFile(string fileName, string name, string type)
         {
             if (File.Exists(fileName))
             {
@@ -137,7 +137,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // returns bool of the line where the specific include is found
-        internal static string ContainsSettings(string fileName, string name)
+        internal static string OccuranceInSettings(string fileName, string name)
         {
             if (File.Exists(fileName))
             {
@@ -179,6 +179,52 @@ namespace RobotAutomationHelper.Scripts
             return "";
         }
 
+        internal static List<int> LocationInSettings(string fileName, string name)
+        {
+            List<int> result = new List<int>();
+            if (File.Exists(fileName))
+            {
+                int index = HasTag(fileName, "settings");
+                if (index != -1)
+                {
+                    string[] arrLine;
+                    arrLine = File.ReadAllLines(fileName);
+                    for (int ind = index; ind < arrLine.Length; ind++)
+                    {
+                        if (!arrLine[ind].StartsWith("***"))
+                        {
+                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
+                            {
+                                if (name.StartsWith("Library") || name.StartsWith("Resource"))
+                                {
+                                    if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
+                                    {
+                                        result.Add(ind);
+                                        return result;
+                                    }
+                                }
+                                else
+                                {
+                                    if (arrLine[ind].ToLower().Trim().StartsWith(name.ToLower()))
+                                    {
+                                        result.Add(ind);
+                                        for (int j = ind + 1; j < arrLine.Length; j++)
+                                            if (arrLine[j].StartsWith("..."))
+                                                result.Add(j);
+                                            else
+                                                break;
+                                        return result;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            result.Add(-1);
+            return result;
+        }
+
         // add newText on new line to file fileName after specified line
         internal static void FileLineAdd(string newText, string fileName, int line_to_add_after)
         {
@@ -198,6 +244,55 @@ namespace RobotAutomationHelper.Scripts
             List<string> temp = new List<string>();
             temp.AddRange(arrLine);
             temp.Insert(line_to_add_after, newText);
+            File.WriteAllLines(fileName, temp);
+        }
+
+        // removes linesToReplace from fileName
+        internal static void FileLineRemove(string fileName, List<int> linesToRemove)
+        {
+            string[] arrLine;
+            if (File.Exists(fileName))
+                arrLine = File.ReadAllLines(fileName);
+            else
+            {
+                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                var myFile = File.Create(fileName);
+                myFile.Close();
+                arrLine = File.ReadAllLines(fileName);
+            }
+
+            List<string> temp = new List<string>();
+            temp.AddRange(arrLine);
+            if (linesToRemove.Count != 0)
+                for (int i = 0; i < linesToRemove.Count; i++)
+                    temp.RemoveAt(linesToRemove[i] - i);
+            File.WriteAllLines(fileName, temp);
+        }
+
+        // replace linesToReplace with single line newText
+        internal static void FileLineReplace(string newText, string fileName, List<int> linesToReplace)
+        {
+            string[] arrLine;
+            if (File.Exists(fileName))
+                arrLine = File.ReadAllLines(fileName);
+            else
+            {
+                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                var myFile = File.Create(fileName);
+                myFile.Close();
+                arrLine = File.ReadAllLines(fileName);
+            }
+
+            List<string> temp = new List<string>();
+            temp.AddRange(arrLine);
+            temp[linesToReplace[0]] = newText;
+            if (linesToReplace.Count != 1)
+                for (int i = 1; i < linesToReplace.Count; i++)
+                    temp.RemoveAt(linesToReplace[i] - i + 1);
             File.WriteAllLines(fileName, temp);
         }
 
@@ -240,9 +335,9 @@ namespace RobotAutomationHelper.Scripts
 
             int index = 0;
             if (isKeyword)
-                index = ContainsTestCaseOrKeyword(fileName, name, "keywords");
+                index = LocationOfTestCaseOrKeywordInFile(fileName, name, "keywords");
             else
-                index = ContainsTestCaseOrKeyword(fileName, name, "test cases");
+                index = LocationOfTestCaseOrKeywordInFile(fileName, name, "test cases");
 
             if (index != -1)
             {
