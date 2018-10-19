@@ -21,7 +21,6 @@ namespace RobotAutomationHelper
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("Save_Click");
             if (!IsTestCasePresentInFilesOrMemoryTree())
             {
                 SaveChangesToTestCases();
@@ -114,11 +113,13 @@ namespace RobotAutomationHelper
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("IsTestCasePresentInFilesOrMemoryTree");
             presentInRobotFile = false;
-            if (TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
+            memoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text),
-                RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent]))
+                RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent]);
+                TestCaseName.ForeColor = Color.Red;
+
+            if (!memoryPath.Equals(""))
                 TestCaseName.ForeColor = Color.Red;
             else
             {

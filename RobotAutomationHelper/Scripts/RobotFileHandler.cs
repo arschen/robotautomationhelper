@@ -131,7 +131,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // returns bool of the line where the specific include is found
-        internal static bool ContainsSettings(string fileName, string name)
+        internal static string ContainsSettings(string fileName, string name)
         {
             if (File.Exists(fileName))
             {
@@ -146,14 +146,20 @@ namespace RobotAutomationHelper.Scripts
                         {
                             if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
                             {
-                                if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
-                                    return true;
+                                if (name.StartsWith("Library") || name.StartsWith("Resource"))
+                                {
+                                    if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
+                                        return arrLine[ind];
+                                }else
+                                                                        if (arrLine[ind].ToLower().Trim().StartsWith(name.ToLower()))
+                                    return arrLine[ind];
+
                             }
                         }
                     }
                 }
             }
-            return false;
+            return "";
         }
 
         // add newText on new line to file fileName after specified line

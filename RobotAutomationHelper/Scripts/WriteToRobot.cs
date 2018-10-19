@@ -162,11 +162,11 @@ namespace RobotAutomationHelper.Scripts
                 {
                     if (path.Equals("SeleniumLibrary"))
                     {
-                        if (!RobotFileHandler.ContainsSettings(fileName, "Library  " + path))
+                        if (RobotFileHandler.ContainsSettings(fileName, "Library  " + path).Equals(""))
                             RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
                     }
                     else
-                        if (!RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")))
+                        if (RobotFileHandler.ContainsSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")).Equals(""))
                             RobotFileHandler.FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\','/'), index);
                     index++;
                 }

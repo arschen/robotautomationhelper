@@ -4,13 +4,13 @@ namespace RobotAutomationHelper.Scripts
 {
     internal static class TestCasesListOperations
     {
-        internal static bool IsPresentInTheTestCasesTree(string name, string fileName, TestCase thisTestCase)
+        internal static string IsPresentInTheTestCasesTree(string name, string fileName, TestCase thisTestCase)
         {
             foreach (TestCase test in RobotAutomationHelper.TestCases)
                 if (test.Name.Trim().ToLower().Equals(name.ToLower())
                     && test != thisTestCase && test.OutputFilePath.ToLower().Equals(fileName.ToLower()))
-                    return true;
-            return false;
+                    return fileName + " | " + name;
+            return "";
         }
 
         internal static string IsPresentInTheKeywordTree(string name, string fileName, Keyword thisKeyword)

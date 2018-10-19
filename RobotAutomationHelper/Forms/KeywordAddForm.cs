@@ -340,10 +340,11 @@ namespace RobotAutomationHelper
 
         private bool IsKeywordPresentInFilesOrMemoryTree()
         {
+            presentInRobotFile = false;
             memoryPath = TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text),
                 ParentKeywords[ImplementationIndexFromTheParent]);
-            presentInRobotFile = false;
+
             if (!memoryPath.Equals(""))
                 KeywordName.ForeColor = Color.Red;
             else

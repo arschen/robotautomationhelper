@@ -13,7 +13,7 @@ namespace RobotAutomationHelper.Forms
 
         internal SettingsAddForm()
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("SettingsAddForm [Constructor]");
+            if (RobotAutomationHelper.Log) Console.WriteLine("SettingsAddForm Constructor");
             InitializeComponent();
             initialYValue = 120;
             IsKeyword = false;
@@ -51,6 +51,21 @@ namespace RobotAutomationHelper.Forms
                     break;
                 }
 
+            if (!CurrentSuiteSettings.Overwrite)
+            {
+                // TODO read keywords properly
+                CurrentSuiteSettings.Documentation = RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), 
+                    "Documentation").Replace("Documentation", "").Trim();
+                CurrentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Test Setup").Replace("Test Setup", "").Trim(), 
+                    CurrentSuiteSettings.OutputFilePath);
+                CurrentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Test Teardown").Replace("Test Teardown", "").Trim(), 
+                    CurrentSuiteSettings.OutputFilePath);
+                CurrentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Suite Setup").Replace("Suite Setup", "").Trim(), 
+                    CurrentSuiteSettings.OutputFilePath);
+                CurrentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Suite Teardown").Replace("Suite Teardown", "").Trim(), 
+                    CurrentSuiteSettings.OutputFilePath);
+            }
+
             ThisFormKeywords = new List<Keyword>();
             if (CurrentSuiteSettings.TestSetup == null)
                 CurrentSuiteSettings.TestSetup = new Keyword("", CurrentSuiteSettings.OutputFilePath);
@@ -68,7 +83,7 @@ namespace RobotAutomationHelper.Forms
                 CurrentSuiteSettings.SuiteTeardown = new Keyword("", CurrentSuiteSettings.OutputFilePath);
             ThisFormKeywords.Add(CurrentSuiteSettings.SuiteTeardown);
 
-            SuiteDocumentation.Text = CurrentSuiteSettings.Documentation.Replace("[Documentation]", "").Trim();
+            SuiteDocumentation.Text = CurrentSuiteSettings.Documentation;
 
             for (int i = 1; i <=4; i++)
                 if (Controls["DynamicStep" + i + "Name"] != null)
@@ -89,7 +104,8 @@ namespace RobotAutomationHelper.Forms
             {
                 if (temp.ToString().Equals(OutputFile.Text))
                 {
-                    temp.Documentation = "[Documentation]  " + SuiteDocumentation.Text;
+                    temp.Documentation = SuiteDocumentation.Text;
+                    temp.Overwrite = true;
                     temp.TestSetup.CopyKeyword(ThisFormKeywords[0]);
                     temp.TestTeardown.CopyKeyword(ThisFormKeywords[1]);
                     temp.SuiteSetup.CopyKeyword(ThisFormKeywords[2]);
