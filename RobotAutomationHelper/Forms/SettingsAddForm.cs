@@ -56,14 +56,14 @@ namespace RobotAutomationHelper.Forms
                 // TODO read keywords properly
                 CurrentSuiteSettings.Documentation = RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), 
                     "Documentation").Replace("Documentation", "").Trim();
-                CurrentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Test Setup").Replace("Test Setup", "").Trim(), 
-                    CurrentSuiteSettings.OutputFilePath);
+                CurrentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Test Setup").Replace("Test Setup", "").Trim(),
+                    CurrentSuiteSettings.OutputFilePath, true);
                 CurrentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Test Teardown").Replace("Test Teardown", "").Trim(), 
-                    CurrentSuiteSettings.OutputFilePath);
+                    CurrentSuiteSettings.OutputFilePath, true);
                 CurrentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Suite Setup").Replace("Suite Setup", "").Trim(), 
-                    CurrentSuiteSettings.OutputFilePath);
+                    CurrentSuiteSettings.OutputFilePath, true);
                 CurrentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.ContainsSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath), "Suite Teardown").Replace("Suite Teardown", "").Trim(), 
-                    CurrentSuiteSettings.OutputFilePath);
+                    CurrentSuiteSettings.OutputFilePath, true);
             }
 
             ThisFormKeywords = new List<Keyword>();

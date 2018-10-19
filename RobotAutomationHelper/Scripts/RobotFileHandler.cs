@@ -150,10 +150,21 @@ namespace RobotAutomationHelper.Scripts
                                 {
                                     if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
                                         return arrLine[ind];
-                                }else
-                                                                        if (arrLine[ind].ToLower().Trim().StartsWith(name.ToLower()))
-                                    return arrLine[ind];
-
+                                }
+                                else
+                                {
+                                    if (arrLine[ind].ToLower().Trim().StartsWith(name.ToLower()))
+                                    {
+                                        string temp = arrLine[ind];
+                                        for (int j = ind + 1; j < arrLine.Length; j++)
+                                            if (arrLine[j].StartsWith("..."))
+                                                if (name.Equals("Documentation"))
+                                                    temp += " " + arrLine[j].Replace("...", "").Trim();
+                                                else
+                                                    temp += "  " + arrLine[j].Replace("...", "").Trim();
+                                        return temp;
+                                    }
+                                }          
                             }
                         }
                     }

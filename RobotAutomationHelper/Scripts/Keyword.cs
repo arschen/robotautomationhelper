@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using RobotAutomationHelper.Scripts;
+using System;
+using System.Collections.Generic;
 
 namespace RobotAutomationHelper
 {
@@ -58,6 +60,30 @@ namespace RobotAutomationHelper
             SuggestionIndex = -1;
         }
 
+        internal Keyword(string KeywordString, string OutputFilePath, bool keywordString)
+        {
+            if (!KeywordString.Equals(""))
+            {
+                string[] splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (Keyword key in FormControls.Suggestions)
+                {
+                    if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
+                    {
+                        CopyKeyword(key);
+                        break;
+                    }
+                }
+                Arguments = KeywordString.Replace(splitKeyword[0], "");
+            }
+            else
+            {
+                Name = "";
+                this.OutputFilePath = OutputFilePath;
+                Documentation = "";
+                SuggestionIndex = -1;
+            }
+        }
+
         internal string ParamsToString()
         {
             string paramsString = "";
@@ -66,6 +92,8 @@ namespace RobotAutomationHelper
                     paramsString += "  " + tempParam.Value;
             return paramsString;
         }
+
+
 
         public override string ToString()
         {
