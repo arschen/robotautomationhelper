@@ -88,7 +88,6 @@ namespace RobotAutomationHelper.Scripts
                         index++;
                         RobotFileHandler.FileLineAdd("\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
                     }
-
                     AddKeywordToRobot(keywordKeyword);
                 }
             return index;
@@ -209,7 +208,7 @@ namespace RobotAutomationHelper.Scripts
                         RemoveFromSettings("Test Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
 
-                    if (suiteSettings.TestSetup.Name != "")
+                    if (suiteSettings.SuiteSetup.Name != "")
                         ReplaceInSettings("Suite Setup  " + suiteSettings.SuiteSetup.Name + suiteSettings.SuiteSetup.ParamsToString()
                             , "Suite Setup",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
@@ -245,7 +244,7 @@ namespace RobotAutomationHelper.Scripts
 
             //Add settings tag if not present in the file
             if (RobotFileHandler.HasTag(outputFileName , "Settings") == -1)
-                RobotFileHandler.FileLineAdd(replacementText
+                RobotFileHandler.FileLineAdd("*** Settings ***"
                     , outputFileName
                     , 0);
 

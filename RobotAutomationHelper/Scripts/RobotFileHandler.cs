@@ -315,6 +315,48 @@ namespace RobotAutomationHelper.Scripts
                     temp.Add(arrLine[arrLine.Length - 1]);
                 File.WriteAllLines(fileName, temp);
             }
+
+            arrLine = File.ReadAllLines(fileName);
+
+            if (!(arrLine == null) && !(arrLine.Length == 0))
+            {
+                List<string> temp = new List<string>();
+                temp.AddRange(arrLine);
+                List<int> indexesToRemove = new List<int>();
+                foreach (string line in temp)
+                {
+                    if (line.StartsWith("***"))
+                        if (temp.IndexOf(line) + 1 < temp.Count)
+                        {
+                            for (int j = temp.IndexOf(line) + 1; j < temp.Count; j++)
+                            {
+                                if (!temp[j].StartsWith("***") && !temp[j].Trim().Equals(""))
+                                    break;
+                                else
+                                {
+                                    if (temp[j].StartsWith("***"))
+                                    {
+                                        for (int k = temp.IndexOf(line); k < j; k++)
+                                        {
+                                            indexesToRemove.Add(k);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            indexesToRemove.Add(temp.IndexOf(line));
+                        }
+                }
+                if (indexesToRemove != null && indexesToRemove.Count != 0)
+                {
+                    for (int i = indexesToRemove.Count - 1; i >= 0; i--)
+                        temp.RemoveAt(i);
+                }
+                File.WriteAllLines(fileName, temp);
+            }
         }
 
         // add newText on new line to file fileName after specified line

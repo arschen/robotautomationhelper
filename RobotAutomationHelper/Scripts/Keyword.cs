@@ -65,28 +65,40 @@ namespace RobotAutomationHelper
             if (!KeywordString.Equals(""))
             {
                 string[] splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                bool found = false;
                 foreach (Keyword key in FormControls.Suggestions)
                 {
                     if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
                     {
                         CopyKeyword(key);
+                        found = true;
                         break;
                     }
                 }
-                for (int i = 1; i < splitKeyword.Length; i++)
+                if (found)
                 {
-                    if (!splitKeyword[i].Contains("="))
-                        Params[i - 1].Value = splitKeyword[i];
-                    else
+                    for (int i = 1; i < splitKeyword.Length; i++)
                     {
-                        // check if after spliting the first string matches any param name
-                        string[] temp = splitKeyword[i].Split('=');
-                        foreach (Param tempParam in Params)
+                        if (!splitKeyword[i].Contains("="))
+                            Params[i - 1].Value = splitKeyword[i];
+                        else
                         {
-                            if (tempParam.Name.ToLower().Trim().Equals(temp[0].ToLower().Trim()))
-                                tempParam.Value = splitKeyword[i].Replace(temp[0] + "=", "");
+                            // check if after spliting the first string matches any param name
+                            string[] temp = splitKeyword[i].Split('=');
+                            foreach (Param tempParam in Params)
+                            {
+                                if (tempParam.Name.ToLower().Trim().Equals(temp[0].ToLower().Trim()))
+                                    tempParam.Value = splitKeyword[i].Replace(temp[0] + "=", "");
+                            }
                         }
                     }
+                }
+                else
+                {
+                    Name = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    this.OutputFilePath = OutputFilePath;
+                    Documentation = "";
+                    SuggestionIndex = -1;
                 }
             }
             else
