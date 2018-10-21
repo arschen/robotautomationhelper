@@ -1,6 +1,7 @@
 ﻿using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -198,6 +199,8 @@ namespace RobotAutomationHelper
 
             foreach (string fileName in FilesAndFolderStructure.SavedFiles)
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName));
+
+            RunCom("robot " + FilesAndFolderStructure.GetFolder());
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -210,6 +213,19 @@ namespace RobotAutomationHelper
                 "Alert",
                 MessageBoxButtons.OK);
             }
+        }
+
+        private void RunCom(string command)
+        {
+            Process cmd = new Process();
+            cmd.StartInfo.FileName = "cmd.exe";
+            cmd.StartInfo.Arguments = "/c" + command;
+            cmd.StartInfo.RedirectStandardInput = true;
+            cmd.StartInfo.RedirectStandardOutput = true;
+            cmd.StartInfo.CreateNoWindow = false;
+            cmd.StartInfo.UseShellExecute = false;
+            cmd.Start();
+            cmd.WaitForExit(5000);
         }
     }
 }

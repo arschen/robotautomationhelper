@@ -299,64 +299,67 @@ namespace RobotAutomationHelper.Scripts
         // add newText on new line to file fileName after specified line
         internal static void TrimFile(string fileName)
         {
-            string[] arrLine = File.ReadAllLines(fileName);
-
-            if (!(arrLine == null) && !(arrLine.Length == 0))
+            if (File.Exists(fileName))
             {
-                List<string> temp = new List<string>();
-                for (int i = 1; i < arrLine.Length; i++)
+                string[] arrLine = File.ReadAllLines(fileName);
+
+                if (!(arrLine == null) && !(arrLine.Length == 0))
                 {
-                    if (!(arrLine[i - 1].Trim().Equals("") && arrLine[i].Trim().Equals("")))
-                        temp.Add(arrLine[i - 1]);
-                    else
-                        Console.WriteLine(i);
+                    List<string> temp = new List<string>();
+                    for (int i = 1; i < arrLine.Length; i++)
+                    {
+                        if (!(arrLine[i - 1].Trim().Equals("") && arrLine[i].Trim().Equals("")))
+                            temp.Add(arrLine[i - 1]);
+                        else
+                            Console.WriteLine(i);
+                    }
+                    if (!arrLine[arrLine.Length - 1].Trim().Equals(""))
+                        temp.Add(arrLine[arrLine.Length - 1]);
+                    File.WriteAllLines(fileName, temp);
                 }
-                if (!arrLine[arrLine.Length - 1].Trim().Equals(""))
-                    temp.Add(arrLine[arrLine.Length - 1]);
-                File.WriteAllLines(fileName, temp);
-            }
 
-            // clears all tags ( settings / keywords / test cases ) that have no implementation inside them
-            arrLine = File.ReadAllLines(fileName);
+                // clears all tags ( settings / keywords / test cases ) that have no implementation inside them
+                arrLine = File.ReadAllLines(fileName);
 
-            if (!(arrLine == null) && !(arrLine.Length == 0))
-            {
-                List<string> temp = new List<string>();
-                temp.AddRange(arrLine);
-                List<int> indexesToRemove = new List<int>();
-                foreach (string line in temp)
+                if (!(arrLine == null) && !(arrLine.Length == 0))
                 {
-                    if (line.StartsWith("***"))
-                        if (temp.IndexOf(line) + 1 < temp.Count)
-                        {
-                            for (int j = temp.IndexOf(line) + 1; j < temp.Count; j++)
+                    List<string> temp = new List<string>();
+                    temp.AddRange(arrLine);
+                    List<int> indexesToRemove = new List<int>();
+                    foreach (string line in temp)
+                    {
+                        if (line.StartsWith("***"))
+                            if (temp.IndexOf(line) + 1 < temp.Count)
                             {
-                                if (!temp[j].StartsWith("***") && !temp[j].Trim().Equals(""))
-                                    break;
-                                else
+                                for (int j = temp.IndexOf(line) + 1; j < temp.Count; j++)
                                 {
-                                    if (temp[j].StartsWith("***"))
-                                    {
-                                        for (int k = temp.IndexOf(line); k < j; k++)
-                                        {
-                                            indexesToRemove.Add(k);
-                                        }
+                                    if (!temp[j].StartsWith("***") && !temp[j].Trim().Equals(""))
                                         break;
+                                    else
+                                    {
+                                        if (temp[j].StartsWith("***"))
+                                        {
+                                            for (int k = temp.IndexOf(line); k < j; k++)
+                                            {
+                                                indexesToRemove.Add(k);
+                                            }
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                        }
-                        else
-                        {
-                            indexesToRemove.Add(temp.IndexOf(line));
-                        }
+                            else
+                            {
+                                indexesToRemove.Add(temp.IndexOf(line));
+                            }
+                    }
+                    if (indexesToRemove != null && indexesToRemove.Count != 0)
+                    {
+                        for (int i = indexesToRemove.Count - 1; i >= 0; i--)
+                            temp.RemoveAt(i);
+                    }
+                    File.WriteAllLines(fileName, temp);
                 }
-                if (indexesToRemove != null && indexesToRemove.Count != 0)
-                {
-                    for (int i = indexesToRemove.Count - 1; i >= 0; i--)
-                        temp.RemoveAt(i);
-                }
-                File.WriteAllLines(fileName, temp);
             }
         }
 
