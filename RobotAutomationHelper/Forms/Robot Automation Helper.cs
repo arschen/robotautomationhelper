@@ -199,8 +199,6 @@ namespace RobotAutomationHelper
 
             foreach (string fileName in FilesAndFolderStructure.SavedFiles)
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName));
-
-            RunCom("robot " + FilesAndFolderStructure.GetFolder());
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -220,12 +218,18 @@ namespace RobotAutomationHelper
             Process cmd = new Process();
             cmd.StartInfo.FileName = "cmd.exe";
             cmd.StartInfo.Arguments = "/c" + command;
-            cmd.StartInfo.RedirectStandardInput = true;
-            cmd.StartInfo.RedirectStandardOutput = true;
+            cmd.StartInfo.RedirectStandardInput = false;
+            cmd.StartInfo.RedirectStandardOutput = false;
             cmd.StartInfo.CreateNoWindow = false;
             cmd.StartInfo.UseShellExecute = false;
             cmd.Start();
             cmd.WaitForExit(5000);
+        }
+
+        private void saveToRobotAndRunToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveToRobotToolStripMenuItem_Click(sender, e);
+            RunCom("cd " + FilesAndFolderStructure.GetFolder() + "&robot tests");
         }
     }
 }
