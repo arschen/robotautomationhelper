@@ -37,13 +37,14 @@ namespace RobotAutomationHelper.Forms
                 foreach (Param param in paramsList)
                 {
                     paramsCount++;
-                    FormControls.AddControl("Label", "DynamicStep" + paramsCount + "Name",
+                    FormControls.AddControl("LabelWithToolTip", "DynamicStep" + paramsCount + "Name",
                         new System.Drawing.Point(10 - this.HorizontalScroll.Value, 123 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(80, 20),
                         param.Name,
                         System.Drawing.Color.Black,
                         null,
                         this);
+
                     FormControls.AddControl("TextBox", "DynamicStep" + paramsCount + "Value",
                         new System.Drawing.Point(100 - this.HorizontalScroll.Value, 120 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(280, 20),

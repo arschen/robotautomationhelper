@@ -25,6 +25,7 @@ namespace RobotAutomationHelper.Scripts
                 case "textwithlist": tempControl = new TextWithList(owner); break;
                 case "checkbox": tempControl = new CheckBox(); ((CheckBox)tempControl).Checked = true; break;
                 case "button": tempControl = new Button(); tempControl.Click += eventHandler; break;
+                case "labelwithtooltip": tempControl = new LabelWithToolTip(); break;
                 default: tempControl = new Label(); break;
             }
 
@@ -42,6 +43,7 @@ namespace RobotAutomationHelper.Scripts
                 case "textwithlist": owner.Controls.Add((TextWithList)tempControl); break;
                 case "checkbox": owner.Controls.Add((CheckBox)tempControl); break;
                 case "button": owner.Controls.Add((Button)tempControl); break;
+                case "labelwithtooltip": owner.Controls.Add((LabelWithToolTip)tempControl); break;
                 default: owner.Controls.Add((Label)tempControl); break;
             }
         }

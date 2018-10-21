@@ -72,6 +72,9 @@
       <DependentUpon>SettingsAddForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Scripts\BaseKeywordAddForm.cs" />
+    <Compile Include="Scripts\LabelWithToolTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Scripts\SuggestionsList.cs">
       <SubType>Component</SubType>
     </Compile>

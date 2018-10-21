@@ -316,6 +316,7 @@ namespace RobotAutomationHelper.Scripts
                 File.WriteAllLines(fileName, temp);
             }
 
+            // clears all tags ( settings / keywords / test cases ) that have no implementation inside them
             arrLine = File.ReadAllLines(fileName);
 
             if (!(arrLine == null) && !(arrLine.Length == 0))
