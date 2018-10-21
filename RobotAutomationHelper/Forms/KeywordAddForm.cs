@@ -20,7 +20,7 @@ namespace RobotAutomationHelper
             InitializeComponent();
             initialYValue = 185;
             ParentKeywords = parentKeywords;
-            FormControls.UpdateOutputFileSuggestions(OutputFile);
+            FormControls.UpdateOutputFileSuggestions(OutputFile, "Keywords");
             ActiveControl = KeywordNameLabel;
             IsKeyword = true;
         }
@@ -76,7 +76,7 @@ namespace RobotAutomationHelper
             if (keyword.Documentation != null)
                 KeywordDocumentation.Text = keyword.Documentation.Replace("[Documentation]", "").Trim();
             if (keyword.OutputFilePath != null || !keyword.OutputFilePath.Equals(""))
-                OutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(), "\\");
+                OutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder("Keywords"), "\\");
             if (keyword.Arguments != null)
                 KeywordArguments.Text = keyword.Arguments.Replace("[Arguments]", "").Trim();
             IsKeywordPresentInFilesOrMemoryTree();
@@ -114,7 +114,7 @@ namespace RobotAutomationHelper
         // adds all field data to parentKeyword or testcaseaddform if not nested
         private void SaveChangesToKeyword(bool save)
         {
-            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text);
+            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords");
 
             List<string> args = StringAndListOperations.ReturnListOfArgs(KeywordArguments.Text);
 
@@ -166,7 +166,7 @@ namespace RobotAutomationHelper
         //adds the list of keywords ( + unimplemented ones ) to a Keyword and returns it
         internal Keyword AddCurrentKeywordsToKeywordsList(object sender, EventArgs e)
         {
-            string path = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text);
+            string path = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords");
 
             // if AddImplementation is pressed a new form should be opened which requires the keyword that it represents
             int keywordIndex = 0;
@@ -300,12 +300,12 @@ namespace RobotAutomationHelper
                 if (checkNull == null) ThisFormKeywords = new List<Keyword>();
             }
                 
-            ThisFormKeywords.Add(new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text)));
+            ThisFormKeywords.Add(new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords")));
 
             for (int i = NumberOfKeywordsInThisKeyword; i > keywordIndex; i--)
                 ThisFormKeywords[i] = ThisFormKeywords[i - 1];
 
-            ThisFormKeywords[keywordIndex] = new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text));
+            ThisFormKeywords[keywordIndex] = new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords"));
 
             NumberOfKeywordsInThisKeyword++;
             AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisKeyword-1], NumberOfKeywordsInThisKeyword);
@@ -342,14 +342,14 @@ namespace RobotAutomationHelper
         {
             presentInRobotFile = false;
             memoryPath = TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
-                FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text),
+                FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords"),
                 ParentKeywords[ImplementationIndexFromTheParent]);
 
             if (!memoryPath.Equals(""))
                 KeywordName.ForeColor = Color.Red;
             else
             {
-                if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text)
+                if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords")
                     , KeywordName.Text, "keyword") != -1)
                 {
                     KeywordName.ForeColor = Color.Red;

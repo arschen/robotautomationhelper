@@ -197,13 +197,13 @@ namespace RobotAutomationHelper
             WriteToRobot.WriteIncludesToRobotFiles();
             WriteToRobot.WriteSuiteSettingsListToRobot();
 
-            foreach (string fileName in FilesAndFolderStructure.SavedFiles)
-                RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName));
+            foreach (string fileName in FilesAndFolderStructure.GetSavedFiles(""))
+                RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName, ""));
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (FilesAndFolderStructure.SavedFiles != null && FilesAndFolderStructure.SavedFiles.Count > 0)
+            if (FilesAndFolderStructure.GetSavedFiles("") != null && FilesAndFolderStructure.GetSavedFiles("").Count > 0)
                 InstantiateSettingsAddForm(sender, e);
             else
             {
@@ -223,13 +223,12 @@ namespace RobotAutomationHelper
             cmd.StartInfo.CreateNoWindow = false;
             cmd.StartInfo.UseShellExecute = false;
             cmd.Start();
-            cmd.WaitForExit(5000);
         }
 
         private void saveToRobotAndRunToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveToRobotToolStripMenuItem_Click(sender, e);
-            RunCom("cd " + FilesAndFolderStructure.GetFolder() + "&robot tests");
+            RunCom("cd " + FilesAndFolderStructure.GetFolder("") + "&robot tests");
         }
     }
 }

@@ -172,8 +172,8 @@ namespace RobotAutomationHelper.Scripts
                                 RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
                         }
                         else
-                            if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder().Replace('\\', '/'), "")).Equals(""))
-                            RobotFileHandler.FileLineAdd("Resource  ./" + path.Replace(FilesAndFolderStructure.GetFolder(), "").Replace('\\', '/'), fileName.Replace('\\', '/'), index);
+                            if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  " + path.Replace(FilesAndFolderStructure.GetFolder("").Replace('\\', '/'), "")).Equals(""))
+                                RobotFileHandler.FileLineAdd("Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(""), "").Replace('\\', '/'), fileName.Replace('\\', '/'), index);
                         index++;
                     }
                 }
@@ -185,44 +185,45 @@ namespace RobotAutomationHelper.Scripts
             foreach (SuiteSettings suiteSettings in RobotAutomationHelper.SuiteSettingsList)
                 if (suiteSettings.Overwrite)
                 {
+                    string type = "";
                     if (suiteSettings.Documentation != "")
                         ReplaceInSettings("Documentation  " + suiteSettings.Documentation, "Documentation",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Documentation",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.TestSetup.Name != "")
                         ReplaceInSettings("Test Setup  " + suiteSettings.TestSetup.Name + suiteSettings.TestSetup.ParamsToString()
                             , "Test Setup",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Test Setup",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.TestTeardown.Name != "")
                         ReplaceInSettings("Test Teardown  " + suiteSettings.TestTeardown.Name + suiteSettings.TestTeardown.ParamsToString()
                             , "Test Teardown",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Test Teardown",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.SuiteSetup.Name != "")
                         ReplaceInSettings("Suite Setup  " + suiteSettings.SuiteSetup.Name + suiteSettings.SuiteSetup.ParamsToString()
                             , "Suite Setup",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Suite Setup",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.SuiteTeardown.Name != "")
                         ReplaceInSettings("Suite Teardown  " + suiteSettings.SuiteTeardown.Name + suiteSettings.SuiteTeardown.ParamsToString()
                             , "Suite Teardown",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Suite Teardown",
-                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath));
+                            FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                 }
         }
 

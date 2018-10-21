@@ -1,4 +1,5 @@
 Write / Overwrite logic for Settings ( DONE )
+Test suites to Tests folder and Keywords to Resources folder ( DONE )
 Read Keywords from files
 Support for For loops and conditional statements
 Python libraries implementation
@@ -9,3 +10,4 @@ BugFixes:
   Resource includes added twice ( no repro )
   Block all keyword fields while editing the name, unblock after keyword selection or lose focus
   ToolTip position is off when using the scroll in SuggestionsList ( DONE )
+  Bug with Auto.robot files added when not saved

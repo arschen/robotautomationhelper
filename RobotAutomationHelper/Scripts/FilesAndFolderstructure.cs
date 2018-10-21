@@ -6,22 +6,28 @@ namespace RobotAutomationHelper.Scripts
     internal static class FilesAndFolderStructure
     {
         // list of saved files for the drop down menus
-        internal static List<string> SavedFiles = new List<string>();
+        private static List<string> SavedFiles = new List<string>();
         private static string OutputFolder;
 
-        internal static bool AddFileToSavedFiles(string filePath)
+        internal static List<string> GetSavedFiles(string type)
+        {
+            List<string> results = new List<string>();
+            string pattern = GetFolder(type);
+            foreach (string temp in SavedFiles)
+                if (temp.Contains(pattern))
+                {
+                    results.Add(temp.Replace(pattern, ""));
+                }
+            return results;
+        }
+
+        internal static void AddFileToSavedFiles(string filePath)
         {
             if (!(filePath == null))
             {
-                filePath = filePath.Replace(OutputFolder, "\\");
-                if (!filePath.Trim().Equals("") && !ContainsFile(filePath))
-                {
+                if (!SavedFiles.Contains(filePath))
                     SavedFiles.Add(filePath);
-                    return true;
-                }
-
             }
-            return false;
         }
 
         internal static void SetFolder(string outputFolder)
@@ -29,14 +35,19 @@ namespace RobotAutomationHelper.Scripts
             OutputFolder = outputFolder;
         }
 
-        internal static string GetFolder()
+        internal static string GetFolder(string type)
         {
-            return OutputFolder;
+            switch (type)
+            {
+                case "Keywords": return OutputFolder + "Resources\\";
+                case "Tests": return OutputFolder + "Tests\\";
+                default: return OutputFolder;
+            }
         }
 
-        internal static string ConcatFileNameToFolder(string FileName)
+        internal static string ConcatFileNameToFolder(string FileName, string type)
         {
-            string outputFilePath = OutputFolder;
+            string outputFilePath = GetFolder(type);
             if (!FileName.StartsWith("\\"))
                 outputFilePath = outputFilePath + FileName;
             else
@@ -70,11 +81,11 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void FindAllRobotFilesAndAddToStructure()
         {
-            DirectoryInfo d = new DirectoryInfo(GetFolder());
+            DirectoryInfo d = new DirectoryInfo(OutputFolder);
 
             foreach (var file in d.GetFiles("*.robot", SearchOption.AllDirectories))
             {
-                AddFileToSavedFiles(file.FullName.Replace(GetFolder(), "\\"));
+                AddFileToSavedFiles(file.FullName);
             }
         }
 

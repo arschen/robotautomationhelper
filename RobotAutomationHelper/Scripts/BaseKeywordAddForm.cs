@@ -248,7 +248,13 @@ namespace RobotAutomationHelper.Scripts
                 FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(ThisFormKeywords, IndexOfTheKeywordToBeImplemented);
                 //update suggestion when not navigating to "Settings" form
                 if (!FormParent.Name.Contains("Settings"))
-                    FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox);
+                {
+                    if (!FormParent.Name.Contains("Keyword"))
+                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, "Keywords");
+                    else
+                        if (!FormParent.Name.Contains("TestCase"))
+                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, "Tests");
+                }
             }
         }
 
@@ -264,7 +270,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (keyword.Type != KeywordType.CUSTOM)
             {
-                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot")); //CopyKeyword
+                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder("Keywords") + "Auto.robot")); //CopyKeyword
                 keyword.Type = KeywordType.CUSTOM;
                 return;
             }
@@ -272,7 +278,7 @@ namespace RobotAutomationHelper.Scripts
             foreach (Keyword seleniumKeyword in FormControls.Suggestions)
                 if (seleniumKeyword.Name.Trim().ToLower().Equals(keyword.Name.Trim().ToLower()))
                 {
-                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder() + "Auto.robot")); //CopyKeyword
+                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder("Keywords") + "Auto.robot")); //CopyKeyword
                     keyword.Type = KeywordType.CUSTOM;
                     return;
                 }
