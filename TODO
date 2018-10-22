@@ -12,4 +12,5 @@ BugFixes:
   ToolTip position is off when using the scroll in SuggestionsList ( DONE )
   Bug with Auto.robot files added when not saved
   Overwriting test cases / keywords doesn't respect the length ( in lines ) of the existing test cases / keywords
+    - it removes current and then adds the new ones ( DONE )
   Recursion fix
