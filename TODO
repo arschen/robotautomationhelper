@@ -11,3 +11,5 @@ BugFixes:
   Block all keyword fields while editing the name, unblock after keyword selection or lose focus
   ToolTip position is off when using the scroll in SuggestionsList ( DONE )
   Bug with Auto.robot files added when not saved
+  Overwriting test cases / keywords doesn't respect the length ( in lines ) of the existing test cases / keywords
+  Recursion fix
