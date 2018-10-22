@@ -93,7 +93,7 @@ namespace RobotAutomationHelper.Scripts
         {
             if (outputFilePath.Equals(FilesAndFolderStructure.GetFolder("Tests")))
                 outputFilePath = FilesAndFolderStructure.GetFolder("Tests") + "Auto.robot";
-            TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestCaseTags, currentTestCaseTestSteps, outputFilePath));
+            TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestCaseTags, currentTestCaseTestSteps, outputFilePath, false));
             currentTestCaseTestSteps = new List<Keyword>();
             currentTestCaseDocumentation = "";
             currentTestCase = "";

@@ -36,21 +36,43 @@ namespace RobotAutomationHelper
             openFileDialog.ShowDialog();
         }
 
+
+        private void openExistingProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog2.ShowDialog() == DialogResult.OK)
+            {
+                BrowseFolderButtonExistingProject();
+            }
+        }
+
         // browse folders for output directory after file has been opened
         private void OpenFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                BrowseFolderButton_Click();
+                BrowseFolderButtonOpenExcel();
             }
         }
 
-        private void BrowseFolderButton_Click()
+        private void BrowseFolderButtonOpenExcel()
         {
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
-            SetStructureFolder();
-            ReadRobotFiles.ReadAllTests();
+            SetStructureFolder(folderBrowserDialog1.SelectedPath);
+            TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
+            TestCases.Sort();
+            AddTestCasesToMainForm();
+            ShowTestCasePanels();
+        }
+
+        private void BrowseFolderButtonExistingProject()
+        {
+            ClearDynamicElements();
+            settingsToolStripMenuItem.Visible = true;
+            SetStructureFolder(folderBrowserDialog2.SelectedPath);
+            TestCases = ReadRobotFiles.ReadAllTests();
+            TestCases.Sort();
+            AddTestCasesToMainForm();
             ShowTestCasePanels();
         }
 
@@ -105,10 +127,14 @@ namespace RobotAutomationHelper
                         Color.Black,
                         null,
                         this);
+
+                    string ImplementationText = "Add Implementation";
+                    if (TestCases[testCasesCounter - 1].Implemented)
+                        ImplementationText = "Edit Implementation";
                     FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddImplementation",
                         new Point(345 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                         new Size(120, 20),
-                        "Add Implementation",
+                        ImplementationText,
                         Color.Black,
                         new EventHandler(InstantiateAddTestCaseForm),
                         this);
@@ -117,11 +143,8 @@ namespace RobotAutomationHelper
                 }
         }
 
-        private void SetStructureFolder()
+        private void SetStructureFolder(string outputFolder)
         {
-            
-            string outputFolder = folderBrowserDialog1.SelectedPath;
-
             if (!outputFolder.EndsWith("\\"))
                 outputFolder = outputFolder + "\\";
             if (!Directory.Exists(outputFolder))
@@ -130,9 +153,6 @@ namespace RobotAutomationHelper
             FilesAndFolderStructure.SetFolder(outputFolder);
 
             FilesAndFolderStructure.FindAllRobotFilesAndAddToStructure();
-
-            TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
-            AddTestCasesToMainForm();
         }
 
         protected void InstantiateAddTestCaseForm(object sender, EventArgs e)
@@ -151,7 +171,10 @@ namespace RobotAutomationHelper
             if (!((TestCaseAddForm) sender).skip)
             {
                 Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[IndexOfTheTestCaseToBeImplemented - 1].Name;
-                Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Edit implementation";
+                if (TestCases[IndexOfTheTestCaseToBeImplemented - 1].Implemented)
+                    Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Edit implementation";
+                else
+                    Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Add implementation";
             }
 
             //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file

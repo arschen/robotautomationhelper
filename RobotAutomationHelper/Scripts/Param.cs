@@ -2,7 +2,7 @@
 {
     internal class Param
     {
-        internal string Name { get; }
+        internal string Name { get; set; }
         internal string Value { get; set; }
 
         internal Param(string Name, string Value)

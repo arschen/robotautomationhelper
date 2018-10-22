@@ -6,15 +6,20 @@ namespace RobotAutomationHelper.Scripts
 {
     internal class ReadRobotFiles
     {
-        internal static List<TestCase> TestCases = new List<TestCase>();
-        private static List<Keyword> currentTestCaseTestSteps = new List<Keyword>();
-        private static string currentTestCaseTags = "";
-        private static string currentTestCaseDocumentation = "";
-        private static string currentTestCase = "";
+        private static List<TestCase> TestCases;
+        private static List<Keyword> currentTestCaseTestSteps;
+        private static string currentTestCaseTags;
+        private static string currentTestCaseDocumentation;
+        private static string currentTestCase;
 
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        internal static void ReadAllTests()
+        internal static List<TestCase> ReadAllTests()
         {
+            TestCases = new List<TestCase>();
+            currentTestCaseTestSteps = new List<Keyword>();
+            currentTestCaseTags = "";
+            currentTestCaseDocumentation = "";
+            currentTestCase = "";
             string[] arrLine;
 
             foreach (string fileName in FilesAndFolderStructure.GetFullSavedFiles("Tests"))
@@ -75,6 +80,7 @@ namespace RobotAutomationHelper.Scripts
                     }
                 }
             }
+            return TestCases;
         }
 
         private static void AddKeywordsInKeyword(Keyword keyword, List<string> filesList)
@@ -84,6 +90,7 @@ namespace RobotAutomationHelper.Scripts
                 int index = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), "Keywords");
                 if (index != -1)
                 {
+                    keyword.OutputFilePath = fileName;
                     string[] arrLine = File.ReadAllLines(fileName);
                     for (int i = index; i < arrLine.Length; i++)
                     {
@@ -100,7 +107,31 @@ namespace RobotAutomationHelper.Scripts
                                 keyword.Documentation = arrLine[i];
                             else
                             if (arrLine[i].Trim().StartsWith("[Arguments]"))
+                            {
+                                string[] splitKeyword = arrLine[i].Replace("[Arguments]", "").Trim().Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                                for (int counter = 0; counter < splitKeyword.Length; counter++)
+                                {
+                                    if (!splitKeyword[counter].Contains("="))
+                                        keyword.Params[counter].Name = splitKeyword[counter];
+                                    else
+                                    {
+                                        // check if after spliting the first string matches any param name
+                                        string[] temp = splitKeyword[counter].Split('=');
+                                        bool toAdd = true;
+                                        foreach (Param par in keyword.Params)
+                                        {
+                                            if (par.Name.Equals(temp[0]))
+                                            {
+                                                toAdd = false;
+                                                break;
+                                            }
+                                        }
+                                        if (toAdd)
+                                            keyword.Params.Add(new Param(temp[0], temp[1]));
+                                    }
+                                }
                                 keyword.Arguments = arrLine[i];
+                            }
                             else
                             {
                                 if (keyword.Keywords == null)
@@ -133,7 +164,7 @@ namespace RobotAutomationHelper.Scripts
 
                     if (start && arrLine[i].StartsWith("Resource"))
                     {
-                        Resources.Add(FilesAndFolderStructure.GetFolder("") + arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        Resources.Add(FilesAndFolderStructure.GetFolder("") + arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/","\\"));
                     }
                 }
             }
@@ -142,7 +173,7 @@ namespace RobotAutomationHelper.Scripts
 
         private static void AddTestCaseAndResetValues(string fileName)
         {
-            TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestCaseTags, currentTestCaseTestSteps, fileName));
+            TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestCaseTags, currentTestCaseTestSteps, fileName, true));
             currentTestCaseTestSteps = new List<Keyword>();
             currentTestCaseDocumentation = "";
             currentTestCase = "";

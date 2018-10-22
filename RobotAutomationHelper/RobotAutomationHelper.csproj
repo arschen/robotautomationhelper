@@ -71,7 +71,7 @@
     <Compile Include="Forms\SettingsAddForm.Designer.cs">
       <DependentUpon>SettingsAddForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Scripts\BaseKeywordAddForm.cs">
+    <Compile Include="Forms\BaseKeywordAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Scripts\LabelWithToolTip.cs">

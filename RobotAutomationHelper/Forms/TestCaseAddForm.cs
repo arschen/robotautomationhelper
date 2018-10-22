@@ -98,7 +98,8 @@ namespace RobotAutomationHelper
                 "[Documentation]  " + TestCaseDocumentation.Text.Trim(),
                 "[Tags]  " + TestCaseTags.Text.Trim(),
                 ThisFormKeywords,
-                finalPath);
+                finalPath,
+                true);
         }
 
         private void TestCaseName_TextChanged(object sender, EventArgs e)

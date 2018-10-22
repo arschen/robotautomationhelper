@@ -31,6 +31,7 @@
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openExistingProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToRobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToRobotAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,6 +40,7 @@
             this.TestCaseNameLabel = new System.Windows.Forms.Label();
             this.AddLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,6 +59,7 @@
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2,
+            this.openExistingProjectToolStripMenuItem,
             this.saveToRobotToolStripMenuItem,
             this.saveToRobotAndRunToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -66,21 +69,28 @@
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(185, 22);
-            this.toolStripMenuItem2.Text = "Open";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(186, 22);
+            this.toolStripMenuItem2.Text = "Open Excel";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.ToolStripMenuOpen_Click);
+            // 
+            // openExistingProjectToolStripMenuItem
+            // 
+            this.openExistingProjectToolStripMenuItem.Name = "openExistingProjectToolStripMenuItem";
+            this.openExistingProjectToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.openExistingProjectToolStripMenuItem.Text = "Open Existing Project";
+            this.openExistingProjectToolStripMenuItem.Click += new System.EventHandler(this.openExistingProjectToolStripMenuItem_Click);
             // 
             // saveToRobotToolStripMenuItem
             // 
             this.saveToRobotToolStripMenuItem.Name = "saveToRobotToolStripMenuItem";
-            this.saveToRobotToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.saveToRobotToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.saveToRobotToolStripMenuItem.Text = "Save Project";
             this.saveToRobotToolStripMenuItem.Click += new System.EventHandler(this.SaveToRobotToolStripMenuItem_Click);
             // 
             // saveToRobotAndRunToolStripMenuItem
             // 
             this.saveToRobotAndRunToolStripMenuItem.Name = "saveToRobotAndRunToolStripMenuItem";
-            this.saveToRobotAndRunToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.saveToRobotAndRunToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.saveToRobotAndRunToolStripMenuItem.Text = "Save Project and Run";
             this.saveToRobotAndRunToolStripMenuItem.Click += new System.EventHandler(this.SaveToRobotAndRunToolStripMenuItem_Click);
             // 
@@ -130,6 +140,10 @@
             // 
             this.folderBrowserDialog1.Description = "Choose Robot Output Folder";
             // 
+            // folderBrowserDialog2
+            // 
+            this.folderBrowserDialog2.Description = "Choose Robot Project Folder";
+            // 
             // RobotAutomationHelper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -164,6 +178,8 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToRobotAndRunToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openExistingProjectToolStripMenuItem;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
     }
 }
 

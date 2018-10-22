@@ -65,6 +65,7 @@ namespace RobotAutomationHelper
         {
             if (!KeywordString.Equals(""))
             {
+                Implemented = true;
                 string[] splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                 bool found = false;
                 foreach (Keyword key in FormControls.Suggestions)
@@ -96,7 +97,20 @@ namespace RobotAutomationHelper
                 }
                 else
                 {
-                    Name = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    Name = splitKeyword[0];
+                    if (splitKeyword.Length > 1)
+                        Params = new List<Param>();
+                    for (int i = 1; i < splitKeyword.Length; i++)
+                    {
+                        if (!splitKeyword[i].Contains("="))
+                            Params.Add(new Param("", splitKeyword[i]));
+                        else
+                        {
+                            // check if after spliting the first string matches any param name
+                            string[] temp = splitKeyword[i].Split('=');
+                            Params.Add(new Param(temp[0], temp[1]));
+                        }
+                    }
                     this.OutputFilePath = OutputFilePath;
                     Documentation = "";
                     SuggestionIndex = -1;
