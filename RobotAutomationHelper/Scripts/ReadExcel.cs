@@ -9,7 +9,7 @@ namespace RobotAutomationHelper.Scripts
 
         private static List<TestCase> TestCases;
         private static List<Keyword> currentTestCaseTestSteps;
-        private static string currentTestTags;
+        private static string currentTestCaseTags;
         private static string currentTestCaseDocumentation;
         private static string currentTestCase;
         private static string outputFilePath;
@@ -18,7 +18,7 @@ namespace RobotAutomationHelper.Scripts
         {
             TestCases = new List<TestCase>();
             currentTestCaseTestSteps = new List<Keyword>();
-            currentTestTags = "";
+            currentTestCaseTags = "";
             currentTestCaseDocumentation = "";
             currentTestCase = "";
             outputFilePath = FilesAndFolderStructure.GetFolder("Tests");
@@ -73,9 +73,9 @@ namespace RobotAutomationHelper.Scripts
                         {
 
                             string[] tagsStrings = cellValue.Split(',');
-                            currentTestTags = "[Tags]";
+                            currentTestCaseTags = "[Tags]";
                             foreach (string tag in tagsStrings)
-                                currentTestTags += "  " + tag.Trim();
+                                currentTestCaseTags += "  " + tag.Trim();
                         }
                     }
                 }
@@ -93,11 +93,11 @@ namespace RobotAutomationHelper.Scripts
         {
             if (outputFilePath.Equals(FilesAndFolderStructure.GetFolder("Tests")))
                 outputFilePath = FilesAndFolderStructure.GetFolder("Tests") + "Auto.robot";
-            TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestTags, currentTestCaseTestSteps, outputFilePath));
+            TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestCaseTags, currentTestCaseTestSteps, outputFilePath));
             currentTestCaseTestSteps = new List<Keyword>();
             currentTestCaseDocumentation = "";
             currentTestCase = "";
-            currentTestTags = "";
+            currentTestCaseTags = "";
             outputFilePath = FilesAndFolderStructure.GetFolder("Tests");
         }
     }

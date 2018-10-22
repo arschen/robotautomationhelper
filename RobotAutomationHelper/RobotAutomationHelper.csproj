@@ -71,10 +71,13 @@
     <Compile Include="Forms\SettingsAddForm.Designer.cs">
       <DependentUpon>SettingsAddForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Scripts\BaseKeywordAddForm.cs" />
+    <Compile Include="Scripts\BaseKeywordAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Scripts\LabelWithToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Scripts\ReadRobotFiles.cs" />
     <Compile Include="Scripts\SuggestionsList.cs">
       <SubType>Component</SubType>
     </Compile>

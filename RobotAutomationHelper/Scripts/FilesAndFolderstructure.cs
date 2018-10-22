@@ -9,7 +9,7 @@ namespace RobotAutomationHelper.Scripts
         private static List<string> SavedFiles = new List<string>();
         private static string OutputFolder;
 
-        internal static List<string> GetSavedFiles(string type)
+        internal static List<string> GetShortSavedFiles(string type)
         {
             List<string> results = new List<string>();
             string pattern = GetFolder(type);
@@ -17,6 +17,18 @@ namespace RobotAutomationHelper.Scripts
                 if (temp.Contains(pattern))
                 {
                     results.Add(temp.Replace(pattern, ""));
+                }
+            return results;
+        }
+
+        internal static List<string> GetFullSavedFiles(string type)
+        {
+            List<string> results = new List<string>();
+            string pattern = GetFolder(type);
+            foreach (string temp in SavedFiles)
+                if (temp.Contains(pattern))
+                {
+                    results.Add(temp);
                 }
             return results;
         }

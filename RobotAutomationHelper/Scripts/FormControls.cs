@@ -53,8 +53,8 @@ namespace RobotAutomationHelper.Scripts
             if (RobotAutomationHelper.Log) Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
             comboBox.Items.Clear();
             comboBox.AutoCompleteCustomSource.Clear();
-            comboBox.Items.AddRange(FilesAndFolderStructure.GetSavedFiles(type).ToArray());
-            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetSavedFiles(type).ToArray());
+            comboBox.Items.AddRange(FilesAndFolderStructure.GetShortSavedFiles(type).ToArray());
+            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetShortSavedFiles(type).ToArray());
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             if (comboBox.DropDownStyle != ComboBoxStyle.DropDownList)
                 comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;

@@ -6,12 +6,12 @@ namespace RobotAutomationHelper
 {
     internal class Keyword
     {
-        internal List<Keyword> Keywords { get; private set; }
-        internal string Arguments { get; private set; }
+        internal List<Keyword> Keywords { get; set; }
+        internal string Arguments { get; set; }
         internal List<Param> Params { get; set; }
         internal string Name { get; set; }
-        internal string Documentation { get; private set; }
-        internal string OutputFilePath { get; private set; }
+        internal string Documentation { get; set; }
+        internal string OutputFilePath { get; set; }
         internal bool Implemented { get; set; }
         internal bool Saved { get; private set; }
         internal KeywordType Type { get; set; }
@@ -60,6 +60,7 @@ namespace RobotAutomationHelper
             SuggestionIndex = -1;
         }
 
+        // convert keyword string taken from file into keyword
         internal Keyword(string KeywordString, string OutputFilePath, bool keywordString)
         {
             if (!KeywordString.Equals(""))

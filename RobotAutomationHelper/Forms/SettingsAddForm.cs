@@ -25,7 +25,7 @@ namespace RobotAutomationHelper.Forms
             FormControls.UpdateOutputFileSuggestions(OutputFile, "");
             OutputFile.SelectedIndex = SelectedIndex;
             bool add;
-            foreach (string fileName in FilesAndFolderStructure.GetSavedFiles(""))
+            foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(""))
             {
                 add = true;
                 if (RobotAutomationHelper.SuiteSettingsList.Count != 0)

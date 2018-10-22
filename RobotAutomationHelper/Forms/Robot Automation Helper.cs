@@ -50,6 +50,7 @@ namespace RobotAutomationHelper
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
             SetStructureFolder();
+            ReadRobotFiles.ReadAllTests();
             ShowTestCasePanels();
         }
 
@@ -197,13 +198,13 @@ namespace RobotAutomationHelper
             WriteToRobot.WriteIncludesToRobotFiles();
             WriteToRobot.WriteSuiteSettingsListToRobot();
 
-            foreach (string fileName in FilesAndFolderStructure.GetSavedFiles(""))
+            foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(""))
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName, ""));
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (FilesAndFolderStructure.GetSavedFiles("") != null && FilesAndFolderStructure.GetSavedFiles("").Count > 0)
+            if (FilesAndFolderStructure.GetShortSavedFiles("") != null && FilesAndFolderStructure.GetShortSavedFiles("").Count > 0)
                 InstantiateSettingsAddForm(sender, e);
             else
             {
@@ -225,7 +226,7 @@ namespace RobotAutomationHelper
             cmd.Start();
         }
 
-        private void saveToRobotAndRunToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToRobotAndRunToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveToRobotToolStripMenuItem_Click(sender, e);
             RunCom("cd " + FilesAndFolderStructure.GetFolder("") + "&robot tests");

@@ -82,7 +82,7 @@
             this.saveToRobotAndRunToolStripMenuItem.Name = "saveToRobotAndRunToolStripMenuItem";
             this.saveToRobotAndRunToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.saveToRobotAndRunToolStripMenuItem.Text = "Save Project and Run";
-            this.saveToRobotAndRunToolStripMenuItem.Click += new System.EventHandler(this.saveToRobotAndRunToolStripMenuItem_Click);
+            this.saveToRobotAndRunToolStripMenuItem.Click += new System.EventHandler(this.SaveToRobotAndRunToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
