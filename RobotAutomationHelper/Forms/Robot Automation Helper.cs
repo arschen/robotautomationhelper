@@ -61,6 +61,42 @@ namespace RobotAutomationHelper
             SetStructureFolder(folderBrowserDialog1.SelectedPath);
             TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
             TestCases.Sort();
+            List<TestCase> ProjectTestCases = new List<TestCase>();
+            ProjectTestCases = ReadRobotFiles.ReadAllTests();
+            bool showAlert = false;
+            foreach (TestCase tempProj in ProjectTestCases)
+            {
+                foreach (TestCase tempExc in TestCases)
+                {
+                    if (tempProj.Name.Equals(tempExc.Name))
+                    {
+                        showAlert = true;
+                        break;
+                    }
+                }
+                if (showAlert)
+                    break;
+            }
+            if (showAlert)
+            {
+                DialogResult result = MessageBox.Show("Use existing Test Cases in project folder?",
+                    "Alert",
+                    MessageBoxButtons.YesNo);
+                if (result.Equals(DialogResult.Yes))
+                {
+                    foreach (TestCase tempProj in ProjectTestCases)
+                    {
+                        foreach (TestCase tempExc in TestCases)
+                        {
+                            if (tempProj.Name.Equals(tempExc.Name))
+                            {
+                                tempExc.CopyTestCase(tempProj);
+                            }
+                        }
+                    }
+                }
+            }
+
             AddTestCasesToMainForm();
             ShowTestCasePanels();
         }

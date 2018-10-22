@@ -5,11 +5,11 @@ namespace RobotAutomationHelper
 {
     internal class TestCase: IComparable<TestCase>
     {
-        internal List<Keyword> Steps { get; }
+        internal List<Keyword> Steps { get; set; }
         internal string Name { get; set; }
-        internal string Documentation { get; }
-        internal string Tags { get; }
-        internal string OutputFilePath { get; }
+        internal string Documentation { get; set;  }
+        internal string Tags { get; set; }
+        internal string OutputFilePath { get; set;  }
         internal bool Overwrite { get; set; }
         internal bool Implemented { get; set; }
 
@@ -22,6 +22,17 @@ namespace RobotAutomationHelper
             OutputFilePath = outputFilePath;
             Overwrite = false;
             Implemented = implemented;
+        }
+
+        internal void CopyTestCase(TestCase testCase)
+        {
+            Steps = testCase.Steps;
+            Name = testCase.Name;
+            Documentation = testCase.Documentation;
+            Tags = testCase.Tags;
+            OutputFilePath = testCase.OutputFilePath;
+            Overwrite = testCase.Overwrite;
+            Implemented = testCase.Implemented;
         }
 
         public int CompareTo(TestCase other)
