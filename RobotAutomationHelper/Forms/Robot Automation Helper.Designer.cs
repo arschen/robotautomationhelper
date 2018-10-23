@@ -78,7 +78,7 @@
             this.openExistingProjectToolStripMenuItem.Name = "openExistingProjectToolStripMenuItem";
             this.openExistingProjectToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.openExistingProjectToolStripMenuItem.Text = "Open Existing Project";
-            this.openExistingProjectToolStripMenuItem.Click += new System.EventHandler(this.openExistingProjectToolStripMenuItem_Click);
+            this.openExistingProjectToolStripMenuItem.Click += new System.EventHandler(this.OpenExistingProjectToolStripMenuItem_Click);
             // 
             // saveToRobotToolStripMenuItem
             // 

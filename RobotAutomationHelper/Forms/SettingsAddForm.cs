@@ -16,7 +16,6 @@ namespace RobotAutomationHelper.Forms
             if (RobotAutomationHelper.Log) Console.WriteLine("SettingsAddForm Constructor");
             InitializeComponent();
             initialYValue = 100;
-            IsKeyword = false;
             SetupsSettingsAddForm();
         }
 

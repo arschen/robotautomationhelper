@@ -16,7 +16,6 @@ namespace RobotAutomationHelper
             initialYValue = 140;
             FormControls.UpdateOutputFileSuggestions(OutputFile, "Tests");
             ActiveControl = TestCaseNameLabel;
-            IsKeyword = false;
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -73,13 +72,23 @@ namespace RobotAutomationHelper
             ThisFormKeywords = new List<Keyword>();
             ThisFormKeywords = testCase.Steps;
 
-            int testStepsCounter = 1;
+            NumberOfKeywordsInThisForm = 0;
             if (ThisFormKeywords != null && ThisFormKeywords.Count != 0)
                 foreach (Keyword testStep in testCase.Steps)
                 {
-                    AddKeywordField(testStep, testStepsCounter);
-                    testStepsCounter++;
+                    AddKeywordField(testStep, NumberOfKeywordsInThisForm + 1);
+                    NumberOfKeywordsInThisForm++;
                 }
+            else
+            {
+                // add a single keyword field if no keywords are available
+                ThisFormKeywords = new List<Keyword>
+                {
+                    new Keyword("New Keyword", FilesAndFolderStructure.GetFolder("Keywords") + "Auto.robot")
+                };
+                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1);
+                NumberOfKeywordsInThisForm++;
+            }
 
             StartPosition = FormStartPosition.Manual;
             var dialogResult = ShowDialog();

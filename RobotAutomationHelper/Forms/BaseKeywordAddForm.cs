@@ -9,9 +9,9 @@ namespace RobotAutomationHelper.Scripts
     internal class BaseKeywordAddForm : Form
     {
         private Form FormParent;
-        protected bool IsKeyword;
         // index and keywords of the parent
         protected int ImplementationIndexFromTheParent;
+        internal int NumberOfKeywordsInThisForm { get; set; }
         //y value for dynamic buttons
         protected int initialYValue;
         internal bool skip = false;
@@ -75,8 +75,7 @@ namespace RobotAutomationHelper.Scripts
                 {
                     if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
                     {
-                        int ParamsButtonX = 450;
-                        if (IsKeyword) ParamsButtonX = 500;
+                        int ParamsButtonX = 500;
 
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
                             new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
@@ -94,8 +93,7 @@ namespace RobotAutomationHelper.Scripts
                 if (!(ThisFormKeywords[keywordIndex - 1].Params == null)
                     && !(ThisFormKeywords[keywordIndex - 1].Params.Count == 0))
                 {
-                    int ParamsButtonX = 450;
-                    if (IsKeyword) ParamsButtonX = 500;
+                    int ParamsButtonX = 500;
 
                     if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
@@ -140,8 +138,8 @@ namespace RobotAutomationHelper.Scripts
         {
             FormParent = this;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
-            if (IsKeyword)
-                (this as KeywordAddForm).AddCurrentKeywordsToKeywordsList(sender, e);
+
+            AddCurrentKeywordsToKeywordsList(sender, e);
 
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
@@ -184,26 +182,23 @@ namespace RobotAutomationHelper.Scripts
                     new EventHandler(InstantiateKeywordAddForm),
                     this);
             }
-            if (IsKeyword)
-            {
-                FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "AddKeyword",
-                    new Point(450 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                    new Size(20, 20),
-                    "+",
-                    Color.Black,
-                    new EventHandler((this as KeywordAddForm).AddKeywordToThisKeyword),
-                    this);
-                FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "RemoveKeyword",
-                    new Point(470 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                    new Size(20, 20),
-                    "-",
-                    Color.Black,
-                    new EventHandler((this as KeywordAddForm).RemoveKeywordFromThisKeyword),
-                    this);
-            }
 
-            int ParamsButtonX = 450;
-            if (IsKeyword) ParamsButtonX = 500;
+            FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "AddKeyword",
+                new Point(450 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
+                new Size(20, 20),
+                "+",
+                Color.Black,
+                new EventHandler(AddKeywordToThisKeyword),
+                this);
+            FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "RemoveKeyword",
+                new Point(470 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
+                new Size(20, 20),
+                "-",
+                Color.Black,
+                new EventHandler(RemoveKeywordFromThisForm),
+                this);
+
+            int ParamsButtonX = 500;
 
             if (keyword.Params != null && keyword.Params.Count != 0)
                 FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "Params",
@@ -228,8 +223,7 @@ namespace RobotAutomationHelper.Scripts
                 {
                     if (Controls.Find("DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length == 0)
                     {
-                        int ParamsButtonX = 450;
-                        if (IsKeyword) ParamsButtonX = 500;
+                        int ParamsButtonX = 500;
 
                         FormControls.AddControl("Button", "DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params",
                             new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
@@ -261,10 +255,10 @@ namespace RobotAutomationHelper.Scripts
         private void CheckKeywordTypeAndEvaluateKeywordData(Keyword keyword, string name)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.Name + " " + name);
-            foreach (Keyword seleniumKeyword in FormControls.Suggestions)
-                if (seleniumKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
+            foreach (Keyword SuggestedKeyword in FormControls.Suggestions)
+                if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
                 {
-                    keyword.CopyKeyword(seleniumKeyword); //CopyKeyword
+                    keyword.CopyKeyword(SuggestedKeyword); //CopyKeyword
                     return;
                 }
 
@@ -298,6 +292,120 @@ namespace RobotAutomationHelper.Scripts
             FormControls.RemoveControlByKey("DynamicStep" + keywordIndex + "Params", Controls);
             if (removeFromList)
                 ThisFormKeywords.RemoveAt(keywordIndex - 1);
+        }
+
+        //adds the list of keywords ( + unimplemented ones ) to a Keyword and returns it
+        protected Keyword AddCurrentKeywordsToKeywordsList(object sender, EventArgs e)
+        {
+            string path = FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, "Keywords");
+
+            // if AddImplementation is pressed a new form should be opened which requires the keyword that it represents
+            int keywordIndex = 0;
+            if (((Button)sender).Name.Contains("DynamicStep")
+                && !((Button)sender).Name.Contains("Params")
+                && !((Button)sender).Name.Contains("AddKeyword")
+                && !((Button)sender).Name.Contains("RemoveKeyword"))
+                keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicStep", ""));
+            else
+                if (((Button)sender).Name.Contains("DynamicStep")
+                && ((Button)sender).Name.Contains("Params"))
+                keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicStep", ""));
+
+            // add to the global variable for the form that matches the index of the keyword to implement
+            IndexOfTheKeywordToBeImplemented = keywordIndex;
+            if (keywordIndex <= 0) keywordIndex = 1;
+
+            if (ThisFormKeywords == null)
+            {
+                ThisFormKeywords = new List<Keyword>();
+                for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+                    ThisFormKeywords.Add(new Keyword(Controls["DynamicStep" + i + "Name"].Text, path));
+            }
+            else
+            {
+                for (int i = ThisFormKeywords.Count + 1; i <= NumberOfKeywordsInThisForm; i++)
+                    ThisFormKeywords.Add(new Keyword(Controls["DynamicStep" + i + "Name"].Text, path));
+            }
+
+            AssignThisKeywordNamesFromTextFields();
+
+            return ThisFormKeywords[keywordIndex - 1];
+        }
+
+        protected void AssignThisKeywordNamesFromTextFields()
+        {
+            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+                if (Controls.Find("DynamicStep" + i + "Name", false).Length != 0)
+                    ThisFormKeywords[i - 1].Name = Controls["DynamicStep" + i + "Name"].Text;
+        }
+
+        internal void RemoveKeywordFromThisForm(object sender, EventArgs e)
+        {
+            AssignThisKeywordNamesFromTextFields();
+
+            if (NumberOfKeywordsInThisForm > 1)
+            {
+                int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("RemoveKeyword", ""));
+                RemoveKeywordField(NumberOfKeywordsInThisForm, false);
+                ThisFormKeywords.RemoveAt(keywordIndex - 1);
+                NumberOfKeywordsInThisForm--;
+                List<string> args = new List<string>();
+                for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+                {
+                    args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[i - 1].Arguments);
+                    if (Controls.Find("DynamicStep" + i + "Params", false).Length != 0)
+                        FormControls.RemoveControlByKey("DynamicStep" + i + "Params", Controls);
+                    if (args != null && args.Count != 0)
+                        FormControls.AddControl("Button", "DynamicStep" + i + "Params",
+                            new Point(500 - HorizontalScroll.Value, initialYValue + (i - 1) * 30 - VerticalScroll.Value),
+                            new Size(75, 20),
+                            "Params",
+                            Color.Black,
+                            new EventHandler(InstantiateParamsAddForm),
+                            this);
+                    Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();
+                }
+            }
+        }
+
+        protected void AddKeywordToThisKeyword(object sender, EventArgs e)
+        {
+            int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("AddKeyword", ""));
+
+            AssignThisKeywordNamesFromTextFields();
+
+            if (ThisFormKeywords == null)
+            {
+                var checkNull = AddCurrentKeywordsToKeywordsList(sender, e);
+                if (checkNull == null) ThisFormKeywords = new List<Keyword>();
+            }
+
+            ThisFormKeywords.Add(new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, "Keywords")));
+
+            for (int i = NumberOfKeywordsInThisForm; i > keywordIndex; i--)
+                ThisFormKeywords[i] = ThisFormKeywords[i - 1];
+
+            ThisFormKeywords[keywordIndex] = new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, "Keywords"));
+
+            NumberOfKeywordsInThisForm++;
+            AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm);
+
+            for (int i = 1; i < NumberOfKeywordsInThisForm; i++)
+                Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();
+
+            for (int i = NumberOfKeywordsInThisForm; i > keywordIndex; i--)
+                if (Controls.Find("DynamicStep" + i + "Params", false).Length != 0)
+                {
+                    if (i == NumberOfKeywordsInThisForm + 1)
+                        FormControls.RemoveControlByKey("DynamicStep" + i + "Params", Controls);
+                    else
+                    {
+                        Controls["DynamicStep" + i + "Params"].Location = new Point(
+                            Controls["DynamicStep" + i + "Params"].Location.X,
+                            Controls["DynamicStep" + i + "Params"].Location.Y + 30);
+                        Controls["DynamicStep" + i + "Params"].Name = "DynamicStep" + (i + 1) + "Params";
+                    }
+                }
         }
     }
 }

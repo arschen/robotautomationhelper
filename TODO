@@ -1,6 +1,8 @@
 Write / Overwrite logic for Settings ( DONE )
 Test suites to Tests folder and Keywords to Resources folder ( DONE )
-Read Keywords from files
+Add new project support ( DONE )
+Add + - options for Test Case Creation and Test Cases ( DONE )
+Read Keywords from files ( DONE )
 Support for For loops and conditional statements
 Python libraries implementation
 Easy implementation of other robot framework libraries
@@ -14,3 +16,5 @@ BugFixes:
   Overwriting test cases / keywords doesn't respect the length ( in lines ) of the existing test cases / keywords
     - it removes current and then adds the new ones ( DONE )
   Recursion fix
+  Naming when adding multiple Test Cases / Steps / Keywords
+  Delete everything in the robot files before writing the new stuff ?

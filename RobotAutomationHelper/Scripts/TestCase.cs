@@ -24,6 +24,14 @@ namespace RobotAutomationHelper
             Implemented = implemented;
         }
 
+        internal TestCase(string Name, string OutputFilePath)
+        {
+            this.Name = Name;
+            this.OutputFilePath = OutputFilePath;
+            Documentation = "";
+            Tags = "";
+        }
+
         internal void CopyTestCase(TestCase testCase)
         {
             Steps = testCase.Steps;

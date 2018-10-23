@@ -81,7 +81,7 @@ namespace RobotAutomationHelper.Scripts
         {
             base.OnSelectedIndexChanged(e);
             if (SelectedIndex >= 0)
-                toolTip.Show(((SuggestionsListObjects)Items[SelectedIndex]).Documentation, this, 20, ItemHeight * (SelectedIndex - TopIndex + 1) + 3);
+                toolTip.Show(((SuggestionsListObjects)Items[SelectedIndex]).Documentation, this, Size.Width, ItemHeight * (SelectedIndex - TopIndex) + 3);
             else
                 toolTip.Hide(this);
         }
