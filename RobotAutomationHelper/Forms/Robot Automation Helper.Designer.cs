@@ -30,8 +30,9 @@
         {
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openExistingProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToRobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToRobotAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +42,7 @@
             this.AddLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,20 +60,21 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
+            this.newProjectToolStripMenuItem,
             this.openExistingProjectToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.saveToRobotToolStripMenuItem,
             this.saveToRobotAndRunToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
             this.toolStripMenuItem1.Text = "File";
             // 
-            // toolStripMenuItem2
+            // newProjectToolStripMenuItem
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(186, 22);
-            this.toolStripMenuItem2.Text = "Open Excel";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.ToolStripMenuOpen_Click);
+            this.newProjectToolStripMenuItem.Name = "newProjectToolStripMenuItem";
+            this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.newProjectToolStripMenuItem.Text = "New Project";
+            this.newProjectToolStripMenuItem.Click += new System.EventHandler(this.NewProjectToolStripMenuItem_Click);
             // 
             // openExistingProjectToolStripMenuItem
             // 
@@ -79,6 +82,13 @@
             this.openExistingProjectToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.openExistingProjectToolStripMenuItem.Text = "Open Existing Project";
             this.openExistingProjectToolStripMenuItem.Click += new System.EventHandler(this.OpenExistingProjectToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(186, 22);
+            this.toolStripMenuItem2.Text = "Open Excel";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.ToolStripMenuOpen_Click);
             // 
             // saveToRobotToolStripMenuItem
             // 
@@ -180,6 +190,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveToRobotAndRunToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openExistingProjectToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
+        private System.Windows.Forms.ToolStripMenuItem newProjectToolStripMenuItem;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog3;
     }
 }
 

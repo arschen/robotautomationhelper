@@ -46,6 +46,14 @@ namespace RobotAutomationHelper
             }
         }
 
+        private void NewProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog3.ShowDialog() == DialogResult.OK)
+            {
+                BrowseFolderButtonNewProject();
+            }
+        }
+
         // browse folders for output directory after file has been opened
         private void OpenFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -53,6 +61,15 @@ namespace RobotAutomationHelper
             {
                 BrowseFolderButtonOpenExcel();
             }
+        }
+
+        private void BrowseFolderButtonNewProject()
+        {
+            ClearDynamicElements();
+            settingsToolStripMenuItem.Visible = true;
+            SetStructureFolder(folderBrowserDialog3.SelectedPath);
+            AddTestCasesToMainForm();
+            ShowTestCasePanels();
         }
 
         private void BrowseFolderButtonOpenExcel()
@@ -117,6 +134,7 @@ namespace RobotAutomationHelper
             SetStructureFolder(folderBrowserDialog2.SelectedPath);
             TestCases = ReadRobotFiles.ReadAllTests();
             if (TestCases.Count != 0)
+            {
                 foreach (TestCase testCase in TestCases)
                 {
                     if (testCase.Steps != null)
@@ -125,9 +143,16 @@ namespace RobotAutomationHelper
                             KeywordToSuggestions(tempKeyword);
                         }
                 }
-            TestCases.Sort();
-            AddTestCasesToMainForm();
-            ShowTestCasePanels();
+                TestCases.Sort();
+                AddTestCasesToMainForm();
+                ShowTestCasePanels();
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("No test cases in the selected folder!",
+                    "Alert",
+                    MessageBoxButtons.OK);
+            }
         }
 
         private void KeywordToSuggestions(Keyword tempKeyword)
@@ -191,6 +216,12 @@ namespace RobotAutomationHelper
                     AddTestCaseField(testCase, testCasesCounter);
                     testCasesCounter++;
                 }
+            else
+            {
+                TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder("Tests") + "Auto.robot"));
+                AddTestCaseField(TestCases[0], testCasesCounter);
+                testCasesCounter++;
+            }
         }
 
         private void AddTestCaseField(TestCase testCase, int testCasesCounter)
