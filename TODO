@@ -1,20 +1,12 @@
-Write / Overwrite logic for Settings ( DONE )
-Test suites to Tests folder and Keywords to Resources folder ( DONE )
-Add new project support ( DONE )
-Add + - options for Test Case Creation and Test Cases ( DONE )
-Read Keywords from files ( DONE )
 Support for For loops and conditional statements
 Python libraries implementation
 Easy implementation of other robot framework libraries
-Tooltip on Param names for visibility ( DONE )
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Resource includes added twice ( no repro )
   Block all keyword fields while editing the name, unblock after keyword selection or lose focus
-  ToolTip position is off when using the scroll in SuggestionsList ( DONE )
   Bug with Auto.robot files added when not saved
   Overwriting test cases / keywords doesn't respect the length ( in lines ) of the existing test cases / keywords
-    - it removes current and then adds the new ones ( DONE )
   Recursion fix
   Naming when adding multiple Test Cases / Steps / Keywords
   Delete everything in the robot files before writing the new stuff ?

@@ -172,7 +172,7 @@ namespace RobotAutomationHelper.Scripts
                                 RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
                         }
                         else
-                            if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  " + path.Replace(FilesAndFolderStructure.GetFolder("").Replace('\\', '/'), "")).Equals(""))
+                            if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(""),"").Replace('\\', '/')).Equals(""))
                                 RobotFileHandler.FileLineAdd("Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(""), "").Replace('\\', '/'), fileName.Replace('\\', '/'), index);
                         index++;
                     }
