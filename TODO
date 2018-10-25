@@ -3,7 +3,6 @@ Python libraries implementation
 Easy implementation of other robot framework libraries
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
-  Resource includes added twice ( no repro )
   Block all keyword fields while editing the name, unblock after keyword selection or lose focus
   Bug with Auto.robot files added when not saved
   Overwriting test cases / keywords doesn't respect the length ( in lines ) of the existing test cases / keywords

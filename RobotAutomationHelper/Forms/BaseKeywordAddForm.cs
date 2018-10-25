@@ -407,5 +407,25 @@ namespace RobotAutomationHelper.Scripts
                     }
                 }
         }
+
+        // Block fields
+        protected void BlockKeywordFields(int keywordIndex)
+        {
+            Controls["DynamicStep" + keywordIndex + "Label"].Enabled = false;
+            Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
+            Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = false;
+            Controls["DynamicStep" + keywordIndex + "RemoveKeyword"].Enabled = false;
+            Controls["DynamicStep" + keywordIndex + "Params"].Enabled = false;
+        }
+
+        // Enable fields
+        protected void EnableKeywordFields(int keywordIndex)
+        {
+            Controls["DynamicStep" + keywordIndex + "Label"].Enabled = true;
+            Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = true;
+            Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = true;
+            Controls["DynamicStep" + keywordIndex + "RemoveKeyword"].Enabled = true;
+            Controls["DynamicStep" + keywordIndex + "Params"].Enabled = true;
+        }
     }
 }
