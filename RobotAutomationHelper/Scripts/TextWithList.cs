@@ -10,15 +10,15 @@ namespace RobotAutomationHelper.Scripts
     {
 
         private SuggestionsList SuggestionsList;
-        private Control ParentControl;
+        private BaseKeywordAddForm ParentForm;
         private bool ForcedFocusToList { get; set; }
         private readonly int IndexOf;
         private bool JustGotFocused = false;
         private bool ChangedImmediatelyAfterSelection = false;
 
-        internal TextWithList(Control Parent, int IndexOf)
+        internal TextWithList(BaseKeywordAddForm Parent, int IndexOf)
         {
-            ParentControl = Parent;
+            ParentForm = Parent;
             SuggestionsList = new SuggestionsList(this);
             this.IndexOf = IndexOf;
         }
@@ -73,8 +73,8 @@ namespace RobotAutomationHelper.Scripts
                 SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
                 SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
                 SuggestionsList.IntegralHeight = true;
-                FormControls.RemoveControlByKey(SuggestionsList.Name, ParentControl.Controls);
-                ParentControl.Controls.Add(SuggestionsList);
+                FormControls.RemoveControlByKey(SuggestionsList.Name, ParentForm.Controls);
+                ParentForm.Controls.Add(SuggestionsList);
                 SuggestionsList.BringToFront();
             }
             else
@@ -165,18 +165,17 @@ namespace RobotAutomationHelper.Scripts
 
         internal void TriggerUpdate(string textChangedPassed)
         {
-            bool isKeywordAddForm = (ParentControl as Form).Name.Contains("Keyword");
-            if (ParentControl.Name.Contains("Keyword"))
-                (ParentControl as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+            if (ParentForm.FormType == FormType.Keyword)
+                (ParentForm as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
             else
             {
-                if (ParentControl.Name.Contains("Settings"))
+                if (ParentForm.FormType == FormType.Settings)
                 {
-                    (ParentControl as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
                 }
                 else
-                    if (ParentControl.Name.Contains("TestCase"))
-                        (ParentControl as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                    if (ParentForm.FormType == FormType.TestCase)
+                        (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
             }
         }
 
@@ -184,38 +183,38 @@ namespace RobotAutomationHelper.Scripts
         {
             SuggestionsList.Visible = false;
             SuggestionsList.HideToolTip();
-            ParentControl.Controls.Remove(SuggestionsList);
+            ParentForm.Controls.Remove(SuggestionsList);
         }
 
         internal void DisableKeywordFields()
         {
-            if (ParentControl.Name.Contains("Keyword"))
-                (ParentControl as KeywordAddForm).DisableKeywordFields(IndexOf);
+            if (ParentForm.FormType == FormType.Keyword)
+                (ParentForm as KeywordAddForm).DisableKeywordFields(IndexOf);
             else
             {
-                if (ParentControl.Name.Contains("Settings"))
+                if (ParentForm.FormType == FormType.Settings)
                 {
-                    (ParentControl as SettingsAddForm).DisableKeywordFields(IndexOf);
+                    (ParentForm as SettingsAddForm).DisableKeywordFields(IndexOf);
                 }
                 else
-                    if (ParentControl.Name.Contains("TestCase"))
-                    (ParentControl as TestCaseAddForm).DisableKeywordFields(IndexOf);
+                    if (ParentForm.FormType == FormType.TestCase)
+                    (ParentForm as TestCaseAddForm).DisableKeywordFields(IndexOf);
             }
         }
 
         internal void EnableKeywordFields()
         {
-            if (ParentControl.Name.Contains("Keyword"))
-                (ParentControl as KeywordAddForm).EnableKeywordFields(IndexOf);
+            if (ParentForm.FormType == FormType.Keyword)
+                (ParentForm as KeywordAddForm).EnableKeywordFields(IndexOf);
             else
             {
-                if (ParentControl.Name.Contains("Settings"))
+                if (ParentForm.FormType == FormType.Settings)
                 {
-                    (ParentControl as SettingsAddForm).EnableKeywordFields(IndexOf);
+                    (ParentForm as SettingsAddForm).EnableKeywordFields(IndexOf);
                 }
                 else
-                    if (ParentControl.Name.Contains("TestCase"))
-                    (ParentControl as TestCaseAddForm).EnableKeywordFields(IndexOf);
+                    if (ParentForm.FormType == FormType.TestCase)
+                    (ParentForm as TestCaseAddForm).EnableKeywordFields(IndexOf);
             }
         }
     }

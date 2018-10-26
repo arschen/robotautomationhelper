@@ -18,6 +18,7 @@ namespace RobotAutomationHelper
         {
             InitializeComponent();
             initialYValue = 185;
+            FormType = FormType.Keyword;
             ParentKeywords = parentKeywords;
             FormControls.UpdateOutputFileSuggestions(OutputFile, "Keywords");
             ActiveControl = KeywordNameLabel;

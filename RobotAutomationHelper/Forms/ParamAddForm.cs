@@ -1,11 +1,10 @@
 ﻿using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class ParamAddForm : Form
+    internal partial class ParamAddForm : BaseKeywordAddForm
     {
         private Keyword keyword;
         private int paramsCount = 0;
@@ -13,6 +12,7 @@ namespace RobotAutomationHelper.Forms
         internal ParamAddForm()
         {
             InitializeComponent();
+            FormType = FormType.Params;
         }
 
         internal void ShowParamContent(Keyword keyword)

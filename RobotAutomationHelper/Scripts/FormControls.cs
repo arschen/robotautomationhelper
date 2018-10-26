@@ -22,7 +22,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
-                case "textwithlist": tempControl = new TextWithList(owner, indexOf); break;
+                case "textwithlist": tempControl = new TextWithList(owner as BaseKeywordAddForm, indexOf); break;
                 case "checkbox": tempControl = new CheckBox(); ((CheckBox)tempControl).Checked = true; break;
                 case "button": tempControl = new Button(); tempControl.Click += eventHandler; break;
                 case "labelwithtooltip": tempControl = new LabelWithToolTip(); break;

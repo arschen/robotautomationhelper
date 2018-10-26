@@ -14,6 +14,7 @@ namespace RobotAutomationHelper
             if (RobotAutomationHelper.Log) Console.WriteLine("TestCaseAddForm [Constructor]");
             InitializeComponent();
             initialYValue = 140;
+            FormType = FormType.TestCase;
             FormControls.UpdateOutputFileSuggestions(OutputFile, "Tests");
             ActiveControl = TestCaseNameLabel;
         }

@@ -8,7 +8,7 @@ namespace RobotAutomationHelper.Scripts
 {
     internal class BaseKeywordAddForm : Form
     {
-        private Form FormParent;
+        private BaseKeywordAddForm FormParent;
         // index and keywords of the parent
         protected int ImplementationIndexFromTheParent;
         internal int NumberOfKeywordsInThisForm { get; set; }
@@ -23,6 +23,7 @@ namespace RobotAutomationHelper.Scripts
         //Present in memory and robot files
         protected bool presentInRobotFile;
         protected string memoryPath;
+        internal FormType FormType { get; set; }
 
         // change the field when the keyword name is changed
         internal void UpdateTheKeywordOnNameChange(object sender, string textChangePassed)
@@ -221,7 +222,7 @@ namespace RobotAutomationHelper.Scripts
 
         private void UpdateThisFormAfterImlpementedChildKeyword(object sender, EventArgs e)
         {
-            if (sender.GetType().FullName.Contains("KeywordAddForm") && !((KeywordAddForm)sender).skip)
+            if (((sender as BaseKeywordAddForm).FormType == FormType.Keyword) && !(sender as BaseKeywordAddForm).skip)
             {
                 Controls["DynamicStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].Name.Trim();
                 Controls["DynamicStep" + IndexOfTheKeywordToBeImplemented + "AddImplementation"].Text = "Edit implementation";
@@ -251,12 +252,12 @@ namespace RobotAutomationHelper.Scripts
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(ThisFormKeywords, IndexOfTheKeywordToBeImplemented);
                 //update suggestion when not navigating to "Settings" form
-                if (!FormParent.Name.Contains("Settings"))
+                if (!(FormParent.FormType == FormType.Settings))
                 {
-                    if (!FormParent.Name.Contains("Keyword"))
+                    if (!(FormParent.FormType == FormType.Keyword))
                         FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, "Keywords");
                     else
-                        if (!FormParent.Name.Contains("TestCase"))
+                        if (!(FormParent.FormType == FormType.TestCase))
                         FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, "Tests");
                 }
             }
@@ -448,5 +449,13 @@ namespace RobotAutomationHelper.Scripts
             if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "Params"].Enabled = true;
         }
+    }
+
+    internal enum FormType
+    {
+        Keyword,
+        TestCase,
+        Settings,
+        Params
     }
 }
