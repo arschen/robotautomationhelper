@@ -59,6 +59,12 @@
     <Compile Include="Forms\KeywordAddForm.Designer.cs">
       <DependentUpon>KeywordAddForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\NameAndOutputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NameAndOutputForm.Designer.cs">
+      <DependentUpon>NameAndOutputForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ParamAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +125,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\KeywordAddForm.resx">
       <DependentUpon>KeywordAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NameAndOutputForm.resx">
+      <DependentUpon>NameAndOutputForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ParamAddForm.resx">
       <DependentUpon>ParamAddForm.cs</DependentUpon>

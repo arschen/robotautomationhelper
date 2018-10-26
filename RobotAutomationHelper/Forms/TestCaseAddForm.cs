@@ -127,7 +127,6 @@ namespace RobotAutomationHelper
             memoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Tests"),
                 RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent]);
-                TestCaseName.ForeColor = Color.Red;
 
             if (!memoryPath.Equals(""))
                 TestCaseName.ForeColor = Color.Red;
