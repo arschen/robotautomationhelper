@@ -9,10 +9,10 @@ namespace RobotAutomationHelper.Scripts
         private static List<string> SavedFiles = new List<string>();
         private static string OutputFolder;
 
-        internal static List<string> GetShortSavedFiles(string type)
+        internal static List<string> GetShortSavedFiles(FolderType folderType)
         {
             List<string> results = new List<string>();
-            string pattern = GetFolder(type);
+            string pattern = GetFolder(folderType);
             foreach (string temp in SavedFiles)
                 if (temp.Contains(pattern))
                 {
@@ -21,10 +21,10 @@ namespace RobotAutomationHelper.Scripts
             return results;
         }
 
-        internal static List<string> GetFullSavedFiles(string type)
+        internal static List<string> GetFullSavedFiles(FolderType folderType)
         {
             List<string> results = new List<string>();
-            string pattern = GetFolder(type);
+            string pattern = GetFolder(folderType);
             foreach (string temp in SavedFiles)
                 if (temp.Contains(pattern))
                 {
@@ -47,19 +47,19 @@ namespace RobotAutomationHelper.Scripts
             OutputFolder = outputFolder;
         }
 
-        internal static string GetFolder(string type)
+        internal static string GetFolder(FolderType folderType)
         {
-            switch (type)
+            switch (folderType)
             {
-                case "Keywords": return OutputFolder + "Resources\\";
-                case "Tests": return OutputFolder + "Tests\\";
+                case FolderType.Resources: return OutputFolder + "Resources\\";
+                case FolderType.Tests: return OutputFolder + "Tests\\";
                 default: return OutputFolder;
             }
         }
 
-        internal static string ConcatFileNameToFolder(string FileName, string type)
+        internal static string ConcatFileNameToFolder(string FileName, FolderType folderType)
         {
-            string outputFilePath = GetFolder(type);
+            string outputFilePath = GetFolder(folderType);
             if (!FileName.StartsWith("\\"))
                 outputFilePath = outputFilePath + FileName;
             else
@@ -110,5 +110,27 @@ namespace RobotAutomationHelper.Scripts
                     AddFilesFromKeywords(key);
         }
 
+        internal static FolderType ConvertFormTypeToFolderType(FormType formType)
+        {
+            FolderType folderType;
+            if (formType.Equals(FormType.Keyword))
+                folderType = FolderType.Resources;
+            else
+            {
+                if (formType.Equals(FormType.Test))
+                    folderType = FolderType.Tests;
+                else
+                    folderType = FolderType.Root;
+            }
+
+            return folderType;
+        }
+    }
+
+    internal enum FolderType
+    {
+        Resources,
+        Tests,
+        Root
     }
 }

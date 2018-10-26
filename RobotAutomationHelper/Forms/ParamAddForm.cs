@@ -12,7 +12,6 @@ namespace RobotAutomationHelper.Forms
         internal ParamAddForm()
         {
             InitializeComponent();
-            FormType = FormType.Params;
         }
 
         internal void ShowParamContent(Keyword keyword)

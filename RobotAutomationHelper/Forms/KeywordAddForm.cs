@@ -20,7 +20,7 @@ namespace RobotAutomationHelper
             initialYValue = 185;
             FormType = FormType.Keyword;
             ParentKeywords = parentKeywords;
-            FormControls.UpdateOutputFileSuggestions(OutputFile, "Keywords");
+            FormControls.UpdateOutputFileSuggestions(OutputFile, FormType);
             ActiveControl = KeywordNameLabel;
         }
 
@@ -75,7 +75,7 @@ namespace RobotAutomationHelper
             if (keyword.Documentation != null)
                 KeywordDocumentation.Text = keyword.Documentation.Replace("[Documentation]", "").Trim();
             if (keyword.OutputFilePath != null || !keyword.OutputFilePath.Equals(""))
-                OutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder("Keywords"), "\\");
+                OutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Resources), "\\");
             if (keyword.Arguments != null)
                 KeywordArguments.Text = keyword.Arguments.Replace("[Arguments]", "").Trim();
             IsKeywordPresentInFilesOrMemoryTree();
@@ -111,7 +111,7 @@ namespace RobotAutomationHelper
         // adds all field data to parentKeyword or testcaseaddform if not nested
         private void SaveChangesToKeyword(bool save)
         {
-            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords");
+            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources);
 
             List<string> args = StringAndListOperations.ReturnListOfArgs(KeywordArguments.Text);
 
@@ -225,15 +225,15 @@ namespace RobotAutomationHelper
         {
             presentInRobotFile = false;
             memoryPath = TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
-                FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords"),
+                FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
                 ParentKeywords[ImplementationIndexFromTheParent]);
 
             if (!memoryPath.Equals(""))
                 KeywordName.ForeColor = Color.Red;
             else
             {
-                if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, "Keywords")
-                    , KeywordName.Text, "keyword") != -1)
+                if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources)
+                    , KeywordName.Text, FormType.Keyword) != -1)
                 {
                     KeywordName.ForeColor = Color.Red;
                     presentInRobotFile = true;

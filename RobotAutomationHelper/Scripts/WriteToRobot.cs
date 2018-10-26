@@ -15,7 +15,7 @@ namespace RobotAutomationHelper.Scripts
             int index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
             if (index < 0) index = 0;
 
-            bool addTestCase = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, testCase.Name.Trim(), "test cases") != -1);
+            bool addTestCase = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, testCase.Name.Trim(), FormType.Test) != -1);
             if (addTestCase)
             {
                 Includes candidate = new Includes(fileName);
@@ -23,7 +23,7 @@ namespace RobotAutomationHelper.Scripts
                     includes.Add(candidate);
 
                 //Add test case to robot file
-                index = AddName(testCase.Name.Trim(), fileName, index, "test cases");
+                index = AddName(testCase.Name.Trim(), fileName, index, FormType.Test);
 
                 //adds documentation
                 index = AddTagsDocumentationArguments("[Documentation]", "\t" + testCase.Documentation, fileName, index);
@@ -44,7 +44,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (index < 0) index = 0;
 
-            bool addKeywordSteps = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), "keyword") != -1);
+            bool addKeywordSteps = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), FormType.Keyword) != -1);
 
             if (addKeywordSteps)
                 if (keyword.Type == KeywordType.CUSTOM)
@@ -57,7 +57,7 @@ namespace RobotAutomationHelper.Scripts
             if (keyword.Saved && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
             {
                 //Add keyword to robot file
-                index = AddName(keyword.Name.Trim(), fileName, index, "keywords");
+                index = AddName(keyword.Name.Trim(), fileName, index, FormType.Keyword);
 
                 //adds documentation
                 index = AddTagsDocumentationArguments("[Documentation]", "\t" + keyword.Documentation, fileName, index);
@@ -109,18 +109,18 @@ namespace RobotAutomationHelper.Scripts
         }
 
         //Add test case / keyword name to robot file
-        private static int AddName(string name, string fileName, int index, string tag)
+        private static int AddName(string name, string fileName, int index, FormType tag)
         {
             int tempTagIndex = RobotFileHandler.HasTag(fileName, tag);
             if (tempTagIndex == -1)
             {
-                if (tag.Equals("keywords"))
+                if (tag.Equals(FormType.Keyword))
                     RobotFileHandler.FileLineAdd("*** Keywords ***", fileName, index);
                 else
                 {
-                    if (tag.Equals("test cases"))
+                    if (tag.Equals(FormType.Test))
                     {
-                        int tempKeywordsIndex = RobotFileHandler.HasTag(fileName, "keywords");
+                        int tempKeywordsIndex = RobotFileHandler.HasTag(fileName, FormType.Keyword);
                         if (tempKeywordsIndex != -1)
                         {
                             RobotFileHandler.FileLineAdd("*** Test Cases ***", fileName, tempKeywordsIndex);
@@ -146,7 +146,7 @@ namespace RobotAutomationHelper.Scripts
         internal static void WriteIncludesToRobotFiles()
         {
             int index;
-            string tag = "settings";
+            FormType tag = FormType.Settings;
             string fileName;
 
             foreach (Includes temp in includes)
@@ -172,8 +172,8 @@ namespace RobotAutomationHelper.Scripts
                                 RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
                         }
                         else
-                            if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(""),"").Replace('\\', '/')).Equals(""))
-                                RobotFileHandler.FileLineAdd("Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(""), "").Replace('\\', '/'), fileName, index);
+                            if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),"").Replace('\\', '/')).Equals(""))
+                                RobotFileHandler.FileLineAdd("Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root), "").Replace('\\', '/'), fileName, index);
                         index++;
                     }
                 }
@@ -185,7 +185,7 @@ namespace RobotAutomationHelper.Scripts
             foreach (SuiteSettings suiteSettings in RobotAutomationHelper.SuiteSettingsList)
                 if (suiteSettings.Overwrite)
                 {
-                    string type = "";
+                    FolderType type = FolderType.Root;
                     if (suiteSettings.Documentation != "")
                         ReplaceInSettings("Documentation  " + suiteSettings.Documentation, "Documentation",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
@@ -244,7 +244,7 @@ namespace RobotAutomationHelper.Scripts
             List<int> location = RobotFileHandler.LocationInSettings(outputFileName, tag);
 
             //Add settings tag if not present in the file
-            if (RobotFileHandler.HasTag(outputFileName , "Settings") == -1)
+            if (RobotFileHandler.HasTag(outputFileName , FormType.Settings) == -1)
                 RobotFileHandler.FileLineAdd("*** Settings ***"
                     , outputFileName
                     , 0);

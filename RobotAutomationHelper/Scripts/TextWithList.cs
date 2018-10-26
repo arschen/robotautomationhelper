@@ -174,7 +174,7 @@ namespace RobotAutomationHelper.Scripts
                     (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
                 }
                 else
-                    if (ParentForm.FormType == FormType.TestCase)
+                    if (ParentForm.FormType == FormType.Test)
                         (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
             }
         }
@@ -197,7 +197,7 @@ namespace RobotAutomationHelper.Scripts
                     (ParentForm as SettingsAddForm).DisableKeywordFields(IndexOf);
                 }
                 else
-                    if (ParentForm.FormType == FormType.TestCase)
+                    if (ParentForm.FormType == FormType.Test)
                     (ParentForm as TestCaseAddForm).DisableKeywordFields(IndexOf);
             }
         }
@@ -213,7 +213,7 @@ namespace RobotAutomationHelper.Scripts
                     (ParentForm as SettingsAddForm).EnableKeywordFields(IndexOf);
                 }
                 else
-                    if (ParentForm.FormType == FormType.TestCase)
+                    if (ParentForm.FormType == FormType.Test)
                     (ParentForm as TestCaseAddForm).EnableKeywordFields(IndexOf);
             }
         }

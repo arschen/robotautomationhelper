@@ -48,13 +48,14 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        internal static void UpdateOutputFileSuggestions(ComboBox comboBox, string type)
+        internal static void UpdateOutputFileSuggestions(ComboBox comboBox, FormType formType)
         {
+            FolderType folderType = FilesAndFolderStructure.ConvertFormTypeToFolderType(formType);
             if (RobotAutomationHelper.Log) Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
             comboBox.Items.Clear();
             comboBox.AutoCompleteCustomSource.Clear();
-            comboBox.Items.AddRange(FilesAndFolderStructure.GetShortSavedFiles(type).ToArray());
-            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetShortSavedFiles(type).ToArray());
+            comboBox.Items.AddRange(FilesAndFolderStructure.GetShortSavedFiles(folderType).ToArray());
+            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetShortSavedFiles(folderType).ToArray());
             comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             if (comboBox.DropDownStyle != ComboBoxStyle.DropDownList)
                 comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;

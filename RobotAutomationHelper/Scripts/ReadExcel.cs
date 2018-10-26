@@ -21,7 +21,7 @@ namespace RobotAutomationHelper.Scripts
             currentTestCaseTags = "";
             currentTestCaseDocumentation = "";
             currentTestCase = "";
-            outputFilePath = FilesAndFolderStructure.GetFolder("Tests");
+            outputFilePath = FilesAndFolderStructure.GetFolder(FolderType.Tests);
 
             var package = new ExcelPackage(new FileInfo(Filename));
             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
@@ -62,11 +62,11 @@ namespace RobotAutomationHelper.Scripts
                         //test cases column equals test steps ( keywords )
                         else if (j == 3 && !cellValue.Equals(""))
                         {
-                            currentTestCaseTestSteps.Add(new Keyword("" + cellValue, FilesAndFolderStructure.GetFolder("Keywords") + "Auto.robot"));
+                            currentTestCaseTestSteps.Add(new Keyword("" + cellValue, FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot"));
                         }
                         else if (j == 4 && !cellValue.Equals(""))
                         {
-                            outputFilePath = FilesAndFolderStructure.ConcatFileNameToFolder(cellValue, "Tests");
+                            outputFilePath = FilesAndFolderStructure.ConcatFileNameToFolder(cellValue, FolderType.Tests);
                         }
                         // TODO
                         else if (j == 5 && !cellValue.Equals(""))
@@ -91,14 +91,14 @@ namespace RobotAutomationHelper.Scripts
 
         private static void AddTestCaseAndResetValues()
         {
-            if (outputFilePath.Equals(FilesAndFolderStructure.GetFolder("Tests")))
-                outputFilePath = FilesAndFolderStructure.GetFolder("Tests") + "Auto.robot";
+            if (outputFilePath.Equals(FilesAndFolderStructure.GetFolder(FolderType.Tests)))
+                outputFilePath = FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot";
             TestCases.Add(new TestCase(currentTestCase, currentTestCaseDocumentation, currentTestCaseTags, currentTestCaseTestSteps, outputFilePath, false));
             currentTestCaseTestSteps = new List<Keyword>();
             currentTestCaseDocumentation = "";
             currentTestCase = "";
             currentTestCaseTags = "";
-            outputFilePath = FilesAndFolderStructure.GetFolder("Tests");
+            outputFilePath = FilesAndFolderStructure.GetFolder(FolderType.Tests);
         }
     }
 }

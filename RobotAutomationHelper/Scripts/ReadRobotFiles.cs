@@ -22,7 +22,7 @@ namespace RobotAutomationHelper.Scripts
             currentTestCase = "";
             string[] arrLine;
 
-            foreach (string fileName in FilesAndFolderStructure.GetFullSavedFiles("Tests"))
+            foreach (string fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Tests))
             {
                 if (File.Exists(fileName))
                 {
@@ -67,7 +67,7 @@ namespace RobotAutomationHelper.Scripts
                                     else
                                     {
                                         currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
-                                            FilesAndFolderStructure.GetFolder("Tests"), true));
+                                            FilesAndFolderStructure.GetFolder(FolderType.Tests), true));
                                         AddKeywordsInKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
                                             GetResourcesFromFile(arrLine));
                                     }
@@ -87,7 +87,7 @@ namespace RobotAutomationHelper.Scripts
         {
             foreach (string fileName in filesList)
             {
-                int index = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), "Keywords");
+                int index = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), FormType.Keyword);
                 if (index != -1)
                 {
                     keyword.OutputFilePath = fileName;
@@ -164,7 +164,7 @@ namespace RobotAutomationHelper.Scripts
 
                     if (start && arrLine[i].StartsWith("Resource"))
                     {
-                        Resources.Add(FilesAndFolderStructure.GetFolder("") + arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/","\\"));
+                        Resources.Add(FilesAndFolderStructure.GetFolder(FolderType.Root) + arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/","\\"));
                     }
                 }
             }

@@ -218,7 +218,7 @@ namespace RobotAutomationHelper
                 }
             else
             {
-                TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder("Tests") + "Auto.robot"));
+                TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
                 AddTestCaseField(TestCases[0], testCasesCounter);
                 testCasesCounter++;
             }
@@ -359,13 +359,13 @@ namespace RobotAutomationHelper
             WriteToRobot.WriteIncludesToRobotFiles();
             WriteToRobot.WriteSuiteSettingsListToRobot();
 
-            foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(""))
-                RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName, ""));
+            foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root))
+                RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName, FolderType.Root));
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (FilesAndFolderStructure.GetShortSavedFiles("") != null && FilesAndFolderStructure.GetShortSavedFiles("").Count > 0)
+            if (FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root) != null && FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root).Count > 0)
                 InstantiateSettingsAddForm(sender, e);
             else
             {
@@ -390,7 +390,7 @@ namespace RobotAutomationHelper
         private void SaveToRobotAndRunToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveToRobotToolStripMenuItem_Click(sender, e);
-            RunCom("cd " + FilesAndFolderStructure.GetFolder("") + "&robot tests");
+            RunCom("cd " + FilesAndFolderStructure.GetFolder(FolderType.Root) + "&robot tests");
         }
 
         internal void AddTestCaseToProject(object sender, EventArgs e)
@@ -399,12 +399,12 @@ namespace RobotAutomationHelper
 
             AssignThisTestCasesNamesFromTextFields();
 
-            TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder("Tests") + "Auto.robot"));
+            TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
 
             for (int i = numberOfTestCases; i > testCaseIndex; i--)
                 TestCases[i] = TestCases[i - 1];
 
-            TestCases[testCaseIndex] = new TestCase("New Test Case", FilesAndFolderStructure.GetFolder("Tests") + "Auto.robot");
+            TestCases[testCaseIndex] = new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot");
 
             numberOfTestCases++;
             AddTestCaseField(TestCases[numberOfTestCases - 1], numberOfTestCases);

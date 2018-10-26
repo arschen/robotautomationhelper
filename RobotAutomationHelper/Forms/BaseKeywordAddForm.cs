@@ -255,10 +255,10 @@ namespace RobotAutomationHelper.Scripts
                 if (!(FormParent.FormType == FormType.Settings))
                 {
                     if (!(FormParent.FormType == FormType.Keyword))
-                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, "Keywords");
+                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
                     else
-                        if (!(FormParent.FormType == FormType.TestCase))
-                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, "Tests");
+                        if (!(FormParent.FormType == FormType.Test))
+                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
                 }
             }
         }
@@ -275,7 +275,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (keyword.Type != KeywordType.CUSTOM)
             {
-                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder("Keywords") + "Auto.robot")); //CopyKeyword
+                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot")); //CopyKeyword
                 keyword.Type = KeywordType.CUSTOM;
                 return;
             }
@@ -283,7 +283,7 @@ namespace RobotAutomationHelper.Scripts
             foreach (Keyword seleniumKeyword in FormControls.Suggestions)
                 if (seleniumKeyword.Name.Trim().ToLower().Equals(keyword.Name.Trim().ToLower()))
                 {
-                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder("Keywords") + "Auto.robot")); //CopyKeyword
+                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot")); //CopyKeyword
                     keyword.Type = KeywordType.CUSTOM;
                     return;
                 }
@@ -308,7 +308,7 @@ namespace RobotAutomationHelper.Scripts
         //adds the list of keywords ( + unimplemented ones ) to a Keyword and returns it
         protected Keyword AddCurrentKeywordsToKeywordsList(object sender, EventArgs e)
         {
-            string path = FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, "Keywords");
+            string path = FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType));
 
             // if AddImplementation is pressed a new form should be opened which requires the keyword that it represents
             int keywordIndex = 0;
@@ -392,12 +392,12 @@ namespace RobotAutomationHelper.Scripts
                 if (checkNull == null) ThisFormKeywords = new List<Keyword>();
             }
 
-            ThisFormKeywords.Add(new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, "Keywords")));
+            ThisFormKeywords.Add(new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType))));
 
             for (int i = NumberOfKeywordsInThisForm; i > keywordIndex; i--)
                 ThisFormKeywords[i] = ThisFormKeywords[i - 1];
 
-            ThisFormKeywords[keywordIndex] = new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, "Keywords"));
+            ThisFormKeywords[keywordIndex] = new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)));
 
             NumberOfKeywordsInThisForm++;
             AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm);
@@ -454,8 +454,7 @@ namespace RobotAutomationHelper.Scripts
     internal enum FormType
     {
         Keyword,
-        TestCase,
-        Settings,
-        Params
+        Test,
+        Settings
     }
 }

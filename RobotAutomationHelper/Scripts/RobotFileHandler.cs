@@ -8,16 +8,16 @@ namespace RobotAutomationHelper.Scripts
     {
         internal static int GetLineAfterLastKeyword(string fileName)
         {
-            return GetLocationOfType(fileName, "keywords");
+            return GetLocationOfType(fileName, FormType.Keyword);
         }
 
         internal static int GetLineAfterLastTestCase(string fileName)
         {
-            return GetLocationOfType(fileName, "test cases");
+            return GetLocationOfType(fileName, FormType.Test);
         }
 
         // get the index line where to add specific type ( keyword / test cases / settings )
-        private static int GetLocationOfType(string fileName, string type)
+        private static int GetLocationOfType(string fileName, FormType type)
         {
             int index = -1;
             string[] arrLine;
@@ -57,7 +57,7 @@ namespace RobotAutomationHelper.Scripts
                             index = i;
                             break;
                         }
-                        if (arrLine[i].ToLower().Contains(type))
+                        if (arrLine[i].ToLower().Contains(type.ToString().ToLower()))
                             start = true;
                     }
                 }
@@ -81,7 +81,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        internal static int HasTag(string fileName, string type)
+        internal static int HasTag(string fileName, FormType formType)
         {
             int index = -1;
 
@@ -98,18 +98,18 @@ namespace RobotAutomationHelper.Scripts
 
             for (int i = 0; i < arrLine.Length; i++)
                 if (arrLine[i].StartsWith("***"))
-                    if (arrLine[i].ToLower().Contains(type.ToLower()))
+                    if (arrLine[i].ToLower().Contains(formType.ToString().ToLower()))
                         index = i;
 
             return index;
         }
 
         // returns index with the line if the file contains a keyword / test case with the same name
-        internal static int LocationOfTestCaseOrKeywordInFile(string fileName, string name, string type)
+        internal static int LocationOfTestCaseOrKeywordInFile(string fileName, string name, FormType formType)
         {
             if (File.Exists(fileName))
             {
-                int index = HasTag(fileName, type);
+                int index = HasTag(fileName, formType);
                 if (index != -1)
                 {
                     string[] arrLine;
@@ -141,7 +141,7 @@ namespace RobotAutomationHelper.Scripts
         {
             if (File.Exists(fileName))
             {
-                int index = HasTag(fileName, "settings");
+                int index = HasTag(fileName, FormType.Settings);
                 if (index != -1)
                 {
                     string[] arrLine;
@@ -184,7 +184,7 @@ namespace RobotAutomationHelper.Scripts
             List<int> result = new List<int>();
             if (File.Exists(fileName))
             {
-                int index = HasTag(fileName, "settings");
+                int index = HasTag(fileName, FormType.Settings);
                 if (index != -1)
                 {
                     string[] arrLine;
@@ -381,9 +381,9 @@ namespace RobotAutomationHelper.Scripts
 
             int index = 0;
             if (isKeyword)
-                index = LocationOfTestCaseOrKeywordInFile(fileName, name, "keywords");
+                index = LocationOfTestCaseOrKeywordInFile(fileName, name, FormType.Keyword);
             else
-                index = LocationOfTestCaseOrKeywordInFile(fileName, name, "test cases");
+                index = LocationOfTestCaseOrKeywordInFile(fileName, name, FormType.Test);
 
             if (index != -1)
             {
