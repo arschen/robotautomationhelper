@@ -154,6 +154,29 @@ namespace RobotAutomationHelper.Scripts
             addParamForm.ShowParamContent(ThisFormKeywords[keywordIndex - 1]);
         }
 
+        private object realSender;
+
+        internal void InstantiateNameAndOutputForm(object sender, EventArgs e)
+        {
+            realSender = sender;
+            FormParent = this;
+            if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
+            FormType formType;
+            if (Name.Contains("Robot Automation Helper"))
+                formType = FormType.Test;
+            else
+                formType = FormType.Keyword;
+
+            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType);
+            nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
+            nameAndOutputForm.ShowContent();
+        }
+
+        private void UpdateAfterClosingNameAndOutputForm(object sender, EventArgs e)
+        {
+            AddKeywordToThisKeyword(realSender, e);
+        }
+
         // Adds TextBox / Label / Add implementation / Add and remove keyword / Params
         protected void AddKeywordField(Keyword keyword, int keywordsCounter)
         {
@@ -196,7 +219,7 @@ namespace RobotAutomationHelper.Scripts
                 new Size(20, 20),
                 "+",
                 Color.Black,
-                new EventHandler(AddKeywordToThisKeyword),
+                new EventHandler(InstantiateNameAndOutputForm),
                 this);
             FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "RemoveKeyword",
                 keywordsCounter,
