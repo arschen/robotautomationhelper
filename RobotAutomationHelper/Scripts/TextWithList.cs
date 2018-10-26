@@ -14,6 +14,7 @@ namespace RobotAutomationHelper.Scripts
         private bool ForcedFocusToList { get; set; }
         private readonly int IndexOf;
         private bool JustGotFocused = false;
+        private bool ChangedImmediatelyAfterSelection = false;
 
         internal TextWithList(Control Parent, int IndexOf)
         {
@@ -34,6 +35,7 @@ namespace RobotAutomationHelper.Scripts
                 {
                     string realName = ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).ValueMember;
                     SuggestionsList.SelectionPerformed = false;
+                    ChangedImmediatelyAfterSelection = true;
                     HideSuggestionsList();
                     TriggerUpdate(realName);
                     EnableKeywordFields();
@@ -45,28 +47,40 @@ namespace RobotAutomationHelper.Scripts
                     else
                         JustGotFocused = false;
 
-                    // find all the items in suggestion that match the current text
-                    List<SuggestionsListObjects> foundItems = ReturnSuggestionsMatches(txt);
-
-                    if (foundItems.Count > 0)
+                    if (ChangedImmediatelyAfterSelection)
                     {
-                        //show suggestions list
-                        SuggestionsList.Items.Clear();
-                        SuggestionsList.Items.AddRange(foundItems.ToArray());
-                        SuggestionsList.Visible = true;
-                        SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
-                        SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
-                        SuggestionsList.IntegralHeight = true;
-                        FormControls.RemoveControlByKey(SuggestionsList.Name, ParentControl.Controls);
-                        ParentControl.Controls.Add(SuggestionsList);
-                        SuggestionsList.BringToFront();
+                        ChangedImmediatelyAfterSelection = false;
                     }
                     else
                     {
-                        //hide suggestions list
-                        HideSuggestionsList();
+                        ShowSuggestions(txt);
                     }
                 }
+            }
+        }
+
+        private void ShowSuggestions(string textInTheField)
+        {
+            // find all the items in suggestion that match the current text
+            List<SuggestionsListObjects> foundItems = ReturnSuggestionsMatches(textInTheField);
+
+            if (foundItems.Count > 0)
+            {
+                //show suggestions list
+                SuggestionsList.Items.Clear();
+                SuggestionsList.Items.AddRange(foundItems.ToArray());
+                SuggestionsList.Visible = true;
+                SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
+                SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
+                SuggestionsList.IntegralHeight = true;
+                FormControls.RemoveControlByKey(SuggestionsList.Name, ParentControl.Controls);
+                ParentControl.Controls.Add(SuggestionsList);
+                SuggestionsList.BringToFront();
+            }
+            else
+            {
+                //hide suggestions list
+                HideSuggestionsList();
             }
         }
 
@@ -79,19 +93,22 @@ namespace RobotAutomationHelper.Scripts
                 HideSuggestionsList();
                 TriggerUpdate("");
                 EnableKeywordFields();
+                SelectionStart = Text.Length;
             }
             else
             {
-                if (e.KeyCode == Keys.Down && Parent.Controls.Find("SuggestionsList", false).Length > 0)
+                if (e.KeyCode == Keys.Down)
                 {
+                    ShowSuggestions(Text);
                     ForcedFocusToList = true;
                     SuggestionsList.SelectedIndex = 0;
                     Parent.Controls["SuggestionsList"].Focus();
                 }
                 else
                 {
-                    if (e.KeyCode == Keys.Up && Parent.Controls.Find("SuggestionsList", false).Length > 0)
+                    if (e.KeyCode == Keys.Up)
                     {
+                        ShowSuggestions(Text);
                         ForcedFocusToList = true;
                         SuggestionsList.SelectedIndex = SuggestionsList.Items.Count - 1;
                         Parent.Controls["SuggestionsList"].Focus();
