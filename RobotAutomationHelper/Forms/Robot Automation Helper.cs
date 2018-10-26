@@ -1,4 +1,5 @@
-﻿using RobotAutomationHelper.Scripts;
+﻿using RobotAutomationHelper.Forms;
+using RobotAutomationHelper.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -221,6 +222,7 @@ namespace RobotAutomationHelper
                 TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
                 AddTestCaseField(TestCases[0], testCasesCounter);
                 testCasesCounter++;
+                numberOfTestCases = 1;
             }
         }
 
@@ -269,7 +271,7 @@ namespace RobotAutomationHelper
                 new Size(20, 20),
                 "+",
                 Color.Black,
-                new EventHandler(AddTestCaseToProject),
+                new EventHandler(InstantiateNameAndOutputForm),
                 this);
             FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "RemoveTestCase",
                 testCasesCounter,
@@ -391,6 +393,28 @@ namespace RobotAutomationHelper
         {
             SaveToRobotToolStripMenuItem_Click(sender, e);
             RunCom("cd " + FilesAndFolderStructure.GetFolder(FolderType.Root) + "&robot tests");
+        }
+
+        private object realSender;
+
+        internal new void InstantiateNameAndOutputForm(object sender, EventArgs e)
+        {
+            realSender = sender;
+            if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
+            FormType formType;
+            if (Name.Contains("Robot Automation Helper"))
+                formType = FormType.Test;
+            else
+                formType = FormType.Keyword;
+
+            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType);
+            nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
+            nameAndOutputForm.ShowContent();
+        }
+
+        private void UpdateAfterClosingNameAndOutputForm(object sender, EventArgs e)
+        {
+            AddTestCaseToProject(realSender, e);
         }
 
         internal void AddTestCaseToProject(object sender, EventArgs e)
