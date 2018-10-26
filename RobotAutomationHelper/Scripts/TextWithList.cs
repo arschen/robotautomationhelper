@@ -12,7 +12,8 @@ namespace RobotAutomationHelper.Scripts
         private SuggestionsList SuggestionsList;
         private Control ParentControl;
         private bool ForcedFocusToList { get; set; }
-        private int IndexOf;
+        private readonly int IndexOf;
+        private bool JustGotFocused = false;
 
         internal TextWithList(Control Parent, int IndexOf)
         {
@@ -39,7 +40,11 @@ namespace RobotAutomationHelper.Scripts
                 }
                 else
                 {
-                    DisableKeywordFields();
+                    if (!JustGotFocused)
+                        DisableKeywordFields();
+                    else
+                        JustGotFocused = false;
+
                     // find all the items in suggestion that match the current text
                     List<SuggestionsListObjects> foundItems = ReturnSuggestionsMatches(txt);
 
@@ -101,6 +106,7 @@ namespace RobotAutomationHelper.Scripts
             if (!ForcedFocusToList)
             {
                 HideSuggestionsList();
+                TriggerUpdate("");
                 EnableKeywordFields();
             }
             ForcedFocusToList = false;
@@ -109,6 +115,7 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
+            JustGotFocused = true;
             OnTextChanged(e);
         }
 
@@ -139,7 +146,7 @@ namespace RobotAutomationHelper.Scripts
             return foundItems;
         }
 
-        private void TriggerUpdate(string textChangedPassed)
+        internal void TriggerUpdate(string textChangedPassed)
         {
             bool isKeywordAddForm = (ParentControl as Form).Name.Contains("Keyword");
             if (ParentControl.Name.Contains("Keyword"))

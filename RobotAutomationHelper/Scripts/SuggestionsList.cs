@@ -89,6 +89,8 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnLostFocus(EventArgs e)
         {
             base.OnLostFocus(e);
+            if (!TextWithListControl.Focused)
+                TextWithListControl.TriggerUpdate("");
             TextWithListControl.EnableKeywordFields();
             Visible = false;
         }
