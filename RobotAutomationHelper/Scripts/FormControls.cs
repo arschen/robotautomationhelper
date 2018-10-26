@@ -10,7 +10,7 @@ namespace RobotAutomationHelper.Scripts
     {
         internal static List<Keyword> Suggestions = new List<Keyword>();
 
-        internal static void AddControl(string type, string name, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
+        internal static void AddControl(string type, string name, int indexOf, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("AddControl " + " " + type + " " + name + " " + text);
             Control tempControl;
@@ -22,7 +22,7 @@ namespace RobotAutomationHelper.Scripts
             switch (type.ToLower())
             {
                 case "textbox": tempControl = new TextBox(); break;
-                case "textwithlist": tempControl = new TextWithList(owner); break;
+                case "textwithlist": tempControl = new TextWithList(owner, indexOf); break;
                 case "checkbox": tempControl = new CheckBox(); ((CheckBox)tempControl).Checked = true; break;
                 case "button": tempControl = new Button(); tempControl.Click += eventHandler; break;
                 case "labelwithtooltip": tempControl = new LabelWithToolTip(); break;

@@ -89,7 +89,8 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnLostFocus(EventArgs e)
         {
             base.OnLostFocus(e);
-            toolTip.Hide(this);
+            TextWithListControl.EnableKeywordFields();
+            Visible = false;
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

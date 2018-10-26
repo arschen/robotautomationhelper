@@ -12,11 +12,13 @@ namespace RobotAutomationHelper.Scripts
         private SuggestionsList SuggestionsList;
         private Control ParentControl;
         private bool ForcedFocusToList { get; set; }
+        private int IndexOf;
 
-        internal TextWithList(Control Parent)
+        internal TextWithList(Control Parent, int IndexOf)
         {
             ParentControl = Parent;
             SuggestionsList = new SuggestionsList(this);
+            this.IndexOf = IndexOf;
         }
 
         protected override void OnTextChanged(EventArgs e)
@@ -33,9 +35,11 @@ namespace RobotAutomationHelper.Scripts
                     SuggestionsList.SelectionPerformed = false;
                     HideSuggestionsList();
                     TriggerUpdate(realName);
+                    EnableKeywordFields();
                 }
                 else
                 {
+                    DisableKeywordFields();
                     // find all the items in suggestion that match the current text
                     List<SuggestionsListObjects> foundItems = ReturnSuggestionsMatches(txt);
 
@@ -48,6 +52,7 @@ namespace RobotAutomationHelper.Scripts
                         SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
                         SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
                         SuggestionsList.IntegralHeight = true;
+                        FormControls.RemoveControlByKey(SuggestionsList.Name, ParentControl.Controls);
                         ParentControl.Controls.Add(SuggestionsList);
                         SuggestionsList.BringToFront();
                     }
@@ -68,6 +73,7 @@ namespace RobotAutomationHelper.Scripts
             {
                 HideSuggestionsList();
                 TriggerUpdate("");
+                EnableKeywordFields();
             }
             else
             {
@@ -93,7 +99,10 @@ namespace RobotAutomationHelper.Scripts
         {
             base.OnLeave(e);
             if (!ForcedFocusToList)
+            {
                 HideSuggestionsList();
+                EnableKeywordFields();
+            }
             ForcedFocusToList = false;
         }
 
@@ -152,6 +161,38 @@ namespace RobotAutomationHelper.Scripts
             SuggestionsList.Visible = false;
             SuggestionsList.HideToolTip();
             ParentControl.Controls.Remove(SuggestionsList);
+        }
+
+        internal void DisableKeywordFields()
+        {
+            if (ParentControl.Name.Contains("Keyword"))
+                (ParentControl as KeywordAddForm).DisableKeywordFields(IndexOf);
+            else
+            {
+                if (ParentControl.Name.Contains("Settings"))
+                {
+                    (ParentControl as SettingsAddForm).DisableKeywordFields(IndexOf);
+                }
+                else
+                    if (ParentControl.Name.Contains("TestCase"))
+                    (ParentControl as TestCaseAddForm).DisableKeywordFields(IndexOf);
+            }
+        }
+
+        internal void EnableKeywordFields()
+        {
+            if (ParentControl.Name.Contains("Keyword"))
+                (ParentControl as KeywordAddForm).EnableKeywordFields(IndexOf);
+            else
+            {
+                if (ParentControl.Name.Contains("Settings"))
+                {
+                    (ParentControl as SettingsAddForm).EnableKeywordFields(IndexOf);
+                }
+                else
+                    if (ParentControl.Name.Contains("TestCase"))
+                    (ParentControl as TestCaseAddForm).EnableKeywordFields(IndexOf);
+            }
         }
     }
 }

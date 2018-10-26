@@ -38,6 +38,7 @@ namespace RobotAutomationHelper.Forms
                 {
                     paramsCount++;
                     FormControls.AddControl("LabelWithToolTip", "DynamicStep" + paramsCount + "Name",
+                        paramsCount,
                         new System.Drawing.Point(10 - this.HorizontalScroll.Value, 123 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(80, 20),
                         param.Name,
@@ -46,6 +47,7 @@ namespace RobotAutomationHelper.Forms
                         this);
 
                     FormControls.AddControl("TextBox", "DynamicStep" + paramsCount + "Value",
+                        paramsCount,
                         new System.Drawing.Point(100 - this.HorizontalScroll.Value, 120 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
                         new System.Drawing.Size(280, 20),
                         paramsList[paramsCount - 1].Value,

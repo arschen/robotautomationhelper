@@ -54,6 +54,7 @@ namespace RobotAutomationHelper.Scripts
                 if (RobotAutomationHelper.Log) Console.WriteLine("length: " + Controls.Find("DynamicStep" + keywordIndex + "AddImplementation", false).Length);
                 if (Controls.Find("DynamicStep" + keywordIndex + "AddImplementation", false).Length == 0)
                     FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "AddImplementation",
+                    keywordIndex,
                     new Point(320 - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
                     new Size(120, 20),
                     buttonImplementation,
@@ -78,6 +79,7 @@ namespace RobotAutomationHelper.Scripts
                         int ParamsButtonX = 500;
 
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
+                            keywordIndex,
                             new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
                             new Size(75, 20),
                             "Params",
@@ -97,6 +99,7 @@ namespace RobotAutomationHelper.Scripts
 
                     if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
+                            keywordIndex,
                             new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
                             new Size(75, 20),
                             "Params",
@@ -154,6 +157,7 @@ namespace RobotAutomationHelper.Scripts
         protected void AddKeywordField(Keyword keyword, int keywordsCounter)
         {
             FormControls.AddControl("TextWithList", "DynamicStep" + keywordsCounter + "Name",
+                keywordsCounter,
                 new Point(30 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(280, 20),
                 keyword.Name.Trim(),
@@ -162,6 +166,7 @@ namespace RobotAutomationHelper.Scripts
                 this);
 
             FormControls.AddControl("Label", "DynamicStep" + keywordsCounter + "Label",
+                keywordsCounter,
                 new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(20, 20),
                 keywordsCounter + ".",
@@ -175,6 +180,7 @@ namespace RobotAutomationHelper.Scripts
                 if (ThisFormKeywords[keywordsCounter - 1].Implemented)
                     buttonImplementation = "Edit Implementation";
                 FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "AddImplementation",
+                    keywordsCounter,
                     new Point(320 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                     new Size(120, 20),
                     buttonImplementation,
@@ -184,6 +190,7 @@ namespace RobotAutomationHelper.Scripts
             }
 
             FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "AddKeyword",
+                keywordsCounter,
                 new Point(450 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(20, 20),
                 "+",
@@ -191,6 +198,7 @@ namespace RobotAutomationHelper.Scripts
                 new EventHandler(AddKeywordToThisKeyword),
                 this);
             FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "RemoveKeyword",
+                keywordsCounter,
                 new Point(470 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                 new Size(20, 20),
                 "-",
@@ -202,6 +210,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (keyword.Params != null && keyword.Params.Count != 0)
                 FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "Params",
+                    keywordsCounter,
                     new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
                     new Size(75, 20),
                     "Params",
@@ -226,6 +235,7 @@ namespace RobotAutomationHelper.Scripts
                         int ParamsButtonX = 500;
 
                         FormControls.AddControl("Button", "DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params",
+                            IndexOfTheKeywordToBeImplemented,
                             new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
                             new Size(75, 20),
                             "Params",
@@ -357,6 +367,7 @@ namespace RobotAutomationHelper.Scripts
                         FormControls.RemoveControlByKey("DynamicStep" + i + "Params", Controls);
                     if (args != null && args.Count != 0)
                         FormControls.AddControl("Button", "DynamicStep" + i + "Params",
+                            i,
                             new Point(500 - HorizontalScroll.Value, initialYValue + (i - 1) * 30 - VerticalScroll.Value),
                             new Size(75, 20),
                             "Params",
@@ -409,23 +420,33 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // Block fields
-        protected void BlockKeywordFields(int keywordIndex)
+        internal void DisableKeywordFields(int keywordIndex)
         {
-            Controls["DynamicStep" + keywordIndex + "Label"].Enabled = false;
-            Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
-            Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = false;
-            Controls["DynamicStep" + keywordIndex + "RemoveKeyword"].Enabled = false;
-            Controls["DynamicStep" + keywordIndex + "Params"].Enabled = false;
+            if (Controls.Find("DynamicStep" + keywordIndex + "Label", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "Label"].Enabled = false;
+            if (Controls.Find("DynamicStep" + keywordIndex + "AddImplementation", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
+            if (Controls.Find("DynamicStep" + keywordIndex + "AddKeyword", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = false;
+            if (Controls.Find("DynamicStep" + keywordIndex + "RemoveKeyword", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "RemoveKeyword"].Enabled = false;
+            if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "Params"].Enabled = false;
         }
 
         // Enable fields
-        protected void EnableKeywordFields(int keywordIndex)
+        internal void EnableKeywordFields(int keywordIndex)
         {
-            Controls["DynamicStep" + keywordIndex + "Label"].Enabled = true;
-            Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = true;
-            Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = true;
-            Controls["DynamicStep" + keywordIndex + "RemoveKeyword"].Enabled = true;
-            Controls["DynamicStep" + keywordIndex + "Params"].Enabled = true;
+            if (Controls.Find("DynamicStep" + keywordIndex + "Label", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "Label"].Enabled = true;
+            if (Controls.Find("DynamicStep" + keywordIndex + "AddImplementation", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = true;
+            if (Controls.Find("DynamicStep" + keywordIndex + "AddKeyword", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = true;
+            if (Controls.Find("DynamicStep" + keywordIndex + "RemoveKeyword", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "RemoveKeyword"].Enabled = true;
+            if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length != 0)
+                Controls["DynamicStep" + keywordIndex + "Params"].Enabled = true;
         }
     }
 }

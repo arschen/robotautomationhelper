@@ -227,6 +227,7 @@ namespace RobotAutomationHelper
         private void AddTestCaseField(TestCase testCase, int testCasesCounter)
         {
             FormControls.AddControl("TextBox", "DynamicTest" + testCasesCounter + "Name",
+                testCasesCounter,
                 new Point(30 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(280, 20),
                 testCase.Name.Trim(),
@@ -234,6 +235,7 @@ namespace RobotAutomationHelper
                 null,
                 this);
             FormControls.AddControl("Label", "DynamicTest" + testCasesCounter + "Label",
+                testCasesCounter,
                 new Point(10 - HorizontalScroll.Value, 53 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 testCasesCounter + ".",
@@ -241,6 +243,7 @@ namespace RobotAutomationHelper
                 null,
                 this);
             FormControls.AddControl("CheckBox", "DynamicTest" + testCasesCounter + "CheckBox",
+                testCasesCounter,
                 new Point(325 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 "Add",
@@ -252,6 +255,7 @@ namespace RobotAutomationHelper
             if (TestCases[testCasesCounter - 1].Implemented)
                 ImplementationText = "Edit Implementation";
             FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddImplementation",
+                testCasesCounter,
                 new Point(345 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(120, 20),
                 ImplementationText,
@@ -260,6 +264,7 @@ namespace RobotAutomationHelper
                 this);
 
             FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddTestCase",
+                testCasesCounter,
                 new Point(470 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 "+",
@@ -267,6 +272,7 @@ namespace RobotAutomationHelper
                 new EventHandler(AddTestCaseToProject),
                 this);
             FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "RemoveTestCase",
+                testCasesCounter,
                 new Point(490 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 "-",
