@@ -14,6 +14,7 @@ namespace RobotAutomationHelper
         internal static List<TestCase> TestCases = new List<TestCase>();
         internal static List<SuiteSettings> SuiteSettingsList = new List<SuiteSettings>();
         private static int numberOfTestCases;
+        private object realSender;
 
         internal static bool Log = false;
         // index of the test case to be implemented
@@ -223,6 +224,7 @@ namespace RobotAutomationHelper
                 AddTestCaseField(TestCases[0], testCasesCounter);
                 testCasesCounter++;
                 numberOfTestCases = 1;
+                FilesAndFolderStructure.AddFileToSavedFiles(TestCases[0].OutputFilePath);
             }
         }
 
@@ -395,14 +397,12 @@ namespace RobotAutomationHelper
             RunCom("cd " + FilesAndFolderStructure.GetFolder(FolderType.Root) + "&robot tests");
         }
 
-        private object realSender;
-
         internal new void InstantiateNameAndOutputForm(object sender, EventArgs e)
         {
             realSender = sender;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
             FormType formType;
-            if (Name.Contains("Robot Automation Helper"))
+            if (Name.Contains("RobotAutomationHelper"))
                 formType = FormType.Test;
             else
                 formType = FormType.Keyword;
@@ -414,7 +414,8 @@ namespace RobotAutomationHelper
 
         private void UpdateAfterClosingNameAndOutputForm(object sender, EventArgs e)
         {
-            AddTestCaseToProject(realSender, e);
+            if (NameAndOutputToTestCaseFormCommunication.Save)
+                AddTestCaseToProject(realSender, e);
         }
 
         internal void AddTestCaseToProject(object sender, EventArgs e)
@@ -428,8 +429,8 @@ namespace RobotAutomationHelper
             for (int i = numberOfTestCases; i > testCaseIndex; i--)
                 TestCases[i] = TestCases[i - 1];
 
-            TestCases[testCaseIndex] = new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot");
-
+            TestCases[testCaseIndex] = new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile);
+            TestCases[testCaseIndex].Overwrite = NameAndOutputToTestCaseFormCommunication.Overwrite;
             numberOfTestCases++;
             AddTestCaseField(TestCases[numberOfTestCases - 1], numberOfTestCases);
 

@@ -472,6 +472,22 @@ namespace RobotAutomationHelper.Scripts
             if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "Params"].Enabled = true;
         }
+
+        protected bool OutputFileCheck(string OutputFileText)
+        {
+            if (!OutputFileText.ToLower().EndsWith(".robot"))
+                return false;
+            else
+                return true;
+        }
+
+        protected bool NameCheck(string Name)
+        {
+            if (Name.Trim().Length == 0)
+                return false;
+            else
+                return true;
+        }
     }
 
     internal enum FormType

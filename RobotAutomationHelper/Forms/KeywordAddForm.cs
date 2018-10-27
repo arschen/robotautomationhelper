@@ -21,6 +21,7 @@ namespace RobotAutomationHelper
             FormType = FormType.Keyword;
             ParentKeywords = parentKeywords;
             FormControls.UpdateOutputFileSuggestions(OutputFile, FormType);
+            UpdateSaveButtonState();
             ActiveControl = KeywordNameLabel;
         }
 
@@ -101,6 +102,7 @@ namespace RobotAutomationHelper
                 };
                 AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1);
                 NumberOfKeywordsInThisForm++;
+                FilesAndFolderStructure.AddFileToSavedFiles(ThisFormKeywords[0].OutputFilePath);
             }
 
             // show the form dialog
@@ -213,12 +215,22 @@ namespace RobotAutomationHelper
 
         private void KeywordName_TextChanged(object sender, EventArgs e)
         {
+            UpdateSaveButtonState();
             IsKeywordPresentInFilesOrMemoryTree();
         }
 
         private void KeywordOutputFile_TextChanged(object sender, EventArgs e)
         {
+            UpdateSaveButtonState();
             IsKeywordPresentInFilesOrMemoryTree();
+        }
+
+        private void UpdateSaveButtonState()
+        {
+            if (NameCheck(KeywordName.Text) && OutputFileCheck(OutputFile.Text))
+                Save.Enabled = true;
+            else
+                Save.Enabled = false;
         }
 
         private bool IsKeywordPresentInFilesOrMemoryTree()

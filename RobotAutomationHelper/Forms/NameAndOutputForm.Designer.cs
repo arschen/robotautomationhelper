@@ -43,6 +43,7 @@
             this.OutputFile.Name = "OutputFile";
             this.OutputFile.Size = new System.Drawing.Size(280, 21);
             this.OutputFile.TabIndex = 22;
+            this.OutputFile.TextChanged += new System.EventHandler(this.OutputFile_TextChanged);
             // 
             // OutputLabel
             // 
@@ -70,6 +71,7 @@
             this.ContentName.Name = "ContentName";
             this.ContentName.Size = new System.Drawing.Size(280, 20);
             this.ContentName.TabIndex = 19;
+            this.ContentName.TextChanged += new System.EventHandler(this.ContentName_TextChanged);
             // 
             // Save
             // 

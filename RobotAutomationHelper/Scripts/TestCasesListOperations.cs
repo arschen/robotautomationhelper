@@ -7,8 +7,9 @@ namespace RobotAutomationHelper.Scripts
         internal static string IsPresentInTheTestCasesTree(string name, string fileName, TestCase thisTestCase)
         {
             foreach (TestCase test in RobotAutomationHelper.TestCases)
-                if (test.Name.Trim().ToLower().Equals(name.ToLower())
-                    && test != thisTestCase && test.OutputFilePath.ToLower().Equals(fileName.ToLower()))
+                if (test.Name.Trim().ToLower().Equals(name.ToLower()))
+                    if (!ReferenceEquals(test, thisTestCase))
+                        if (test.OutputFilePath.ToLower().Equals(fileName.ToLower()))
                     return fileName + " | " + name;
             return "";
         }

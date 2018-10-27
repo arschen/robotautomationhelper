@@ -16,6 +16,7 @@ namespace RobotAutomationHelper
             initialYValue = 140;
             FormType = FormType.Test;
             FormControls.UpdateOutputFileSuggestions(OutputFile, FormType);
+            UpdateSaveButtonState();
             ActiveControl = TestCaseNameLabel;
         }
 
@@ -114,12 +115,22 @@ namespace RobotAutomationHelper
 
         private void TestCaseName_TextChanged(object sender, EventArgs e)
         {
+            UpdateSaveButtonState();
             IsTestCasePresentInFilesOrMemoryTree();
         }
 
         private void TestCaseOutputFile_TextChanged(object sender, EventArgs e)
         {
+            UpdateSaveButtonState();
             IsTestCasePresentInFilesOrMemoryTree();
+        }
+
+        private void UpdateSaveButtonState()
+        {
+            if (NameCheck(TestCaseName.Text) && OutputFileCheck(OutputFile.Text))
+                Save.Enabled = true;
+            else
+                Save.Enabled = false;
         }
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
