@@ -122,8 +122,19 @@ namespace RobotAutomationHelper.Scripts
                     (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
                 }
                 else
+                {
                     if (ParentForm.FormType == FormType.Test)
-                    (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                    {
+                        (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                    }
+                    else
+                    {
+                        if (ParentForm.FormType == FormType.NameAndOutput)
+                        {
+                            (ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                        }
+                    }
+                }
             }
         }
 

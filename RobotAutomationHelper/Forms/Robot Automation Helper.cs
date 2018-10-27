@@ -66,6 +66,7 @@ namespace RobotAutomationHelper
         private void BrowseFolderButtonNewProject()
         {
             ClearDynamicElements();
+            TestCases = new List<TestCase>();
             settingsToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog3.SelectedPath);
             AddTestCasesToMainForm();
@@ -408,7 +409,7 @@ namespace RobotAutomationHelper
 
             NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType);
             nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
-            nameAndOutputForm.ShowContent();
+            nameAndOutputForm.ShowTestCaseContent();
         }
 
         private void UpdateAfterClosingNameAndOutputForm(object sender, EventArgs e)

@@ -169,7 +169,7 @@ namespace RobotAutomationHelper.Scripts
 
             NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType);
             nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
-            nameAndOutputForm.ShowContent();
+            nameAndOutputForm.ShowKeywordContent();
         }
 
         private void UpdateAfterClosingNameAndOutputForm(object sender, EventArgs e)
@@ -478,6 +478,7 @@ namespace RobotAutomationHelper.Scripts
     {
         Keyword,
         Test,
-        Settings
+        Settings,
+        NameAndOutput
     }
 }
