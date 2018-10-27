@@ -20,7 +20,7 @@ namespace RobotAutomationHelper.Scripts
                 if (test.Steps != null)
                     foreach (Keyword keyword in test.Steps)
                     {
-                        if (keyword.Saved && keyword != thisKeyword
+                        if (keyword.Saved && !ReferenceEquals(keyword, thisKeyword)
                             && keyword.Name.Trim().ToLower().Equals(name.ToLower())
                             && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
                             return test.Name + " | " + keyword.Name.Trim();
@@ -38,7 +38,7 @@ namespace RobotAutomationHelper.Scripts
 
         private static string IsPresentInChildrenKeywords(string name, Keyword keyword, string fileName, Keyword thisKeyword, string path)
         {
-            if (keyword != thisKeyword && keyword.Implemented
+            if (!ReferenceEquals(keyword, thisKeyword) && keyword.Implemented
                 && keyword.Name.Trim().ToLower().Equals(name.ToLower())
                 && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
                 return path + " | " + keyword.Name.Trim();
