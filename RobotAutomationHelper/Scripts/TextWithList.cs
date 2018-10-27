@@ -9,6 +9,7 @@ namespace RobotAutomationHelper.Scripts
     internal class TextWithList : TextBox
     {
 
+        // Fields and Properties ===================================================
         private SuggestionsList SuggestionsList;
         private BaseKeywordAddForm ParentForm;
         private bool ForcedFocusToList { get; set; }
@@ -16,6 +17,7 @@ namespace RobotAutomationHelper.Scripts
         private bool JustGotFocused = false;
         private bool ChangedImmediatelyAfterSelection = false;
 
+        // Methods =================================================================
         internal TextWithList(BaseKeywordAddForm Parent, int IndexOf)
         {
             ParentForm = Parent;
@@ -59,31 +61,6 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        private void ShowSuggestions(string textInTheField)
-        {
-            // find all the items in suggestion that match the current text
-            List<SuggestionsListObjects> foundItems = ReturnSuggestionsMatches(textInTheField);
-
-            if (foundItems.Count > 0)
-            {
-                //show suggestions list
-                SuggestionsList.Items.Clear();
-                SuggestionsList.Items.AddRange(foundItems.ToArray());
-                SuggestionsList.Visible = true;
-                SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
-                SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
-                SuggestionsList.IntegralHeight = true;
-                FormControls.RemoveControlByKey(SuggestionsList.Name, ParentForm.Controls);
-                ParentForm.Controls.Add(SuggestionsList);
-                SuggestionsList.BringToFront();
-            }
-            else
-            {
-                //hide suggestions list
-                HideSuggestionsList();
-            }
-        }
-
         //on Enter triggers update and hides suggestions
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -116,7 +93,6 @@ namespace RobotAutomationHelper.Scripts
                 }
             }
         }
-
         protected override void OnLeave(EventArgs e)
         {
             base.OnLeave(e);
@@ -128,12 +104,27 @@ namespace RobotAutomationHelper.Scripts
             }
             ForcedFocusToList = false;
         }
-
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
             JustGotFocused = true;
             OnTextChanged(e);
+        }
+
+        internal void TriggerUpdate(string textChangedPassed)
+        {
+            if (ParentForm.FormType == FormType.Keyword)
+                (ParentForm as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+            else
+            {
+                if (ParentForm.FormType == FormType.Settings)
+                {
+                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                }
+                else
+                    if (ParentForm.FormType == FormType.Test)
+                    (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+            }
         }
 
         private List<SuggestionsListObjects> ReturnSuggestionsMatches(string txt)
@@ -162,23 +153,30 @@ namespace RobotAutomationHelper.Scripts
             }
             return foundItems;
         }
-
-        internal void TriggerUpdate(string textChangedPassed)
+        private void ShowSuggestions(string textInTheField)
         {
-            if (ParentForm.FormType == FormType.Keyword)
-                (ParentForm as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+            // find all the items in suggestion that match the current text
+            List<SuggestionsListObjects> foundItems = ReturnSuggestionsMatches(textInTheField);
+
+            if (foundItems.Count > 0)
+            {
+                //show suggestions list
+                SuggestionsList.Items.Clear();
+                SuggestionsList.Items.AddRange(foundItems.ToArray());
+                SuggestionsList.Visible = true;
+                SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
+                SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
+                SuggestionsList.IntegralHeight = true;
+                FormControls.RemoveControlByKey(SuggestionsList.Name, ParentForm.Controls);
+                ParentForm.Controls.Add(SuggestionsList);
+                SuggestionsList.BringToFront();
+            }
             else
             {
-                if (ParentForm.FormType == FormType.Settings)
-                {
-                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
-                }
-                else
-                    if (ParentForm.FormType == FormType.Test)
-                        (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                //hide suggestions list
+                HideSuggestionsList();
             }
         }
-
         internal void HideSuggestionsList()
         {
             SuggestionsList.Visible = false;
@@ -201,7 +199,6 @@ namespace RobotAutomationHelper.Scripts
                     (ParentForm as TestCaseAddForm).DisableKeywordFields(IndexOf);
             }
         }
-
         internal void EnableKeywordFields()
         {
             if (ParentForm.FormType == FormType.Keyword)

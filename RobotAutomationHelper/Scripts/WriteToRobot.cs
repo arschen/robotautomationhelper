@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace RobotAutomationHelper.Scripts
 {
@@ -7,8 +8,10 @@ namespace RobotAutomationHelper.Scripts
     internal static class WriteToRobot
     {
 
+        // Fields and Properties ===================================================
         internal static List<Includes> includes;
 
+        // Methods =================================================================
         internal static void AddTestCaseToRobot(TestCase testCase)
         {
             string fileName = testCase.OutputFilePath;
@@ -32,9 +35,8 @@ namespace RobotAutomationHelper.Scripts
                 index = AddTagsDocumentationArguments("[Tags]", "\t" + testCase.Tags, fileName, index);
             }
 
-            index = AddKeyword(testCase.Steps, fileName, index, addTestCase, testCase.Overwrite);
+            index = AddSteps(testCase.Steps, fileName, index, addTestCase, testCase.Overwrite);
         }
-
         internal static void AddKeywordToRobot(Keyword keyword)
         {
             string fileName = keyword.OutputFilePath;
@@ -66,11 +68,11 @@ namespace RobotAutomationHelper.Scripts
                 index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.Arguments, fileName, index);
             }
 
-            index = AddKeyword(keyword.Keywords, fileName, index, addKeywordSteps, keyword.Overwrite);
+            index = AddSteps(keyword.Keywords, fileName, index, addKeywordSteps, keyword.Overwrite);
         }
 
-        //adds Keywords
-        private static int AddKeyword(List<Keyword> keywordKeywords, string fileName, int index, bool addSteps, bool overwrite)
+        //adds Steps
+        private static int AddSteps(List<Keyword> keywordKeywords, string fileName, int index, bool addSteps, bool overwrite)
         {
             Includes container = new Includes(fileName);
             if (keywordKeywords != null)
@@ -92,8 +94,6 @@ namespace RobotAutomationHelper.Scripts
                 }
             return index;
         }
-
-
 
         //adds Tags / Documentation / Arguments
         private static int AddTagsDocumentationArguments(string type, string addString, string fileName, int index)
@@ -179,7 +179,6 @@ namespace RobotAutomationHelper.Scripts
                 }
             }
         }
-
         internal static void WriteSuiteSettingsListToRobot()
         {
             foreach (SuiteSettings suiteSettings in RobotAutomationHelper.SuiteSettingsList)
@@ -227,17 +226,6 @@ namespace RobotAutomationHelper.Scripts
                 }
         }
 
-        internal static void RemoveKeyword(Keyword keyword)
-        {
-            if (keyword.Keywords != null)
-                foreach (Keyword step in keyword.Keywords)
-                {
-                    RemoveKeyword(step);
-                    if (step.Overwrite)
-                        RobotFileHandler.TestCaseKeywordRemove(step.Name, step.OutputFilePath, true);
-                }
-        }
-
         // replaces tags and text when writing settings to the files
         private static void ReplaceInSettings(string replacementText, string tag, string outputFileName)
         {
@@ -266,6 +254,63 @@ namespace RobotAutomationHelper.Scripts
             if (location[0] != -1)
                 RobotFileHandler.FileLineRemove(outputFileName
                                 , location);
+        }
+
+        internal static void RemoveKeywordForOverwriting(Keyword keyword)
+        {
+            if (keyword.Keywords != null)
+                foreach (Keyword step in keyword.Keywords)
+                {
+                    RemoveKeywordForOverwriting(step);
+                    if (step.Overwrite)
+                        TestCaseKeywordRemove(step.Name, step.OutputFilePath, true);
+                }
+        }
+        internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
+        {
+            string[] arrLine;
+            if (File.Exists(fileName))
+                arrLine = File.ReadAllLines(fileName);
+            else
+            {
+                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                var myFile = File.Create(fileName);
+                myFile.Close();
+                arrLine = File.ReadAllLines(fileName);
+            }
+
+            int index = 0;
+            if (isKeyword)
+                index = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, name, FormType.Keyword);
+            else
+                index = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, name, FormType.Test);
+
+            if (index != -1)
+            {
+                bool endOfTestCaseKeyword = false;
+                List<string> temp = new List<string>();
+                temp.AddRange(arrLine);
+
+                while (!endOfTestCaseKeyword)
+                {
+                    if (index < temp.Count)
+                        temp.RemoveAt(index);
+                    else
+                        endOfTestCaseKeyword = true;
+
+                    if (index < temp.Count)
+                        if (!temp[index].StartsWith(" "))
+                            if (!temp[index].StartsWith("\t"))
+                                if (!temp[index].StartsWith("\\"))
+                                    if (!temp[index].StartsWith("."))
+                                        if (!temp[index].Equals(""))
+                                            endOfTestCaseKeyword = true;
+                }
+
+                File.WriteAllLines(fileName, temp);
+            }
         }
     }
 }

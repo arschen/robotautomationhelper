@@ -134,8 +134,6 @@ namespace RobotAutomationHelper
             return paramsString;
         }
 
-
-
         public override string ToString()
         {
             switch (Type)

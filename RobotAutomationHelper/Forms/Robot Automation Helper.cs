@@ -38,7 +38,6 @@ namespace RobotAutomationHelper
             openFileDialog.ShowDialog();
         }
 
-
         private void OpenExistingProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog2.ShowDialog() == DialogResult.OK)
@@ -341,14 +340,14 @@ namespace RobotAutomationHelper
             {
                 TestCase testCase = TestCases[index - 1];
                 if (testCase.Overwrite)
-                    RobotFileHandler.TestCaseKeywordRemove(testCase.Name, testCase.OutputFilePath, false);
+                    WriteToRobot.TestCaseKeywordRemove(testCase.Name, testCase.OutputFilePath, false);
 
                 if (testCase.Steps != null)
                     foreach (Keyword testStep in testCase.Steps)
                     {
-                        WriteToRobot.RemoveKeyword(testStep);
+                        WriteToRobot.RemoveKeywordForOverwriting(testStep);
                         if (testStep.Overwrite)
-                            RobotFileHandler.TestCaseKeywordRemove(testStep.Name, testStep.OutputFilePath, true);
+                            WriteToRobot.TestCaseKeywordRemove(testStep.Name, testStep.OutputFilePath, true);
                     }
             }
 

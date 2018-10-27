@@ -8,16 +8,15 @@ namespace RobotAutomationHelper.Scripts
     {
         internal static int GetLineAfterLastKeyword(string fileName)
         {
-            return GetLocationOfType(fileName, FormType.Keyword);
+            return GetWriteLocationOfType(fileName, FormType.Keyword);
         }
-
         internal static int GetLineAfterLastTestCase(string fileName)
         {
-            return GetLocationOfType(fileName, FormType.Test);
+            return GetWriteLocationOfType(fileName, FormType.Test);
         }
 
         // get the index line where to add specific type ( keyword / test cases / settings )
-        private static int GetLocationOfType(string fileName, FormType type)
+        private static int GetWriteLocationOfType(string fileName, FormType type)
         {
             int index = -1;
             string[] arrLine;
@@ -136,7 +135,7 @@ namespace RobotAutomationHelper.Scripts
             return -1;
         }
 
-        // returns bool of the line where the specific include is found
+        // returns non empty string of the line where the specific include is found
         internal static string OccuranceInSettings(string fileName, string name)
         {
             if (File.Exists(fileName))
@@ -179,6 +178,7 @@ namespace RobotAutomationHelper.Scripts
             return "";
         }
 
+        // returns list of indexes with locations of specifig string
         internal static List<int> LocationInSettings(string fileName, string name)
         {
             List<int> result = new List<int>();
@@ -360,54 +360,6 @@ namespace RobotAutomationHelper.Scripts
                     }
                     File.WriteAllLines(fileName, temp);
                 }
-            }
-        }
-
-        // add newText on new line to file fileName after specified line
-        internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
-        {
-            string[] arrLine;
-            if (File.Exists(fileName))
-                arrLine = File.ReadAllLines(fileName);
-            else
-            {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
-                var myFile = File.Create(fileName);
-                myFile.Close();
-                arrLine = File.ReadAllLines(fileName);
-            }
-
-            int index = 0;
-            if (isKeyword)
-                index = LocationOfTestCaseOrKeywordInFile(fileName, name, FormType.Keyword);
-            else
-                index = LocationOfTestCaseOrKeywordInFile(fileName, name, FormType.Test);
-
-            if (index != -1)
-            {
-                bool endOfTestCaseKeyword = false;
-                List<string> temp = new List<string>();
-                temp.AddRange(arrLine);
-
-                while (!endOfTestCaseKeyword)
-                {
-                    if (index < temp.Count)
-                        temp.RemoveAt(index);
-                    else
-                        endOfTestCaseKeyword = true;
-
-                    if (index < temp.Count)
-                        if (!temp[index].StartsWith(" "))
-                            if (!temp[index].StartsWith("\t"))
-                                if (!temp[index].StartsWith("\\"))
-                                    if(!temp[index].StartsWith("."))
-                                            if (!temp[index].Equals(""))
-                                                endOfTestCaseKeyword = true;
-                }
-
-                File.WriteAllLines(fileName, temp);
             }
         }
     }
