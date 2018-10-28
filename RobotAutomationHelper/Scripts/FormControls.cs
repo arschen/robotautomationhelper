@@ -76,5 +76,15 @@ namespace RobotAutomationHelper.Scripts
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
         }
+
+        internal static bool IsInSuggestionsList(string name)
+        {
+            foreach (Keyword SuggestedKeyword in Suggestions)
+                if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
+                {
+                    return true;
+                }
+            return false;
+        }
     }
 }

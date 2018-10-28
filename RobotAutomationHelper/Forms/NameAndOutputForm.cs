@@ -8,11 +8,15 @@ namespace RobotAutomationHelper.Forms
 {
     internal partial class NameAndOutputForm : BaseKeywordAddForm
     {
+
+        FormType parentType;
+
         internal NameAndOutputForm(FormType type)
         {
             InitializeComponent();
             NameAndOutputToTestCaseFormCommunication.Save = false;
             FormControls.UpdateOutputFileSuggestions(OutputFile, type);
+            parentType = type;
             UpdateSaveButtonState();
             FormType = FormType.NameAndOutput;
             ThisFormKeywords = new List<Keyword>
@@ -23,7 +27,11 @@ namespace RobotAutomationHelper.Forms
 
         private void Save_Click(object sender, System.EventArgs e)
         {
-            TestCaseSave(sender, e);
+            if (parentType.Equals(FormType.Test))
+                TestCaseSave(sender, e);
+            else
+                if (parentType.Equals(FormType.Keyword))
+                    KeywordSave(sender, e);
         }
 
         private void Cancel_Click(object sender, System.EventArgs e)
@@ -35,7 +43,7 @@ namespace RobotAutomationHelper.Forms
         internal void ShowKeywordContent()
         {
             FormControls.RemoveControlByKey(ContentName.Name, Controls);
-            FormControls.AddControl("TextWithList", "DynamicStep" + 1 + "Name",
+            FormControls.AddControl("TextWithList", "DynamicStep1Name",
                 1,
                 new Point(32 - HorizontalScroll.Value, 24 - VerticalScroll.Value),
                 new Size(280, 20),
@@ -43,6 +51,7 @@ namespace RobotAutomationHelper.Forms
                 Color.Black,
                 null,
                 this);
+            Controls["DynamicStep1Name"].TextChanged += KeywordName_TextChanged;
             var dialogResult = ShowDialog();
         }
 
@@ -88,24 +97,77 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
+        private void KeywordSave(object sender, EventArgs e)
+        {
+            NameAndOutputToTestCaseFormCommunication.Save = true;
+            NameAndOutputToTestCaseFormCommunication.Name = Controls["DynamicStep1Name"].Text;
+            NameAndOutputToTestCaseFormCommunication.OutputFile = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources);
+            NameAndOutputToTestCaseFormCommunication.Overwrite = false;
+            Close();
+        }
+
         private void ContentName_TextChanged(object sender, System.EventArgs e)
         {
             UpdateSaveButtonState();
             IsTestCasePresentInFilesOrMemoryTree();
         }
 
+        private void KeywordName_TextChanged(object sender, EventArgs e)
+        {
+            UpdateSaveButtonState();
+        }
+
         private void OutputFile_TextChanged(object sender, EventArgs e)
         {
             UpdateSaveButtonState();
-            IsTestCasePresentInFilesOrMemoryTree();
+            if (parentType.Equals(FormType.Test))
+                IsTestCasePresentInFilesOrMemoryTree();
         }
 
         private void UpdateSaveButtonState()
         {
-            if (NameCheck(ContentName.Text) && OutputFileCheck(OutputFile.Text))
-                Save.Enabled = true;
+            string name;
+            if (parentType.Equals(FormType.Test))
+                name = ContentName.Text;
             else
-                Save.Enabled = false;
+            {
+                if (Controls.Find("DynamicStep1Name", false).Length > 0)
+                    name = Controls["DynamicStep1Name"].Text;
+                else
+                    name = "";
+            }
+
+            if (parentType.Equals(FormType.Keyword))
+            {
+                if (Controls.Find("DynamicStep1Name", false).Length > 0)
+                {
+                    if (FormControls.IsInSuggestionsList(Controls["DynamicStep1Name"].Text))
+                    {
+                        OutputFile.Enabled = false;
+                        if (NameCheck(name))
+                            Save.Enabled = true;
+                        else
+                            Save.Enabled = false;
+                    }
+                    else
+                        OutputFile.Enabled = true;
+                }
+                else
+                {
+                    OutputFile.Enabled = true;
+                    if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                        Save.Enabled = true;
+                    else
+                        Save.Enabled = false;
+                }
+            }
+            else
+            {
+                if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                    Save.Enabled = true;
+                else
+                    Save.Enabled = false;
+            }
         }
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
