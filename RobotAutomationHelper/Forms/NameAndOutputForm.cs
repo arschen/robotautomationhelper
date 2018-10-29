@@ -146,7 +146,7 @@ namespace RobotAutomationHelper.Forms
                     if (SuggestionsClass.IsInSuggestionsList(Controls["DynamicStep1Name"].Text))
                     {
                         OutputFile.Enabled = false;
-                        if (NameCheck(name))
+                        if (IsNameValid(name))
                         {
                             toolTip.Hide(this);
                             Save.Enabled = true;
@@ -155,7 +155,7 @@ namespace RobotAutomationHelper.Forms
                     else
                     {
                         OutputFile.Enabled = true;
-                        if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                        if (IsNameValid(name) && OutputFileCheck(OutputFile.Text))
                         {
                             toolTip.Hide(this);
                             Save.Enabled = true;
@@ -170,7 +170,7 @@ namespace RobotAutomationHelper.Forms
                 else
                 {
                     OutputFile.Enabled = true;
-                    if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                    if (IsNameValid(name) && OutputFileCheck(OutputFile.Text))
                     {
                         toolTip.Hide(this);
                         Save.Enabled = true;
@@ -184,7 +184,7 @@ namespace RobotAutomationHelper.Forms
             }
             else
             {
-                if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                if (IsNameValid(name) && OutputFileCheck(OutputFile.Text))
                 {
                     toolTip.Hide(this);
                     Save.Enabled = true;

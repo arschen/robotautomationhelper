@@ -484,7 +484,7 @@ namespace RobotAutomationHelper.Scripts
             if (Controls.Find("DynamicStep" + keywordIndex + "Label", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "Label"].Enabled = true;
             if (Controls.Find("DynamicStep" + keywordIndex + "AddImplementation", false).Length != 0)
-                Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = true;
+                Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = IsNameValid(Controls["DynamicStep" + keywordIndex + "Name"].Text);
             if (Controls.Find("DynamicStep" + keywordIndex + "AddKeyword", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = true;
             if (Controls.Find("DynamicStep" + keywordIndex + "RemoveKeyword", false).Length != 0)
@@ -501,7 +501,7 @@ namespace RobotAutomationHelper.Scripts
                 return true;
         }
 
-        protected bool NameCheck(string Name)
+        protected bool IsNameValid(string Name)
         {
             if (Name.Trim().Length == 0)
                 return false;
