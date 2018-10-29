@@ -83,7 +83,7 @@
     <Compile Include="Scripts\CustomControls\LabelWithToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Scripts\Static\ReadRobotFiles.cs" />
+    <Compile Include="Scripts\Static\Readers\ReadRobotFiles.cs" />
     <Compile Include="Scripts\Static\SuggestionsClass.cs" />
     <Compile Include="Scripts\CustomControls\SuggestionsList.cs">
       <SubType>Component</SubType>
@@ -100,16 +100,16 @@
     </Compile>
     <Compile Include="Scripts\Static\FilesAndFolderstructure.cs" />
     <Compile Include="Scripts\Static\FormControls.cs" />
-    <Compile Include="Scripts\Static\HtmlLibsGetter.cs" />
+    <Compile Include="Scripts\Static\ExcelLibsGetter.cs" />
     <Compile Include="Scripts\Objects\Includes.cs" />
     <Compile Include="Scripts\Objects\Param.cs" />
-    <Compile Include="Scripts\Static\ReadExcel.cs" />
+    <Compile Include="Scripts\Static\Readers\ReadExcel.cs" />
     <Compile Include="Scripts\Objects\Keyword.cs" />
-    <Compile Include="Scripts\RobotFileHandler.cs" />
+    <Compile Include="Scripts\Static\Writers\RobotFileHandler.cs" />
     <Compile Include="Scripts\Static\StringAndListOperations.cs" />
     <Compile Include="Scripts\Objects\TestCase.cs" />
     <Compile Include="Scripts\Static\TestCasesListOperations.cs" />
-    <Compile Include="Scripts\WriteToRobot.cs" />
+    <Compile Include="Scripts\Static\Writers\WriteToRobot.cs" />
     <Compile Include="Forms\TestCaseAddForm.cs">
       <SubType>Form</SubType>
     </Compile>

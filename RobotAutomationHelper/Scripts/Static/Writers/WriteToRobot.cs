@@ -4,7 +4,6 @@ using System.IO;
 
 namespace RobotAutomationHelper.Scripts
 {
-
     internal static class WriteToRobot
     {
 

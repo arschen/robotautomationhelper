@@ -34,7 +34,7 @@ namespace RobotAutomationHelper.Scripts
 
         private static void PopulateSeleniumKeywords()
         {
-            Selenium = HtmlLibsGetter.ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            Selenium = ExcelLibsGetter.ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 @"RobotKeywords\Selenium.xlsx")
                 , KeywordType.SELENIUM);
             foreach (Keyword key in Selenium)
@@ -45,7 +45,7 @@ namespace RobotAutomationHelper.Scripts
 
         private static void PopulateBuiltInKeywords()
         {
-            BuiltIn = HtmlLibsGetter.ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            BuiltIn = ExcelLibsGetter.ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 @"RobotKeywords\Built_in.xlsx")
                 , KeywordType.BUILT_IN);
             foreach (Keyword key in BuiltIn)

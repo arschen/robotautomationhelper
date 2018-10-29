@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RobotAutomationHelper.Scripts
 {
-    internal static class HtmlLibsGetter
+    internal static class ExcelLibsGetter
     {
         private static string currentKeywordDocumentation;
         private static string currentKeywordName;
