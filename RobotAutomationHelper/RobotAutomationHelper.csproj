@@ -80,34 +80,35 @@
     <Compile Include="Forms\BaseKeywordAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Scripts\LabelWithToolTip.cs">
+    <Compile Include="Scripts\CustomControls\LabelWithToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Scripts\ReadRobotFiles.cs" />
-    <Compile Include="Scripts\SuggestionsList.cs">
+    <Compile Include="Scripts\Static\ReadRobotFiles.cs" />
+    <Compile Include="Scripts\Static\SuggestionsClass.cs" />
+    <Compile Include="Scripts\CustomControls\SuggestionsList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Scripts\SuggestionsList.Designer.cs">
+    <Compile Include="Scripts\CustomControls\SuggestionsList.Designer.cs">
       <DependentUpon>SuggestionsList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Scripts\SuggestionsListObjects.cs">
+    <Compile Include="Scripts\CustomControls\SuggestionsListObjects.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Scripts\SuiteSettings.cs" />
-    <Compile Include="Scripts\TextWithList.cs">
+    <Compile Include="Scripts\Objects\SuiteSettings.cs" />
+    <Compile Include="Scripts\CustomControls\TextWithList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Scripts\FilesAndFolderstructure.cs" />
-    <Compile Include="Scripts\FormControls.cs" />
-    <Compile Include="Scripts\HtmlLibsGetter.cs" />
-    <Compile Include="Scripts\Includes.cs" />
-    <Compile Include="Scripts\Param.cs" />
-    <Compile Include="Scripts\ReadExcel.cs" />
-    <Compile Include="Scripts\Keyword.cs" />
+    <Compile Include="Scripts\Static\FilesAndFolderstructure.cs" />
+    <Compile Include="Scripts\Static\FormControls.cs" />
+    <Compile Include="Scripts\Static\HtmlLibsGetter.cs" />
+    <Compile Include="Scripts\Objects\Includes.cs" />
+    <Compile Include="Scripts\Objects\Param.cs" />
+    <Compile Include="Scripts\Static\ReadExcel.cs" />
+    <Compile Include="Scripts\Objects\Keyword.cs" />
     <Compile Include="Scripts\RobotFileHandler.cs" />
-    <Compile Include="Scripts\StringAndListOperations.cs" />
-    <Compile Include="Scripts\TestCase.cs" />
-    <Compile Include="Scripts\TestCasesListOperations.cs" />
+    <Compile Include="Scripts\Static\StringAndListOperations.cs" />
+    <Compile Include="Scripts\Objects\TestCase.cs" />
+    <Compile Include="Scripts\Static\TestCasesListOperations.cs" />
     <Compile Include="Scripts\WriteToRobot.cs" />
     <Compile Include="Forms\TestCaseAddForm.cs">
       <SubType>Form</SubType>
@@ -170,8 +171,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\Static\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -22,7 +22,7 @@ namespace RobotAutomationHelper.Forms
 
         private void SetupsSettingsAddForm()
         {
-            FormControls.UpdateOutputFileSuggestions(OutputFile, FormType);
+            UpdateOutputFileSuggestions(OutputFile, FormType);
             OutputFile.SelectedIndex = SelectedIndex;
             bool add;
             foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root))

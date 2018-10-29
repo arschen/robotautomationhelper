@@ -142,7 +142,7 @@ namespace RobotAutomationHelper.Scripts
         private List<SuggestionsListObjects> ReturnSuggestionsMatches(string txt)
         {
             List<SuggestionsListObjects> foundItems = new List<SuggestionsListObjects>();
-            foreach (Keyword keyword in FormControls.Suggestions)
+            foreach (Keyword keyword in SuggestionsClass.Suggestions)
             //if (!keyword.Name.ToLower().Trim().Equals(txt.ToLower().Trim()))
             {
                 bool containsAll = true;

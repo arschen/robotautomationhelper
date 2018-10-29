@@ -24,8 +24,7 @@ namespace RobotAutomationHelper
         {
             InitializeComponent();
             ActiveControl = TestCaseNameLabel;
-            HtmlLibsGetter.PopulateSeleniumKeywords();
-            HtmlLibsGetter.PopulateBuiltInKeywords();
+            SuggestionsClass.PopulateSuggestionsList(true, true);
         }
 
         private void ApplicationMain_Load(object sender, EventArgs e)
@@ -162,7 +161,7 @@ namespace RobotAutomationHelper
             if (tempKeyword.SuggestionIndex == -1 && !tempKeyword.OutputFilePath.Equals(""))
             {
                 bool toAdd = true;
-                foreach (Keyword suggested in FormControls.Suggestions)
+                foreach (Keyword suggested in SuggestionsClass.Suggestions)
                 {
                     if (!suggested.OutputFilePath.Equals(""))
                     {
@@ -175,8 +174,8 @@ namespace RobotAutomationHelper
                 }
                 if (toAdd)
                 {
-                    tempKeyword.SuggestionIndex = FormControls.Suggestions.Count;
-                    FormControls.Suggestions.Add(tempKeyword);
+                    tempKeyword.SuggestionIndex = SuggestionsClass.Suggestions.Count;
+                    SuggestionsClass.Suggestions.Add(tempKeyword);
                 }
             }
             if (tempKeyword.Keywords != null)
@@ -429,8 +428,10 @@ namespace RobotAutomationHelper
             for (int i = numberOfTestCases; i > testCaseIndex; i--)
                 TestCases[i] = TestCases[i - 1];
 
-            TestCases[testCaseIndex] = new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile);
-            TestCases[testCaseIndex].Overwrite = NameAndOutputToTestCaseFormCommunication.Overwrite;
+            TestCases[testCaseIndex] = new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile)
+            {
+                Overwrite = NameAndOutputToTestCaseFormCommunication.Overwrite
+            };
             numberOfTestCases++;
             AddTestCaseField(TestCases[numberOfTestCases - 1], numberOfTestCases);
 

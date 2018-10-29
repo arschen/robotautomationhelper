@@ -8,8 +8,6 @@ namespace RobotAutomationHelper.Scripts
 {
     internal static class FormControls
     {
-        internal static List<Keyword> Suggestions = new List<Keyword>();
-
         internal static void AddControl(string type, string name, int indexOf, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("AddControl " + " " + type + " " + name + " " + text);
@@ -48,19 +46,6 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        internal static void UpdateOutputFileSuggestions(ComboBox comboBox, FormType formType)
-        {
-            FolderType folderType = FilesAndFolderStructure.ConvertFormTypeToFolderType(formType);
-            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
-            comboBox.Items.Clear();
-            comboBox.AutoCompleteCustomSource.Clear();
-            comboBox.Items.AddRange(FilesAndFolderStructure.GetShortSavedFiles(folderType).ToArray());
-            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetShortSavedFiles(folderType).ToArray());
-            comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            if (comboBox.DropDownStyle != ComboBoxStyle.DropDownList)
-                comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        }
-
         internal static void RemoveControlByKey(string key, ControlCollection controlCollection)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("RemoveControlByKey " + key);
@@ -75,16 +60,6 @@ namespace RobotAutomationHelper.Scripts
             if (RobotAutomationHelper.Log) Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
-        }
-
-        internal static bool IsInSuggestionsList(string name)
-        {
-            foreach (Keyword SuggestedKeyword in Suggestions)
-                if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
-                {
-                    return true;
-                }
-            return false;
         }
     }
 }

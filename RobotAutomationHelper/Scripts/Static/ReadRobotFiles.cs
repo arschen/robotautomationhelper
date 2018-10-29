@@ -4,7 +4,7 @@ using System.IO;
 
 namespace RobotAutomationHelper.Scripts
 {
-    internal class ReadRobotFiles
+    internal static class ReadRobotFiles
     {
         private static List<TestCase> TestCases;
         private static List<Keyword> currentTestCaseTestSteps;
@@ -68,7 +68,7 @@ namespace RobotAutomationHelper.Scripts
                                     {
                                         currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
                                             FilesAndFolderStructure.GetFolder(FolderType.Tests), true));
-                                        AddKeywordsInKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
+                                        AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
                                             GetResourcesFromFile(arrLine));
                                     }
                                 }
@@ -83,7 +83,7 @@ namespace RobotAutomationHelper.Scripts
             return TestCases;
         }
 
-        private static void AddKeywordsInKeyword(Keyword keyword, List<string> filesList)
+        private static void AddKeywordsFromKeyword(Keyword keyword, List<string> filesList)
         {
             foreach (string fileName in filesList)
             {
@@ -138,7 +138,7 @@ namespace RobotAutomationHelper.Scripts
                                     keyword.Keywords = new List<Keyword>();
                                 keyword.Keywords.Add(new Keyword(arrLine[i],
                                     fileName, true));
-                                AddKeywordsInKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
+                                AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
                                     GetResourcesFromFile(arrLine));
                             }
                         }

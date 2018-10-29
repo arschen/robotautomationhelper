@@ -284,10 +284,10 @@ namespace RobotAutomationHelper.Scripts
                 if (!(FormParent.FormType == FormType.Settings))
                 {
                     if (!(FormParent.FormType == FormType.Keyword))
-                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
+                        UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
                     else
                         if (!(FormParent.FormType == FormType.Test))
-                        FormControls.UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
+                        UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
                 }
             }
         }
@@ -295,7 +295,7 @@ namespace RobotAutomationHelper.Scripts
         private void CheckKeywordTypeAndEvaluateKeywordData(Keyword keyword, string name)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.Name + " " + name);
-            foreach (Keyword SuggestedKeyword in FormControls.Suggestions)
+            foreach (Keyword SuggestedKeyword in SuggestionsClass.Suggestions)
                 if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
                 {
                     keyword.CopyKeyword(SuggestedKeyword); //CopyKeyword
@@ -309,7 +309,7 @@ namespace RobotAutomationHelper.Scripts
                 return;
             }
 
-            foreach (Keyword seleniumKeyword in FormControls.Suggestions)
+            foreach (Keyword seleniumKeyword in SuggestionsClass.Suggestions)
                 if (seleniumKeyword.Name.Trim().ToLower().Equals(keyword.Name.Trim().ToLower()))
                 {
                     keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot")); //CopyKeyword
@@ -448,6 +448,19 @@ namespace RobotAutomationHelper.Scripts
                     }
                 }
             (Controls["DynamicStep" + (keywordIndex + 1) + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[keywordIndex].Name);
+        }
+
+        internal static void UpdateOutputFileSuggestions(ComboBox comboBox, FormType formType)
+        {
+            FolderType folderType = FilesAndFolderStructure.ConvertFormTypeToFolderType(formType);
+            if (RobotAutomationHelper.Log) Console.WriteLine("UpdateOutputFileSuggestions " + comboBox.Name);
+            comboBox.Items.Clear();
+            comboBox.AutoCompleteCustomSource.Clear();
+            comboBox.Items.AddRange(FilesAndFolderStructure.GetShortSavedFiles(folderType).ToArray());
+            comboBox.AutoCompleteCustomSource.AddRange(FilesAndFolderStructure.GetShortSavedFiles(folderType).ToArray());
+            comboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            if (comboBox.DropDownStyle != ComboBoxStyle.DropDownList)
+                comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
         }
 
         // Block fields

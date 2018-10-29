@@ -15,7 +15,7 @@ namespace RobotAutomationHelper.Forms
         {
             InitializeComponent();
             NameAndOutputToTestCaseFormCommunication.Save = false;
-            FormControls.UpdateOutputFileSuggestions(OutputFile, type);
+            UpdateOutputFileSuggestions(OutputFile, type);
             parentType = type;
             UpdateSaveButtonState();
             FormType = FormType.NameAndOutput;
@@ -142,7 +142,7 @@ namespace RobotAutomationHelper.Forms
             {
                 if (Controls.Find("DynamicStep1Name", false).Length > 0)
                 {
-                    if (FormControls.IsInSuggestionsList(Controls["DynamicStep1Name"].Text))
+                    if (SuggestionsClass.IsInSuggestionsList(Controls["DynamicStep1Name"].Text))
                     {
                         OutputFile.Enabled = false;
                         if (NameCheck(name))

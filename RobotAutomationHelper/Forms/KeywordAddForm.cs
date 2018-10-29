@@ -20,7 +20,7 @@ namespace RobotAutomationHelper
             initialYValue = 185;
             FormType = FormType.Keyword;
             ParentKeywords = parentKeywords;
-            FormControls.UpdateOutputFileSuggestions(OutputFile, FormType);
+            UpdateOutputFileSuggestions(OutputFile, FormType);
             UpdateSaveButtonState();
             ActiveControl = KeywordNameLabel;
         }
@@ -153,13 +153,13 @@ namespace RobotAutomationHelper
 
             if (addToSuggestions)
             {
-                ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = FormControls.Suggestions.Count;
+                ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.Suggestions.Count;
                 Keyword temp = new Keyword();
                 temp.CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
-                FormControls.Suggestions.Add(temp);
+                SuggestionsClass.Suggestions.Add(temp);
             }
             else
-                FormControls.Suggestions[ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
+                SuggestionsClass.Suggestions[ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
         }
 
         // adding argument to the KeywordArguments.Text

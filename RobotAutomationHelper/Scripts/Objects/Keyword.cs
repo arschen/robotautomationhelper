@@ -68,7 +68,7 @@ namespace RobotAutomationHelper
                 Implemented = true;
                 string[] splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                 bool found = false;
-                foreach (Keyword key in FormControls.Suggestions)
+                foreach (Keyword key in SuggestionsClass.Suggestions)
                 {
                     if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
                     {

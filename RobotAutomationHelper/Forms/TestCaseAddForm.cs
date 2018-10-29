@@ -15,7 +15,7 @@ namespace RobotAutomationHelper
             InitializeComponent();
             initialYValue = 140;
             FormType = FormType.Test;
-            FormControls.UpdateOutputFileSuggestions(OutputFile, FormType);
+            UpdateOutputFileSuggestions(OutputFile, FormType);
             UpdateSaveButtonState();
             ActiveControl = TestCaseNameLabel;
         }

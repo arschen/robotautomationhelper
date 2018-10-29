@@ -6,7 +6,6 @@ namespace RobotAutomationHelper.Scripts
 {
     internal static class ReadExcel
     {
-
         private static List<TestCase> TestCases;
         private static List<Keyword> currentTestCaseTestSteps;
         private static string currentTestCaseTags;

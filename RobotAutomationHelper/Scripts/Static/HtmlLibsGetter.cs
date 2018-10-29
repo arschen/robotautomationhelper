@@ -8,36 +8,11 @@ namespace RobotAutomationHelper.Scripts
 {
     internal static class HtmlLibsGetter
     {
+        private static string currentKeywordDocumentation;
+        private static string currentKeywordName;
+        private static List<Param> currentKeywordParams;
 
-        internal static List<Keyword> Selenium = new List<Keyword>();
-        internal static List<Keyword> BuiltIn = new List<Keyword>();
-        internal static string currentKeywordDocumentation;
-        internal static string currentKeywordName;
-        internal static List<Param> currentKeywordParams;
-
-        internal static void PopulateSeleniumKeywords()
-        {
-            Selenium = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
-                @"RobotKeywords\Selenium.xlsx")
-                , KeywordType.SELENIUM);
-            foreach (Keyword key in Selenium)
-                FormControls.Suggestions.Add(new Keyword(key.Name, key.Documentation,
-                    key.Keywords, key.Arguments, key.Params,
-                    key.OutputFilePath, key.Saved, key.Type, key.SuggestionIndex));
-        }
-
-        internal static void PopulateBuiltInKeywords()
-        {
-            BuiltIn = ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                @"RobotKeywords\Built_in.xlsx")
-                , KeywordType.BUILT_IN);
-            foreach (Keyword key in BuiltIn)
-                FormControls.Suggestions.Add(new Keyword(key.Name, key.Documentation,
-                    key.Keywords, key.Arguments, key.Params,
-                    key.OutputFilePath, key.Saved, key.Type, key.SuggestionIndex));
-        }
-
-        private static List<Keyword> ReadAllKeywordsFromExcel(string Filename, KeywordType type)
+        internal static List<Keyword> ReadAllKeywordsFromExcel(string Filename, KeywordType type)
         {
             List<Keyword> listKeys = new List<Keyword>();
             currentKeywordParams = new List<Param>();
