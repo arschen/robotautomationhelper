@@ -52,6 +52,7 @@ namespace RobotAutomationHelper.Forms
                 null,
                 this);
             Controls["DynamicStep1Name"].TextChanged += KeywordName_TextChanged;
+            (Controls["DynamicStep1Name"] as TextWithList).MaxItemsInSuggestionsList = 5;
             var dialogResult = ShowDialog();
         }
 

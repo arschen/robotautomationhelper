@@ -193,6 +193,7 @@ namespace RobotAutomationHelper.Scripts
                 Color.Black,
                 null,
                 this);
+            (Controls["DynamicStep1Name"] as TextWithList).MaxItemsInSuggestionsList = 15;
 
             FormControls.AddControl("Label", "DynamicStep" + keywordsCounter + "Label",
                 keywordsCounter,

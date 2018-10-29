@@ -16,6 +16,7 @@ namespace RobotAutomationHelper.Scripts
         private readonly int IndexOf;
         private bool JustGotFocused = false;
         private bool ChangedImmediatelyAfterSelection = false;
+        internal int MaxItemsInSuggestionsList { get; set; }
 
         // Methods =================================================================
         internal TextWithList(BaseKeywordAddForm Parent, int IndexOf)
@@ -175,8 +176,8 @@ namespace RobotAutomationHelper.Scripts
                 SuggestionsList.Items.Clear();
                 SuggestionsList.Items.AddRange(foundItems.ToArray());
                 SuggestionsList.Visible = true;
-                SuggestionsList.Location = new Point(Location.X, Location.Y + 20);
-                SuggestionsList.Size = new Size(Size.Width, foundItems.Count * SuggestionsList.ItemHeight > 200 ? 200 : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
+                SuggestionsList.Location = new Point(Location.X, Location.Y + Height);
+                SuggestionsList.Size = new Size(Size.Width, foundItems.Count >= MaxItemsInSuggestionsList ? (MaxItemsInSuggestionsList + 1) * SuggestionsList.ItemHeight : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
                 SuggestionsList.IntegralHeight = true;
                 FormControls.RemoveControlByKey(SuggestionsList.Name, ParentForm.Controls);
                 ParentForm.Controls.Add(SuggestionsList);
