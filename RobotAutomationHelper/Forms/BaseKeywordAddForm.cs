@@ -25,6 +25,8 @@ namespace RobotAutomationHelper.Scripts
         protected string memoryPath;
         internal FormType FormType { get; set; }
 
+        private bool recursive = false;
+
         internal BaseKeywordAddForm(BaseKeywordAddForm parentForm)
         {
             FormParent = parentForm;
@@ -490,8 +492,14 @@ namespace RobotAutomationHelper.Scripts
                 if (!IsNameValid(Controls["DynamicStep" + keywordIndex + "Name"].Text))
                     Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
                 else
+                {
+                    recursive = false;
                     if (IsRecursive(ThisFormKeywords[keywordIndex - 1], this))
+                    {
+                        Controls["DynamicStep" + keywordIndex + "AddImplementation"].Text = "Recursive";
                         Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
+                    }
+                }
             }
             if (Controls.Find("DynamicStep" + keywordIndex + "AddKeyword", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = true;
@@ -525,14 +533,33 @@ namespace RobotAutomationHelper.Scripts
 
         private bool IsRecursive(Keyword keyword, BaseKeywordAddForm form)
         {
-            if (form.FormParent != null && form.FormParent.FormType.Equals(FormType.Keyword))
+            if (form.FormParent != null && !form.FormParent.Name.Contains("RobotAutomationHelper"))
             {
-                if ((form.FormParent as KeywordAddForm).ThisFormKeywords[(form.FormParent as KeywordAddForm).IndexOfTheKeywordToBeImplemented-1].Name.ToLower().Equals(keyword.Name.Trim().ToLower()))
-                    return true;
+                if (form.FormParent.FormType.Equals(FormType.Keyword))
+                {
+                    if ((form.FormParent as KeywordAddForm).ThisFormKeywords[(form.FormParent as KeywordAddForm).IndexOfTheKeywordToBeImplemented - 1].Name.ToLower().Equals(keyword.Name.Trim().ToLower()))
+                    {
+                        recursive = true;
+                        return true;
+                    }
+                    else
+                        IsRecursive(keyword, form.FormParent);
+                }
                 else
-                    IsRecursive(keyword, form.FormParent);
+                {
+                    if (form.FormParent.FormType.Equals(FormType.Test))
+                    {
+                        if ((form.FormParent as TestCaseAddForm).ThisFormKeywords[(form.FormParent as TestCaseAddForm).IndexOfTheKeywordToBeImplemented - 1].Name.ToLower().Equals(keyword.Name.Trim().ToLower()))
+                        {
+                            recursive = true;
+                            return true;
+                        }
+                        else
+                            IsRecursive(keyword, form.FormParent);
+                    }
+                }
             }
-            return false;
+            return recursive;
         }
     }
 

@@ -103,6 +103,8 @@ namespace RobotAutomationHelper
                 };
                 AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1);
                 NumberOfKeywordsInThisForm++;
+                (Controls["DynamicStep" + 1 + "Name"] as TextWithList).TriggerUpdate("");
+                (Controls["DynamicStep" + 1 + "Name"] as TextWithList).EnableKeywordFields();
                 FilesAndFolderStructure.AddFileToSavedFiles(ThisFormKeywords[0].OutputFilePath);
             }
 
