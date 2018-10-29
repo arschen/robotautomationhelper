@@ -80,6 +80,12 @@
     <Compile Include="Forms\BaseKeywordAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Scripts\CustomControls\ButtonWithToolTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scripts\CustomControls\ButtonWithToolTip.Designer.cs">
+      <DependentUpon>ButtonWithToolTip.cs</DependentUpon>
+    </Compile>
     <Compile Include="Scripts\CustomControls\LabelWithToolTip.cs">
       <SubType>Component</SubType>
     </Compile>

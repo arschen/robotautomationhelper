@@ -506,7 +506,13 @@ namespace RobotAutomationHelper.Scripts
             if (Name.Trim().Length == 0)
                 return false;
             else
+            {
+                for (int i = 0; i < Name.Trim().Length - 1; i++)
+                    if (Name.Trim()[i].Equals(' '))
+                        if (Name.Trim()[i + 1].Equals(' '))
+                            return false;
                 return true;
+            }
         }
     }
 
