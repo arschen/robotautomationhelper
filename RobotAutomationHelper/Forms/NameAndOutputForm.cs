@@ -9,7 +9,8 @@ namespace RobotAutomationHelper.Forms
     internal partial class NameAndOutputForm : BaseKeywordAddForm
     {
 
-        FormType parentType;
+        private FormType parentType;
+        private ToolTip toolTip = new ToolTip();
 
         internal NameAndOutputForm(FormType type)
         {
@@ -146,28 +147,53 @@ namespace RobotAutomationHelper.Forms
                     {
                         OutputFile.Enabled = false;
                         if (NameCheck(name))
+                        {
+                            toolTip.Hide(this);
                             Save.Enabled = true;
-                        else
-                            Save.Enabled = false;
+                        }
                     }
                     else
+                    {
                         OutputFile.Enabled = true;
+                        if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                        {
+                            toolTip.Hide(this);
+                            Save.Enabled = true;
+                        }
+                        else
+                        {
+                            toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
+                            Save.Enabled = false;
+                        }
+                    }  
                 }
                 else
                 {
                     OutputFile.Enabled = true;
                     if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                    {
+                        toolTip.Hide(this);
                         Save.Enabled = true;
+                    }
                     else
+                    {
+                        toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
                         Save.Enabled = false;
+                    }
                 }
             }
             else
             {
                 if (NameCheck(name) && OutputFileCheck(OutputFile.Text))
+                {
+                    toolTip.Hide(this);
                     Save.Enabled = true;
+                }
                 else
+                {
+                    toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
                     Save.Enabled = false;
+                }
             }
         }
 

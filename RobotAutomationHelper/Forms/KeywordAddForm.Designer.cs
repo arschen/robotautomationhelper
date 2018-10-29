@@ -1,4 +1,6 @@
-﻿namespace RobotAutomationHelper
+﻿using RobotAutomationHelper.Scripts.CustomControls;
+
+namespace RobotAutomationHelper
 {
     partial class KeywordAddForm
     {
@@ -34,7 +36,7 @@
             this.KeywordName = new System.Windows.Forms.TextBox();
             this.AddKeywordLabel = new System.Windows.Forms.Label();
             this.Skip = new System.Windows.Forms.Button();
-            this.Save = new System.Windows.Forms.Button();
+            this.Save = new ButtonWithToolTip();
             this.ArgumentType = new System.Windows.Forms.ComboBox();
             this.OutputFile = new System.Windows.Forms.ComboBox();
             this.KeywordOutputLabel = new System.Windows.Forms.Label();

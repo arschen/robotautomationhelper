@@ -1,4 +1,6 @@
-﻿namespace RobotAutomationHelper.Forms
+﻿using RobotAutomationHelper.Scripts.CustomControls;
+
+namespace RobotAutomationHelper.Forms
 {
     partial class NameAndOutputForm
     {

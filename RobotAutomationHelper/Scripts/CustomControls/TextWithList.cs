@@ -28,6 +28,7 @@ namespace RobotAutomationHelper.Scripts
 
         protected override void OnTextChanged(EventArgs e)
         {
+            UpdateListNamesAndUpdateStateOfSave();
             if (Focused || SuggestionsList.SelectionPerformed)
             {
                 base.OnTextChanged(e);
@@ -133,6 +134,33 @@ namespace RobotAutomationHelper.Scripts
                         if (ParentForm.FormType == FormType.NameAndOutput)
                         {
                             (ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void UpdateListNamesAndUpdateStateOfSave()
+        {
+            if (ParentForm.FormType == FormType.Keyword)
+                (ParentForm as KeywordAddForm).UpdateNamesListAndUpdateStateOfSave();
+            else
+            {
+                if (ParentForm.FormType == FormType.Settings)
+                {
+                    //(ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                }
+                else
+                {
+                    if (ParentForm.FormType == FormType.Test)
+                    {
+                        (ParentForm as TestCaseAddForm).UpdateListNamesAndUpdateStateOfSave();
+                    }
+                    else
+                    {
+                        if (ParentForm.FormType == FormType.NameAndOutput)
+                        {
+                            //(ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
                         }
                     }
                 }

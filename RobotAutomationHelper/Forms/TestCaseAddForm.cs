@@ -1,4 +1,5 @@
 ﻿using RobotAutomationHelper.Scripts;
+using RobotAutomationHelper.Scripts.CustomControls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,7 +17,6 @@ namespace RobotAutomationHelper
             initialYValue = 140;
             FormType = FormType.Test;
             UpdateOutputFileSuggestions(OutputFile, FormType);
-            UpdateSaveButtonState();
             ActiveControl = TestCaseNameLabel;
         }
 
@@ -70,6 +70,7 @@ namespace RobotAutomationHelper
                 TestCaseTags.Text = testCase.Tags.Replace("[Tags]","").Trim();
             if (testCase.OutputFilePath != null)
                 OutputFile.Text = testCase.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests),"\\");
+
             IsTestCasePresentInFilesOrMemoryTree();
             ThisFormKeywords = new List<Keyword>();
             ThisFormKeywords = testCase.Steps;
@@ -92,6 +93,7 @@ namespace RobotAutomationHelper
                 NumberOfKeywordsInThisForm++;
             }
 
+            UpdateListNamesAndUpdateStateOfSave();
             StartPosition = FormStartPosition.Manual;
             var dialogResult = ShowDialog();
         }
@@ -115,22 +117,14 @@ namespace RobotAutomationHelper
 
         private void TestCaseName_TextChanged(object sender, EventArgs e)
         {
-            UpdateSaveButtonState();
+            UpdateListNamesAndUpdateStateOfSave();
             IsTestCasePresentInFilesOrMemoryTree();
         }
 
         private void TestCaseOutputFile_TextChanged(object sender, EventArgs e)
         {
-            UpdateSaveButtonState();
+            UpdateListNamesAndUpdateStateOfSave();
             IsTestCasePresentInFilesOrMemoryTree();
-        }
-
-        private void UpdateSaveButtonState()
-        {
-            if (NameCheck(TestCaseName.Text) && OutputFileCheck(OutputFile.Text))
-                Save.Enabled = true;
-            else
-                Save.Enabled = false;
         }
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
@@ -157,6 +151,20 @@ namespace RobotAutomationHelper
                 }
             }
             return true;
+        }
+
+        internal void UpdateListNamesAndUpdateStateOfSave()
+        {
+            List<string> namesList = new List<string>
+            {
+                TestCaseName.Text
+            };
+            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            {
+                if (Controls.Find("DynamicStep" + i + "Name", false).Length > 0)
+                    namesList.Add(Controls["DynamicStep" + i + "Name"].Text);
+            }
+            (Save as ButtonWithToolTip).UpdateState(namesList, OutputFile.Text);
         }
     }
 }

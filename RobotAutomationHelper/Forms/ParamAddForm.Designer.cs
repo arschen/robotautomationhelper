@@ -1,4 +1,6 @@
-﻿namespace RobotAutomationHelper.Forms
+﻿using RobotAutomationHelper.Scripts.CustomControls;
+
+namespace RobotAutomationHelper.Forms
 {
     partial class ParamAddForm
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             this.Skip = new System.Windows.Forms.Button();
-            this.Save = new System.Windows.Forms.Button();
+            this.Save = new ButtonWithToolTip();
             this.KeywordDocumentationLabel = new System.Windows.Forms.Label();
             this.KeywordDocumentation = new System.Windows.Forms.TextBox();
             this.KeywordNameLabel = new System.Windows.Forms.Label();

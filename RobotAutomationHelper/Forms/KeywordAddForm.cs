@@ -1,5 +1,6 @@
 ﻿using RobotAutomationHelper.Forms;
 using RobotAutomationHelper.Scripts;
+using RobotAutomationHelper.Scripts.CustomControls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,7 +22,6 @@ namespace RobotAutomationHelper
             FormType = FormType.Keyword;
             ParentKeywords = parentKeywords;
             UpdateOutputFileSuggestions(OutputFile, FormType);
-            UpdateSaveButtonState();
             ActiveControl = KeywordNameLabel;
         }
 
@@ -79,6 +79,7 @@ namespace RobotAutomationHelper
                 OutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Resources), "\\");
             if (keyword.Arguments != null)
                 KeywordArguments.Text = keyword.Arguments.Replace("[Arguments]", "").Trim();
+
             IsKeywordPresentInFilesOrMemoryTree();
             ThisFormKeywords = keyword.Keywords;
 
@@ -104,6 +105,8 @@ namespace RobotAutomationHelper
                 NumberOfKeywordsInThisForm++;
                 FilesAndFolderStructure.AddFileToSavedFiles(ThisFormKeywords[0].OutputFilePath);
             }
+
+            UpdateNamesListAndUpdateStateOfSave();
 
             // show the form dialog
             StartPosition = FormStartPosition.Manual;
@@ -215,22 +218,14 @@ namespace RobotAutomationHelper
 
         private void KeywordName_TextChanged(object sender, EventArgs e)
         {
-            UpdateSaveButtonState();
+            UpdateNamesListAndUpdateStateOfSave();
             IsKeywordPresentInFilesOrMemoryTree();
         }
 
         private void KeywordOutputFile_TextChanged(object sender, EventArgs e)
         {
-            UpdateSaveButtonState();
+            UpdateNamesListAndUpdateStateOfSave();
             IsKeywordPresentInFilesOrMemoryTree();
-        }
-
-        private void UpdateSaveButtonState()
-        {
-            if (NameCheck(KeywordName.Text) && OutputFileCheck(OutputFile.Text))
-                Save.Enabled = true;
-            else
-                Save.Enabled = false;
         }
 
         private bool IsKeywordPresentInFilesOrMemoryTree()
@@ -257,6 +252,20 @@ namespace RobotAutomationHelper
                 }
             }
             return true;
+        }
+
+        internal void UpdateNamesListAndUpdateStateOfSave()
+        {
+            List<string> namesList = new List<string>
+            {
+                KeywordName.Text
+            };
+            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            {
+                if (Controls.Find("DynamicStep" + i + "Name", false).Length > 0)
+                    namesList.Add(Controls["DynamicStep" + i + "Name"].Text);
+            }
+            (Save as ButtonWithToolTip).UpdateState(namesList, OutputFile.Text);
         }
     }
 }

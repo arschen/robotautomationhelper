@@ -1,4 +1,6 @@
-﻿namespace RobotAutomationHelper.Forms
+﻿using RobotAutomationHelper.Scripts.CustomControls;
+
+namespace RobotAutomationHelper.Forms
 {
     partial class SettingsAddForm
     {
@@ -30,7 +32,7 @@
         {
             this.OutputFile = new System.Windows.Forms.ComboBox();
             this.OutputLabel = new System.Windows.Forms.Label();
-            this.Save = new System.Windows.Forms.Button();
+            this.Save = new ButtonWithToolTip();
             this.SuiteDocumentationLabel = new System.Windows.Forms.Label();
             this.SuiteDocumentation = new System.Windows.Forms.TextBox();
             this.AddSettingsLabel = new System.Windows.Forms.Label();

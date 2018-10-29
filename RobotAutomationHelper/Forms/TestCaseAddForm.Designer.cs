@@ -1,4 +1,6 @@
-﻿namespace RobotAutomationHelper
+﻿using RobotAutomationHelper.Scripts.CustomControls;
+
+namespace RobotAutomationHelper
 {
     partial class TestCaseAddForm
     {
@@ -30,7 +32,7 @@
         {
             this.TestCaseNameLabel = new System.Windows.Forms.Label();
             this.Skip = new System.Windows.Forms.Button();
-            this.Save = new System.Windows.Forms.Button();
+            this.Save = new ButtonWithToolTip();
             this.TestCaseName = new System.Windows.Forms.TextBox();
             this.TestCaseAddLabel = new System.Windows.Forms.Label();
             this.TestCaseDocumentation = new System.Windows.Forms.TextBox();
