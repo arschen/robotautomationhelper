@@ -107,7 +107,8 @@ namespace RobotAutomationHelper.Scripts
             AddFileToSavedFiles(keyword.OutputFilePath);
             if (keyword.Keywords != null)
                 foreach (Keyword key in keyword.Keywords)
-                    AddFilesFromKeywords(key);
+                    if (!key.Recursive)
+                        AddFilesFromKeywords(key);
         }
 
         internal static FolderType ConvertFormTypeToFolderType(FormType formType)

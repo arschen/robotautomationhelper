@@ -251,8 +251,8 @@ namespace RobotAutomationHelper.Scripts
                     new EventHandler(InstantiateParamsAddForm),
                     this);
 
-            (Controls["DynamicStep" + 1 + "Name"] as TextWithList).TriggerUpdate("");
-            (Controls["DynamicStep" + 1 + "Name"] as TextWithList).EnableKeywordFields();
+            (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("");
+            (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).EnableKeywordFields();
         }
 
         private void UpdateThisFormAfterImlpementedChildKeyword(object sender, EventArgs e)
@@ -502,6 +502,11 @@ namespace RobotAutomationHelper.Scripts
                     {
                         Controls["DynamicStep" + keywordIndex + "AddImplementation"].Text = "Recursive";
                         Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
+                        ThisFormKeywords[keywordIndex - 1].Recursive = true;
+                    }
+                    else
+                    {
+                        ThisFormKeywords[keywordIndex - 1].Recursive = false;
                     }
                 }
             }

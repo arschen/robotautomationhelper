@@ -17,6 +17,7 @@ namespace RobotAutomationHelper
         internal KeywordType Type { get; set; }
         internal int SuggestionIndex { get; set; }
         internal bool Overwrite { get; set; }
+        internal bool Recursive { get; set; }
 
         internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex)
         {
@@ -31,6 +32,7 @@ namespace RobotAutomationHelper
             this.Saved = Saved;
             this.Type = Type;
             this.SuggestionIndex = SuggestionIndex;
+            Recursive = false;
         }
 
         internal Keyword()
@@ -58,6 +60,7 @@ namespace RobotAutomationHelper
             this.OutputFilePath = OutputFilePath;
             Documentation = "";
             SuggestionIndex = -1;
+            Recursive = false;
         }
 
         // convert keyword string taken from file into keyword
