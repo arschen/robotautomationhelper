@@ -250,6 +250,9 @@ namespace RobotAutomationHelper.Scripts
                     Color.Black,
                     new EventHandler(InstantiateParamsAddForm),
                     this);
+
+            (Controls["DynamicStep" + 1 + "Name"] as TextWithList).TriggerUpdate("");
+            (Controls["DynamicStep" + 1 + "Name"] as TextWithList).EnableKeywordFields();
         }
 
         private void UpdateThisFormAfterImlpementedChildKeyword(object sender, EventArgs e)
@@ -451,6 +454,7 @@ namespace RobotAutomationHelper.Scripts
                     }
                 }
             (Controls["DynamicStep" + (keywordIndex + 1) + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[keywordIndex].Name);
+            (Controls["DynamicStep" + (keywordIndex + 1) + "Name"] as TextWithList).EnableKeywordFields();
         }
 
         internal static void UpdateOutputFileSuggestions(ComboBox comboBox, FormType formType)
