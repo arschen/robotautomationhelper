@@ -12,7 +12,7 @@ namespace RobotAutomationHelper.Forms
         private FormType parentType;
         private ToolTip toolTip = new ToolTip();
 
-        internal NameAndOutputForm(FormType type)
+        internal NameAndOutputForm(FormType type, BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
             NameAndOutputToTestCaseFormCommunication.Save = false;

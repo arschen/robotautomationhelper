@@ -10,7 +10,7 @@ namespace RobotAutomationHelper
     internal partial class TestCaseAddForm : BaseKeywordAddForm
     {
 
-        internal TestCaseAddForm()
+        internal TestCaseAddForm(BaseKeywordAddForm parent) : base(parent)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("TestCaseAddForm [Constructor]");
             InitializeComponent();

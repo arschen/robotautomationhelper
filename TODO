@@ -5,9 +5,6 @@ Python libraries implementation
 Easy implementation of other robot framework libraries
 Check for files in the folder when starting new project
 Moving all static classes to static folder ( DONE ) and create clear cache
-Moving Suggestions to separate class for visibility and easy handling ( DONE )
-Text with ToolTip ( for Names )
-Button with ToolTip ( for Save )
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Bug with Auto.robot files added when not saved

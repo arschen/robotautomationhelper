@@ -20,7 +20,7 @@ namespace RobotAutomationHelper
         // index of the test case to be implemented
         private int IndexOfTheTestCaseToBeImplemented = 0;
 
-        internal RobotAutomationHelper()
+        internal RobotAutomationHelper(BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
             ActiveControl = TestCaseNameLabel;
@@ -302,7 +302,7 @@ namespace RobotAutomationHelper
             IndexOfTheTestCaseToBeImplemented = testIndex;
             TestCase testCase = TestCases[testIndex - 1];
             testCase.Name = Controls["DynamicTest" + testIndex + "Name"].Text;
-            TestCaseAddForm testCaseAddForm = new TestCaseAddForm();
+            TestCaseAddForm testCaseAddForm = new TestCaseAddForm(this);
             testCaseAddForm.FormClosing += new FormClosingEventHandler(UpdateThisFormTestCaseAddFormClosing);
             testCaseAddForm.ShowTestCaseContent(testCase, testIndex - 1);
         }
@@ -406,7 +406,7 @@ namespace RobotAutomationHelper
             else
                 formType = FormType.Keyword;
 
-            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType);
+            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType, this);
             nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
             nameAndOutputForm.ShowTestCaseContent();
         }

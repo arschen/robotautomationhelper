@@ -25,6 +25,11 @@ namespace RobotAutomationHelper.Scripts
         protected string memoryPath;
         internal FormType FormType { get; set; }
 
+        internal BaseKeywordAddForm(BaseKeywordAddForm parentForm)
+        {
+            FormParent = parentForm;
+        }
+
         // change the field when the keyword name is changed
         internal void UpdateTheKeywordOnNameChange(object sender, string textChangePassed)
         {
@@ -121,37 +126,34 @@ namespace RobotAutomationHelper.Scripts
 
         protected void InstantiateKeywordAddForm(object sender, EventArgs e)
         {
-            FormParent = this;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateKeywordAddForm " + ((Button)sender).Name);
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicStep", ""));
             IndexOfTheKeywordToBeImplemented = keywordIndex;
             Keyword keyword = ThisFormKeywords[keywordIndex - 1];
             keyword.Implemented = true;
             keyword.Name = Controls["DynamicStep" + keywordIndex + "Name"].Text;
-            KeywordAddForm addKeywordForm = new KeywordAddForm(ThisFormKeywords);
+            KeywordAddForm addKeywordForm = new KeywordAddForm(ThisFormKeywords, this);
             addKeywordForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             addKeywordForm.ShowKeywordContent(keyword, keywordIndex - 1);
         }
 
         protected void InstantiateSettingsAddForm(object sender, EventArgs e)
         {
-            FormParent = this;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateSettingsAddForm " + ((Button)sender).Name);
-            SettingsAddForm AddSettingsForm = new SettingsAddForm();
+            SettingsAddForm AddSettingsForm = new SettingsAddForm(this);
             //AddSettingsForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
             AddSettingsForm.ShowSettingsContent();
         }
 
         internal void InstantiateParamsAddForm(object sender, EventArgs e)
         {
-            FormParent = this;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
 
             AddCurrentKeywordsToKeywordsList(sender, e);
 
             int keywordIndex = int.Parse(((Button)sender).Name.Replace("Params", "").Replace("DynamicStep", ""));
             // instantiate the new KeywordAddForm with this parent and Keywords argument
-            ParamAddForm addParamForm = new ParamAddForm();
+            ParamAddForm addParamForm = new ParamAddForm(this);
             ThisFormKeywords[keywordIndex - 1].Name = Controls["DynamicStep" + keywordIndex + "Name"].Text;
             // add closing event
             // addParamForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
@@ -163,7 +165,6 @@ namespace RobotAutomationHelper.Scripts
         internal void InstantiateNameAndOutputForm(object sender, EventArgs e)
         {
             realSender = sender;
-            FormParent = this;
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
             FormType formType;
             if (Name.Contains("Robot Automation Helper"))
@@ -171,7 +172,7 @@ namespace RobotAutomationHelper.Scripts
             else
                 formType = FormType.Keyword;
 
-            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType);
+            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType, this);
             nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
             nameAndOutputForm.ShowKeywordContent();
         }
@@ -484,7 +485,14 @@ namespace RobotAutomationHelper.Scripts
             if (Controls.Find("DynamicStep" + keywordIndex + "Label", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "Label"].Enabled = true;
             if (Controls.Find("DynamicStep" + keywordIndex + "AddImplementation", false).Length != 0)
-                Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = IsNameValid(Controls["DynamicStep" + keywordIndex + "Name"].Text);
+            {
+                Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = true;
+                if (!IsNameValid(Controls["DynamicStep" + keywordIndex + "Name"].Text))
+                    Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
+                else
+                    if (IsRecursive(ThisFormKeywords[keywordIndex - 1], this))
+                        Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
+            }
             if (Controls.Find("DynamicStep" + keywordIndex + "AddKeyword", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "AddKeyword"].Enabled = true;
             if (Controls.Find("DynamicStep" + keywordIndex + "RemoveKeyword", false).Length != 0)
@@ -513,6 +521,18 @@ namespace RobotAutomationHelper.Scripts
                             return false;
                 return true;
             }
+        }
+
+        private bool IsRecursive(Keyword keyword, BaseKeywordAddForm form)
+        {
+            if (form.FormParent != null && form.FormParent.FormType.Equals(FormType.Keyword))
+            {
+                if ((form.FormParent as KeywordAddForm).ThisFormKeywords[(form.FormParent as KeywordAddForm).IndexOfTheKeywordToBeImplemented-1].Name.ToLower().Equals(keyword.Name.Trim().ToLower()))
+                    return true;
+                else
+                    IsRecursive(keyword, form.FormParent);
+            }
+            return false;
         }
     }
 

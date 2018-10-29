@@ -9,7 +9,7 @@ namespace RobotAutomationHelper.Forms
         private Keyword keyword;
         private int paramsCount = 0;
 
-        internal ParamAddForm()
+        internal ParamAddForm(BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
         }

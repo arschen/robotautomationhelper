@@ -11,7 +11,7 @@ namespace RobotAutomationHelper.Forms
         private SuiteSettings CurrentSuiteSettings;
         private int SelectedIndex = 0;
 
-        internal SettingsAddForm()
+        internal SettingsAddForm(BaseKeywordAddForm parent) : base(parent)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("SettingsAddForm Constructor");
             InitializeComponent();

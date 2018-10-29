@@ -15,7 +15,7 @@ namespace RobotAutomationHelper
         //keywords in this form
         private List<Param> ThisKeywordParams = new List<Param>();
 
-        internal KeywordAddForm(List<Keyword> parentKeywords)
+        internal KeywordAddForm(List<Keyword> parentKeywords, BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
             initialYValue = 185;
