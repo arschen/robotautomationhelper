@@ -28,9 +28,12 @@ namespace RobotAutomationHelper.Scripts
                         if (keyword.Keywords != null)
                             foreach (Keyword key in keyword.Keywords)
                             {
-                                string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, test.Name + " | " + keyword.Name.Trim());
-                                if (!temp.Equals(""))
-                                    return temp;
+                                if (!key.Recursive)
+                                {
+                                    string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, test.Name + " | " + keyword.Name.Trim());
+                                    if (!temp.Equals(""))
+                                        return temp;
+                                }
                             }
                     }
             return "";
@@ -46,9 +49,12 @@ namespace RobotAutomationHelper.Scripts
             if (keyword.Keywords != null)
                 foreach (Keyword key in keyword.Keywords)
                 {
-                    string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, path + " | " + keyword.Name.Trim());
-                    if (!temp.Equals(""))
-                        return temp;
+                    if (!key.Recursive)
+                    {
+                        string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, path + " | " + keyword.Name.Trim());
+                        if (!temp.Equals(""))
+                            return temp;
+                    }
                 }
             return "";
         }
