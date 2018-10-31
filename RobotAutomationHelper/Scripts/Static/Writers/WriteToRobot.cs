@@ -224,6 +224,15 @@ namespace RobotAutomationHelper.Scripts
                     else
                         RemoveFromSettings("Suite Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
+
+                    if (suiteSettings.SuiteSetup != null && !suiteSettings.SuiteSetup.Name.Trim().Equals(""))
+                        AddKeywordToRobot(suiteSettings.SuiteSetup);
+                    if (suiteSettings.SuiteTeardown != null && !suiteSettings.SuiteTeardown.Name.Trim().Equals(""))
+                        AddKeywordToRobot(suiteSettings.SuiteTeardown);
+                    if (suiteSettings.TestSetup != null && !suiteSettings.TestSetup.Name.Trim().Equals(""))
+                        AddKeywordToRobot(suiteSettings.TestSetup);
+                    if (suiteSettings.TestTeardown != null && !suiteSettings.TestTeardown.Name.Trim().Equals(""))
+                        AddKeywordToRobot(suiteSettings.TestTeardown);
                 }
         }
 
