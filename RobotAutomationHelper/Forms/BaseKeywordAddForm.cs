@@ -566,6 +566,19 @@ namespace RobotAutomationHelper.Scripts
                         else
                             IsRecursive(keyword, form.FormParent);
                     }
+                    else
+                    {
+                        if (form.FormParent.FormType.Equals(FormType.Settings))
+                        {
+                            if ((form.FormParent as SettingsAddForm).ThisFormKeywords[(form.FormParent as SettingsAddForm).IndexOfTheKeywordToBeImplemented - 1].Name.ToLower().Equals(keyword.Name.Trim().ToLower()))
+                            {
+                                recursive = true;
+                                return true;
+                            }
+                            else
+                                IsRecursive(keyword, form.FormParent);
+                        }
+                    }
                 }
             }
             return recursive;

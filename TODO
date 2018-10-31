@@ -12,3 +12,4 @@ BugFixes:
   KeywordAddForm showing full path ( when auto adding keyword to test case / keyword )
   Stop overwrite alert when overwrite already chosen
   Crash in Settings when using recursion
+  Settings now written to files
