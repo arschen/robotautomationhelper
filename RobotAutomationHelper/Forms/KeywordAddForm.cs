@@ -38,18 +38,23 @@ namespace RobotAutomationHelper
             {
                 if (presentInRobotFile)
                 {
-                    DialogResult result = MessageBox.Show("Overwrite existing keyword in the output file?",
-                        "Alert",
-                        MessageBoxButtons.YesNo);
-                    if (result.Equals(DialogResult.Yes))
-                    {
-                        AddCurrentKeywordsToKeywordsList(sender, e);
-                        SaveChangesToKeyword(true);
-                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
-                        Close();
+                    if (!ParentKeywords[ImplementationIndexFromTheParent].Overwrite)
+                {
+                        DialogResult result = MessageBox.Show("Overwrite existing keyword in the output file?",
+                            "Alert",
+                            MessageBoxButtons.YesNo);
+                        if (result.Equals(DialogResult.Yes))
+                        {
+                            AddCurrentKeywordsToKeywordsList(sender, e);
+                            SaveChangesToKeyword(true);
+                            ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
+                            Close();
+                        }
+                        else
+                            ParentKeywords[ImplementationIndexFromTheParent].Overwrite = false;
                     }
                     else
-                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = false;
+                        Close();
                 }
                 else
                 {

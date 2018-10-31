@@ -31,17 +31,22 @@ namespace RobotAutomationHelper
             {
                 if (presentInRobotFile)
                 {
-                    DialogResult result = MessageBox.Show("Overwrite existing test case in the output file?",
+                    if (!RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite)
+                    {
+                        DialogResult result = MessageBox.Show("Overwrite existing test case in the output file?",
                         "Alert",
                         MessageBoxButtons.YesNo);
-                    if (result.Equals(DialogResult.Yes))
-                    {
-                        SaveChangesToTestCases();
-                        RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite = true;
-                        Close();
+                        if (result.Equals(DialogResult.Yes))
+                        {
+                            SaveChangesToTestCases();
+                            RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite = true;
+                            Close();
+                        }
+                        else
+                            RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite = false;
                     }
                     else
-                        RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite = false;
+                        Close();
                 }
                 else
                 {
