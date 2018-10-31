@@ -89,7 +89,9 @@ namespace RobotAutomationHelper.Scripts
                         index++;
                         RobotFileHandler.FileLineAdd("\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
                     }
-                    AddKeywordToRobot(keywordKeyword);
+
+                    if (!keywordKeyword.Recursive)
+                        AddKeywordToRobot(keywordKeyword);
                 }
             return index;
         }
@@ -260,9 +262,12 @@ namespace RobotAutomationHelper.Scripts
             if (keyword.Keywords != null)
                 foreach (Keyword step in keyword.Keywords)
                 {
-                    RemoveKeywordForOverwriting(step);
-                    if (step.Overwrite)
-                        TestCaseKeywordRemove(step.Name, step.OutputFilePath, true);
+                    if (!step.Recursive)
+                    {
+                        RemoveKeywordForOverwriting(step);
+                        if (step.Overwrite)
+                            TestCaseKeywordRemove(step.Name, step.OutputFilePath, true);
+                    }
                 }
         }
         internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
