@@ -36,7 +36,6 @@ namespace RobotAutomationHelper.Forms
             this.SuiteDocumentationLabel = new System.Windows.Forms.Label();
             this.SuiteDocumentation = new System.Windows.Forms.TextBox();
             this.AddSettingsLabel = new System.Windows.Forms.Label();
-            this.SetupsAndTeardownsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // OutputFile
@@ -98,22 +97,11 @@ namespace RobotAutomationHelper.Forms
             this.AddSettingsLabel.Text = "Edit Settings";
             this.AddSettingsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // SetupsAndTeardownsLabel
-            // 
-            this.SetupsAndTeardownsLabel.AutoSize = true;
-            this.SetupsAndTeardownsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SetupsAndTeardownsLabel.Location = new System.Drawing.Point(11, 84);
-            this.SetupsAndTeardownsLabel.Name = "SetupsAndTeardownsLabel";
-            this.SetupsAndTeardownsLabel.Size = new System.Drawing.Size(120, 13);
-            this.SetupsAndTeardownsLabel.TabIndex = 26;
-            this.SetupsAndTeardownsLabel.Text = "Setups and Teardowns:";
-            // 
             // SettingsAddForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.SetupsAndTeardownsLabel);
             this.Controls.Add(this.OutputFile);
             this.Controls.Add(this.OutputLabel);
             this.Controls.Add(this.Save);
@@ -135,6 +123,5 @@ namespace RobotAutomationHelper.Forms
         private System.Windows.Forms.Label SuiteDocumentationLabel;
         private System.Windows.Forms.TextBox SuiteDocumentation;
         private System.Windows.Forms.Label AddSettingsLabel;
-        private System.Windows.Forms.Label SetupsAndTeardownsLabel;
     }
 }

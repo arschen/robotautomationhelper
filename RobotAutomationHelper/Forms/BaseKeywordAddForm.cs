@@ -1,4 +1,5 @@
 ﻿using RobotAutomationHelper.Forms;
+using RobotAutomationHelper.Scripts.Static.Consts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -27,6 +28,11 @@ namespace RobotAutomationHelper.Scripts
 
         private bool recursive = false;
 
+        internal BaseKeywordAddForm()
+        {
+
+        }
+
         internal BaseKeywordAddForm(BaseKeywordAddForm parentForm)
         {
             FormParent = parentForm;
@@ -50,6 +56,10 @@ namespace RobotAutomationHelper.Scripts
 
         private void UpdateTheKeywordFieldsBasedOnNewData(object sender)
         {
+            int settingsLabel = 0;
+            if (FormType == FormType.Settings)
+                settingsLabel = KeywordFieldConsts.SettingsLabelWidth - KeywordFieldConsts.LabelWidth;
+
             if (RobotAutomationHelper.Log) Console.WriteLine("UpdateKeywordInThisKeyword " + ((TextWithList)sender).Name + " " + Name);
             int keywordIndex = int.Parse(((TextWithList)sender).Name.Replace("DynamicStep", "").Replace("Name", "")); 
             if (!FormType.Equals(FormType.NameAndOutput))
@@ -64,8 +74,8 @@ namespace RobotAutomationHelper.Scripts
                     if (Controls.Find("DynamicStep" + keywordIndex + "AddImplementation", false).Length == 0)
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "AddImplementation",
                         keywordIndex,
-                        new Point(320 - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
-                        new Size(120, 20),
+                        new Point(settingsLabel + KeywordFieldConsts.AddImplementationX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                        new Size(KeywordFieldConsts.AddKeywordWidth, KeywordFieldConsts.VerticalDistanceBetweenKeywords),
                         buttonImplementation,
                         Color.Black,
                         new EventHandler(InstantiateKeywordAddForm),
@@ -85,12 +95,10 @@ namespace RobotAutomationHelper.Scripts
                     {
                         if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
                         {
-                            int ParamsButtonX = 500;
-
                             FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
                                 keywordIndex,
-                                new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
-                                new Size(75, 20),
+                                new Point(settingsLabel + KeywordFieldConsts.ParamX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                                new Size(KeywordFieldConsts.ParamWidth, KeywordFieldConsts.FieldsHeight),
                                 "Params",
                                 Color.Black,
                                 new EventHandler(InstantiateParamsAddForm),
@@ -105,13 +113,11 @@ namespace RobotAutomationHelper.Scripts
                     if (!(ThisFormKeywords[keywordIndex - 1].Params == null)
                         && !(ThisFormKeywords[keywordIndex - 1].Params.Count == 0))
                     {
-                        int ParamsButtonX = 500;
-
                         if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
                             FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "Params",
                                 keywordIndex,
-                                new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * 30 - VerticalScroll.Value),
-                                new Size(75, 20),
+                                new Point(settingsLabel + KeywordFieldConsts.ParamX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                                new Size(KeywordFieldConsts.ParamWidth, KeywordFieldConsts.FieldsHeight),
                                 "Params",
                                 Color.Black,
                                 new EventHandler(InstantiateParamsAddForm),
@@ -188,10 +194,14 @@ namespace RobotAutomationHelper.Scripts
         // Adds TextBox / Label / Add implementation / Add and remove keyword / Params
         protected void AddKeywordField(Keyword keyword, int keywordsCounter)
         {
+            int settingsLabel = 0;
+            if (FormType == FormType.Settings)
+                settingsLabel = KeywordFieldConsts.SettingsLabelWidth - KeywordFieldConsts.LabelWidth;
+
             FormControls.AddControl("TextWithList", "DynamicStep" + keywordsCounter + "Name",
                 keywordsCounter,
-                new Point(30 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                new Size(280, 20),
+                new Point(settingsLabel + KeywordFieldConsts.NameX - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                new Size(KeywordFieldConsts.NameWidth, KeywordFieldConsts.FieldsHeight),
                 keyword.Name.Trim(),
                 Color.Black,
                 null,
@@ -200,9 +210,9 @@ namespace RobotAutomationHelper.Scripts
 
             FormControls.AddControl("Label", "DynamicStep" + keywordsCounter + "Label",
                 keywordsCounter,
-                new Point(10 - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                new Size(20, 20),
-                keywordsCounter + ".",
+                new Point(KeywordFieldConsts.LabelX - HorizontalScroll.Value, initialYValue + 3 + (keywordsCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                new Size(settingsLabel + KeywordFieldConsts.LabelWidth, KeywordFieldConsts.FieldsHeight),
+                (FormType == FormType.Settings) ? KeywordFieldConsts.LabelNames[keywordsCounter-1] : keywordsCounter + ".",
                 Color.Black,
                 null,
                 this);
@@ -214,8 +224,8 @@ namespace RobotAutomationHelper.Scripts
                     buttonImplementation = "Edit Implementation";
                 FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "AddImplementation",
                     keywordsCounter,
-                    new Point(320 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                    new Size(120, 20),
+                    new Point(settingsLabel + KeywordFieldConsts.AddImplementationX - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                    new Size(KeywordFieldConsts.AddImplementationWidth, KeywordFieldConsts.FieldsHeight),
                     buttonImplementation,
                     Color.Black,
                     new EventHandler(InstantiateKeywordAddForm),
@@ -224,28 +234,26 @@ namespace RobotAutomationHelper.Scripts
 
             FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "AddKeyword",
                 keywordsCounter,
-                new Point(450 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                new Size(20, 20),
+                new Point(settingsLabel + KeywordFieldConsts.AddKeywordX - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                new Size(KeywordFieldConsts.AddKeywordWidth, KeywordFieldConsts.FieldsHeight),
                 "+",
                 Color.Black,
                 new EventHandler(InstantiateNameAndOutputForm),
                 this);
             FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "RemoveKeyword",
                 keywordsCounter,
-                new Point(470 - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                new Size(20, 20),
+                new Point(settingsLabel + KeywordFieldConsts.RemoveKeywordX - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                new Size(KeywordFieldConsts.RemoveKeywordWidth, KeywordFieldConsts.FieldsHeight),
                 "-",
                 Color.Black,
                 new EventHandler(RemoveKeywordFromThisForm),
                 this);
 
-            int ParamsButtonX = 500;
-
             if (keyword.Params != null && keyword.Params.Count != 0)
                 FormControls.AddControl("Button", "DynamicStep" + keywordsCounter + "Params",
                     keywordsCounter,
-                    new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * 30 - VerticalScroll.Value),
-                    new Size(75, 20),
+                    new Point(settingsLabel + KeywordFieldConsts.ParamX - HorizontalScroll.Value, initialYValue + (keywordsCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                    new Size(KeywordFieldConsts.ParamWidth, KeywordFieldConsts.FieldsHeight),
                     "Params",
                     Color.Black,
                     new EventHandler(InstantiateParamsAddForm),
@@ -257,6 +265,10 @@ namespace RobotAutomationHelper.Scripts
 
         private void UpdateThisFormAfterImlpementedChildKeyword(object sender, EventArgs e)
         {
+            int settingsLabel = 0;
+            if (FormType == FormType.Settings)
+                settingsLabel = KeywordFieldConsts.SettingsLabelWidth - KeywordFieldConsts.LabelWidth;
+
             if (((sender as BaseKeywordAddForm).FormType == FormType.Keyword) && !(sender as BaseKeywordAddForm).skip)
             {
                 Controls["DynamicStep" + IndexOfTheKeywordToBeImplemented + "Name"].Text = ThisFormKeywords[IndexOfTheKeywordToBeImplemented - 1].Name.Trim();
@@ -268,12 +280,10 @@ namespace RobotAutomationHelper.Scripts
                 {
                     if (Controls.Find("DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params", false).Length == 0)
                     {
-                        int ParamsButtonX = 500;
-
                         FormControls.AddControl("Button", "DynamicStep" + IndexOfTheKeywordToBeImplemented + "Params",
                             IndexOfTheKeywordToBeImplemented,
-                            new Point(ParamsButtonX - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * 30 - VerticalScroll.Value),
-                            new Size(75, 20),
+                            new Point(settingsLabel + KeywordFieldConsts.ParamX - HorizontalScroll.Value, initialYValue + (IndexOfTheKeywordToBeImplemented - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                            new Size(KeywordFieldConsts.ParamWidth, KeywordFieldConsts.FieldsHeight),
                             "Params",
                             Color.Black,
                             new EventHandler(InstantiateParamsAddForm),
@@ -391,6 +401,10 @@ namespace RobotAutomationHelper.Scripts
 
             if (NumberOfKeywordsInThisForm > 1)
             {
+                int settingsLabel = 0;
+                if (FormType == FormType.Settings)
+                    settingsLabel = KeywordFieldConsts.SettingsLabelWidth - KeywordFieldConsts.LabelWidth;
+
                 int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("RemoveKeyword", ""));
                 RemoveKeywordField(NumberOfKeywordsInThisForm, false);
                 ThisFormKeywords.RemoveAt(keywordIndex - 1);
@@ -404,8 +418,8 @@ namespace RobotAutomationHelper.Scripts
                     if (args != null && args.Count != 0)
                         FormControls.AddControl("Button", "DynamicStep" + i + "Params",
                             i,
-                            new Point(500 - HorizontalScroll.Value, initialYValue + (i - 1) * 30 - VerticalScroll.Value),
-                            new Size(75, 20),
+                            new Point(settingsLabel + KeywordFieldConsts.ParamX - HorizontalScroll.Value, initialYValue + (i - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                            new Size(KeywordFieldConsts.ParamWidth, KeywordFieldConsts.FieldsHeight),
                             "Params",
                             Color.Black,
                             new EventHandler(InstantiateParamsAddForm),
@@ -449,7 +463,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         Controls["DynamicStep" + i + "Params"].Location = new Point(
                             Controls["DynamicStep" + i + "Params"].Location.X,
-                            Controls["DynamicStep" + i + "Params"].Location.Y + 30);
+                            Controls["DynamicStep" + i + "Params"].Location.Y + KeywordFieldConsts.HorizontalDistanceBetweenKeywords);
                         Controls["DynamicStep" + i + "Params"].Name = "DynamicStep" + (i + 1) + "Params";
                     }
                 }

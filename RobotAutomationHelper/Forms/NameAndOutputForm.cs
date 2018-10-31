@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using RobotAutomationHelper.Scripts;
+using RobotAutomationHelper.Scripts.Static.Consts;
 
 namespace RobotAutomationHelper.Forms
 {
@@ -47,7 +48,7 @@ namespace RobotAutomationHelper.Forms
             FormControls.AddControl("TextWithList", "DynamicStep1Name",
                 1,
                 new Point(32 - HorizontalScroll.Value, 24 - VerticalScroll.Value),
-                new Size(280, 20),
+                new Size(KeywordFieldConsts.NameWidth, KeywordFieldConsts.FieldsHeight),
                 "",
                 Color.Black,
                 null,

@@ -50,13 +50,14 @@ namespace RobotAutomationHelper.Forms
                     break;
                 }
 
+            FolderType folderType = FolderType.Root;
+            if (CurrentSuiteSettings.OutputFilePath.Contains("Resources"))
+                folderType = FolderType.Resources;
+            if (CurrentSuiteSettings.OutputFilePath.Contains("Tests"))
+                folderType = FolderType.Tests;
+
             if (!CurrentSuiteSettings.Overwrite)
             {
-                FolderType folderType = FolderType.Root;
-                if (CurrentSuiteSettings.OutputFilePath.Contains("Resources"))
-                    folderType = FolderType.Resources;
-                if (CurrentSuiteSettings.OutputFilePath.Contains("Tests"))
-                    folderType = FolderType.Tests;
                 CurrentSuiteSettings.Documentation = RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, folderType), 
                     "Documentation").Replace("Documentation", "").Trim();
                 CurrentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, folderType), "Test Setup").Replace("Test Setup", "").Trim(),
@@ -88,11 +89,12 @@ namespace RobotAutomationHelper.Forms
 
             SuiteDocumentation.Text = CurrentSuiteSettings.Documentation;
 
-            for (int i = 1; i <=4; i++)
-                if (Controls["DynamicStep" + i + "Name"] != null)
-                    Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i-1].Name;
-                else
-                    AddKeywordField(ThisFormKeywords[i-1], i);
+            if (folderType == FolderType.Tests)
+                for (int i = 1; i <=4; i++)
+                    if (Controls["DynamicStep" + i + "Name"] != null)
+                        Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i-1].Name;
+                    else
+                        AddKeywordField(ThisFormKeywords[i-1], i);
         }
 
         internal void ShowSettingsContent()
