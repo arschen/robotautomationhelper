@@ -8,7 +8,7 @@ namespace RobotAutomationHelper.Scripts
     {
 
         // Fields and Properties ===================================================
-        internal static List<Includes> includes;
+        internal static List<Includes> Includes;
 
         // Methods =================================================================
         internal static void AddTestCaseToRobot(TestCase testCase)
@@ -21,8 +21,8 @@ namespace RobotAutomationHelper.Scripts
             if (addTestCase)
             {
                 Includes candidate = new Includes(fileName);
-                if (!includes.Contains(candidate))
-                    includes.Add(candidate);
+                if (!Includes.Contains(candidate))
+                    Includes.Add(candidate);
 
                 //Add test case to robot file
                 index = AddName(testCase.Name.Trim(), fileName, index, FormType.Test);
@@ -51,8 +51,8 @@ namespace RobotAutomationHelper.Scripts
                 if (keyword.Type == KeywordType.CUSTOM)
                 {
                     Includes candidate = new Includes(fileName);
-                    if (!includes.Contains(candidate))
-                        includes.Add(candidate);
+                    if (!Includes.Contains(candidate))
+                        Includes.Add(candidate);
                 }
 
             if (keyword.Saved && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
@@ -80,10 +80,10 @@ namespace RobotAutomationHelper.Scripts
                     if (addSteps)
                     {
                         if (keywordKeyword.Saved && keywordKeyword.Type == KeywordType.CUSTOM)
-                            includes[includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
+                            Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
                         else
                             if (keywordKeyword.Type == KeywordType.SELENIUM)
-                            includes[includes.IndexOf(container)].AddToList("SeleniumLibrary");
+                            Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
 
                         //adds test steps
                         index++;
@@ -150,7 +150,7 @@ namespace RobotAutomationHelper.Scripts
             FormType tag = FormType.Settings;
             string fileName;
 
-            foreach (Includes temp in includes)
+            foreach (Includes temp in Includes)
             {
                 if (temp.FilesToInclude.Count > 0)
                 {

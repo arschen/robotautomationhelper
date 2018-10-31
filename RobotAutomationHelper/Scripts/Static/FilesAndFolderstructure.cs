@@ -9,6 +9,12 @@ namespace RobotAutomationHelper.Scripts
         private static List<string> SavedFiles = new List<string>();
         private static string OutputFolder;
 
+        internal static void CleanUp()
+        {
+            SavedFiles = new List<string>();
+            OutputFolder = "";
+        }
+
         internal static List<string> GetShortSavedFiles(FolderType folderType)
         {
             List<string> results = new List<string>();

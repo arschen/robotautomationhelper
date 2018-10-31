@@ -4,7 +4,8 @@ Support for Gerkhin
 Python libraries implementation
 Easy implementation of other robot framework libraries
 Check for files in the folder when starting new project
-Add clear cache method
+Save and Exit for Settings
+Prevent start with variable in Name while in implementation form
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Bug with Auto.robot files added when not saved

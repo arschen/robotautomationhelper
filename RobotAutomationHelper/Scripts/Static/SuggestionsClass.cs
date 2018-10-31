@@ -14,6 +14,13 @@ namespace RobotAutomationHelper.Scripts
         private static List<Keyword> Selenium = new List<Keyword>();
         private static List<Keyword> BuiltIn = new List<Keyword>();
 
+        internal static void CleanUp()
+        {
+            Suggestions = new List<Keyword>();
+            Selenium = new List<Keyword>();
+            BuiltIn = new List<Keyword>();
+        }
+
         internal static bool IsInSuggestionsList(string name)
         {
             foreach (Keyword SuggestedKeyword in Suggestions)

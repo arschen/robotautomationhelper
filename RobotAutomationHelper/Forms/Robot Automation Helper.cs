@@ -1,5 +1,6 @@
 ﻿using RobotAutomationHelper.Forms;
 using RobotAutomationHelper.Scripts;
+using RobotAutomationHelper.Scripts.Static;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,7 +25,6 @@ namespace RobotAutomationHelper
         {
             InitializeComponent();
             ActiveControl = TestCaseNameLabel;
-            SuggestionsClass.PopulateSuggestionsList(true, true);
         }
 
         private void ApplicationMain_Load(object sender, EventArgs e)
@@ -65,6 +65,8 @@ namespace RobotAutomationHelper
 
         private void BrowseFolderButtonNewProject()
         {
+            Cache.ClearCache();
+            SuggestionsClass.PopulateSuggestionsList(true, true);
             ClearDynamicElements();
             TestCases = new List<TestCase>();
             settingsToolStripMenuItem.Visible = true;
@@ -75,6 +77,8 @@ namespace RobotAutomationHelper
 
         private void BrowseFolderButtonOpenExcel()
         {
+            Cache.ClearCache();
+            SuggestionsClass.PopulateSuggestionsList(true, true);
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog1.SelectedPath);
@@ -130,6 +134,8 @@ namespace RobotAutomationHelper
 
         private void BrowseFolderButtonExistingProject()
         {
+            Cache.ClearCache();
+            SuggestionsClass.PopulateSuggestionsList(true, true);
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog2.SelectedPath);
@@ -331,7 +337,7 @@ namespace RobotAutomationHelper
 
         private void SaveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WriteToRobot.includes = new List<Includes>();
+            WriteToRobot.Includes = new List<Includes>();
             List<int> testCasesToAdd = new List<int>();
             foreach (Control tempControl in Controls)
                 if (tempControl.Name.EndsWith("CheckBox") && ((CheckBox)tempControl).Checked)
