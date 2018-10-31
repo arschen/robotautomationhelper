@@ -543,6 +543,12 @@ namespace RobotAutomationHelper.Scripts
                 return false;
             else
             {
+                // the following block allows using variables at the beginning of the name without checking for 2 spaces
+                string[] checkForVariables = Name.Trim().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if (checkForVariables != null && checkForVariables.Length != 0)
+                    if (StringAndListOperations.StartsWithVariable(checkForVariables[0]))
+                        return true;
+
                 for (int i = 0; i < Name.Trim().Length - 1; i++)
                     if (Name.Trim()[i].Equals(' '))
                         if (Name.Trim()[i + 1].Equals(' '))

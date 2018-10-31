@@ -21,5 +21,15 @@ namespace RobotAutomationHelper.Scripts
                         args.RemoveAt(i);
             return args;
         }
+
+        internal static bool StartsWithVariable(string Name)
+        {
+            if (Name.StartsWith("${")
+                || Name.StartsWith("@{")
+                || Name.StartsWith("&{"))
+                if (Name.EndsWith("}"))
+                    return true;
+            return false;
+        }
     }
 }

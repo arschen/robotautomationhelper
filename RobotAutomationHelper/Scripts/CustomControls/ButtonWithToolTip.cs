@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts.CustomControls
@@ -70,6 +71,11 @@ namespace RobotAutomationHelper.Scripts.CustomControls
                 }
                 else
                 {
+                    string[] checkForVariables = Name.Trim().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    if (checkForVariables != null && checkForVariables.Length != 0)
+                        if (StringAndListOperations.StartsWithVariable(checkForVariables[0]))
+                                return true;
+
                     for (int i = 0; i < Name.Trim().Length - 1; i++)
                         if (Name.Trim()[i].Equals(' '))
                             if (Name.Trim()[i + 1].Equals(' '))
