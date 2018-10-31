@@ -297,13 +297,10 @@ namespace RobotAutomationHelper.Scripts
                 //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
                 FilesAndFolderStructure.AddImplementedKeywordFilesToSavedFiles(ThisFormKeywords, IndexOfTheKeywordToBeImplemented);
                 //update suggestion when not navigating to "Settings" form
-                if (!(FormParent.FormType == FormType.Settings))
+                if (!(FormType == FormType.Settings))
                 {
-                    if (!(FormParent.FormType == FormType.Keyword))
-                        UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
-                    else
-                        if (!(FormParent.FormType == FormType.Test))
-                        UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormParent.FormType);
+                    if (FormType == FormType.Keyword || FormType == FormType.Test)
+                        UpdateOutputFileSuggestions(Controls["OutputFile"] as ComboBox, FormType);
                 }
             }
         }
