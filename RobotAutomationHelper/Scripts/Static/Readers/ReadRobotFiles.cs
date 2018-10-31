@@ -67,7 +67,7 @@ namespace RobotAutomationHelper.Scripts
                                     else
                                     {
                                         currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
-                                            FilesAndFolderStructure.GetFolder(FolderType.Tests), true));
+                                            FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
                                         AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
                                             GetResourcesFromFile(arrLine));
                                     }
