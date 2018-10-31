@@ -508,6 +508,12 @@ namespace RobotAutomationHelper.Scripts
                     Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
                 else
                 {
+                    // starts with variable
+                    string[] checkForVariables = Controls["DynamicStep" + keywordIndex + "Name"].Text.Trim().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    if (checkForVariables != null && checkForVariables.Length != 0)
+                        if (StringAndListOperations.StartsWithVariable(checkForVariables[0]))
+                            Controls["DynamicStep" + keywordIndex + "AddImplementation"].Enabled = false;
+
                     recursive = false;
                     if (IsRecursive(ThisFormKeywords[keywordIndex - 1], this))
                     {
