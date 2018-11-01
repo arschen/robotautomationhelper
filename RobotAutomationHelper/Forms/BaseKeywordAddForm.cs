@@ -75,7 +75,7 @@ namespace RobotAutomationHelper.Scripts
                         FormControls.AddControl("Button", "DynamicStep" + keywordIndex + "AddImplementation",
                         keywordIndex,
                         new Point(settingsLabel + KeywordFieldConsts.AddImplementationX - HorizontalScroll.Value, initialYValue + (keywordIndex - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
-                        new Size(KeywordFieldConsts.AddKeywordWidth, KeywordFieldConsts.VerticalDistanceBetweenKeywords),
+                        new Size(KeywordFieldConsts.AddImplementationWidth, KeywordFieldConsts.FieldsHeight),
                         buttonImplementation,
                         Color.Black,
                         new EventHandler(InstantiateKeywordAddForm),
