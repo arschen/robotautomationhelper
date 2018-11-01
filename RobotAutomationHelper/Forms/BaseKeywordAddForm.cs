@@ -401,29 +401,19 @@ namespace RobotAutomationHelper.Scripts
 
             if (NumberOfKeywordsInThisForm > 1)
             {
-                int settingsLabel = 0;
-                if (FormType == FormType.Settings)
-                    settingsLabel = KeywordFieldConsts.SettingsLabelWidth - KeywordFieldConsts.LabelWidth;
-
                 int keywordIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("RemoveKeyword", ""));
                 RemoveKeywordField(NumberOfKeywordsInThisForm, false);
                 ThisFormKeywords.RemoveAt(keywordIndex - 1);
                 NumberOfKeywordsInThisForm--;
                 for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
                 {
-                    if (Controls.Find("DynamicStep" + i + "Params", false).Length != 0)
-                        FormControls.RemoveControlByKey("DynamicStep" + i + "Params", Controls);
-                    if (!(ThisFormKeywords[i - 1].Params == null)
-                        && !(ThisFormKeywords[i - 1].Params.Count == 0))
-                        FormControls.AddControl("Button", "DynamicStep" + i + "Params",
-                            i,
-                            new Point(settingsLabel + KeywordFieldConsts.ParamX - HorizontalScroll.Value, initialYValue + (i - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
-                            new Size(KeywordFieldConsts.ParamWidth, KeywordFieldConsts.FieldsHeight),
-                            "Params",
-                            Color.Black,
-                            new EventHandler(InstantiateParamsAddForm),
-                            this);
                     Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();
+                }
+
+                for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+                {
+                    (Controls["DynamicStep" + i + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[i - 1].Name);
+                    (Controls["DynamicStep" + i + "Name"] as TextWithList).EnableKeywordFields();
                 }
             }
         }
@@ -459,21 +449,11 @@ namespace RobotAutomationHelper.Scripts
             for (int i = 1; i < NumberOfKeywordsInThisForm; i++)
                 Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();
 
-            for (int i = NumberOfKeywordsInThisForm; i > keywordIndex; i--)
-                if (Controls.Find("DynamicStep" + i + "Params", false).Length != 0)
-                {
-                    if (i == NumberOfKeywordsInThisForm)
-                        FormControls.RemoveControlByKey("DynamicStep" + i + "Params", Controls);
-                    else
-                    {
-                        Controls["DynamicStep" + i + "Params"].Location = new Point(
-                            Controls["DynamicStep" + i + "Params"].Location.X,
-                            Controls["DynamicStep" + i + "Params"].Location.Y + KeywordFieldConsts.VerticalDistanceBetweenKeywords);
-                        Controls["DynamicStep" + i + "Params"].Name = "DynamicStep" + (i + 1) + "Params";
-                    }
-                }
-            (Controls["DynamicStep" + (keywordIndex + 1) + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[keywordIndex].Name);
-            (Controls["DynamicStep" + (keywordIndex + 1) + "Name"] as TextWithList).EnableKeywordFields();
+            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            {
+                (Controls["DynamicStep" + i + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[i - 1].Name);
+                (Controls["DynamicStep" + i + "Name"] as TextWithList).EnableKeywordFields();
+            }
         }
 
         internal static void UpdateOutputFileSuggestions(ComboBox comboBox, FormType formType)
