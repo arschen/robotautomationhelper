@@ -58,9 +58,19 @@ namespace RobotAutomationHelper
                 }
                 else
                 {
-                    DialogResult result = MessageBox.Show("Keyword with this name has already been implemented in the output file. \n" + memoryPath,
+                    DialogResult result = MessageBox.Show("This action will affect other test cases / keywords that are using this one \n" + memoryPath,
                         "Alert",
-                        MessageBoxButtons.OK);
+                        MessageBoxButtons.YesNo);
+                    if (result.Equals(DialogResult.Yes))
+                    {
+                        // TODO
+                        AddCurrentKeywordsToKeywordsList(sender, e);
+                        SaveChangesToKeyword(true);
+                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
+                        Close();
+                    }
+                    else
+                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = false;
                 }
             }
         }
@@ -241,13 +251,13 @@ namespace RobotAutomationHelper
                 ParentKeywords[ImplementationIndexFromTheParent]);
 
             if (!memoryPath.Equals(""))
-                KeywordName.ForeColor = Color.Red;
+                KeywordName.ForeColor = Color.DarkOrange;
             else
             {
                 if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources)
                     , KeywordName.Text, FormType.Keyword) != -1)
                 {
-                    KeywordName.ForeColor = Color.Red;
+                    KeywordName.ForeColor = Color.DarkOrange;
                     presentInRobotFile = true;
                 }
                 else

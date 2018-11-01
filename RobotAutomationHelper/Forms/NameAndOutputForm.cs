@@ -212,7 +212,7 @@ namespace RobotAutomationHelper.Forms
                 if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests)
                     , ContentName.Text, FormType.Test) != -1)
                 {
-                    ContentName.ForeColor = Color.Red;
+                    ContentName.ForeColor = Color.DarkOrange;
                     presentInRobotFile = true;
                 }
                 else
