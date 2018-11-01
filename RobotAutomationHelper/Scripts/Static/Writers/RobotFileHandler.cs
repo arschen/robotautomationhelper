@@ -310,8 +310,6 @@ namespace RobotAutomationHelper.Scripts
                     {
                         if (!(arrLine[i - 1].Trim().Equals("") && arrLine[i].Trim().Equals("")))
                             temp.Add(arrLine[i - 1]);
-                        else
-                            Console.WriteLine(i);
                     }
                     if (!arrLine[arrLine.Length - 1].Trim().Equals(""))
                         temp.Add(arrLine[arrLine.Length - 1]);

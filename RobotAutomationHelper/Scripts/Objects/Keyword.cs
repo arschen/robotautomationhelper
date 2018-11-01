@@ -7,6 +7,7 @@ namespace RobotAutomationHelper
     internal class Keyword
     {
         internal List<Keyword> Keywords { get; set; }
+        internal List<Keyword> ForLoopKeywords { get; set; }
         internal string Arguments { get; set; }
         internal List<Param> Params { get; set; }
         internal string Name { get; set; }

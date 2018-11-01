@@ -206,7 +206,8 @@ namespace RobotAutomationHelper.Scripts
                 Color.Black,
                 null,
                 this);
-            (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).MaxItemsInSuggestionsList = 15;
+            if ((Controls.Find("DynamicStep" + keywordsCounter + "Name", false).Length > 0))
+                (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).MaxItemsInSuggestionsList = 15;
 
             FormControls.AddControl("Label", "DynamicStep" + keywordsCounter + "Label",
                 keywordsCounter,
@@ -350,7 +351,11 @@ namespace RobotAutomationHelper.Scripts
         //adds the list of keywords ( + unimplemented ones ) to a Keyword and returns it
         protected Keyword AddCurrentKeywordsToKeywordsList(object sender, EventArgs e)
         {
-            string path = FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType));
+            string path;
+            if (!FormType.Equals(FormType.Params))
+                path = FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType));
+            else
+                path = FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].OutputFilePath;
 
             // if AddImplementation is pressed a new form should be opened which requires the keyword that it represents
             int keywordIndex = 0;
@@ -438,7 +443,13 @@ namespace RobotAutomationHelper.Scripts
                 if (checkNull == null) ThisFormKeywords = new List<Keyword>();
             }
 
-            ThisFormKeywords.Add(new Keyword("New Keyword", FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType))));
+            string path;
+            if (!FormType.Equals(FormType.Params))
+                path = FilesAndFolderStructure.ConcatFileNameToFolder(Controls["OutputFile"].Text, FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType));
+            else
+                path = FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].OutputFilePath;
+
+            ThisFormKeywords.Add(new Keyword("New Keyword", path));
 
             for (int i = NumberOfKeywordsInThisForm; i > keywordIndex; i--)
                 ThisFormKeywords[i].CopyKeyword(ThisFormKeywords[i - 1]);
@@ -613,6 +624,7 @@ namespace RobotAutomationHelper.Scripts
         Keyword,
         Test,
         Settings,
-        NameAndOutput
+        NameAndOutput,
+        Params
     }
 }

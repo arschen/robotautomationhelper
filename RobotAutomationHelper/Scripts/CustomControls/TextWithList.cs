@@ -125,15 +125,22 @@ namespace RobotAutomationHelper.Scripts
                 }
                 else
                 {
-                    if (ParentForm.FormType == FormType.Test)
+                    if (ParentForm.FormType == FormType.Params)
                     {
-                        (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                        (ParentForm as ParamAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
                     }
                     else
                     {
-                        if (ParentForm.FormType == FormType.NameAndOutput)
+                        if (ParentForm.FormType == FormType.Test)
                         {
-                            (ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                            (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                        }
+                        else
+                        {
+                            if (ParentForm.FormType == FormType.NameAndOutput)
+                            {
+                                (ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                            }
                         }
                     }
                 }
@@ -148,19 +155,26 @@ namespace RobotAutomationHelper.Scripts
             {
                 if (ParentForm.FormType == FormType.Settings)
                 {
-                    //(ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, "");
                 }
                 else
                 {
-                    if (ParentForm.FormType == FormType.Test)
+                    if (ParentForm.FormType == FormType.Params)
                     {
-                        (ParentForm as TestCaseAddForm).UpdateListNamesAndUpdateStateOfSave();
+                        (ParentForm as ParamAddForm).UpdateTheKeywordOnNameChange(this, "");
                     }
                     else
                     {
-                        if (ParentForm.FormType == FormType.NameAndOutput)
+                        if (ParentForm.FormType == FormType.Test)
                         {
-                            //(ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                            (ParentForm as TestCaseAddForm).UpdateListNamesAndUpdateStateOfSave();
+                        }
+                        else
+                        {
+                            if (ParentForm.FormType == FormType.NameAndOutput)
+                            {
+                                //(ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                            }
                         }
                     }
                 }
