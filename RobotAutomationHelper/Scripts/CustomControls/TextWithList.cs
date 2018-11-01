@@ -155,13 +155,13 @@ namespace RobotAutomationHelper.Scripts
             {
                 if (ParentForm.FormType == FormType.Settings)
                 {
-                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, "");
+                    (ParentForm as SettingsAddForm).UpdateNamesListAndUpdateStateOfSave();
                 }
                 else
                 {
                     if (ParentForm.FormType == FormType.Params)
                     {
-                        (ParentForm as ParamAddForm).UpdateTheKeywordOnNameChange(this, "");
+                        (ParentForm as ParamAddForm).UpdateListNamesAndUpdateStateOfSave();
                     }
                     else
                     {

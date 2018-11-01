@@ -1,4 +1,5 @@
 ﻿using RobotAutomationHelper.Scripts;
+using RobotAutomationHelper.Scripts.CustomControls;
 using System;
 using System.Collections.Generic;
 
@@ -85,6 +86,17 @@ namespace RobotAutomationHelper.Forms
             }
 
             var dialogResult = this.ShowDialog();
+        }
+
+        internal void UpdateListNamesAndUpdateStateOfSave()
+        {
+            List<string> namesList = new List<string>();
+            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            {
+                if (Controls.Find("DynamicStep" + i + "Name", false).Length > 0)
+                    namesList.Add(Controls["DynamicStep" + i + "Name"].Text);
+            }
+            (Save as ButtonWithToolTip).UpdateState(namesList, FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot");
         }
 
         private void Save_Click(object sender, EventArgs e)

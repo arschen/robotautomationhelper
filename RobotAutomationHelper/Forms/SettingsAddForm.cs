@@ -1,4 +1,5 @@
 ﻿using RobotAutomationHelper.Scripts;
+using RobotAutomationHelper.Scripts.CustomControls;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -135,6 +136,19 @@ namespace RobotAutomationHelper.Forms
                     RemoveKeywordField(i, false);
                 SetupsSettingsAddForm();
             }
+        }
+
+        internal void UpdateNamesListAndUpdateStateOfSave()
+        {
+            List<string> namesList = new List<string>
+            {
+            };
+            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            {
+                if (Controls.Find("DynamicStep" + i + "Name", false).Length > 0)
+                    namesList.Add(Controls["DynamicStep" + i + "Name"].Text);
+            }
+            (Save as ButtonWithToolTip).UpdateState(namesList, OutputFile.Text);
         }
     }
 }

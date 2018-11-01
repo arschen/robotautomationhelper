@@ -88,10 +88,8 @@ namespace RobotAutomationHelper.Scripts
 
                 if (ThisFormKeywords[keywordIndex - 1].Type.Equals(KeywordType.CUSTOM))
                 {
-                    List<string> args = new List<string>();
-                    args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[keywordIndex - 1].Arguments);
-
-                    if (args != null && args.Count != 0)
+                    if (!(ThisFormKeywords[keywordIndex - 1].Params == null)
+                        && !(ThisFormKeywords[keywordIndex - 1].Params.Count == 0))
                     {
                         if (Controls.Find("DynamicStep" + keywordIndex + "Params", false).Length == 0)
                         {
@@ -411,13 +409,12 @@ namespace RobotAutomationHelper.Scripts
                 RemoveKeywordField(NumberOfKeywordsInThisForm, false);
                 ThisFormKeywords.RemoveAt(keywordIndex - 1);
                 NumberOfKeywordsInThisForm--;
-                List<string> args = new List<string>();
                 for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
                 {
-                    args = StringAndListOperations.ReturnListOfArgs(ThisFormKeywords[i - 1].Arguments);
                     if (Controls.Find("DynamicStep" + i + "Params", false).Length != 0)
                         FormControls.RemoveControlByKey("DynamicStep" + i + "Params", Controls);
-                    if (args != null && args.Count != 0)
+                    if (!(ThisFormKeywords[i - 1].Params == null)
+                        && !(ThisFormKeywords[i - 1].Params.Count == 0))
                         FormControls.AddControl("Button", "DynamicStep" + i + "Params",
                             i,
                             new Point(settingsLabel + KeywordFieldConsts.ParamX - HorizontalScroll.Value, initialYValue + (i - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
@@ -471,7 +468,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         Controls["DynamicStep" + i + "Params"].Location = new Point(
                             Controls["DynamicStep" + i + "Params"].Location.X,
-                            Controls["DynamicStep" + i + "Params"].Location.Y + KeywordFieldConsts.HorizontalDistanceBetweenKeywords);
+                            Controls["DynamicStep" + i + "Params"].Location.Y + KeywordFieldConsts.VerticalDistanceBetweenKeywords);
                         Controls["DynamicStep" + i + "Params"].Name = "DynamicStep" + (i + 1) + "Params";
                     }
                 }
