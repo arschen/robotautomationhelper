@@ -150,6 +150,6 @@ namespace RobotAutomationHelper
 
     internal enum KeywordType
     {
-        CUSTOM, SELENIUM, BUILT_IN
+        CUSTOM, SELENIUM, BUILT_IN, FOR_LOOP_IN_RANGE, FOR_LOOP_ELEMENTS
     }
 }

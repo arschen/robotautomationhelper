@@ -33,6 +33,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void PopulateSuggestionsList(bool Selenium, bool BuiltIn)
         {
+            PopulateForLoops();
             if (Selenium)
                 PopulateSeleniumKeywords();
             if (BuiltIn)
@@ -59,6 +60,30 @@ namespace RobotAutomationHelper.Scripts
                 SuggestionsClass.Suggestions.Add(new Keyword(key.Name, key.Documentation,
                     key.Keywords, key.Arguments, key.Params,
                     key.OutputFilePath, key.Saved, key.Type, key.SuggestionIndex));
+        }
+
+        private static void PopulateForLoops()
+        {
+            List<Param> currentKeywordParams = new List<Param>();
+            currentKeywordParams.Add(new Param("Param name", ""));
+            currentKeywordParams.Add(new Param("Initial value", ""));
+            currentKeywordParams.Add(new Param("End value", ""));
+            Keyword ForLoopInRange = new Keyword("ForLoopInRange", 
+                "For loop from the initial value to the end value ( excluding ) using the param.", null, "", 
+                currentKeywordParams, "", false, 
+                KeywordType.FOR_LOOP_IN_RANGE, -1);
+
+            Suggestions.Add(ForLoopInRange);
+
+            currentKeywordParams = new List<Param>();
+            currentKeywordParams.Add(new Param("Param name", ""));
+            currentKeywordParams.Add(new Param("List", ""));
+            Keyword ForLoopElements = new Keyword("ForLoopElements",
+                "Loops through all the values in the provided list.", null, "",
+                currentKeywordParams, "", false,
+                KeywordType.FOR_LOOP_ELEMENTS, -1);
+
+            Suggestions.Add(ForLoopElements);
         }
     }
 }
