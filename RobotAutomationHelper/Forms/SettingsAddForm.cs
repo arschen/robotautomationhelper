@@ -15,7 +15,7 @@ namespace RobotAutomationHelper.Forms
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("SettingsAddForm Constructor");
             InitializeComponent();
-            initialYValue = 100;
+            initialYValue = 120;
             FormType = FormType.Settings;
             SetupsSettingsAddForm();
         }
@@ -118,6 +118,12 @@ namespace RobotAutomationHelper.Forms
                     break;
                 }
             }
+        }
+
+        private void SaveAndExit_Click(object sender, EventArgs e)
+        {
+            Save_Click(sender, e);
+            Close();
         }
 
         private void OutputFile_SelectedIndexChanged(object sender, EventArgs e)

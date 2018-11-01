@@ -32,10 +32,11 @@ namespace RobotAutomationHelper.Forms
         {
             this.OutputFile = new System.Windows.Forms.ComboBox();
             this.OutputLabel = new System.Windows.Forms.Label();
-            this.Save = new ButtonWithToolTip();
             this.SuiteDocumentationLabel = new System.Windows.Forms.Label();
             this.SuiteDocumentation = new System.Windows.Forms.TextBox();
             this.AddSettingsLabel = new System.Windows.Forms.Label();
+            this.SaveAndExit = new ButtonWithToolTip();
+            this.Save = new ButtonWithToolTip();
             this.SuspendLayout();
             // 
             // OutputFile
@@ -97,11 +98,22 @@ namespace RobotAutomationHelper.Forms
             this.AddSettingsLabel.Text = "Edit Settings";
             this.AddSettingsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // SaveAndExit
+            // 
+            this.SaveAndExit.Location = new System.Drawing.Point(626, 90);
+            this.SaveAndExit.Name = "SaveAndExit";
+            this.SaveAndExit.Size = new System.Drawing.Size(100, 30);
+            this.SaveAndExit.TabIndex = 26;
+            this.SaveAndExit.Text = "Save and Exit";
+            this.SaveAndExit.UseVisualStyleBackColor = true;
+            this.SaveAndExit.Click += new System.EventHandler(this.SaveAndExit_Click);
+            // 
             // SettingsAddForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.SaveAndExit);
             this.Controls.Add(this.OutputFile);
             this.Controls.Add(this.OutputLabel);
             this.Controls.Add(this.Save);
@@ -119,9 +131,10 @@ namespace RobotAutomationHelper.Forms
 
         private System.Windows.Forms.ComboBox OutputFile;
         private System.Windows.Forms.Label OutputLabel;
-        private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Label SuiteDocumentationLabel;
         private System.Windows.Forms.TextBox SuiteDocumentation;
         private System.Windows.Forms.Label AddSettingsLabel;
+        private ButtonWithToolTip SaveAndExit;
+        private ButtonWithToolTip Save;
     }
 }
