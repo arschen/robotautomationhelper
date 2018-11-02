@@ -67,6 +67,9 @@ namespace RobotAutomationHelper
                         AddCurrentKeywordsToKeywordsList(sender, e);
                         SaveChangesToKeyword(true);
                         ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
+                        TestCasesListOperations.OverwriteOccurrencesInKeywordTree(KeywordName.Text,
+                            FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
+                            ParentKeywords[ImplementationIndexFromTheParent]);
                         Close();
                     }
                     else

@@ -58,5 +58,46 @@ namespace RobotAutomationHelper.Scripts
                 }
             return "";
         }
+
+        internal static void OverwriteOccurrencesInKeywordTree(string name, string fileName, Keyword thisKeyword)
+        {
+            foreach (TestCase test in RobotAutomationHelper.TestCases)
+                if (test.Steps != null)
+                    foreach (Keyword keyword in test.Steps)
+                    {
+                        if (keyword.Saved && !ReferenceEquals(keyword, thisKeyword)
+                            && keyword.Name.Trim().ToLower().Equals(name.ToLower())
+                            && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
+                            if (keyword.SuggestionIndex == thisKeyword.SuggestionIndex)
+                                keyword.CopyKeyword(thisKeyword);
+
+                        if (keyword.Keywords != null)
+                            foreach (Keyword key in keyword.Keywords)
+                            {
+                                if (!key.Recursive)
+                                {
+                                    OverwriteOccurrencesInChildrenKeywords(name, key, fileName, thisKeyword);
+                                }
+                            }
+                    }
+        }
+
+        private static void OverwriteOccurrencesInChildrenKeywords(string name, Keyword keyword, string fileName, Keyword thisKeyword)
+        {
+            if (!ReferenceEquals(keyword, thisKeyword) && keyword.Implemented
+                && keyword.Name.Trim().ToLower().Equals(name.ToLower())
+                && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
+                if (keyword.SuggestionIndex == thisKeyword.SuggestionIndex)
+                    keyword.CopyKeyword(thisKeyword);
+
+            if (keyword.Keywords != null)
+                foreach (Keyword key in keyword.Keywords)
+                {
+                    if (!key.Recursive)
+                    {
+                        OverwriteOccurrencesInChildrenKeywords(name, key, fileName, thisKeyword);
+                    }
+                }
+        }
     }
 }
