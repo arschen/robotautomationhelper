@@ -87,7 +87,11 @@ namespace RobotAutomationHelper.Scripts
 
                         //adds test steps
                         index++;
-                        RobotFileHandler.FileLineAdd("\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
+                        if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS && keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS)
+                            //TODO add actual FOR Loop line + keywords inside it
+                            RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
+                        else
+                            RobotFileHandler.FileLineAdd("\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
                     }
 
                     if (!keywordKeyword.Recursive)
