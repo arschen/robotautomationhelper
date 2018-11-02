@@ -105,6 +105,20 @@ namespace RobotAutomationHelper.Forms
             for (int i = 1; i <= paramsCount; i++)
                 formParams.Add(new Param(this.Controls["DynamicStep" + i + "ParamName"].Text, this.Controls["DynamicStep" + i + "ParamValue"].Text));
 
+            if (keyword.Type.Equals(KeywordType.FOR_LOOP_ELEMENTS) || keyword.Type.Equals(KeywordType.FOR_LOOP_IN_RANGE))
+            {
+                if (ThisFormKeywords != null && ThisFormKeywords.Count != 0)
+                {
+                    keyword.ForLoopKeywords = new List<Keyword>();
+                    foreach (Keyword step in ThisFormKeywords)
+                    {
+                        Keyword temp = new Keyword();
+                        temp.CopyKeyword(step);
+                        keyword.ForLoopKeywords.Add(temp);
+                    }
+                }
+            }
+
             keyword.Params = formParams;
             this.Close();
         }

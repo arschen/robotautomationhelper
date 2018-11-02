@@ -1,10 +1,11 @@
-Support for For loops and conditional statements ( In progress )
 Support for template
 Support for Gerkhin
 Python libraries implementation
 Easy implementation of other robot framework libraries
 Check for files in the folder when starting new project
-Overwriting to all occurances in the memory
+Overwriting to all occurrences in the memory
+Write ForLoops to robot files
+Read ForLoops from robot files
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)

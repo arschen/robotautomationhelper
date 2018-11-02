@@ -244,13 +244,20 @@ namespace RobotAutomationHelper.Scripts
                 (ParentForm as KeywordAddForm).DisableKeywordFields(IndexOf);
             else
             {
-                if (ParentForm.FormType == FormType.Settings)
+                if (ParentForm.FormType == FormType.Params)
                 {
-                    (ParentForm as SettingsAddForm).DisableKeywordFields(IndexOf);
+                    (ParentForm as ParamAddForm).DisableKeywordFields(IndexOf);
                 }
                 else
+                {
+                    if (ParentForm.FormType == FormType.Settings)
+                    {
+                        (ParentForm as SettingsAddForm).DisableKeywordFields(IndexOf);
+                    }
+                    else
                     if (ParentForm.FormType == FormType.Test)
-                    (ParentForm as TestCaseAddForm).DisableKeywordFields(IndexOf);
+                        (ParentForm as TestCaseAddForm).DisableKeywordFields(IndexOf);
+                }
             }
         }
         internal void EnableKeywordFields()
@@ -259,13 +266,20 @@ namespace RobotAutomationHelper.Scripts
                 (ParentForm as KeywordAddForm).EnableKeywordFields(IndexOf);
             else
             {
-                if (ParentForm.FormType == FormType.Settings)
+                if (ParentForm.FormType == FormType.Params)
                 {
-                    (ParentForm as SettingsAddForm).EnableKeywordFields(IndexOf);
+                    (ParentForm as ParamAddForm).EnableKeywordFields(IndexOf);
                 }
                 else
+                {
+                    if (ParentForm.FormType == FormType.Settings)
+                    {
+                        (ParentForm as SettingsAddForm).EnableKeywordFields(IndexOf);
+                    }
+                    else
                     if (ParentForm.FormType == FormType.Test)
-                    (ParentForm as TestCaseAddForm).EnableKeywordFields(IndexOf);
+                        (ParentForm as TestCaseAddForm).EnableKeywordFields(IndexOf);
+                }
             }
         }
     }
