@@ -83,7 +83,7 @@ namespace RobotAutomationHelper.Scripts
                             Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
                         else
                             if (keywordKeyword.Type == KeywordType.SELENIUM)
-                            Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
+                                Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
 
                         //adds test steps
                         if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS || keywordKeyword.Type == KeywordType.FOR_LOOP_IN_RANGE)
@@ -100,6 +100,13 @@ namespace RobotAutomationHelper.Scripts
                             {
                                 index++;
                                 RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + key.Name + key.ParamsToString(), fileName, index);
+
+                                if (key.Saved && key.Type == KeywordType.CUSTOM)
+                                    Includes[Includes.IndexOf(container)].AddToList(key.OutputFilePath);
+                                else
+                                    if (key.Type == KeywordType.SELENIUM)
+                                        Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
+
                                 if (!key.Recursive)
                                     AddKeywordToRobot(key);
                             }

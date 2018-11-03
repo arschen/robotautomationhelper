@@ -33,7 +33,7 @@ namespace RobotAutomationHelper.Scripts
                         bool start = false;
                         for (int i = 0; i < arrLine.Length; i++)
                         {
-                            if (start && arrLine[i].StartsWith("***") || i + 1 == arrLine.Length)
+                            if (start && arrLine[i].StartsWith("***"))
                             {
                                 if (!currentTestCase.Equals(""))
                                 {
@@ -66,11 +66,71 @@ namespace RobotAutomationHelper.Scripts
                                         currentTestCaseTags = arrLine[i];
                                     else
                                     {
-                                        currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
-                                            FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
-                                        AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
-                                            GetResourcesFromFile(arrLine));
+                                        if (!arrLine[i].Trim().ToLower().StartsWith(":for")
+                                            && !arrLine[i].Trim().ToLower().StartsWith("\\"))
+                                        {
+                                            currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
+                                                FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                            AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
+                                                GetResourcesFromFile(arrLine));
+                                        }
+                                        else
+                                        {
+                                            if (arrLine[i].Trim().ToLower().StartsWith(":for"))
+                                            {
+                                                if (arrLine[i].Trim().ToLower().Contains("range"))
+                                                {
+                                                    Keyword temp = new Keyword();
+                                                    temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_IN_RANGE));
+                                                    string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                                                    if (splitKeyword.Length == 1)
+                                                        splitKeyword = arrLine[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                                    temp.Params[0].Value = splitKeyword[1];
+                                                    temp.Params[1].Value = splitKeyword[3];
+                                                    temp.Params[2].Value = splitKeyword[4];
+                                                    currentTestCaseTestSteps.Add(temp);
+                                                    currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords = new List<Keyword>();
+                                                }
+                                                else
+                                                {
+                                                    Keyword temp = new Keyword();
+                                                    temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_ELEMENTS));
+                                                    string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                                                    if (splitKeyword.Length == 1)
+                                                        splitKeyword = arrLine[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                                    temp.Params[0].Value = splitKeyword[1];
+                                                    temp.Params[1].Value = splitKeyword[3];
+                                                    currentTestCaseTestSteps.Add(temp);
+                                                    currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords = new List<Keyword>();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords.Add(
+                                                    new Keyword(arrLine[i].Trim().Remove(0,1).Trim(),
+                                                    FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                                AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords[currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords.Count - 1],
+                                                    GetResourcesFromFile(arrLine));
+                                            }
+                                        }
                                     }
+                                }
+                            }
+
+                            if (i + 1 == arrLine.Length)
+                            {
+                                if (!currentTestCase.Equals(""))
+                                {
+                                    //Setup test creation for previous Test case
+                                    AddTestCaseAndResetValues(fileName);
+                                    if (!currentTestCase.Equals(arrLine[i]))
+                                        currentTestCase = arrLine[i];
+                                    else
+                                        currentTestCase = "";
+                                }
+                                else
+                                {
+                                    currentTestCase = arrLine[i];
                                 }
                             }
 
@@ -136,10 +196,53 @@ namespace RobotAutomationHelper.Scripts
                             {
                                 if (keyword.Keywords == null)
                                     keyword.Keywords = new List<Keyword>();
-                                keyword.Keywords.Add(new Keyword(arrLine[i],
-                                    fileName, true));
-                                AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
-                                    GetResourcesFromFile(arrLine));
+                                if (!arrLine[i].Trim().ToLower().StartsWith(":for")
+                                            && !arrLine[i].Trim().ToLower().StartsWith("\\"))
+                                {
+                                    keyword.Keywords.Add(new Keyword(arrLine[i],
+                                        FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                    AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
+                                        GetResourcesFromFile(arrLine));
+                                }
+                                else
+                                {
+                                    if (arrLine[i].Trim().ToLower().StartsWith(":for"))
+                                    {
+                                        if (arrLine[i].Trim().ToLower().Contains("range"))
+                                        {
+                                            Keyword temp = new Keyword();
+                                            temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_IN_RANGE));
+                                            string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                                            if (splitKeyword.Length == 1)
+                                                splitKeyword = arrLine[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                            temp.Params[0].Value = splitKeyword[1];
+                                            temp.Params[1].Value = splitKeyword[3];
+                                            temp.Params[2].Value = splitKeyword[4];
+                                            keyword.Keywords.Add(temp);
+                                            keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords = new List<Keyword>();
+                                        }
+                                        else
+                                        {
+                                            Keyword temp = new Keyword();
+                                            temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_ELEMENTS));
+                                            string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                                            if (splitKeyword.Length == 1)
+                                                splitKeyword = arrLine[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                            temp.Params[0].Value = splitKeyword[1];
+                                            temp.Params[1].Value = splitKeyword[3];
+                                            keyword.Keywords.Add(temp);
+                                            keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords = new List<Keyword>();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Add(
+                                            new Keyword(arrLine[i].Trim().Remove(0, 1).Trim(),
+                                            FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                        AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords[keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Count - 1],
+                                            GetResourcesFromFile(arrLine));
+                                    }
+                                }
                             }
                         }
                     }

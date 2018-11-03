@@ -68,9 +68,9 @@ namespace RobotAutomationHelper.Scripts
             currentKeywordParams.Add(new Param("Param name", ""));
             currentKeywordParams.Add(new Param("Initial value", ""));
             currentKeywordParams.Add(new Param("End value", ""));
-            Keyword ForLoopInRange = new Keyword("ForLoopInRange", 
-                "For loop from the initial value to the end value ( excluding ) using the param.", null, "", 
-                currentKeywordParams, "", false, 
+            Keyword ForLoopInRange = new Keyword("ForLoopInRange",
+                "For loop from the initial value to the end value ( excluding ) using the param.", null, "",
+                currentKeywordParams, "", false,
                 KeywordType.FOR_LOOP_IN_RANGE, -1);
 
             Suggestions.Add(ForLoopInRange);
@@ -84,6 +84,14 @@ namespace RobotAutomationHelper.Scripts
                 KeywordType.FOR_LOOP_ELEMENTS, -1);
 
             Suggestions.Add(ForLoopElements);
+        }
+
+        internal static Keyword GetForLoop(KeywordType keywordType)
+        {
+            foreach (Keyword temp in Suggestions)
+                if (temp.Type.Equals(keywordType))
+                    return temp;
+            return null;
         }
     }
 }
