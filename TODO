@@ -3,7 +3,6 @@ Support for Gerkhin
 Python libraries implementation
 Easy implementation of other robot framework libraries
 Check for files in the folder when starting new project
-Write ForLoops to robot files
 Read ForLoops from robot files
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )

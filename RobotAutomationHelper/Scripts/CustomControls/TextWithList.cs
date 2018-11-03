@@ -106,6 +106,7 @@ namespace RobotAutomationHelper.Scripts
             }
             ForcedFocusToList = false;
         }
+
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);

@@ -63,7 +63,6 @@ namespace RobotAutomationHelper
                         MessageBoxButtons.YesNo);
                     if (result.Equals(DialogResult.Yes))
                     {
-                        // TODO
                         AddCurrentKeywordsToKeywordsList(sender, e);
                         SaveChangesToKeyword(true);
                         ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;

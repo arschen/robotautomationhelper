@@ -86,12 +86,29 @@ namespace RobotAutomationHelper.Scripts
                             Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
 
                         //adds test steps
-                        index++;
-                        if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS && keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS)
+                        if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS || keywordKeyword.Type == KeywordType.FOR_LOOP_IN_RANGE)
+                        {
                             //TODO add actual FOR Loop line + keywords inside it
-                            RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
+                            index++;
+                            if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS)
+                                RobotFileHandler.FileLineAdd("\t" + ":FOR" + "\t" + keywordKeyword.Params[0].Value + "\t" + "IN" + "\t" + keywordKeyword.Params[1].Value, fileName, index);
+                            else
+                                if (keywordKeyword.Type == KeywordType.FOR_LOOP_IN_RANGE)
+                                RobotFileHandler.FileLineAdd("\t" + ":FOR" + "\t" + keywordKeyword.Params[0].Value + "\t" + "IN RANGE" + "\t" + keywordKeyword.Params[1].Value + "\t" + keywordKeyword.Params[2].Value, fileName, index);
+
+                            foreach (Keyword key in keywordKeyword.ForLoopKeywords)
+                            {
+                                index++;
+                                RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + key.Name + key.ParamsToString(), fileName, index);
+                                if (!key.Recursive)
+                                    AddKeywordToRobot(key);
+                            }
+                        }
                         else
+                        {
+                            index++;
                             RobotFileHandler.FileLineAdd("\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
+                        }    
                     }
 
                     if (!keywordKeyword.Recursive)

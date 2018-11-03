@@ -310,7 +310,11 @@ namespace RobotAutomationHelper.Scripts
             foreach (Keyword SuggestedKeyword in SuggestionsClass.Suggestions)
                 if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
                 {
-                    keyword.CopyKeyword(SuggestedKeyword); //CopyKeyword
+                    if (!keyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
+                        keyword.CopyKeyword(SuggestedKeyword);
+                    else
+                        if (!keyword.Implemented)
+                            keyword.CopyKeyword(SuggestedKeyword);
                     return;
                 }
 
