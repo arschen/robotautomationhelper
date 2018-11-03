@@ -27,7 +27,6 @@ namespace RobotAutomationHelper.Scripts
             if (Name.StartsWith("${")
                 || Name.StartsWith("@{")
                 || Name.StartsWith("&{"))
-                if (Name.EndsWith("}"))
                     return true;
             return false;
         }

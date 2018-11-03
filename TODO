@@ -4,7 +4,9 @@ Python libraries implementation
 Easy implementation of other robot framework libraries
 Check for files in the folder when starting new project
 Read ForLoops from robot files
+Read keywords starting with variables ( DONE )
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
   Settings keywords are not written to robot files
+  Keywords starting with variables and implemented for loops are added to suggestions

@@ -65,12 +65,18 @@ namespace RobotAutomationHelper
         }
 
         // convert keyword string taken from file into keyword
-        internal Keyword(string KeywordString, string OutputFilePath, bool keywordString)
+        internal Keyword(string KeywordString, string OutputFilePath, bool IsKeywordString)
         {
             if (!KeywordString.Equals(""))
             {
                 Implemented = true;
-                string[] splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                string[] splitKeyword;
+                KeywordString = KeywordString.Trim();
+                if (!StringAndListOperations.StartsWithVariable(KeywordString))
+                    splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                else
+                    splitKeyword = new string[] { KeywordString };
+
                 bool found = false;
                 foreach (Keyword key in SuggestionsClass.Suggestions)
                 {
