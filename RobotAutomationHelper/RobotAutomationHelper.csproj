@@ -89,6 +89,7 @@
     <Compile Include="Scripts\CustomControls\LabelWithToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Scripts\ExtensionMethods.cs" />
     <Compile Include="Scripts\Static\Cache.cs" />
     <Compile Include="Scripts\Static\Consts\KeywordFieldConsts.cs" />
     <Compile Include="Scripts\Static\Readers\ReadRobotFiles.cs" />

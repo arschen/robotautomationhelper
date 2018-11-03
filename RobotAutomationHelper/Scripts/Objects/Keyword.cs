@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace RobotAutomationHelper
 {
+    [Serializable]
     internal class Keyword
     {
         internal List<Keyword> Keywords { get; set; }
@@ -24,9 +25,19 @@ namespace RobotAutomationHelper
         {
             this.Name = Name;
             this.Documentation = Documentation;
-            this.Keywords = Keywords;
+            if (Keywords != null)
+                this.Keywords = ExtensionMethods.DeepClone(Keywords);
+            else
+                this.Keywords = new List<Keyword>();
+            if (ForLoopKeywords != null)
+                ForLoopKeywords = ExtensionMethods.DeepClone(ForLoopKeywords);
+            else
+                ForLoopKeywords = new List<Keyword>();
             this.Arguments = Arguments;
-            this.Params = Params;
+            if (Params != null)
+                this.Params = ExtensionMethods.DeepClone(Params);
+            else
+                this.Params = new List<Param>();
             this.OutputFilePath = OutputFilePath;
             Implemented = true;
             Overwrite = false;
@@ -44,9 +55,19 @@ namespace RobotAutomationHelper
         {
             Name = keyword.Name;
             Documentation = keyword.Documentation;
-            Keywords = keyword.Keywords;
-            Arguments = keyword.Arguments;
-            Params = keyword.Params;
+            if (keyword.Keywords != null)
+                Keywords = ExtensionMethods.DeepClone(keyword.Keywords);
+            else
+                Keywords = new List<Keyword>();
+            if (keyword.ForLoopKeywords != null)
+                ForLoopKeywords = ExtensionMethods.DeepClone(keyword.ForLoopKeywords);
+            else
+                ForLoopKeywords = new List<Keyword>();
+            this.Arguments = Arguments;
+            if (keyword.Params != null)
+                Params = ExtensionMethods.DeepClone(keyword.Params);
+            else
+                Params = new List<Param>();
             OutputFilePath = keyword.OutputFilePath;
             Implemented = keyword.Implemented;
             Saved = keyword.Saved;

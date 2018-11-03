@@ -1,5 +1,8 @@
-﻿namespace RobotAutomationHelper
+﻿using System;
+
+namespace RobotAutomationHelper
 {
+    [Serializable]
     internal class Param
     {
         internal string Name { get; set; }

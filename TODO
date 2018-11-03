@@ -8,4 +8,3 @@ BugFixes:
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
   Settings keywords are not written to robot files
   Keywords starting with variables and implemented for loops are added to suggestions
-  Params get duplicated ( to investigate )
