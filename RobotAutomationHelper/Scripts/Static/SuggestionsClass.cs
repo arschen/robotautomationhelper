@@ -64,10 +64,12 @@ namespace RobotAutomationHelper.Scripts
 
         private static void PopulateForLoops()
         {
-            List<Param> currentKeywordParams = new List<Param>();
-            currentKeywordParams.Add(new Param("Param name", ""));
-            currentKeywordParams.Add(new Param("Initial value", ""));
-            currentKeywordParams.Add(new Param("End value", ""));
+            List<Param> currentKeywordParams = new List<Param>
+            {
+                new Param("Param name", ""),
+                new Param("Initial value", ""),
+                new Param("End value", "")
+            };
             Keyword ForLoopInRange = new Keyword("ForLoopInRange",
                 "For loop from the initial value to the end value ( excluding ) using the param.", null, "",
                 currentKeywordParams, "", false,
@@ -75,9 +77,11 @@ namespace RobotAutomationHelper.Scripts
 
             Suggestions.Add(ForLoopInRange);
 
-            currentKeywordParams = new List<Param>();
-            currentKeywordParams.Add(new Param("Param name", ""));
-            currentKeywordParams.Add(new Param("List", ""));
+            currentKeywordParams = new List<Param>
+            {
+                new Param("Param name", ""),
+                new Param("List", "")
+            };
             Keyword ForLoopElements = new Keyword("ForLoopElements",
                 "Loops through all the values in the provided list.", null, "",
                 currentKeywordParams, "", false,

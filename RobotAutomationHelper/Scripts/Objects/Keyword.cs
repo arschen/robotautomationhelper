@@ -29,15 +29,18 @@ namespace RobotAutomationHelper
                 this.Keywords = ExtensionMethods.DeepClone(Keywords);
             else
                 this.Keywords = new List<Keyword>();
+
             if (ForLoopKeywords != null)
                 ForLoopKeywords = ExtensionMethods.DeepClone(ForLoopKeywords);
             else
                 ForLoopKeywords = new List<Keyword>();
-            this.Arguments = Arguments;
+            
             if (Params != null)
                 this.Params = ExtensionMethods.DeepClone(Params);
             else
                 this.Params = new List<Param>();
+
+            this.Arguments = Arguments;
             this.OutputFilePath = OutputFilePath;
             Implemented = true;
             Overwrite = false;
@@ -55,19 +58,23 @@ namespace RobotAutomationHelper
         {
             Name = keyword.Name;
             Documentation = keyword.Documentation;
+
             if (keyword.Keywords != null)
                 Keywords = ExtensionMethods.DeepClone(keyword.Keywords);
             else
                 Keywords = new List<Keyword>();
+
             if (keyword.ForLoopKeywords != null)
                 ForLoopKeywords = ExtensionMethods.DeepClone(keyword.ForLoopKeywords);
             else
                 ForLoopKeywords = new List<Keyword>();
-            this.Arguments = Arguments;
+
             if (keyword.Params != null)
                 Params = ExtensionMethods.DeepClone(keyword.Params);
             else
                 Params = new List<Param>();
+
+            Arguments = keyword.Arguments;
             OutputFilePath = keyword.OutputFilePath;
             Implemented = keyword.Implemented;
             Saved = keyword.Saved;

@@ -254,13 +254,33 @@ namespace RobotAutomationHelper.Scripts
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.SuiteSetup != null && !suiteSettings.SuiteSetup.Name.Trim().Equals(""))
+                    {
+                        RemoveKeywordForOverwriting(suiteSettings.SuiteSetup);
+                        if (suiteSettings.SuiteSetup.Overwrite)
+                            TestCaseKeywordRemove(suiteSettings.SuiteSetup.Name, suiteSettings.SuiteSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteSetup);
+                    }
                     if (suiteSettings.SuiteTeardown != null && !suiteSettings.SuiteTeardown.Name.Trim().Equals(""))
+                    {
+                        RemoveKeywordForOverwriting(suiteSettings.SuiteTeardown);
+                        if (suiteSettings.SuiteTeardown.Overwrite)
+                            TestCaseKeywordRemove(suiteSettings.SuiteTeardown.Name, suiteSettings.SuiteTeardown.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteTeardown);
+                    }
                     if (suiteSettings.TestSetup != null && !suiteSettings.TestSetup.Name.Trim().Equals(""))
+                    {
+                        RemoveKeywordForOverwriting(suiteSettings.TestSetup);
+                        if (suiteSettings.TestSetup.Overwrite)
+                            TestCaseKeywordRemove(suiteSettings.TestSetup.Name, suiteSettings.TestSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.TestSetup);
+                    }
                     if (suiteSettings.TestTeardown != null && !suiteSettings.TestTeardown.Name.Trim().Equals(""))
+                    {
+                        RemoveKeywordForOverwriting(suiteSettings.TestTeardown);
+                        if (suiteSettings.TestTeardown.Overwrite)
+                            TestCaseKeywordRemove(suiteSettings.TestTeardown.Name, suiteSettings.TestTeardown.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.TestTeardown);
+                    }
                 }
         }
 
@@ -307,6 +327,7 @@ namespace RobotAutomationHelper.Scripts
                     }
                 }
         }
+
         internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
         {
             string[] arrLine;

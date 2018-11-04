@@ -51,6 +51,7 @@ namespace RobotAutomationHelper.Forms
                     break;
                 }
 
+
             FolderType folderType = FolderType.Root;
             if (CurrentSuiteSettings.OutputFilePath.Contains("Resources"))
                 folderType = FolderType.Resources;
@@ -59,16 +60,23 @@ namespace RobotAutomationHelper.Forms
 
             if (!CurrentSuiteSettings.Overwrite)
             {
-                CurrentSuiteSettings.Documentation = RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, folderType), 
+                string realOutput = CurrentSuiteSettings.OutputFilePath;
+                if (folderType.Equals(FolderType.Tests))
+                    realOutput = realOutput.Remove(0, 5);
+                else
+                    if (folderType.Equals(FolderType.Resources))
+                    realOutput = realOutput.Remove(0, 9);
+
+                CurrentSuiteSettings.Documentation = RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), 
                     "Documentation").Replace("Documentation", "").Trim();
-                CurrentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, folderType), "Test Setup").Replace("Test Setup", "").Trim(),
-                    CurrentSuiteSettings.OutputFilePath, true);
-                CurrentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, folderType), "Test Teardown").Replace("Test Teardown", "").Trim(), 
-                    CurrentSuiteSettings.OutputFilePath, true);
-                CurrentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, folderType), "Suite Setup").Replace("Suite Setup", "").Trim(), 
-                    CurrentSuiteSettings.OutputFilePath, true);
-                CurrentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, folderType), "Suite Teardown").Replace("Suite Teardown", "").Trim(), 
-                    CurrentSuiteSettings.OutputFilePath, true);
+                CurrentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Test Setup").Replace("Test Setup", "").Trim(),
+                    realOutput, true);
+                CurrentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Test Teardown").Replace("Test Teardown", "").Trim(),
+                    realOutput, true);
+                CurrentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Suite Setup").Replace("Suite Setup", "").Trim(),
+                    realOutput, true);
+                CurrentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.OccuranceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Suite Teardown").Replace("Suite Teardown", "").Trim(),
+                    realOutput, true);
             }
 
             ThisFormKeywords = new List<Keyword>();

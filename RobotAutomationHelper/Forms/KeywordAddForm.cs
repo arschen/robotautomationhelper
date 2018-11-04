@@ -39,7 +39,7 @@ namespace RobotAutomationHelper
                 if (presentInRobotFile)
                 {
                     if (!ParentKeywords[ImplementationIndexFromTheParent].Overwrite)
-                {
+                    {
                         DialogResult result = MessageBox.Show("Overwrite existing keyword in the output file?",
                             "Alert",
                             MessageBoxButtons.YesNo);
@@ -54,7 +54,12 @@ namespace RobotAutomationHelper
                             ParentKeywords[ImplementationIndexFromTheParent].Overwrite = false;
                     }
                     else
+                    {
+                        AddCurrentKeywordsToKeywordsList(sender, e);
+                        SaveChangesToKeyword(true);
+                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
                         Close();
+                    }
                 }
                 else
                 {

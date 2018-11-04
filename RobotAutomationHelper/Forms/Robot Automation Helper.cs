@@ -164,7 +164,7 @@ namespace RobotAutomationHelper
 
         private void KeywordToSuggestions(Keyword tempKeyword)
         {
-            if (tempKeyword.SuggestionIndex == -1 && !tempKeyword.OutputFilePath.Equals(""))
+            if (tempKeyword.SuggestionIndex == -1 && !tempKeyword.OutputFilePath.Equals("") && !StringAndListOperations.StartsWithVariable(tempKeyword.Name))
             {
                 bool toAdd = true;
                 foreach (Keyword suggested in SuggestionsClass.Suggestions)
@@ -365,8 +365,8 @@ namespace RobotAutomationHelper
                 WriteToRobot.AddTestCaseToRobot(testCase);
             }
 
-            WriteToRobot.WriteIncludesToRobotFiles();
             WriteToRobot.WriteSuiteSettingsListToRobot();
+            WriteToRobot.WriteIncludesToRobotFiles();
 
             foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root))
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName, FolderType.Root));
