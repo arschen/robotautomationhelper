@@ -6,6 +6,5 @@ Check for files in the folder when starting new project
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
-  Read settings keywords and add to suggestions
   Includes for Settings keywords
   Fix placement of Settings in new files ( currently all are written at line 1 )

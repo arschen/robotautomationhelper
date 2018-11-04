@@ -72,7 +72,7 @@ namespace RobotAutomationHelper.Scripts
                                             currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
                                                 FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
                                             AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
-                                                GetResourcesFromFile(arrLine));
+                                                GetResourcesFromFile(fileName));
                                         }
                                         else
                                         {
@@ -110,7 +110,7 @@ namespace RobotAutomationHelper.Scripts
                                                     new Keyword(arrLine[i].Trim().Remove(0,1).Trim(),
                                                     FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
                                                 AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords[currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords.Count - 1],
-                                                    GetResourcesFromFile(arrLine));
+                                                    GetResourcesFromFile(fileName));
                                             }
                                         }
                                     }
@@ -202,7 +202,7 @@ namespace RobotAutomationHelper.Scripts
                                     keyword.Keywords.Add(new Keyword(arrLine[i],
                                         FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
                                     AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
-                                        GetResourcesFromFile(arrLine));
+                                        GetResourcesFromFile(fileName));
                                 }
                                 else
                                 {
@@ -240,7 +240,7 @@ namespace RobotAutomationHelper.Scripts
                                             new Keyword(arrLine[i].Trim().Remove(0, 1).Trim(),
                                             FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
                                         AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords[keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Count - 1],
-                                            GetResourcesFromFile(arrLine));
+                                            GetResourcesFromFile(fileName));
                                     }
                                 }
                             }
@@ -251,10 +251,45 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        private static List<string> GetResourcesFromFile(string[] arrLine)
+        // returns the index of the specific tag - keyword / test cases / settings / variables
+        internal static List<Keyword> ReadAllSettings()
         {
+            List<Keyword> SettingsKeywords = new List<Keyword>();
+            foreach (string fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Tests))
+            {
+                List<Keyword> SetupsAndTeardowns = new List<Keyword>();
+                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Setup").Replace("Test Setup", "").Trim(),
+                    fileName, true));
+                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(),
+                    fileName, true));
+                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(),
+                    fileName, true));
+                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(),
+                    fileName, true));
+
+                foreach (Keyword settingsKeyword in SetupsAndTeardowns)
+                {
+                    if (!settingsKeyword.Name.Equals(""))
+                    {
+                        AddKeywordsFromKeyword(settingsKeyword, GetResourcesFromFile(fileName));
+                        Keyword temp = new Keyword();
+                        temp.CopyKeyword(settingsKeyword);
+                        SettingsKeywords.Add(temp);
+                    }
+                }
+            }
+            return SettingsKeywords;
+        }
+
+        private static List<string> GetResourcesFromFile(string fileName)
+        {
+            string[] arrLine = File.ReadAllLines(fileName);
             // find all resources
-            List<string> Resources = new List<string>();
+            List<string> Resources = new List<string>()
+            {
+                fileName
+            };
+            
             if (arrLine.Length != 0)
             {
                 bool start = false;

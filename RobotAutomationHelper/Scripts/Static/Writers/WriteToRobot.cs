@@ -88,7 +88,7 @@ namespace RobotAutomationHelper.Scripts
                         //adds test steps
                         if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS || keywordKeyword.Type == KeywordType.FOR_LOOP_IN_RANGE)
                         {
-                            //TODO add actual FOR Loop line + keywords inside it
+                            //add actual FOR Loop line + keywords inside it
                             index++;
                             if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS)
                                 RobotFileHandler.FileLineAdd("\t" + ":FOR" + "\t" + keywordKeyword.Params[0].Value + "\t" + "IN" + "\t" + keywordKeyword.Params[1].Value, fileName, index);

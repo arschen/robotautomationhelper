@@ -140,8 +140,18 @@ namespace RobotAutomationHelper
             settingsToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog2.SelectedPath);
             TestCases = ReadRobotFiles.ReadAllTests();
+
             if (TestCases.Count != 0)
             {
+                List<Keyword> temp = ReadRobotFiles.ReadAllSettings();
+                if (temp != null && temp.Count != 0)
+                {
+                    foreach (Keyword tempKeyword in temp)
+                    {
+                        KeywordToSuggestions(tempKeyword);
+                    }
+                }
+
                 foreach (TestCase testCase in TestCases)
                 {
                     if (testCase.Steps != null)
