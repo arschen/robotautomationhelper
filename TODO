@@ -9,3 +9,4 @@ BugFixes:
   Read settings keywords and add to suggestions
   Keywords read from files are added to suggestions
   Includes for Settings keywords
+  Fix placement of Settings in new files ( currently all are written at line 1 )
