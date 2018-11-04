@@ -189,6 +189,11 @@ namespace RobotAutomationHelper
                 {
                     KeywordToSuggestions(nestedKeyword);
                 }
+            if (tempKeyword.ForLoopKeywords != null)
+                foreach (Keyword nestedKeyword in tempKeyword.ForLoopKeywords)
+                {
+                    KeywordToSuggestions(nestedKeyword);
+                }
         }
 
         //Clear dynamic elements when new file is opened
