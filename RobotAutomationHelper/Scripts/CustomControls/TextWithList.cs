@@ -12,11 +12,12 @@ namespace RobotAutomationHelper.Scripts
         // Fields and Properties ===================================================
         private SuggestionsList SuggestionsList;
         private BaseKeywordAddForm ParentForm;
-        private bool ForcedFocusToList { get; set; }
         private readonly int IndexOf;
         private bool JustGotFocused = false;
         private bool ChangedImmediatelyAfterSelection = false;
         internal int MaxItemsInSuggestionsList { get; set; }
+        private bool updateNeeded = false;
+        internal string updateValue = "";
 
         // Methods =================================================================
         internal TextWithList(BaseKeywordAddForm Parent, int IndexOf)
@@ -29,6 +30,7 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnTextChanged(EventArgs e)
         {
             UpdateListNamesAndUpdateStateOfSave();
+            updateNeeded = true;
             if (Focused || SuggestionsList.SelectionPerformed)
             {
                 base.OnTextChanged(e);
@@ -40,6 +42,9 @@ namespace RobotAutomationHelper.Scripts
                     string realName = ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).ValueMember;
                     SuggestionsList.SelectionPerformed = false;
                     ChangedImmediatelyAfterSelection = true;
+                    updateNeeded = false;
+                    //Console.WriteLine("OnTextChanged.SelectionPerformed Trigger Update: " + ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text);
+                    updateValue = ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text;
                     TriggerUpdate(realName, ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text);
                     HideSuggestionsList();
                     EnableKeywordFields();
@@ -70,7 +75,11 @@ namespace RobotAutomationHelper.Scripts
             if (e.KeyCode == Keys.Enter && e.KeyCode == Keys.Return)
             {
                 HideSuggestionsList();
-                TriggerUpdate("", "");
+                Console.WriteLine("OnKeyDown Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
+                if (updateNeeded)
+                    TriggerUpdate("", "");
+                else
+                    TriggerUpdate("", updateValue);
                 EnableKeywordFields();
                 SelectionStart = Text.Length;
             }
@@ -79,7 +88,6 @@ namespace RobotAutomationHelper.Scripts
                 if (e.KeyCode == Keys.Down)
                 {
                     ShowSuggestions(Text);
-                    ForcedFocusToList = true;
                     SuggestionsList.SelectedIndex = 0;
                     Parent.Controls["SuggestionsList"].Focus();
                 }
@@ -88,7 +96,6 @@ namespace RobotAutomationHelper.Scripts
                     if (e.KeyCode == Keys.Up)
                     {
                         ShowSuggestions(Text);
-                        ForcedFocusToList = true;
                         SuggestionsList.SelectedIndex = SuggestionsList.Items.Count - 1;
                         Parent.Controls["SuggestionsList"].Focus();
                     }
@@ -98,13 +105,29 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnLeave(EventArgs e)
         {
             base.OnLeave(e);
-            if (!ForcedFocusToList)
+            if (Parent.Controls.Find("SuggestionsList", false).Length > 0)
+            {
+                if (!Parent.Controls["SuggestionsList"].Focused)
+                {
+                    HideSuggestionsList();
+                    //Console.WriteLine("OnLeave Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
+                    if (updateNeeded)
+                        TriggerUpdate("", "");
+                    else
+                        TriggerUpdate("", updateValue);
+                    EnableKeywordFields();
+                }
+            }
+            else
             {
                 HideSuggestionsList();
-                TriggerUpdate("", "");
+                //Console.WriteLine("OnLeave Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
+                if (updateNeeded)
+                    TriggerUpdate("", "");
+                else
+                    TriggerUpdate("", updateValue);
                 EnableKeywordFields();
             }
-            ForcedFocusToList = false;
         }
 
         protected override void OnGotFocus(EventArgs e)
@@ -112,6 +135,7 @@ namespace RobotAutomationHelper.Scripts
             base.OnGotFocus(e);
             JustGotFocused = true;
             OnTextChanged(e);
+            updateNeeded = false;
         }
 
         internal void TriggerUpdate(string textChangedPassed, string keywordType)

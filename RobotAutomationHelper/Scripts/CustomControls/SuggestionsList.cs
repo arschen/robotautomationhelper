@@ -89,8 +89,6 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnLostFocus(EventArgs e)
         {
             base.OnLostFocus(e);
-            if (!TextWithListControl.Focused)
-                TextWithListControl.TriggerUpdate("", "");
             TextWithListControl.EnableKeywordFields();
             Visible = false;
         }
@@ -104,7 +102,6 @@ namespace RobotAutomationHelper.Scripts
             {
                 SelectionPerformed = true;
                 TextWithListControl.Focus();
-                //TextWithListControl.Text = (((SuggestionsListObjects)Items[nIdx]).ValueMember);
                 TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
             }
             else

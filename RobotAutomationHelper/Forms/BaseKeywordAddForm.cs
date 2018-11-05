@@ -258,7 +258,10 @@ namespace RobotAutomationHelper.Scripts
                     new EventHandler(InstantiateParamsAddForm),
                     this);
 
-            (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", keyword.ToString());
+            if (NameAndOutputToTestCaseFormCommunication.Value != null)
+                (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", NameAndOutputToTestCaseFormCommunication.Value);
+            else
+                (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", keyword.ToString());
             (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).EnableKeywordFields();
         }
 
@@ -307,7 +310,6 @@ namespace RobotAutomationHelper.Scripts
         private void CheckKeywordTypeAndEvaluateKeywordData(Keyword keyword, string name, string keywordType)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.Name + " " + name);
-            Console.WriteLine(keyword.ToString());
             foreach (Lib lib in SuggestionsClass.Suggestions)
                 if (lib.ToInclude)
                     foreach (Keyword SuggestedKeyword in lib.LibKeywords)
@@ -320,7 +322,8 @@ namespace RobotAutomationHelper.Scripts
 
                         if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
                         {
-                            if (!keyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
+                            if (!keyword.Name.Trim().ToLower().Equals(name.Trim().ToLower())
+                                || !keyword.Type.Equals(SuggestedKeyword.Type))
                                 keyword.CopyKeyword(SuggestedKeyword);
                             else
                                 if (!keyword.Implemented)

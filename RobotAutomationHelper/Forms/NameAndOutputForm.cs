@@ -104,6 +104,7 @@ namespace RobotAutomationHelper.Forms
         {
             NameAndOutputToTestCaseFormCommunication.Save = true;
             NameAndOutputToTestCaseFormCommunication.Name = Controls["DynamicStep1Name"].Text;
+            NameAndOutputToTestCaseFormCommunication.Value = ((TextWithList)Controls["DynamicStep1Name"]).updateValue;
             NameAndOutputToTestCaseFormCommunication.OutputFile = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources);
             NameAndOutputToTestCaseFormCommunication.Overwrite = false;
             Close();
@@ -228,6 +229,7 @@ namespace RobotAutomationHelper.Forms
     internal static class NameAndOutputToTestCaseFormCommunication
     {
         internal static string Name { get; set; }
+        internal static string Value { get; set; }
         internal static string OutputFile { get; set; }
         internal static bool Save { get; set; }
         internal static bool Overwrite { get; set; }
