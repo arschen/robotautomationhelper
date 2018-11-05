@@ -107,15 +107,16 @@ namespace RobotAutomationHelper
 
                 bool found = false;
                 foreach (Lib lib in SuggestionsClass.Suggestions)
-                    foreach (Keyword key in lib.LibKeywords)
-                    {
-                        if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
+                    if (lib.ToInclude)
+                        foreach (Keyword key in lib.LibKeywords)
                         {
-                            CopyKeyword(key);
-                            found = true;
-                            break;
+                            if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
+                            {
+                                CopyKeyword(key);
+                                found = true;
+                                break;
+                            }
                         }
-                    }
 
                 if (found)
                 {

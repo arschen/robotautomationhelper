@@ -24,7 +24,8 @@ namespace RobotAutomationHelper.Scripts
         internal static bool IsInSuggestionsList(string name)
         {
             foreach (Lib lib in Suggestions)
-                foreach (Keyword SuggestedKeyword in lib.LibKeywords)
+                if (lib.ToInclude)
+                    foreach (Keyword SuggestedKeyword in lib.LibKeywords)
                     if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
                     {
                         return true;
@@ -36,7 +37,8 @@ namespace RobotAutomationHelper.Scripts
         {
             Lib lib = new Lib
             {
-                Name = "CUSTOM"
+                Name = "CUSTOM",
+                ToInclude = true
             };
 
             DirectoryInfo d = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
@@ -46,6 +48,7 @@ namespace RobotAutomationHelper.Scripts
                 lib = new Lib
                 {
                     Name = file.Name.Replace(".xlsx", ""),
+                    ToInclude = true,
                     LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, KeywordType.STANDARD)
                 };
                 Suggestions.Add(lib);
@@ -68,6 +71,7 @@ namespace RobotAutomationHelper.Scripts
                 lib = new Lib
                 {
                     Name = file.Name.Replace(".xlsx", ""),
+                    ToInclude = true,
                     LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, type)
                 };
                 Suggestions.Add(lib);
@@ -87,9 +91,12 @@ namespace RobotAutomationHelper.Scripts
                 currentKeywordParams, "", false,
                 KeywordType.FOR_LOOP_IN_RANGE, -1);
 
-            Lib lib = new Lib();
+            Lib lib = new Lib
+            {
+                Name = "FOR_LOOP_IN_RANGE",
+                ToInclude = true
+            };
             lib.LibKeywords.Add(ForLoopInRange);
-            lib.Name = "FOR_LOOP_IN_RANGE";
             Suggestions.Add(lib);
 
             currentKeywordParams = new List<Param>
@@ -102,18 +109,22 @@ namespace RobotAutomationHelper.Scripts
                 currentKeywordParams, "", false,
                 KeywordType.FOR_LOOP_ELEMENTS, -1);
 
-            Lib lib1 = new Lib();
+            Lib lib1 = new Lib
+            {
+                Name = "FOR_LOOP_ELEMENTS",
+                ToInclude = true
+            };
             lib1.LibKeywords.Add(ForLoopElements);
-            lib1.Name = "FOR_LOOP_ELEMENTS";
             Suggestions.Add(lib1);
         }
 
         internal static Keyword GetForLoop(KeywordType keywordType)
         {
             foreach (Lib lib in Suggestions)
-                foreach (Keyword temp in lib.LibKeywords)
-                    if (temp.Type.Equals(keywordType))
-                        return temp;
+                if (lib.ToInclude)
+                    foreach (Keyword temp in lib.LibKeywords)
+                        if (temp.Type.Equals(keywordType))
+                            return temp;
             return null;
         }
 
@@ -130,6 +141,7 @@ namespace RobotAutomationHelper.Scripts
     {
         internal List<Keyword> LibKeywords = new List<Keyword>();
         internal string Name { get; set; }
+        internal bool ToInclude;
 
         public override string ToString()
         {

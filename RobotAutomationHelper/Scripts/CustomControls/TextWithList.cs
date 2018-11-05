@@ -186,28 +186,29 @@ namespace RobotAutomationHelper.Scripts
         {
             List<SuggestionsListObjects> foundItems = new List<SuggestionsListObjects>();
             foreach (Lib lib in SuggestionsClass.Suggestions)
-                foreach (Keyword keyword in lib.LibKeywords)
-                //if (!keyword.Name.ToLower().Trim().Equals(txt.ToLower().Trim()))
-                {
-                    bool containsAll = true;
-                    foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                if (lib.ToInclude)
+                    foreach (Keyword keyword in lib.LibKeywords)
+                    //if (!keyword.Name.ToLower().Trim().Equals(txt.ToLower().Trim()))
                     {
-                        if (RobotAutomationHelper.Log) Console.WriteLine(keyword.ToString());
-                        if (!keyword.Name.ToLower().Contains(temp))
+                        bool containsAll = true;
+                        foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            containsAll = false;
-                            break;
+                            if (RobotAutomationHelper.Log) Console.WriteLine(keyword.ToString());
+                            if (!keyword.Name.ToLower().Contains(temp))
+                            {
+                                containsAll = false;
+                                break;
+                            }
+                        }
+                        if (containsAll)
+                        {
+                            if (keyword.Type != KeywordType.CUSTOM)
+                                foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString(), ValueMember = keyword.Name, Documentation = keyword.Documentation });
+                            else
+                                foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString().Trim(), ValueMember = keyword.Name.Trim(), Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation.Trim() });
                         }
                     }
-                    if (containsAll)
-                    {
-                        if (keyword.Type != KeywordType.CUSTOM)
-                            foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString(), ValueMember = keyword.Name, Documentation = keyword.Documentation });
-                        else
-                            foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString().Trim(), ValueMember = keyword.Name.Trim(), Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation.Trim() });
-                    }
-                }
-                return foundItems;
+                    return foundItems;
         }
 
         private void ShowSuggestions(string textInTheField)

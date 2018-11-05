@@ -187,22 +187,23 @@ namespace RobotAutomationHelper
             {
                 bool toAdd = true;
                 foreach (Lib lib in SuggestionsClass.Suggestions)
-                    foreach (Keyword suggested in lib.LibKeywords)
-                    {
-                        if (!suggested.OutputFilePath.Equals(""))
+                    if (lib.ToInclude)
+                        foreach (Keyword suggested in lib.LibKeywords)
                         {
-                            if (suggested.Name.Equals(tempKeyword.Name) && suggested.OutputFilePath.Equals(tempKeyword.OutputFilePath))
+                            if (!suggested.OutputFilePath.Equals(""))
                             {
-                                toAdd = false;
-                                break;
+                                if (suggested.Name.Equals(tempKeyword.Name) && suggested.OutputFilePath.Equals(tempKeyword.OutputFilePath))
+                                {
+                                    toAdd = false;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (toAdd)
-                    {
-                        tempKeyword.SuggestionIndex = SuggestionsClass.Suggestions.Count;
-                        SuggestionsClass.GetCustomLibKeywords().Add(tempKeyword);
-                    }
+                        if (toAdd)
+                        {
+                            tempKeyword.SuggestionIndex = SuggestionsClass.Suggestions.Count;
+                            SuggestionsClass.GetCustomLibKeywords().Add(tempKeyword);
+                        }
             }
             if (tempKeyword.Keywords != null)
                 foreach (Keyword nestedKeyword in tempKeyword.Keywords)
