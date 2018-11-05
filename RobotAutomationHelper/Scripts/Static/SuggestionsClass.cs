@@ -10,56 +10,68 @@ namespace RobotAutomationHelper.Scripts
 {
     internal static class SuggestionsClass
     {
-        internal static List<Keyword> Suggestions = new List<Keyword>();
+        internal static List<Lib> Suggestions = new List<Lib>();
         private static List<Keyword> Selenium = new List<Keyword>();
         private static List<Keyword> BuiltIn = new List<Keyword>();
 
         internal static void CleanUp()
         {
-            Suggestions = new List<Keyword>();
+            Suggestions = new List<Lib>();
             Selenium = new List<Keyword>();
             BuiltIn = new List<Keyword>();
         }
 
         internal static bool IsInSuggestionsList(string name)
         {
-            foreach (Keyword SuggestedKeyword in Suggestions)
-                if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
-                {
-                    return true;
-                }
+            foreach (Lib lib in Suggestions)
+                foreach (Keyword SuggestedKeyword in lib.LibKeywords)
+                    if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
+                    {
+                        return true;
+                    }
             return false;
         }
 
         internal static void PopulateSuggestionsList(bool Selenium, bool BuiltIn)
         {
-            PopulateForLoops();
-            if (Selenium)
-                PopulateSeleniumKeywords();
-            if (BuiltIn)
-                PopulateBuiltInKeywords();
-        }
+            Lib lib = new Lib
+            {
+                Name = "CUSTOM"
+            };
 
-        private static void PopulateSeleniumKeywords()
-        {
-            Selenium = ExcelLibsGetter.ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                @"RobotKeywords\Selenium.xlsx")
-                , KeywordType.SELENIUM);
-            foreach (Keyword key in Selenium)
-                SuggestionsClass.Suggestions.Add(new Keyword(key.Name, key.Documentation,
-                    key.Keywords, key.Arguments, key.Params,
-                    key.OutputFilePath, key.Saved, key.Type, key.SuggestionIndex));
-        }
+            DirectoryInfo d = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                @"RobotKeywords\Standard libraries\"));
+            foreach (var file in d.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            {
+                lib = new Lib
+                {
+                    Name = file.Name.Replace(".xlsx", ""),
+                    LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, KeywordType.STANDARD)
+                };
+                Suggestions.Add(lib);
+            }
 
-        private static void PopulateBuiltInKeywords()
-        {
-            BuiltIn = ExcelLibsGetter.ReadAllKeywordsFromExcel(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                @"RobotKeywords\Built_in.xlsx")
-                , KeywordType.BUILT_IN);
-            foreach (Keyword key in BuiltIn)
-                SuggestionsClass.Suggestions.Add(new Keyword(key.Name, key.Documentation,
-                    key.Keywords, key.Arguments, key.Params,
-                    key.OutputFilePath, key.Saved, key.Type, key.SuggestionIndex));
+            d = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                @"RobotKeywords\External libraries\"));
+            foreach (var file in d.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            {
+                KeywordType type = KeywordType.STANDARD;
+                foreach (KeywordType temp in Enum.GetValues(typeof(KeywordType)))
+                {
+                    if (temp.ToString().ToLower().Equals(file.Name.Replace(".xlsx","").ToLower()))
+                    {
+                        type = temp;
+                        break;
+                    }
+                }
+
+                lib = new Lib
+                {
+                    Name = file.Name.Replace(".xlsx", ""),
+                    LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, type)
+                };
+                Suggestions.Add(lib);
+            }
         }
 
         private static void PopulateForLoops()
@@ -75,7 +87,10 @@ namespace RobotAutomationHelper.Scripts
                 currentKeywordParams, "", false,
                 KeywordType.FOR_LOOP_IN_RANGE, -1);
 
-            Suggestions.Add(ForLoopInRange);
+            Lib lib = new Lib();
+            lib.LibKeywords.Add(ForLoopInRange);
+            lib.Name = "FOR_LOOP_IN_RANGE";
+            Suggestions.Add(lib);
 
             currentKeywordParams = new List<Param>
             {
@@ -87,15 +102,38 @@ namespace RobotAutomationHelper.Scripts
                 currentKeywordParams, "", false,
                 KeywordType.FOR_LOOP_ELEMENTS, -1);
 
-            Suggestions.Add(ForLoopElements);
+            Lib lib1 = new Lib();
+            lib1.LibKeywords.Add(ForLoopElements);
+            lib1.Name = "FOR_LOOP_ELEMENTS";
+            Suggestions.Add(lib1);
         }
 
         internal static Keyword GetForLoop(KeywordType keywordType)
         {
-            foreach (Keyword temp in Suggestions)
-                if (temp.Type.Equals(keywordType))
-                    return temp;
+            foreach (Lib lib in Suggestions)
+                foreach (Keyword temp in lib.LibKeywords)
+                    if (temp.Type.Equals(keywordType))
+                        return temp;
             return null;
+        }
+
+        internal static List<Keyword> GetCustomLibKeywords()
+        {
+            foreach (Lib lib in Suggestions)
+                if (lib.Name.Equals("CUSTOM"))
+                    return lib.LibKeywords;
+            return null;
+        }
+    }
+
+    internal class Lib
+    {
+        internal List<Keyword> LibKeywords = new List<Keyword>();
+        internal string Name { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

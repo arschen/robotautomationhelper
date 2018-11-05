@@ -106,15 +106,17 @@ namespace RobotAutomationHelper
                     splitKeyword = new string[] { KeywordString };
 
                 bool found = false;
-                foreach (Keyword key in SuggestionsClass.Suggestions)
-                {
-                    if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
+                foreach (Lib lib in SuggestionsClass.Suggestions)
+                    foreach (Keyword key in lib.LibKeywords)
                     {
-                        CopyKeyword(key);
-                        found = true;
-                        break;
+                        if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
+                        {
+                            CopyKeyword(key);
+                            found = true;
+                            break;
+                        }
                     }
-                }
+
                 if (found)
                 {
                     for (int i = 1; i < splitKeyword.Length; i++)
@@ -176,8 +178,13 @@ namespace RobotAutomationHelper
         {
             switch (Type)
             {
-                case KeywordType.SELENIUM: return "[S] " + Name;
-                case KeywordType.BUILT_IN: return "[B] " + Name;
+                case KeywordType.SELENIUMLIBRARY: return "[SEL] " + Name;
+                case KeywordType.STANDARD: return "[STD] " + Name;
+                case KeywordType.FOR_LOOP_ELEMENTS: return "[FOR] " + Name;
+                case KeywordType.FOR_LOOP_IN_RANGE: return "[FOR] " + Name;
+                case KeywordType.APPIUMLIBRARY: return "[APPIUM] " + Name;
+                case KeywordType.REST: return "[REST] " + Name;
+                case KeywordType.FAKERLIBRARY: return "[FAKE] " + Name;
             }
             return Name;
         }
@@ -185,6 +192,6 @@ namespace RobotAutomationHelper
 
     internal enum KeywordType
     {
-        CUSTOM, SELENIUM, BUILT_IN, FOR_LOOP_IN_RANGE, FOR_LOOP_ELEMENTS
+        CUSTOM, SELENIUMLIBRARY, APPIUMLIBRARY, FAKERLIBRARY, REST, STANDARD, FOR_LOOP_IN_RANGE, FOR_LOOP_ELEMENTS
     }
 }

@@ -307,16 +307,17 @@ namespace RobotAutomationHelper.Scripts
         private void CheckKeywordTypeAndEvaluateKeywordData(Keyword keyword, string name)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.Name + " " + name);
-            foreach (Keyword SuggestedKeyword in SuggestionsClass.Suggestions)
-                if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
-                {
-                    if (!keyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
-                        keyword.CopyKeyword(SuggestedKeyword);
-                    else
-                        if (!keyword.Implemented)
+            foreach (Lib lib in SuggestionsClass.Suggestions)
+                foreach (Keyword SuggestedKeyword in lib.LibKeywords)
+                    if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
+                    {
+                        if (!keyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
                             keyword.CopyKeyword(SuggestedKeyword);
-                    return;
-                }
+                        else
+                            if (!keyword.Implemented)
+                                keyword.CopyKeyword(SuggestedKeyword);
+                        return;
+                    }
 
             if (keyword.Type != KeywordType.CUSTOM)
             {
@@ -325,13 +326,14 @@ namespace RobotAutomationHelper.Scripts
                 return;
             }
 
-            foreach (Keyword seleniumKeyword in SuggestionsClass.Suggestions)
-                if (seleniumKeyword.Name.Trim().ToLower().Equals(keyword.Name.Trim().ToLower()))
-                {
-                    keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot")); //CopyKeyword
-                    keyword.Type = KeywordType.CUSTOM;
-                    return;
-                }
+            foreach (Lib lib in SuggestionsClass.Suggestions)
+                foreach (Keyword seleniumKeyword in lib.LibKeywords)
+                    if (seleniumKeyword.Name.Trim().ToLower().Equals(keyword.Name.Trim().ToLower()))
+                    {
+                        keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot")); //CopyKeyword
+                        keyword.Type = KeywordType.CUSTOM;
+                        return;
+                    }
 
             keyword.Name = name;
             keyword.Type = KeywordType.CUSTOM;

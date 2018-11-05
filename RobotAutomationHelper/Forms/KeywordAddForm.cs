@@ -181,10 +181,10 @@ namespace RobotAutomationHelper
                 ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.Suggestions.Count;
                 Keyword temp = new Keyword();
                 temp.CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
-                SuggestionsClass.Suggestions.Add(temp);
+                SuggestionsClass.GetCustomLibKeywords().Add(temp);
             }
             else
-                SuggestionsClass.Suggestions[ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
+                SuggestionsClass.GetCustomLibKeywords()[ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
         }
 
         // adding argument to the KeywordArguments.Text

@@ -82,7 +82,7 @@ namespace RobotAutomationHelper.Scripts
                         if (keywordKeyword.Saved && keywordKeyword.Type == KeywordType.CUSTOM)
                             Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
                         else
-                            if (keywordKeyword.Type == KeywordType.SELENIUM)
+                            if (keywordKeyword.Type == KeywordType.SELENIUMLIBRARY)
                                 Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
 
                         //adds test steps
@@ -104,7 +104,7 @@ namespace RobotAutomationHelper.Scripts
                                 if (key.Saved && key.Type == KeywordType.CUSTOM)
                                     Includes[Includes.IndexOf(container)].AddToList(key.OutputFilePath);
                                 else
-                                    if (key.Type == KeywordType.SELENIUM)
+                                    if (key.Type == KeywordType.SELENIUMLIBRARY)
                                         Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
 
                                 if (!key.Recursive)
@@ -338,7 +338,7 @@ namespace RobotAutomationHelper.Scripts
             if (keyword.Type == KeywordType.CUSTOM)
                 Includes[Includes.IndexOf(container)].AddToList(keyword.OutputFilePath);
             else
-                if (keyword.Type == KeywordType.SELENIUM)
+                if (keyword.Type == KeywordType.SELENIUMLIBRARY)
                 Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
             }
 
