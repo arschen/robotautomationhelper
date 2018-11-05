@@ -181,13 +181,29 @@ namespace RobotAutomationHelper
             {
                 case KeywordType.SELENIUMLIBRARY: return "[SEL] " + Name;
                 case KeywordType.STANDARD: return "[STD] " + Name;
-                case KeywordType.FOR_LOOP_ELEMENTS: return "[FOR] " + Name;
-                case KeywordType.FOR_LOOP_IN_RANGE: return "[FOR] " + Name;
+                case KeywordType.FOR_LOOP_ELEMENTS: return "[FORE] " + Name;
+                case KeywordType.FOR_LOOP_IN_RANGE: return "[FORR] " + Name;
                 case KeywordType.APPIUMLIBRARY: return "[APPIUM] " + Name;
                 case KeywordType.REST: return "[REST] " + Name;
                 case KeywordType.FAKERLIBRARY: return "[FAKE] " + Name;
+                default: return Name;
             }
-            return Name;
+        }
+
+        public KeywordType GetTypeBasedOnSuggestionStart(string SuggestionStartsWith)
+        {
+            SuggestionStartsWith = SuggestionStartsWith.Split(' ')[0];
+            switch (SuggestionStartsWith)
+            {
+                case "[SEL]": return KeywordType.SELENIUMLIBRARY;
+                case "[STD]": return KeywordType.STANDARD;
+                case "[FORE]": return KeywordType.FOR_LOOP_ELEMENTS;
+                case "[FORR]": return KeywordType.FOR_LOOP_IN_RANGE;
+                case "[APPIUM]": return KeywordType.APPIUMLIBRARY;
+                case "[REST]": return KeywordType.REST;
+                case "[FAKE]": return KeywordType.FAKERLIBRARY;
+                default: return KeywordType.CUSTOM;
+            }
         }
     }
 

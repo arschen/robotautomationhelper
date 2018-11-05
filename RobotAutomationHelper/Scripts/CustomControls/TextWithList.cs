@@ -40,8 +40,8 @@ namespace RobotAutomationHelper.Scripts
                     string realName = ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).ValueMember;
                     SuggestionsList.SelectionPerformed = false;
                     ChangedImmediatelyAfterSelection = true;
+                    TriggerUpdate(realName, ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text);
                     HideSuggestionsList();
-                    TriggerUpdate(realName);
                     EnableKeywordFields();
                 }
                 else
@@ -70,7 +70,7 @@ namespace RobotAutomationHelper.Scripts
             if (e.KeyCode == Keys.Enter && e.KeyCode == Keys.Return)
             {
                 HideSuggestionsList();
-                TriggerUpdate("");
+                TriggerUpdate("", "");
                 EnableKeywordFields();
                 SelectionStart = Text.Length;
             }
@@ -101,7 +101,7 @@ namespace RobotAutomationHelper.Scripts
             if (!ForcedFocusToList)
             {
                 HideSuggestionsList();
-                TriggerUpdate("");
+                TriggerUpdate("", "");
                 EnableKeywordFields();
             }
             ForcedFocusToList = false;
@@ -114,33 +114,33 @@ namespace RobotAutomationHelper.Scripts
             OnTextChanged(e);
         }
 
-        internal void TriggerUpdate(string textChangedPassed)
+        internal void TriggerUpdate(string textChangedPassed, string keywordType)
         {
             if (ParentForm.FormType == FormType.Keyword)
-                (ParentForm as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                (ParentForm as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
             else
             {
                 if (ParentForm.FormType == FormType.Settings)
                 {
-                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
                 }
                 else
                 {
                     if (ParentForm.FormType == FormType.Params)
                     {
-                        (ParentForm as ParamAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                        (ParentForm as ParamAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
                     }
                     else
                     {
                         if (ParentForm.FormType == FormType.Test)
                         {
-                            (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                            (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
                         }
                         else
                         {
                             if (ParentForm.FormType == FormType.NameAndOutput)
                             {
-                                (ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                                (ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
                             }
                         }
                     }

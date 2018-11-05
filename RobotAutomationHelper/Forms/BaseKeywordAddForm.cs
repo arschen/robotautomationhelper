@@ -39,7 +39,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // change the field when the keyword name is changed
-        internal void UpdateTheKeywordOnNameChange(object sender, string textChangePassed)
+        internal void UpdateTheKeywordOnNameChange(object sender, string textChangePassed, string keywordType)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("ChangeTheKeywordFieldAfterSelection " + (sender as TextWithList).Name + " " + this.Name);
 
@@ -47,9 +47,9 @@ namespace RobotAutomationHelper.Scripts
             int keywordIndex = int.Parse(textWithList.Name.Replace("Name", "").Replace("DynamicStep", ""));
 
             if (textChangePassed.Equals(""))
-                CheckKeywordTypeAndEvaluateKeywordData(ThisFormKeywords[keywordIndex - 1], textWithList.Text);
+                CheckKeywordTypeAndEvaluateKeywordData(ThisFormKeywords[keywordIndex - 1], textWithList.Text, keywordType);
             else
-                CheckKeywordTypeAndEvaluateKeywordData(ThisFormKeywords[keywordIndex - 1], textChangePassed);
+                CheckKeywordTypeAndEvaluateKeywordData(ThisFormKeywords[keywordIndex - 1], textChangePassed, keywordType);
 
             UpdateTheKeywordFieldsBasedOnNewData(sender);
         }
@@ -258,7 +258,7 @@ namespace RobotAutomationHelper.Scripts
                     new EventHandler(InstantiateParamsAddForm),
                     this);
 
-            (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("");
+            (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", keyword.ToString());
             (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).EnableKeywordFields();
         }
 
@@ -304,21 +304,30 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        private void CheckKeywordTypeAndEvaluateKeywordData(Keyword keyword, string name)
+        private void CheckKeywordTypeAndEvaluateKeywordData(Keyword keyword, string name, string keywordType)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("CheckKeywordTypeAndReturnKeyword " + keyword.Name + " " + name);
+            Console.WriteLine(keyword.ToString());
             foreach (Lib lib in SuggestionsClass.Suggestions)
                 if (lib.ToInclude)
                     foreach (Keyword SuggestedKeyword in lib.LibKeywords)
+                    {
+                        if (keywordType.StartsWith("["))
+                            if (keyword.GetTypeBasedOnSuggestionStart(keywordType) != SuggestedKeyword.Type)
+                            {
+                                break;
+                            }
+
                         if (SuggestedKeyword.Name.Trim().ToLower().Equals(name.ToLower()))
                         {
                             if (!keyword.Name.Trim().ToLower().Equals(name.Trim().ToLower()))
                                 keyword.CopyKeyword(SuggestedKeyword);
                             else
                                 if (!keyword.Implemented)
-                                    keyword.CopyKeyword(SuggestedKeyword);
+                                keyword.CopyKeyword(SuggestedKeyword);
                             return;
                         }
+                    }
 
             if (keyword.Type != KeywordType.CUSTOM)
             {
@@ -420,7 +429,7 @@ namespace RobotAutomationHelper.Scripts
 
                 for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
                 {
-                    (Controls["DynamicStep" + i + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[i - 1].Name);
+                    (Controls["DynamicStep" + i + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[i - 1].Name, ThisFormKeywords[i - 1].ToString());
                     (Controls["DynamicStep" + i + "Name"] as TextWithList).EnableKeywordFields();
                 }
             }
@@ -459,7 +468,7 @@ namespace RobotAutomationHelper.Scripts
 
             for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
             {
-                (Controls["DynamicStep" + i + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[i - 1].Name);
+                (Controls["DynamicStep" + i + "Name"] as TextWithList).TriggerUpdate(ThisFormKeywords[i - 1].Name, ThisFormKeywords[i - 1].ToString());
                 (Controls["DynamicStep" + i + "Name"] as TextWithList).EnableKeywordFields();
             }
         }

@@ -90,7 +90,7 @@ namespace RobotAutomationHelper.Scripts
         {
             base.OnLostFocus(e);
             if (!TextWithListControl.Focused)
-                TextWithListControl.TriggerUpdate("");
+                TextWithListControl.TriggerUpdate("", "");
             TextWithListControl.EnableKeywordFields();
             Visible = false;
         }
