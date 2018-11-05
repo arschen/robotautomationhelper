@@ -38,8 +38,10 @@ namespace RobotAutomationHelper.Scripts
             Lib lib = new Lib
             {
                 Name = "CUSTOM",
+                LibKeywords = new List<Keyword>(),
                 ToInclude = true
             };
+            Suggestions.Add(lib);
 
             DirectoryInfo d = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 @"RobotKeywords\Standard libraries\"));
@@ -76,6 +78,8 @@ namespace RobotAutomationHelper.Scripts
                 };
                 Suggestions.Add(lib);
             }
+
+            PopulateForLoops();
         }
 
         private static void PopulateForLoops()
@@ -94,6 +98,7 @@ namespace RobotAutomationHelper.Scripts
             Lib lib = new Lib
             {
                 Name = "FOR_LOOP_IN_RANGE",
+                LibKeywords = new List<Keyword>(),
                 ToInclude = true
             };
             lib.LibKeywords.Add(ForLoopInRange);
@@ -104,6 +109,7 @@ namespace RobotAutomationHelper.Scripts
                 new Param("Param name", ""),
                 new Param("List", "")
             };
+
             Keyword ForLoopElements = new Keyword("ForLoopElements",
                 "Loops through all the values in the provided list.", null, "",
                 currentKeywordParams, "", false,
@@ -112,6 +118,7 @@ namespace RobotAutomationHelper.Scripts
             Lib lib1 = new Lib
             {
                 Name = "FOR_LOOP_ELEMENTS",
+                LibKeywords = new List<Keyword>(),
                 ToInclude = true
             };
             lib1.LibKeywords.Add(ForLoopElements);
@@ -139,7 +146,7 @@ namespace RobotAutomationHelper.Scripts
 
     internal class Lib
     {
-        internal List<Keyword> LibKeywords = new List<Keyword>();
+        internal List<Keyword> LibKeywords;
         internal string Name { get; set; }
         internal bool ToInclude;
 
