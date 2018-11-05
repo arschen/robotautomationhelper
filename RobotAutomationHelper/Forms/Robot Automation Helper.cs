@@ -118,6 +118,15 @@ namespace RobotAutomationHelper
                 {
                     foreach (TestCase tempProj in ProjectTestCases)
                     {
+                        List<Keyword> temp = ReadRobotFiles.ReadAllSettings();
+                        if (temp != null && temp.Count != 0)
+                        {
+                            foreach (Keyword tempKeyword in temp)
+                            {
+                                KeywordToSuggestions(tempKeyword);
+                            }
+                        }
+
                         foreach (TestCase tempExc in TestCases)
                         {
                             if (tempProj.Name.Equals(tempExc.Name))
