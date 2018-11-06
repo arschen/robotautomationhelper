@@ -201,7 +201,7 @@ namespace RobotAutomationHelper
                         }
                         if (toAdd)
                         {
-                            tempKeyword.SuggestionIndex = SuggestionsClass.Suggestions.Count;
+                            tempKeyword.SuggestionIndex = SuggestionsClass.GetCustomLibKeywords().Count;
                             SuggestionsClass.GetCustomLibKeywords().Add(tempKeyword);
                         }
             }
@@ -438,7 +438,7 @@ namespace RobotAutomationHelper
             else
                 formType = FormType.Keyword;
 
-            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType, this);
+            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType, this, null);
             nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
             nameAndOutputForm.ShowTestCaseContent();
         }

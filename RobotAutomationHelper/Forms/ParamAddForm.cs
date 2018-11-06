@@ -77,7 +77,7 @@ namespace RobotAutomationHelper.Forms
                     // add a single keyword field if no keywords are available
                     ThisFormKeywords = new List<Keyword>
                     {
-                        new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot")
+                        new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", keyword.Parent)
                     };
                     AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1);
                     NumberOfKeywordsInThisForm++;
@@ -112,7 +112,7 @@ namespace RobotAutomationHelper.Forms
                     keyword.ForLoopKeywords = new List<Keyword>();
                     foreach (Keyword step in ThisFormKeywords)
                     {
-                        Keyword temp = new Keyword();
+                        Keyword temp = new Keyword(step.Parent);
                         temp.CopyKeyword(step);
                         keyword.ForLoopKeywords.Add(temp);
                     }

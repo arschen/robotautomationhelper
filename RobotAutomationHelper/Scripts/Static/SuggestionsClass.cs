@@ -93,7 +93,7 @@ namespace RobotAutomationHelper.Scripts
             Keyword ForLoopInRange = new Keyword("ForLoopInRange",
                 "For loop from the initial value to the end value ( excluding ) using the param.", null, "",
                 currentKeywordParams, "", false,
-                KeywordType.FOR_LOOP_IN_RANGE, -1, "ForLoop");
+                KeywordType.FOR_LOOP_IN_RANGE, -1, "ForLoop", null);
 
             Lib lib = new Lib
             {
@@ -113,7 +113,7 @@ namespace RobotAutomationHelper.Scripts
             Keyword ForLoopElements = new Keyword("ForLoopElements",
                 "Loops through all the values in the provided list.", null, "",
                 currentKeywordParams, "", false,
-                KeywordType.FOR_LOOP_ELEMENTS, -1, "ForLoop");
+                KeywordType.FOR_LOOP_ELEMENTS, -1, "ForLoop", null);
 
             Lib lib1 = new Lib
             {

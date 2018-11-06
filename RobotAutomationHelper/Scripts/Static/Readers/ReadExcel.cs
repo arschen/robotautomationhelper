@@ -61,7 +61,7 @@ namespace RobotAutomationHelper.Scripts
                         //test cases column equals test steps ( keywords )
                         else if (j == 3 && !cellValue.Equals(""))
                         {
-                            currentTestCaseTestSteps.Add(new Keyword("" + cellValue, FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot"));
+                            currentTestCaseTestSteps.Add(new Keyword("" + cellValue, FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", null));
                         }
                         else if (j == 4 && !cellValue.Equals(""))
                         {

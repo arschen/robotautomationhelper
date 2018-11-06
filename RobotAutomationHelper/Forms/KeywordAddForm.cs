@@ -121,7 +121,7 @@ namespace RobotAutomationHelper
                 // add a single keyword field if no keywords are available
                 ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath)
+                    new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword.Parent)
                 };
                 AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1);
                 NumberOfKeywordsInThisForm++;
@@ -175,12 +175,13 @@ namespace RobotAutomationHelper
             save,
             KeywordType.CUSTOM,
             ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex,
-            "Custom");
+            "Custom",
+            ParentKeywords[ImplementationIndexFromTheParent].Parent);
 
             if (addToSuggestions)
             {
-                ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.Suggestions.Count;
-                Keyword temp = new Keyword();
+                ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.GetCustomLibKeywords().Count;
+                Keyword temp = new Keyword(ParentKeywords[ImplementationIndexFromTheParent].Parent);
                 temp.CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
                 SuggestionsClass.GetCustomLibKeywords().Add(temp);
             }

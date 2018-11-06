@@ -70,7 +70,7 @@ namespace RobotAutomationHelper.Scripts
                                             && !arrLine[i].Trim().ToLower().StartsWith("\\"))
                                         {
                                             currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
-                                                FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
+                                                FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName), null));
                                             AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
                                                 GetResourcesFromFile(fileName));
                                         }
@@ -80,7 +80,7 @@ namespace RobotAutomationHelper.Scripts
                                             {
                                                 if (arrLine[i].Trim().ToLower().Contains("range"))
                                                 {
-                                                    Keyword temp = new Keyword();
+                                                    Keyword temp = new Keyword(null);
                                                     temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_IN_RANGE));
                                                     string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                                     if (splitKeyword.Length == 1)
@@ -96,7 +96,7 @@ namespace RobotAutomationHelper.Scripts
                                                 }
                                                 else
                                                 {
-                                                    Keyword temp = new Keyword();
+                                                    Keyword temp = new Keyword(null);
                                                     temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_ELEMENTS));
                                                     string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                                     if (splitKeyword.Length == 1)
@@ -114,7 +114,7 @@ namespace RobotAutomationHelper.Scripts
                                             {
                                                 currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords.Add(
                                                     new Keyword(arrLine[i].Trim().Remove(0,1).Trim(),
-                                                    FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
+                                                    FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName), null));
                                                 AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords[currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords.Count - 1],
                                                     GetResourcesFromFile(fileName));
                                             }
@@ -206,7 +206,7 @@ namespace RobotAutomationHelper.Scripts
                                             && !arrLine[i].Trim().ToLower().StartsWith("\\"))
                                 {
                                     keyword.Keywords.Add(new Keyword(arrLine[i],
-                                        FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
+                                        FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName), keyword));
                                     AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
                                         GetResourcesFromFile(fileName));
                                 }
@@ -216,7 +216,7 @@ namespace RobotAutomationHelper.Scripts
                                     {
                                         if (arrLine[i].Trim().ToLower().Contains("range"))
                                         {
-                                            Keyword temp = new Keyword();
+                                            Keyword temp = new Keyword(keyword);
                                             temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_IN_RANGE));
                                             string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                             if (splitKeyword.Length == 1)
@@ -229,7 +229,7 @@ namespace RobotAutomationHelper.Scripts
                                         }
                                         else
                                         {
-                                            Keyword temp = new Keyword();
+                                            Keyword temp = new Keyword(keyword);
                                             temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.FOR_LOOP_ELEMENTS));
                                             string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                             if (splitKeyword.Length == 1)
@@ -244,7 +244,7 @@ namespace RobotAutomationHelper.Scripts
                                     {
                                         keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Add(
                                             new Keyword(arrLine[i].Trim().Remove(0, 1).Trim(),
-                                            FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
+                                            FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName), keyword));
                                         AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords[keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Count - 1],
                                             GetResourcesFromFile(fileName));
                                     }
@@ -266,13 +266,13 @@ namespace RobotAutomationHelper.Scripts
                 List<Keyword> SetupsAndTeardowns = new List<Keyword>
                 {
                     new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Setup").Replace("Test Setup", "").Trim(),
-                    fileName, true, GetLibs(fileName)),
+                    fileName, true, GetLibs(fileName), null),
                     new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(),
-                    fileName, true, GetLibs(fileName)),
+                    fileName, true, GetLibs(fileName), null),
                     new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(),
-                    fileName, true, GetLibs(fileName)),
+                    fileName, true, GetLibs(fileName), null),
                     new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(),
-                    fileName, true, GetLibs(fileName))
+                    fileName, true, GetLibs(fileName), null)
                 };
 
                 foreach (Keyword settingsKeyword in SetupsAndTeardowns)
@@ -280,7 +280,7 @@ namespace RobotAutomationHelper.Scripts
                     if (!settingsKeyword.Name.Equals(""))
                     {
                         AddKeywordsFromKeyword(settingsKeyword, GetResourcesFromFile(fileName));
-                        Keyword temp = new Keyword();
+                        Keyword temp = new Keyword(null);
                         temp.CopyKeyword(settingsKeyword);
                         SettingsKeywords.Add(temp);
                     }

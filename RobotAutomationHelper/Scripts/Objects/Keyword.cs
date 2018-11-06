@@ -7,6 +7,7 @@ namespace RobotAutomationHelper
     [Serializable]
     internal class Keyword
     {
+        internal Keyword Parent;
         internal List<Keyword> Keywords { get; set; }
         internal List<Keyword> ForLoopKeywords { get; set; }
         internal string Arguments { get; set; }
@@ -22,7 +23,7 @@ namespace RobotAutomationHelper
         internal bool Overwrite { get; set; }
         internal bool Recursive { get; set; }
 
-        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString)
+        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -50,10 +51,12 @@ namespace RobotAutomationHelper
             this.SuggestionIndex = SuggestionIndex;
             Recursive = false;
             this.KeywordString = KeywordString;
+            this.Parent = Parent;
         }
 
-        internal Keyword()
+        internal Keyword(Keyword Parent)
         {
+            this.Parent = Parent;
         }
 
         internal void CopyKeyword(Keyword keyword)
@@ -86,18 +89,20 @@ namespace RobotAutomationHelper
             KeywordString = keyword.KeywordString;
         }
 
-        internal Keyword(string Name, string OutputFilePath)
+        internal Keyword(string Name, string OutputFilePath, Keyword Parent)
         {
             this.Name = Name;
             this.OutputFilePath = OutputFilePath;
             Documentation = "";
             SuggestionIndex = -1;
             Recursive = false;
+            this.Parent = Parent;
         }
 
         // convert keyword string taken from file into keyword
-        internal Keyword(string KeywordString, string OutputFilePath, bool IsKeywordString, List<string> LibsToCheck)
+        internal Keyword(string KeywordString, string OutputFilePath, bool IsKeywordString, List<string> LibsToCheck, Keyword Parent)
         {
+            this.Parent = Parent;
             if (!KeywordString.Equals(""))
             {
                 Implemented = true;
