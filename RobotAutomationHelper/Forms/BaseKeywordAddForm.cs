@@ -470,7 +470,7 @@ namespace RobotAutomationHelper.Scripts
             if (FormParent.ThisFormKeywords != null)
                 ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent);
             else
-                ThisFormKeywords.Add(new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, null));
+                ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, null);
 
             NumberOfKeywordsInThisForm++;
             AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm);

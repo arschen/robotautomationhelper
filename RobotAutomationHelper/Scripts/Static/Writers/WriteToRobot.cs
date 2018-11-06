@@ -82,8 +82,9 @@ namespace RobotAutomationHelper.Scripts
                         if (keywordKeyword.Saved && keywordKeyword.Type == KeywordType.CUSTOM)
                             Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
                         else
-                            if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
-                                Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
+                            if (keywordKeyword.Type != KeywordType.CUSTOM)
+                                if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
+                                    Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
 
                         //adds test steps
                         if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS || keywordKeyword.Type == KeywordType.FOR_LOOP_IN_RANGE)
@@ -104,8 +105,9 @@ namespace RobotAutomationHelper.Scripts
                                 if (key.Saved && key.Type == KeywordType.CUSTOM)
                                     Includes[Includes.IndexOf(container)].AddToList(key.OutputFilePath);
                                 else
-                                    if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
-                                            Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
+                                    if (keywordKeyword.Type != KeywordType.CUSTOM)
+                                        if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
+                                                Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
 
                                 if (!key.Recursive)
                                     AddKeywordToRobot(key);
@@ -193,6 +195,7 @@ namespace RobotAutomationHelper.Scripts
                     else
                         index = tempTagIndex + 1;
 
+                    temp.FilesToInclude.Sort();
                     foreach (string path in temp.FilesToInclude)
                     {
                         if (!path.Contains("\\"))
@@ -343,8 +346,9 @@ namespace RobotAutomationHelper.Scripts
             if (keyword.Type == KeywordType.CUSTOM)
                 Includes[Includes.IndexOf(container)].AddToList(keyword.OutputFilePath);
             else
-                if (!keyword.KeywordString.Equals("BuiltIn") && !keyword.KeywordString.Equals("ForLoop"))
-                    Includes[Includes.IndexOf(container)].AddToList(keyword.KeywordString);
+                if (keyword.Type != KeywordType.CUSTOM)
+                    if (!keyword.KeywordString.Equals("BuiltIn") && !keyword.KeywordString.Equals("ForLoop"))
+                        Includes[Includes.IndexOf(container)].AddToList(keyword.KeywordString);
         }
 
         internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
