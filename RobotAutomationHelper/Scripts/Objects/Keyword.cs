@@ -213,6 +213,30 @@ namespace RobotAutomationHelper
                 default: return KeywordType.CUSTOM;
             }
         }
+
+        private bool recursive = false;
+        internal bool IsRecursive(Keyword keyword)
+        {
+            if (keyword.Parent != null)
+                if (Name.ToLower().Equals(keyword.Parent.Name.Trim().ToLower()))
+                {
+                    recursive = true;
+                    return true;
+                }
+                else
+                {
+                    IsRecursive(keyword.Parent);
+                }
+            if (recursive)
+            {
+                recursive = false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     internal enum KeywordType

@@ -51,7 +51,7 @@ namespace RobotAutomationHelper.Scripts
                                 break;
                             }
 
-                            if (start && !arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t"))
+                            if ((!arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t")) || arrLine[i].Trim().Equals(""))
                             {
                                 currentTestCase = arrLine[i];
                             }
@@ -160,7 +160,7 @@ namespace RobotAutomationHelper.Scripts
                     string[] arrLine = File.ReadAllLines(fileName);
                     for (int i = index; i < arrLine.Length; i++)
                     {
-                        if (!arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t"))
+                        if ((!arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t")) || arrLine[i].Trim().Equals(""))
                         {
                             if (i != index)
                                 break;
@@ -203,10 +203,15 @@ namespace RobotAutomationHelper.Scripts
                                 if (keyword.Keywords == null)
                                     keyword.Keywords = new List<Keyword>();
                                 if (!arrLine[i].Trim().ToLower().StartsWith(":for")
-                                            && !arrLine[i].Trim().ToLower().StartsWith("\\"))
+                                    && !arrLine[i].Trim().ToLower().StartsWith("\\"))
                                 {
                                     keyword.Keywords.Add(new Keyword(arrLine[i],
                                         FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName), keyword));
+                                    if (keyword.Keywords[keyword.Keywords.Count - 1].IsRecursive(keyword.Keywords[keyword.Keywords.Count - 1]))
+                                    {
+                                        keyword.Keywords[keyword.Keywords.Count - 1].Recursive = true;
+                                    }
+                                    else
                                     AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
                                         GetResourcesFromFile(fileName));
                                 }
@@ -245,7 +250,12 @@ namespace RobotAutomationHelper.Scripts
                                         keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Add(
                                             new Keyword(arrLine[i].Trim().Remove(0, 1).Trim(),
                                             FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName), keyword));
-                                        AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords[keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Count - 1],
+                                        if (keyword.Keywords[keyword.Keywords.Count - 1].IsRecursive(keyword.Keywords[keyword.Keywords.Count - 1]))
+                                        {
+                                            keyword.Keywords[keyword.Keywords.Count - 1].Recursive = true;
+                                        }
+                                        else
+                                            AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords[keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Count - 1],
                                             GetResourcesFromFile(fileName));
                                     }
                                 }
