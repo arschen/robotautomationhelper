@@ -70,7 +70,7 @@ namespace RobotAutomationHelper.Scripts
                                             && !arrLine[i].Trim().ToLower().StartsWith("\\"))
                                         {
                                             currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
-                                                FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                                FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
                                             AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1],
                                                 GetResourcesFromFile(fileName));
                                         }
@@ -114,7 +114,7 @@ namespace RobotAutomationHelper.Scripts
                                             {
                                                 currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords.Add(
                                                     new Keyword(arrLine[i].Trim().Remove(0,1).Trim(),
-                                                    FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                                    FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
                                                 AddKeywordsFromKeyword(currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords[currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords.Count - 1],
                                                     GetResourcesFromFile(fileName));
                                             }
@@ -206,7 +206,7 @@ namespace RobotAutomationHelper.Scripts
                                             && !arrLine[i].Trim().ToLower().StartsWith("\\"))
                                 {
                                     keyword.Keywords.Add(new Keyword(arrLine[i],
-                                        FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                        FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
                                     AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1],
                                         GetResourcesFromFile(fileName));
                                 }
@@ -244,7 +244,7 @@ namespace RobotAutomationHelper.Scripts
                                     {
                                         keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Add(
                                             new Keyword(arrLine[i].Trim().Remove(0, 1).Trim(),
-                                            FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true));
+                                            FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", true, GetLibs(fileName)));
                                         AddKeywordsFromKeyword(keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords[keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Count - 1],
                                             GetResourcesFromFile(fileName));
                                     }
@@ -263,15 +263,17 @@ namespace RobotAutomationHelper.Scripts
             List<Keyword> SettingsKeywords = new List<Keyword>();
             foreach (string fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Tests))
             {
-                List<Keyword> SetupsAndTeardowns = new List<Keyword>();
-                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Setup").Replace("Test Setup", "").Trim(),
-                    fileName, true));
-                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(),
-                    fileName, true));
-                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(),
-                    fileName, true));
-                SetupsAndTeardowns.Add(new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(),
-                    fileName, true));
+                List<Keyword> SetupsAndTeardowns = new List<Keyword>
+                {
+                    new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Setup").Replace("Test Setup", "").Trim(),
+                    fileName, true, GetLibs(fileName)),
+                    new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(),
+                    fileName, true, GetLibs(fileName)),
+                    new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(),
+                    fileName, true, GetLibs(fileName)),
+                    new Keyword(RobotFileHandler.OccuranceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(),
+                    fileName, true, GetLibs(fileName))
+                };
 
                 foreach (Keyword settingsKeyword in SetupsAndTeardowns)
                 {
@@ -313,6 +315,31 @@ namespace RobotAutomationHelper.Scripts
                 }
             }
             return Resources;
+        }
+
+        internal static List<string> GetLibs(string fileName)
+        {
+            string[] arrLine = File.ReadAllLines(fileName);
+            // find all resources
+            List<string> Libraries = new List<string>();
+
+            if (arrLine.Length != 0)
+            {
+                bool start = false;
+                for (int i = 0; i < arrLine.Length; i++)
+                {
+                    if (start && arrLine[i].StartsWith("***"))
+                        break;
+                    if (arrLine[i].StartsWith("*** Settings ***"))
+                        start = true;
+
+                    if (start && arrLine[i].StartsWith("Library"))
+                    {
+                        Libraries.Add(arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                    }
+                }
+            }
+            return Libraries;
         }
 
         private static void AddTestCaseAndResetValues(string fileName)

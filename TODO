@@ -9,4 +9,3 @@ BugFixes:
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
   Fix placement of Settings in new files ( currently all are written at line 1 )
   Fix recursion crash bug when reading
-  Fix includes when reading from file ( only use libraries from the includes and built in )

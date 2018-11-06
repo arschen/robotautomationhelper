@@ -96,7 +96,7 @@ namespace RobotAutomationHelper
         }
 
         // convert keyword string taken from file into keyword
-        internal Keyword(string KeywordString, string OutputFilePath, bool IsKeywordString)
+        internal Keyword(string KeywordString, string OutputFilePath, bool IsKeywordString, List<string> LibsToCheck)
         {
             if (!KeywordString.Equals(""))
             {
@@ -110,7 +110,7 @@ namespace RobotAutomationHelper
 
                 bool found = false;
                 foreach (Lib lib in SuggestionsClass.Suggestions)
-                    if (lib.ToInclude)
+                    if (LibsToCheck.Contains(lib.Name))
                         foreach (Keyword key in lib.LibKeywords)
                         {
                             if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
