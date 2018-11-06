@@ -82,8 +82,8 @@ namespace RobotAutomationHelper.Scripts
                         if (keywordKeyword.Saved && keywordKeyword.Type == KeywordType.CUSTOM)
                             Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
                         else
-                            if (keywordKeyword.Type == KeywordType.SELENIUMLIBRARY)
-                                Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
+                            if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
+                                Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
 
                         //adds test steps
                         if (keywordKeyword.Type == KeywordType.FOR_LOOP_ELEMENTS || keywordKeyword.Type == KeywordType.FOR_LOOP_IN_RANGE)
@@ -104,8 +104,8 @@ namespace RobotAutomationHelper.Scripts
                                 if (key.Saved && key.Type == KeywordType.CUSTOM)
                                     Includes[Includes.IndexOf(container)].AddToList(key.OutputFilePath);
                                 else
-                                    if (key.Type == KeywordType.SELENIUMLIBRARY)
-                                        Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
+                                    if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
+                                            Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
 
                                 if (!key.Recursive)
                                     AddKeywordToRobot(key);
@@ -195,15 +195,20 @@ namespace RobotAutomationHelper.Scripts
 
                     foreach (string path in temp.FilesToInclude)
                     {
-                        if (path.Equals("SeleniumLibrary"))
+                        if (!path.Contains("\\"))
                         {
                             if (RobotFileHandler.OccuranceInSettings(fileName, "Library  " + path).Equals(""))
+                            {
                                 RobotFileHandler.FileLineAdd("Library  " + path, fileName, index);
+                                index++;
+                            }
                         }
                         else
                             if (RobotFileHandler.OccuranceInSettings(fileName, "Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),"").Replace('\\', '/')).Equals(""))
-                                RobotFileHandler.FileLineAdd("Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root), "").Replace('\\', '/'), fileName, index);
-                        index++;
+                        {
+                            RobotFileHandler.FileLineAdd("Resource  " + path.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root), "").Replace('\\', '/'), fileName, index);
+                            index++;
+                        }
                     }
                 }
             }
@@ -338,9 +343,9 @@ namespace RobotAutomationHelper.Scripts
             if (keyword.Type == KeywordType.CUSTOM)
                 Includes[Includes.IndexOf(container)].AddToList(keyword.OutputFilePath);
             else
-                if (keyword.Type == KeywordType.SELENIUMLIBRARY)
-                Includes[Includes.IndexOf(container)].AddToList("SeleniumLibrary");
-            }
+                if (!keyword.KeywordString.Equals("BuiltIn") && !keyword.KeywordString.Equals("ForLoop"))
+                    Includes[Includes.IndexOf(container)].AddToList(keyword.KeywordString);
+        }
 
         internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
         {

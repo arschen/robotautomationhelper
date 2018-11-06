@@ -85,9 +85,12 @@ namespace RobotAutomationHelper.Scripts
                                                     string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                                     if (splitKeyword.Length == 1)
                                                         splitKeyword = arrLine[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
-                                                    temp.Params[0].Value = splitKeyword[1];
-                                                    temp.Params[1].Value = splitKeyword[3];
-                                                    temp.Params[2].Value = splitKeyword[4];
+                                                    if (splitKeyword != null && splitKeyword.Length >= 5)
+                                                    {
+                                                        temp.Params[0].Value = splitKeyword[1];
+                                                        temp.Params[1].Value = splitKeyword[3];
+                                                        temp.Params[2].Value = splitKeyword[4];
+                                                    }
                                                     currentTestCaseTestSteps.Add(temp);
                                                     currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords = new List<Keyword>();
                                                 }
@@ -98,8 +101,11 @@ namespace RobotAutomationHelper.Scripts
                                                     string[] splitKeyword = arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                                     if (splitKeyword.Length == 1)
                                                         splitKeyword = arrLine[i].Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
-                                                    temp.Params[0].Value = splitKeyword[1];
-                                                    temp.Params[1].Value = splitKeyword[3];
+                                                    if (splitKeyword != null && splitKeyword.Length >= 4)
+                                                    {
+                                                        temp.Params[0].Value = splitKeyword[1];
+                                                        temp.Params[1].Value = splitKeyword[3];
+                                                    }
                                                     currentTestCaseTestSteps.Add(temp);
                                                     currentTestCaseTestSteps[currentTestCaseTestSteps.Count - 1].ForLoopKeywords = new List<Keyword>();
                                                 }
