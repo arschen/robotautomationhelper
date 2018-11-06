@@ -21,6 +21,8 @@ namespace RobotAutomationHelper.Scripts
 
             var package = new ExcelPackage(new FileInfo(Filename));
             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+            string[] splitFileName = Filename.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            Filename = splitFileName[splitFileName.Length - 1].Replace(".xlsx", "");
 
             for (int i = workSheet.Dimension.Start.Row;
                                     i <= workSheet.Dimension.End.Row;
@@ -40,7 +42,7 @@ namespace RobotAutomationHelper.Scripts
                             if (!currentKeywordName.Equals(""))
                             {
                                 //Setup test creation for previous Test case
-                                AddKeywordAndResetValues(listKeys, type);
+                                AddKeywordAndResetValues(listKeys, type, Filename);
                                 if (!currentKeywordName.Equals(cellValue))
                                     currentKeywordName = cellValue;
                                 else
@@ -74,7 +76,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (!currentKeywordName.Equals(""))
             {
-                AddKeywordAndResetValues(listKeys, type);
+                AddKeywordAndResetValues(listKeys, type, Filename);
             }
 
             return listKeys;
@@ -89,6 +91,8 @@ namespace RobotAutomationHelper.Scripts
 
             var package = new ExcelPackage(new FileInfo(Filename));
             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+            string[] splitFileName = Filename.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            Filename = splitFileName[splitFileName.Length - 1].Replace(".xlsx", "");
 
             for (int i = workSheet.Dimension.Start.Row;
                                     i <= workSheet.Dimension.End.Row;
@@ -108,7 +112,7 @@ namespace RobotAutomationHelper.Scripts
                                 if (!currentKeywordName.Equals(""))
                                 {
                                     //Setup test creation for previous Test case
-                                    AddKeywordAndResetValuesSecondType(listKeys, type);
+                                    AddKeywordAndResetValuesSecondType(listKeys, type, Filename);
                                     if (!currentKeywordName.Equals(cellValue))
                                         currentKeywordName = cellValue;
                                     else
@@ -142,21 +146,21 @@ namespace RobotAutomationHelper.Scripts
 
             if (!currentKeywordName.Equals(""))
             {
-                AddKeywordAndResetValuesSecondType(listKeys, type);
+                AddKeywordAndResetValuesSecondType(listKeys, type, Filename);
             }
 
             return listKeys;
         }
 
-        private static void AddKeywordAndResetValues(List<Keyword> keywordsList, KeywordType type)
+        private static void AddKeywordAndResetValues(List<Keyword> keywordsList, KeywordType type, string Filename)
         {
-            keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1));
+            keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1, Filename));
             currentKeywordDocumentation = "";
             currentKeywordName = "";
             currentKeywordParams = new List<Param>();
         }
 
-        private static void AddKeywordAndResetValuesSecondType(List<Keyword> keywordsList, KeywordType type)
+        private static void AddKeywordAndResetValuesSecondType(List<Keyword> keywordsList, KeywordType type, string Filename)
         {
             bool removeTheKeyword = false;
             foreach (Keyword temp in keywordsList)
@@ -194,7 +198,7 @@ namespace RobotAutomationHelper.Scripts
             }
 
             if (!removeTheKeyword)
-                keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1));
+                keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1, Filename));
 
             currentKeywordDocumentation = "";
             currentKeywordName = "";

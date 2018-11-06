@@ -17,11 +17,12 @@ namespace RobotAutomationHelper
         internal bool Implemented { get; set; }
         internal bool Saved { get; private set; }
         internal KeywordType Type { get; set; }
+        internal string KeywordString { get; set; }
         internal int SuggestionIndex { get; set; }
         internal bool Overwrite { get; set; }
         internal bool Recursive { get; set; }
 
-        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex)
+        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -48,6 +49,7 @@ namespace RobotAutomationHelper
             this.Type = Type;
             this.SuggestionIndex = SuggestionIndex;
             Recursive = false;
+            this.KeywordString = KeywordString;
         }
 
         internal Keyword()
@@ -81,6 +83,7 @@ namespace RobotAutomationHelper
             Type = keyword.Type;
             SuggestionIndex = keyword.SuggestionIndex;
             Overwrite = keyword.Overwrite;
+            KeywordString = keyword.KeywordString;
         }
 
         internal Keyword(string Name, string OutputFilePath)

@@ -174,7 +174,8 @@ namespace RobotAutomationHelper
             finalPath,
             save,
             KeywordType.CUSTOM,
-            ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex);
+            ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex,
+            "Custom");
 
             if (addToSuggestions)
             {
