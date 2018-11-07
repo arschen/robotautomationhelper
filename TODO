@@ -2,10 +2,10 @@ Support for template
 Support for Gerkhin
 Custom Python libraries implementation
 Easy implementation of other robot framework libraries ( By adding xlsx in specific format and ENUM edit in code )
-Check for files in the folder when starting new project
-Option in the menu to select only certain libs for suggestions
 BugFixes:
   Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
   Fix placement of Settings in new files ( currently all are written at line 1 )
-  RemoveKeywordForOverwriting can potentially delete valid keywords for other tests / keywords
+
+Nice to have:
+Preferences saved in local file

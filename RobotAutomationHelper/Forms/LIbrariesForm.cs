@@ -59,5 +59,29 @@ namespace RobotAutomationHelper.Forms
             Controls.Add(libName);
             Controls.Add(checkBox);
         }
+
+        private void Skip_Click(object sender, System.EventArgs e)
+        {
+            Close();
+        }
+
+        private void Save_Click(object sender, System.EventArgs e)
+        {
+            foreach (Lib lib in SuggestionsClass.Suggestions)
+            {
+                if (lib.keyType.Equals(KeywordType.STANDARD))
+                {
+                    lib.ToInclude = (Controls["checkbox" + lib.Name] as CheckBox).Checked;
+                }
+                else
+                {
+                    if (!lib.keyType.Equals(KeywordType.FOR_LOOP_ELEMENTS) && !lib.keyType.Equals(KeywordType.FOR_LOOP_IN_RANGE) && !lib.keyType.Equals(KeywordType.CUSTOM))
+                    {
+                        lib.ToInclude = (Controls["checkbox" + lib.Name] as CheckBox).Checked;
+                    }
+                }
+            }
+            Close();
+        }
     }
 }

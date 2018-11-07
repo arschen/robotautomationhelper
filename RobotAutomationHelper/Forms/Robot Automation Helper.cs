@@ -72,6 +72,18 @@ namespace RobotAutomationHelper
             settingsToolStripMenuItem.Visible = true;
             librariesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog3.SelectedPath);
+
+            List<TestCase> TempTestCases = ReadRobotFiles.ReadAllTests();
+
+            if (TempTestCases.Count != 0)
+            {
+                DialogResult result = MessageBox.Show("Use existing Test Cases in project folder?",
+                    "Alert",
+                    MessageBoxButtons.YesNo);
+                if (result.Equals(DialogResult.Yes))
+                    TestCases = TempTestCases;
+            }
+
             AddTestCasesToMainForm();
             ShowTestCasePanels();
         }

@@ -44,6 +44,7 @@ namespace RobotAutomationHelper.Forms
             this.Save.TabIndex = 0;
             this.Save.Text = "Save";
             this.Save.UseVisualStyleBackColor = true;
+            this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
             // Skip
             // 
@@ -53,6 +54,7 @@ namespace RobotAutomationHelper.Forms
             this.Skip.TabIndex = 1;
             this.Skip.Text = "Skip";
             this.Skip.UseVisualStyleBackColor = true;
+            this.Skip.Click += new System.EventHandler(this.Skip_Click);
             // 
             // STDLIBlabel
             // 
@@ -72,7 +74,7 @@ namespace RobotAutomationHelper.Forms
             this.EXTLIBlabel.TabIndex = 3;
             this.EXTLIBlabel.Text = "External libraries";
             // 
-            // LIbrariesFom
+            // LibrariesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -81,7 +83,7 @@ namespace RobotAutomationHelper.Forms
             this.Controls.Add(this.STDLIBlabel);
             this.Controls.Add(this.Skip);
             this.Controls.Add(this.Save);
-            this.Name = "LIbrariesFom";
+            this.Name = "LibrariesForm";
             this.Text = "LIbrariesFom";
             this.ResumeLayout(false);
             this.PerformLayout();
