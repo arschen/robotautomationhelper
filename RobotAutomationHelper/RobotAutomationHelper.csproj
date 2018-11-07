@@ -59,11 +59,11 @@
     <Compile Include="Forms\KeywordAddForm.Designer.cs">
       <DependentUpon>KeywordAddForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\LIbrariesFom.cs">
+    <Compile Include="Forms\LibrariesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\LIbrariesFom.Designer.cs">
-      <DependentUpon>LIbrariesFom.cs</DependentUpon>
+    <Compile Include="Forms\LibrariesForm.Designer.cs">
+      <DependentUpon>LibrariesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\NameAndOutputForm.cs">
       <SubType>Form</SubType>
@@ -143,8 +143,8 @@
       <DependentUpon>KeywordAddForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LIbrariesFom.resx">
-      <DependentUpon>LIbrariesFom.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\LibrariesForm.resx">
+      <DependentUpon>LibrariesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NameAndOutputForm.resx">
       <DependentUpon>NameAndOutputForm.cs</DependentUpon>

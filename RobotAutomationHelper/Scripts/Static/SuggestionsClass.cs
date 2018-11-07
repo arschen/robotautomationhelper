@@ -39,7 +39,8 @@ namespace RobotAutomationHelper.Scripts
             {
                 Name = "CUSTOM",
                 LibKeywords = new List<Keyword>(),
-                ToInclude = true
+                ToInclude = true,
+                keyType = KeywordType.CUSTOM
             };
             Suggestions.Add(lib);
 
@@ -51,7 +52,8 @@ namespace RobotAutomationHelper.Scripts
                 {
                     Name = file.Name.Replace(".xlsx", ""),
                     ToInclude = true,
-                    LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, KeywordType.STANDARD)
+                    LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, KeywordType.STANDARD),
+                    keyType = KeywordType.STANDARD
                 };
                 Suggestions.Add(lib);
             }
@@ -74,7 +76,8 @@ namespace RobotAutomationHelper.Scripts
                 {
                     Name = file.Name.Replace(".xlsx", ""),
                     ToInclude = true,
-                    LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, type)
+                    LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, type),
+                    keyType = type
                 };
                 Suggestions.Add(lib);
             }
@@ -99,7 +102,8 @@ namespace RobotAutomationHelper.Scripts
             {
                 Name = "FOR_LOOP_IN_RANGE",
                 LibKeywords = new List<Keyword>(),
-                ToInclude = true
+                ToInclude = true,
+                keyType = KeywordType.FOR_LOOP_IN_RANGE
             };
             lib.LibKeywords.Add(ForLoopInRange);
             Suggestions.Add(lib);
@@ -119,7 +123,8 @@ namespace RobotAutomationHelper.Scripts
             {
                 Name = "FOR_LOOP_ELEMENTS",
                 LibKeywords = new List<Keyword>(),
-                ToInclude = true
+                ToInclude = true,
+                keyType = KeywordType.FOR_LOOP_ELEMENTS
             };
             lib1.LibKeywords.Add(ForLoopElements);
             Suggestions.Add(lib1);
@@ -149,6 +154,7 @@ namespace RobotAutomationHelper.Scripts
         internal List<Keyword> LibKeywords;
         internal string Name { get; set; }
         internal bool ToInclude;
+        internal KeywordType keyType;
 
         public override string ToString()
         {

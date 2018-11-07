@@ -1,6 +1,8 @@
-﻿namespace RobotAutomationHelper.Forms
+﻿using RobotAutomationHelper.Scripts.CustomControls;
+
+namespace RobotAutomationHelper.Forms
 {
-    partial class LIbrariesFom
+    partial class LibrariesForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.Save = new ButtonWithToolTip();
             this.Skip = new System.Windows.Forms.Button();
             this.STDLIBlabel = new System.Windows.Forms.Label();
             this.EXTLIBlabel = new System.Windows.Forms.Label();
@@ -87,7 +90,7 @@
 
         #endregion
 
-        private Scripts.CustomControls.ButtonWithToolTip Save;
+        private ButtonWithToolTip Save;
         private System.Windows.Forms.Button Skip;
         private System.Windows.Forms.Label STDLIBlabel;
         private System.Windows.Forms.Label EXTLIBlabel;

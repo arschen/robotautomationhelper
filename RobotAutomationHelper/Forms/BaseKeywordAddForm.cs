@@ -152,9 +152,8 @@ namespace RobotAutomationHelper.Scripts
         protected void InstantiateLibrariesAddForm(object sender, EventArgs e)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateLibrariesAddForm " + ((Button)sender).Name);
-            SettingsAddForm AddSettingsForm = new SettingsAddForm(this);
-            //AddSettingsForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImlpementedChildKeyword);
-            AddSettingsForm.ShowSettingsContent();
+            LibrariesForm librariesForm = new LibrariesForm();
+            librariesForm.ShowLibrariesContent();
         }
 
         internal void InstantiateParamsAddForm(object sender, EventArgs e)
