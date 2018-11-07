@@ -36,6 +36,8 @@
             this.saveToRobotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToRobotAndRunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.librariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.suggestionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.IndexLabel = new System.Windows.Forms.Label();
             this.TestCaseNameLabel = new System.Windows.Forms.Label();
@@ -50,7 +52,8 @@
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
-            this.settingsToolStripMenuItem});
+            this.settingsToolStripMenuItem,
+            this.librariesToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(784, 24);
@@ -111,6 +114,22 @@
             this.settingsToolStripMenuItem.Text = "Robot Files Settings";
             this.settingsToolStripMenuItem.Visible = false;
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
+            // 
+            // librariesToolStripMenuItem
+            // 
+            this.librariesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.suggestionsToolStripMenuItem});
+            this.librariesToolStripMenuItem.Name = "librariesToolStripMenuItem";
+            this.librariesToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.librariesToolStripMenuItem.Text = "Libraries";
+            this.librariesToolStripMenuItem.Visible = false;
+            // 
+            // suggestionsToolStripMenuItem
+            // 
+            this.suggestionsToolStripMenuItem.Name = "suggestionsToolStripMenuItem";
+            this.suggestionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.suggestionsToolStripMenuItem.Text = "Suggestions";
+            this.suggestionsToolStripMenuItem.Click += new System.EventHandler(this.SuggestionsToolStripMenuItem_Click);
             // 
             // openFileDialog
             // 
@@ -192,6 +211,8 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
         private System.Windows.Forms.ToolStripMenuItem newProjectToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog3;
+        private System.Windows.Forms.ToolStripMenuItem librariesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem suggestionsToolStripMenuItem;
     }
 }
 

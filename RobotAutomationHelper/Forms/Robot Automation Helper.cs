@@ -70,6 +70,7 @@ namespace RobotAutomationHelper
             ClearDynamicElements();
             TestCases = new List<TestCase>();
             settingsToolStripMenuItem.Visible = true;
+            librariesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog3.SelectedPath);
             AddTestCasesToMainForm();
             ShowTestCasePanels();
@@ -81,6 +82,7 @@ namespace RobotAutomationHelper
             SuggestionsClass.PopulateSuggestionsList(true, true);
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
+            librariesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog1.SelectedPath);
             TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
             TestCases.Sort();
@@ -147,6 +149,7 @@ namespace RobotAutomationHelper
             SuggestionsClass.PopulateSuggestionsList(true, true);
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
+            librariesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog2.SelectedPath);
             TestCases = ReadRobotFiles.ReadAllTests();
 
@@ -405,6 +408,18 @@ namespace RobotAutomationHelper
             else
             {
                 DialogResult result = MessageBox.Show("You haven't saved any keywords or test cases to files yet.",
+                "Alert",
+                MessageBoxButtons.OK);
+            }
+        }
+
+        private void SuggestionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SuggestionsClass.Suggestions != null && SuggestionsClass.Suggestions.Count > 0)
+                InstantiateLibrariesAddForm(sender, e);
+            else
+            {
+                DialogResult result = MessageBox.Show("No libraries loaded.",
                 "Alert",
                 MessageBoxButtons.OK);
             }
