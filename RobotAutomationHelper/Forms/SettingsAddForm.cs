@@ -103,7 +103,7 @@ namespace RobotAutomationHelper.Forms
                     if (Controls["DynamicStep" + i + "Name"] != null)
                         Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i-1].Name;
                     else
-                        AddKeywordField(ThisFormKeywords[i-1], i);
+                        AddKeywordField(ThisFormKeywords[i-1], i, false);
         }
 
         internal void ShowSettingsContent()

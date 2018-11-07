@@ -66,24 +66,37 @@ namespace RobotAutomationHelper
         private void BrowseFolderButtonNewProject()
         {
             Cache.ClearCache();
-            SuggestionsClass.PopulateSuggestionsList(true, true);
+            SuggestionsClass.PopulateSuggestionsList();
             ClearDynamicElements();
             TestCases = new List<TestCase>();
             settingsToolStripMenuItem.Visible = true;
             librariesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog3.SelectedPath);
+            List<TestCase> ProjectTestCases = ReadRobotFiles.ReadAllTests();
+            List<Keyword> SuiteSettingsKeywordList = ReadRobotFiles.ReadAllSettings();
 
-            List<TestCase> TempTestCases = ReadRobotFiles.ReadAllTests();
-
-            if (TempTestCases.Count != 0)
+            if (ProjectTestCases.Count != 0)
             {
                 DialogResult result = MessageBox.Show("Use existing Test Cases in project folder?",
                     "Alert",
                     MessageBoxButtons.YesNo);
                 if (result.Equals(DialogResult.Yes))
-                    TestCases = TempTestCases;
+                {
+                    TestCases = ProjectTestCases;
+                    foreach (TestCase tempProj in ProjectTestCases)
+                    {
+                        if (SuiteSettingsKeywordList != null && SuiteSettingsKeywordList.Count != 0)
+                        {
+                            foreach (Keyword tempKeyword in SuiteSettingsKeywordList)
+                            {
+                                KeywordToSuggestions(tempKeyword);
+                            }
+                        }
+                    }
+                }
             }
 
+            SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsKeywordList);
             AddTestCasesToMainForm();
             ShowTestCasePanels();
         }
@@ -91,15 +104,16 @@ namespace RobotAutomationHelper
         private void BrowseFolderButtonOpenExcel()
         {
             Cache.ClearCache();
-            SuggestionsClass.PopulateSuggestionsList(true, true);
+            SuggestionsClass.PopulateSuggestionsList();
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
             librariesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog1.SelectedPath);
             TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
             TestCases.Sort();
-            List<TestCase> ProjectTestCases = new List<TestCase>();
-            ProjectTestCases = ReadRobotFiles.ReadAllTests();
+            List<TestCase> ProjectTestCases = ReadRobotFiles.ReadAllTests();
+            List<Keyword> SuiteSettingsKeywordList = ReadRobotFiles.ReadAllSettings();
+
             bool showAlert = false;
             if (ProjectTestCases.Count != 0)
                 foreach (TestCase tempProj in ProjectTestCases)
@@ -132,25 +146,20 @@ namespace RobotAutomationHelper
                 {
                     foreach (TestCase tempProj in ProjectTestCases)
                     {
-                        List<Keyword> temp = ReadRobotFiles.ReadAllSettings();
-                        if (temp != null && temp.Count != 0)
+                        if (SuiteSettingsKeywordList != null && SuiteSettingsKeywordList.Count != 0)
                         {
-                            foreach (Keyword tempKeyword in temp)
+                            foreach (Keyword tempKeyword in SuiteSettingsKeywordList)
                             {
                                 KeywordToSuggestions(tempKeyword);
                             }
                         }
 
-                        foreach (TestCase tempExc in TestCases)
-                        {
-                            if (tempProj.Name.Equals(tempExc.Name))
-                            {
-                                tempExc.CopyTestCase(tempProj);
-                            }
-                        }
+                        TestCases = ProjectTestCases;
                     }
                 }
             }
+
+            SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsKeywordList);
             AddTestCasesToMainForm();
             ShowTestCasePanels();
         }
@@ -158,7 +167,7 @@ namespace RobotAutomationHelper
         private void BrowseFolderButtonExistingProject()
         {
             Cache.ClearCache();
-            SuggestionsClass.PopulateSuggestionsList(true, true);
+            SuggestionsClass.PopulateSuggestionsList();
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
             librariesToolStripMenuItem.Visible = true;
@@ -167,10 +176,10 @@ namespace RobotAutomationHelper
 
             if (TestCases.Count != 0)
             {
-                List<Keyword> temp = ReadRobotFiles.ReadAllSettings();
-                if (temp != null && temp.Count != 0)
+                List<Keyword> SuiteSettingsKeywords = ReadRobotFiles.ReadAllSettings();
+                if (SuiteSettingsKeywords != null && SuiteSettingsKeywords.Count != 0)
                 {
-                    foreach (Keyword tempKeyword in temp)
+                    foreach (Keyword tempKeyword in SuiteSettingsKeywords)
                     {
                         KeywordToSuggestions(tempKeyword);
                     }
@@ -185,6 +194,8 @@ namespace RobotAutomationHelper
                         }
                 }
                 TestCases.Sort();
+
+                SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsKeywords);
                 AddTestCasesToMainForm();
                 ShowTestCasePanels();
             }

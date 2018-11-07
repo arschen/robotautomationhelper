@@ -75,7 +75,7 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        internal static void PopulateSuggestionsList(bool Selenium, bool BuiltIn)
+        internal static void PopulateSuggestionsList()
         {
             Lib lib = new Lib
             {
@@ -188,6 +188,50 @@ namespace RobotAutomationHelper.Scripts
                 if (lib.Name.Equals("CUSTOM"))
                     return lib.LibKeywords;
             return null;
+        }
+
+        private static List<string> SuggestionsToInclude;
+        internal static List<string> UpdateSuggestionsToIncludes(List<TestCase> TestCases, List<Keyword> SuiteSettingsKeywordsList)
+        {
+            SuggestionsToInclude = new List<string>
+            {
+                "BuiltIn"
+            };
+
+            if (TestCases != null)
+                foreach (TestCase test in TestCases)
+                    foreach (Keyword keyword in test.Steps)
+                        UpdateSuggestionsKeywordToIncludes(keyword);
+
+            foreach (Keyword suiteKeyword in SuiteSettingsKeywordsList)
+            {
+                UpdateSuggestionsKeywordToIncludes(suiteKeyword);
+            }
+
+            return SuggestionsToInclude;
+        }
+
+        private static void UpdateSuggestionsKeywordToIncludes(Keyword keyword)
+        {
+            foreach (Lib lib in Suggestions)
+                if (lib.Name.Equals(keyword.KeywordString))
+                {
+                    if (!SuggestionsToInclude.Contains(lib.Name))
+                    {
+                        lib.ToInclude = true;
+                        SuggestionsToInclude.Add(lib.Name);
+                    }
+                }
+
+            if (keyword.Keywords != null)
+                foreach (Keyword key in keyword.Keywords)
+                    if (!key.Recursive)
+                        UpdateSuggestionsKeywordToIncludes(key);
+
+            if (keyword.ForLoopKeywords != null)
+                foreach (Keyword key in keyword.ForLoopKeywords)
+                    if (!key.Recursive)
+                        UpdateSuggestionsKeywordToIncludes(key);
         }
     }
 

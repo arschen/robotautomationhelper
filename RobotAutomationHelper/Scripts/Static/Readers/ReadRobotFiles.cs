@@ -332,7 +332,7 @@ namespace RobotAutomationHelper.Scripts
             string[] arrLine = File.ReadAllLines(fileName);
             // find all resources
             List<string> Libraries = new List<string>();
-
+            Libraries.Add("BuiltIn");
             if (arrLine.Length != 0)
             {
                 bool start = false;

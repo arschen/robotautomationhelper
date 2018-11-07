@@ -200,7 +200,7 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // Adds TextBox / Label / Add implementation / Add and remove keyword / Params
-        protected void AddKeywordField(Keyword keyword, int keywordsCounter)
+        protected void AddKeywordField(Keyword keyword, int keywordsCounter, bool newKeyword)
         {
             int settingsLabel = 0;
             if (FormType == FormType.Settings)
@@ -268,10 +268,10 @@ namespace RobotAutomationHelper.Scripts
                     new EventHandler(InstantiateParamsAddForm),
                     this);
 
-            if (NameAndOutputToTestCaseFormCommunication.Value != null)
+            if (newKeyword && NameAndOutputToTestCaseFormCommunication.Value != null)
                 (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", NameAndOutputToTestCaseFormCommunication.Value);
             else
-                (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", keyword.ToString());
+                (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", keyword.KeywordString);
             (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).EnableKeywordFields();
         }
 
@@ -324,7 +324,7 @@ namespace RobotAutomationHelper.Scripts
                 if (lib.ToInclude)
                     foreach (Keyword SuggestedKeyword in lib.LibKeywords)
                     {
-                        if (keywordType.StartsWith("["))
+                        if (keywordType != null && keywordType.StartsWith("["))
                             if (keyword.GetTypeBasedOnSuggestionStart(keywordType) != SuggestedKeyword.Type)
                             {
                                 break;
@@ -480,7 +480,7 @@ namespace RobotAutomationHelper.Scripts
                 ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, null);
 
             NumberOfKeywordsInThisForm++;
-            AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm);
+            AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm, true);
 
             for (int i = 1; i < NumberOfKeywordsInThisForm; i++)
                 Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();

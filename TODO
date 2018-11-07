@@ -5,4 +5,3 @@ Easy implementation of other robot framework libraries ( By adding xlsx in speci
 BugFixes:
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
   Fix placement of Settings in new files ( currently all are written at line 1 )
-  Add check for library usages in test cases / keywords and lock true / false in libraries form

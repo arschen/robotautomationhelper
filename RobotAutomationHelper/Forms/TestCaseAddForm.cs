@@ -84,7 +84,7 @@ namespace RobotAutomationHelper
             if (ThisFormKeywords != null && ThisFormKeywords.Count != 0)
                 foreach (Keyword testStep in testCase.Steps)
                 {
-                    AddKeywordField(testStep, NumberOfKeywordsInThisForm + 1);
+                    AddKeywordField(testStep, NumberOfKeywordsInThisForm + 1, false);
                     NumberOfKeywordsInThisForm++;
                 }
             else
@@ -94,7 +94,7 @@ namespace RobotAutomationHelper
                 {
                     new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", null)
                 };
-                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1);
+                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, false);
                 NumberOfKeywordsInThisForm++;
             }
 

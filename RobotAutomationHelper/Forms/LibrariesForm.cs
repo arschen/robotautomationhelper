@@ -1,4 +1,5 @@
 ﻿using RobotAutomationHelper.Scripts;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -20,11 +21,30 @@ namespace RobotAutomationHelper.Forms
         {
             int stdLibsCounter = 0;
             int extLibsCounter = 0;
+            List<Keyword> listKeyword = new List<Keyword>();
+
+            foreach (SuiteSettings temp in RobotAutomationHelper.SuiteSettingsList)
+                if (temp != null)
+                {
+                    if (temp.TestSetup != null)
+                        listKeyword.Add(temp.TestSetup);
+                    if (temp.SuiteSetup != null)
+                        listKeyword.Add(temp.SuiteSetup);
+                    if (temp.TestTeardown != null)
+                        listKeyword.Add(temp.TestTeardown);
+                    if (temp.SuiteTeardown != null)
+                        listKeyword.Add(temp.SuiteTeardown);
+                }
+
+            List<string> LockedIncludes = SuggestionsClass.UpdateSuggestionsToIncludes(RobotAutomationHelper.TestCases, listKeyword);
+
             foreach (Lib lib in SuggestionsClass.Suggestions)
             {
                 if (lib.keyType.Equals(KeywordType.STANDARD))
                 {
                     ShowLibField(STDLIBlabel.Location.X, initialY + stdLibsCounter * FieldHeight, lib.Name, lib.ToInclude);
+                    if (LockedIncludes.Contains(lib.Name))
+                        DisableLibField(lib.Name);
                     stdLibsCounter++;
                 }
                 else
@@ -32,6 +52,8 @@ namespace RobotAutomationHelper.Forms
                     if (!lib.keyType.Equals(KeywordType.FOR_LOOP_ELEMENTS) && !lib.keyType.Equals(KeywordType.FOR_LOOP_IN_RANGE) && !lib.keyType.Equals(KeywordType.CUSTOM))
                     {
                         ShowLibField(EXTLIBlabel.Location.X, initialY + extLibsCounter * FieldHeight, lib.Name, lib.ToInclude);
+                        if (LockedIncludes.Contains(lib.Name))
+                            DisableLibField(lib.Name);
                         extLibsCounter++;
                     }
                 }
@@ -41,7 +63,13 @@ namespace RobotAutomationHelper.Forms
             var dialogResult = ShowDialog();
         }
 
-        internal void ShowLibField(int x, int y, string Name, bool check)
+        private void DisableLibField(string Name)
+        {
+            Controls["checkbox" + Name].Enabled = false;
+            Controls[Name].Enabled = false;
+        }
+
+        private void ShowLibField(int x, int y, string Name, bool check)
         {
             Label libName = new Label
             {
