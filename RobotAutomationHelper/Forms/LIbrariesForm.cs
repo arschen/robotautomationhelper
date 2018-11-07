@@ -71,13 +71,13 @@ namespace RobotAutomationHelper.Forms
             {
                 if (lib.keyType.Equals(KeywordType.STANDARD))
                 {
-                    lib.ToInclude = (Controls["checkbox" + lib.Name] as CheckBox).Checked;
+                    lib.ToInclude = SuggestionsClass.ContainsName(lib.Name, (Controls["checkbox" + lib.Name] as CheckBox).Checked, false);
                 }
                 else
                 {
                     if (!lib.keyType.Equals(KeywordType.FOR_LOOP_ELEMENTS) && !lib.keyType.Equals(KeywordType.FOR_LOOP_IN_RANGE) && !lib.keyType.Equals(KeywordType.CUSTOM))
                     {
-                        lib.ToInclude = (Controls["checkbox" + lib.Name] as CheckBox).Checked;
+                        lib.ToInclude = SuggestionsClass.ContainsName(lib.Name, (Controls["checkbox" + lib.Name] as CheckBox).Checked, false);
                     }
                 }
             }

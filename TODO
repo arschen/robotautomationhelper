@@ -3,9 +3,6 @@ Support for Gerkhin
 Custom Python libraries implementation
 Easy implementation of other robot framework libraries ( By adding xlsx in specific format and ENUM edit in code )
 BugFixes:
-  Documentation for library keywords has [Lists] ( need extractor from html tables to excel )
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
   Fix placement of Settings in new files ( currently all are written at line 1 )
-
-Nice to have:
-Preferences saved in local file
+  Add check for library usages in test cases / keywords and lock true / false in libraries form

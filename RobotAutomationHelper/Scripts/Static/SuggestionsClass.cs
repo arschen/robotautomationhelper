@@ -33,13 +33,55 @@ namespace RobotAutomationHelper.Scripts
             return false;
         }
 
+        internal static bool ContainsName(string name, bool toInclude, bool isPopulating)
+        {
+            string[] arrLine;
+            string fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "Preferences.txt";
+            if (File.Exists(fileName))
+            {
+                arrLine = File.ReadAllLines(fileName);
+                for (int i = 0; i < arrLine.Count(); i++)
+                {
+                    if (arrLine[i].StartsWith(name + "="))
+                    {
+                        string[] tempString = arrLine[i].Split(new string[]{ "=" }, StringSplitOptions.RemoveEmptyEntries);
+                        if (tempString[tempString.Count() - 1].ToLower().Equals(toInclude.ToString().ToLower()))
+                            return toInclude;
+                        else
+                        {
+                            if (!isPopulating)
+                            {
+                                tempString[tempString.Count() - 1] = toInclude.ToString().ToLower();
+                                arrLine[i] = tempString[0] + "=" + tempString[tempString.Count() - 1];
+                                File.WriteAllLines(fileName, arrLine);
+                            }
+                            return !toInclude;
+                        }
+                    }
+                }
+
+                List<string> tempList = new List<string>();
+                tempList.AddRange(arrLine);
+                tempList.Add(name + "=" + toInclude.ToString().ToLower());
+                File.WriteAllLines(fileName, tempList);
+                return toInclude;
+            }
+            else
+            {
+                var myFile = File.Create(fileName);
+                myFile.Close();
+                File.WriteAllLines(fileName, new string[] { name + "=" + toInclude.ToString().ToLower() });
+                return toInclude;
+            }
+        }
+
         internal static void PopulateSuggestionsList(bool Selenium, bool BuiltIn)
         {
             Lib lib = new Lib
             {
                 Name = "CUSTOM",
                 LibKeywords = new List<Keyword>(),
-                ToInclude = true,
+                ToInclude = ContainsName("CUSTOM", true, true),
                 keyType = KeywordType.CUSTOM
             };
             Suggestions.Add(lib);
@@ -51,7 +93,7 @@ namespace RobotAutomationHelper.Scripts
                 lib = new Lib
                 {
                     Name = file.Name.Replace(".xlsx", ""),
-                    ToInclude = true,
+                    ToInclude = ContainsName(file.Name.Replace(".xlsx", ""), true, true),
                     LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, KeywordType.STANDARD),
                     keyType = KeywordType.STANDARD
                 };
@@ -75,7 +117,7 @@ namespace RobotAutomationHelper.Scripts
                 lib = new Lib
                 {
                     Name = file.Name.Replace(".xlsx", ""),
-                    ToInclude = true,
+                    ToInclude = ContainsName(file.Name.Replace(".xlsx", ""), true, true),
                     LibKeywords = ExcelLibsGetter.ReadAllKeywordsFromExcelSecondType(file.FullName, type),
                     keyType = type
                 };
