@@ -243,7 +243,10 @@ namespace RobotAutomationHelper.Scripts
 
             List<string> temp = new List<string>();
             temp.AddRange(arrLine);
-            temp.Insert(line_to_add_after, newText);
+            if (!(line_to_add_after > arrLine.Length))
+                temp.Insert(line_to_add_after, newText);
+            else
+                temp.Add(newText);
             File.WriteAllLines(fileName, temp);
         }
 

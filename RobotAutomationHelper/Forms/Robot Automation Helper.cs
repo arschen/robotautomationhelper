@@ -405,9 +405,12 @@ namespace RobotAutomationHelper
                 if (testCase.Steps != null)
                     foreach (Keyword testStep in testCase.Steps)
                     {
-                        WriteToRobot.RemoveKeywordForOverwriting(testStep);
+                        
                         if (testStep.Overwrite)
+                        {
+                            WriteToRobot.RemoveKeywordChidrenOfKeywordForOverwriting(testStep);
                             WriteToRobot.TestCaseKeywordRemove(testStep.GetName(), testStep.OutputFilePath, true);
+                        }   
                     }
             }
 

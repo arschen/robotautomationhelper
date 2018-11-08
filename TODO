@@ -11,3 +11,4 @@ Support for Gerkhin
 BugFixes:
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
   Fix placement of Settings in new files ( currently all are written at line 1 )
+  Debug writing to robot fails ( MAJOR issue )
