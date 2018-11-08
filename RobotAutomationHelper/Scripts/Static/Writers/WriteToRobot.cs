@@ -36,6 +36,7 @@ namespace RobotAutomationHelper.Scripts
 
             index = AddSteps(testCase.Steps, fileName, index, addTestCase, testCase.Overwrite);
         }
+
         internal static void AddKeywordToRobot(Keyword keyword)
         {
             string fileName = keyword.OutputFilePath;
@@ -45,7 +46,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (index < 0) index = 0;
 
-            bool addKeywordSteps = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), FormType.Keyword) != -1);
+            bool addKeywordSteps = !(RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.GetName().Trim(), FormType.Keyword) != -1);
 
             if (addKeywordSteps)
                 if (keyword.Type == KeywordType.CUSTOM)
@@ -58,7 +59,7 @@ namespace RobotAutomationHelper.Scripts
             if (keyword.Saved && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
             {
                 //Add keyword to robot file
-                index = AddName(keyword.Name.Trim(), fileName, index, FormType.Keyword);
+                index = AddName(keyword.GetName().Trim(), fileName, index, FormType.Keyword);
 
                 //adds documentation
                 index = AddTagsDocumentationArguments("[Documentation]", "\t" + keyword.Documentation, fileName, index);
@@ -100,7 +101,7 @@ namespace RobotAutomationHelper.Scripts
                             foreach (Keyword key in keywordKeyword.ForLoopKeywords)
                             {
                                 index++;
-                                RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + key.Name + key.ParamsToString(), fileName, index);
+                                RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + key.GetName() + key.ParamsToString(), fileName, index);
 
                                 if (key.Saved && key.Type == KeywordType.CUSTOM)
                                     Includes[Includes.IndexOf(container)].AddToList(key.OutputFilePath);
@@ -116,7 +117,7 @@ namespace RobotAutomationHelper.Scripts
                         else
                         {
                             index++;
-                            RobotFileHandler.FileLineAdd("\t" + keywordKeyword.Name + keywordKeyword.ParamsToString(), fileName, index);
+                            RobotFileHandler.FileLineAdd("\t" + keywordKeyword.GetName() + keywordKeyword.ParamsToString(), fileName, index);
                         }    
                     }
 
@@ -216,6 +217,7 @@ namespace RobotAutomationHelper.Scripts
                 }
             }
         }
+
         internal static void WriteSuiteSettingsListToRobot()
         {
             foreach (SuiteSettings suiteSettings in RobotAutomationHelper.SuiteSettingsList)
@@ -229,68 +231,68 @@ namespace RobotAutomationHelper.Scripts
                         RemoveFromSettings("Documentation",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.TestSetup.Name != "")
-                        ReplaceInSettings("Test Setup  " + suiteSettings.TestSetup.Name + suiteSettings.TestSetup.ParamsToString()
+                    if (suiteSettings.TestSetup.GetName() != "")
+                        ReplaceInSettings("Test Setup  " + suiteSettings.TestSetup.GetName() + suiteSettings.TestSetup.ParamsToString()
                             , "Test Setup",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Test Setup",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.TestTeardown.Name != "")
-                        ReplaceInSettings("Test Teardown  " + suiteSettings.TestTeardown.Name + suiteSettings.TestTeardown.ParamsToString()
+                    if (suiteSettings.TestTeardown.GetName() != "")
+                        ReplaceInSettings("Test Teardown  " + suiteSettings.TestTeardown.GetName() + suiteSettings.TestTeardown.ParamsToString()
                             , "Test Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Test Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.SuiteSetup.Name != "")
-                        ReplaceInSettings("Suite Setup  " + suiteSettings.SuiteSetup.Name + suiteSettings.SuiteSetup.ParamsToString()
+                    if (suiteSettings.SuiteSetup.GetName() != "")
+                        ReplaceInSettings("Suite Setup  " + suiteSettings.SuiteSetup.GetName() + suiteSettings.SuiteSetup.ParamsToString()
                             , "Suite Setup",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Suite Setup",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.SuiteTeardown.Name != "")
-                        ReplaceInSettings("Suite Teardown  " + suiteSettings.SuiteTeardown.Name + suiteSettings.SuiteTeardown.ParamsToString()
+                    if (suiteSettings.SuiteTeardown.GetName() != "")
+                        ReplaceInSettings("Suite Teardown  " + suiteSettings.SuiteTeardown.GetName() + suiteSettings.SuiteTeardown.ParamsToString()
                             , "Suite Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
                         RemoveFromSettings("Suite Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.SuiteSetup != null && !suiteSettings.SuiteSetup.Name.Trim().Equals(""))
+                    if (suiteSettings.SuiteSetup != null && !suiteSettings.SuiteSetup.GetName().Trim().Equals(""))
                     {
                         RemoveKeywordForOverwriting(suiteSettings.SuiteSetup);
                         AddIncludesFromSettingsKeyword(suiteSettings.SuiteSetup, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                         if (suiteSettings.SuiteSetup.Overwrite)
-                            TestCaseKeywordRemove(suiteSettings.SuiteSetup.Name, suiteSettings.SuiteSetup.OutputFilePath, true);
+                            TestCaseKeywordRemove(suiteSettings.SuiteSetup.GetName(), suiteSettings.SuiteSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteSetup);
                     }
-                    if (suiteSettings.SuiteTeardown != null && !suiteSettings.SuiteTeardown.Name.Trim().Equals(""))
+                    if (suiteSettings.SuiteTeardown != null && !suiteSettings.SuiteTeardown.GetName().Trim().Equals(""))
                     {
                         RemoveKeywordForOverwriting(suiteSettings.SuiteTeardown);
                         AddIncludesFromSettingsKeyword(suiteSettings.SuiteTeardown, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                         if (suiteSettings.SuiteTeardown.Overwrite)
-                            TestCaseKeywordRemove(suiteSettings.SuiteTeardown.Name, suiteSettings.SuiteTeardown.OutputFilePath, true);
+                            TestCaseKeywordRemove(suiteSettings.SuiteTeardown.GetName(), suiteSettings.SuiteTeardown.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteTeardown);
                     }
-                    if (suiteSettings.TestSetup != null && !suiteSettings.TestSetup.Name.Trim().Equals(""))
+                    if (suiteSettings.TestSetup != null && !suiteSettings.TestSetup.GetName().Trim().Equals(""))
                     {
                         RemoveKeywordForOverwriting(suiteSettings.TestSetup);
                         AddIncludesFromSettingsKeyword(suiteSettings.TestSetup, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                         if (suiteSettings.TestSetup.Overwrite)
-                            TestCaseKeywordRemove(suiteSettings.TestSetup.Name, suiteSettings.TestSetup.OutputFilePath, true);
+                            TestCaseKeywordRemove(suiteSettings.TestSetup.GetName(), suiteSettings.TestSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.TestSetup);
                     }
-                    if (suiteSettings.TestTeardown != null && !suiteSettings.TestTeardown.Name.Trim().Equals(""))
+                    if (suiteSettings.TestTeardown != null && !suiteSettings.TestTeardown.GetName().Trim().Equals(""))
                     {
                         RemoveKeywordForOverwriting(suiteSettings.TestTeardown);
                         AddIncludesFromSettingsKeyword(suiteSettings.TestTeardown, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                         if (suiteSettings.TestTeardown.Overwrite)
-                            TestCaseKeywordRemove(suiteSettings.TestTeardown.Name, suiteSettings.TestTeardown.OutputFilePath, true);
+                            TestCaseKeywordRemove(suiteSettings.TestTeardown.GetName(), suiteSettings.TestTeardown.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.TestTeardown);
                     }
                 }
@@ -335,7 +337,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         RemoveKeywordForOverwriting(step);
                         if (step.Overwrite)
-                            TestCaseKeywordRemove(step.Name, step.OutputFilePath, true);
+                            TestCaseKeywordRemove(step.GetName(), step.OutputFilePath, true);
                     }
                 }
         }

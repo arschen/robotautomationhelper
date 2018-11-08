@@ -297,6 +297,11 @@ namespace RobotAutomationHelper
                 return false;
             }
         }
+
+        internal string GetName()
+        {
+            return name;
+        }
     }
 
     internal enum KeywordType

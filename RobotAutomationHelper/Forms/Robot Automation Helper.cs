@@ -407,7 +407,7 @@ namespace RobotAutomationHelper
                     {
                         WriteToRobot.RemoveKeywordForOverwriting(testStep);
                         if (testStep.Overwrite)
-                            WriteToRobot.TestCaseKeywordRemove(testStep.Name, testStep.OutputFilePath, true);
+                            WriteToRobot.TestCaseKeywordRemove(testStep.GetName(), testStep.OutputFilePath, true);
                     }
             }
 
