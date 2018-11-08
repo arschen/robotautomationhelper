@@ -51,13 +51,15 @@ namespace RobotAutomationHelper.Scripts
                                 break;
                             }
 
-                            if ((!arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t")) || arrLine[i].Trim().Equals(""))
+                            if (start && !arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t") && !arrLine[i].Trim().Equals(""))
                             {
+                                if (currentTestCase != "")
+                                    AddTestCaseAndResetValues(fileName);
                                 currentTestCase = arrLine[i];
                             }
                             else
                             {
-                                if (start)
+                                if (start && !arrLine[i].Trim().Equals(""))
                                 {
                                     if (arrLine[i].Trim().StartsWith("[Documentation]"))
                                         currentTestCaseDocumentation = arrLine[i];
@@ -160,14 +162,15 @@ namespace RobotAutomationHelper.Scripts
                     string[] arrLine = File.ReadAllLines(fileName);
                     for (int i = index; i < arrLine.Length; i++)
                     {
-                        if ((!arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t")) || arrLine[i].Trim().Equals(""))
+                        if (!arrLine[i].StartsWith(" ") && !arrLine[i].StartsWith("\t") && !arrLine[i].Trim().Equals(""))
                         {
                             if (i != index)
                                 break;
                             else
                                 keyword.Name = arrLine[i];
                         }
-                        else
+                        else 
+                        if (!arrLine[i].Trim().Equals(""))
                         {
                             if (arrLine[i].Trim().StartsWith("[Documentation]"))
                                 keyword.Documentation = arrLine[i];
@@ -329,10 +332,13 @@ namespace RobotAutomationHelper.Scripts
 
         internal static List<string> GetLibs(string fileName)
         {
+            // find all libraries
+            List<string> Libraries = new List<string>
+            {
+                "BuiltIn"
+            };
+
             string[] arrLine = File.ReadAllLines(fileName);
-            // find all resources
-            List<string> Libraries = new List<string>();
-            Libraries.Add("BuiltIn");
             if (arrLine.Length != 0)
             {
                 bool start = false;
@@ -349,6 +355,28 @@ namespace RobotAutomationHelper.Scripts
                     }
                 }
             }
+
+            foreach (string resourceFileName in GetResourcesFromFile(fileName))
+            {
+                arrLine = File.ReadAllLines(resourceFileName);
+                if (arrLine.Length != 0)
+                {
+                    bool start = false;
+                    for (int i = 0; i < arrLine.Length; i++)
+                    {
+                        if (start && arrLine[i].StartsWith("***"))
+                            break;
+                        if (arrLine[i].StartsWith("*** Settings ***"))
+                            start = true;
+
+                        if (start && arrLine[i].StartsWith("Library"))
+                        {
+                            Libraries.Add(arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        }
+                    }
+                }
+            }
+
             return Libraries;
         }
 
