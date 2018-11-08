@@ -1,8 +1,8 @@
 Support for variables
 Support for comments # ( reading done )
 Support for empty lines between keywords ( reading whole lines done )
+Support for KeywordFile.Keyword (  reading done )
 Support for custom Python libraries
-Support for KeywordFile.Keyword ( dots that show where the keyword is imported from )
 Easy implementation of other robot framework libraries ( By adding xlsx in specific format and ENUM edit in code )
 Error message when unsupported library is used in the files
 Support for template

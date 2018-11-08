@@ -32,7 +32,7 @@ namespace RobotAutomationHelper.Scripts
             List<string> results = new List<string>();
             string pattern = GetFolder(folderType);
             foreach (string temp in SavedFiles)
-                if (temp.Contains(pattern))
+                if (temp.ToLower().Contains(pattern.ToLower()))
                 {
                     results.Add(temp);
                 }

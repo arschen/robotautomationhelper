@@ -12,9 +12,43 @@ namespace RobotAutomationHelper
         internal List<Keyword> ForLoopKeywords { get; set; }
         internal string Arguments { get; set; }
         internal List<Param> Params { get; set; }
-        internal string Name { get; set; }
+        private string name;
+        internal string Name
+        { get
+            {
+                if (!IncludeImportFile) return name;
+                else return name.Split(new string[] { "." },StringSplitOptions.RemoveEmptyEntries)[1];
+            }
+            set {
+                if (!IncludeImportFile) name = value;
+                else
+                {
+                    if (OutputFilePath != null)
+                        name = OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries).Length - 1].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
+                    else
+                        name = value;
+                }
+            }
+        }
         internal string Documentation { get; set; }
-        internal string OutputFilePath { get; set; }
+
+        private string outputFilePath;
+        internal string OutputFilePath
+        {
+            get
+            {
+                return outputFilePath;
+            }
+            set
+            {
+                if (IncludeImportFile && outputFilePath != null)
+                {
+                    string[] tempOutpuFileSplit = outputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                    ImportFileName = tempOutpuFileSplit[tempOutpuFileSplit.Length - 1].Replace(".robot", "");
+                }
+                outputFilePath = value;
+            }
+        }
         internal bool Implemented { get; set; }
         internal bool Saved { get; private set; }
         internal KeywordType Type { get; set; }
@@ -23,6 +57,8 @@ namespace RobotAutomationHelper
         internal bool Overwrite { get; set; }
         internal bool Recursive { get; set; }
         internal string Comments { get; set; }
+        internal bool IncludeImportFile = false;
+        internal string ImportFileName { get; set; }
 
         internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent)
         {
@@ -123,6 +159,13 @@ namespace RobotAutomationHelper
                         splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                     else
                         splitKeyword = new string[] { KeywordString };
+
+                    if (!splitKeyword[0].StartsWith("{") && splitKeyword[0].Contains("."))
+                    {
+                        string[] tempOutpuFileSplit = OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                        IncludeImportFile = true;
+                        ImportFileName = splitKeyword[0].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    }
 
                     bool found = false;
                     foreach (Lib lib in SuggestionsClass.Suggestions)
