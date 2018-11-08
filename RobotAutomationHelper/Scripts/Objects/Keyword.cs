@@ -22,6 +22,7 @@ namespace RobotAutomationHelper
         internal int SuggestionIndex { get; set; }
         internal bool Overwrite { get; set; }
         internal bool Recursive { get; set; }
+        internal string Comments { get; set; }
 
         internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent)
         {
@@ -105,69 +106,80 @@ namespace RobotAutomationHelper
             this.Parent = Parent;
             if (!KeywordString.Equals(""))
             {
-                Implemented = true;
-                string[] splitKeyword;
-                KeywordString = KeywordString.Trim();
-                if (!StringAndListOperations.StartsWithVariable(KeywordString))
-                    splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-                else
-                    splitKeyword = new string[] { KeywordString };
-
-                bool found = false;
-                foreach (Lib lib in SuggestionsClass.Suggestions)
-                    if (LibsToCheck.Contains(lib.Name))
-                        foreach (Keyword key in lib.LibKeywords)
-                        {
-                            if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
-                            {
-                                CopyKeyword(key);
-                                found = true;
-                                break;
-                            }
-                        }
-
-                if (found)
+                if (KeywordString.Trim().StartsWith("#"))
                 {
-                    for (int i = 1; i < splitKeyword.Length; i++)
-                    {
-                        if (!splitKeyword[i].Contains("="))
-                        {
-                            if (i - 1 < Params.Count)
-                                Params[i - 1].Value = splitKeyword[i];
-                            else
-                                Params[Params.Count - 1].Value += "  " + splitKeyword[i];
-                        }
-                        else
-                        {
-                            // check if after spliting the first string matches any param name
-                            string[] temp = splitKeyword[i].Split('=');
-                            foreach (Param tempParam in Params)
-                            {
-                                if (tempParam.Name.ToLower().Trim().Equals(temp[0].ToLower().Trim()))
-                                    tempParam.Value = splitKeyword[i].Replace(temp[0] + "=", "");
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    Name = splitKeyword[0];
-                    if (splitKeyword.Length > 1)
-                        Params = new List<Param>();
-                    for (int i = 1; i < splitKeyword.Length; i++)
-                    {
-                        if (!splitKeyword[i].Contains("="))
-                            Params.Add(new Param("", splitKeyword[i]));
-                        else
-                        {
-                            // check if after spliting the first string matches any param name
-                            string[] temp = splitKeyword[i].Split('=');
-                            Params.Add(new Param(temp[0], temp[1]));
-                        }
-                    }
+                    Comments = KeywordString;
                     this.OutputFilePath = OutputFilePath;
                     Documentation = "";
                     SuggestionIndex = -1;
+                    Type = KeywordType.COMMENT;
+                }
+                else
+                {
+                    Implemented = true;
+                    string[] splitKeyword;
+                    KeywordString = KeywordString.Trim();
+                    if (!StringAndListOperations.StartsWithVariable(KeywordString))
+                        splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                    else
+                        splitKeyword = new string[] { KeywordString };
+
+                    bool found = false;
+                    foreach (Lib lib in SuggestionsClass.Suggestions)
+                        if (LibsToCheck.Contains(lib.Name))
+                            foreach (Keyword key in lib.LibKeywords)
+                            {
+                                if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
+                                {
+                                    CopyKeyword(key);
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                    if (found)
+                    {
+                        for (int i = 1; i < splitKeyword.Length; i++)
+                        {
+                            if (!splitKeyword[i].Contains("="))
+                            {
+                                if (i - 1 < Params.Count)
+                                    Params[i - 1].Value = splitKeyword[i];
+                                else
+                                    Params[Params.Count - 1].Value += "  " + splitKeyword[i];
+                            }
+                            else
+                            {
+                                // check if after spliting the first string matches any param name
+                                string[] temp = splitKeyword[i].Split('=');
+                                foreach (Param tempParam in Params)
+                                {
+                                    if (tempParam.Name.ToLower().Trim().Equals(temp[0].ToLower().Trim()))
+                                        tempParam.Value = splitKeyword[i].Replace(temp[0] + "=", "");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Name = splitKeyword[0];
+                        if (splitKeyword.Length > 1)
+                            Params = new List<Param>();
+                        for (int i = 1; i < splitKeyword.Length; i++)
+                        {
+                            if (!splitKeyword[i].Contains("="))
+                                Params.Add(new Param("", splitKeyword[i]));
+                            else
+                            {
+                                // check if after spliting the first string matches any param name
+                                string[] temp = splitKeyword[i].Split('=');
+                                Params.Add(new Param(temp[0], temp[1]));
+                            }
+                        }
+                        this.OutputFilePath = OutputFilePath;
+                        Documentation = "";
+                        SuggestionIndex = -1;
+                    }
                 }
             }
             else
@@ -246,6 +258,6 @@ namespace RobotAutomationHelper
 
     internal enum KeywordType
     {
-        CUSTOM, SELENIUMLIBRARY, APPIUMLIBRARY, FAKERLIBRARY, REST, STANDARD, FOR_LOOP_IN_RANGE, FOR_LOOP_ELEMENTS, COMMENT
+        CUSTOM, SELENIUMLIBRARY, APPIUMLIBRARY, FAKERLIBRARY, REST, STANDARD, FOR_LOOP_IN_RANGE, FOR_LOOP_ELEMENTS, COMMENT, EMPTY
     }
 }
