@@ -53,9 +53,9 @@ namespace RobotAutomationHelper.Forms
 
 
             FolderType folderType = FolderType.Root;
-            if (CurrentSuiteSettings.OutputFilePath.Contains("Resources"))
+            if (CurrentSuiteSettings.OutputFilePath.Contains(FilesAndFolderStructure.resources))
                 folderType = FolderType.Resources;
-            if (CurrentSuiteSettings.OutputFilePath.Contains("Tests"))
+            if (CurrentSuiteSettings.OutputFilePath.Contains(FilesAndFolderStructure.tests))
                 folderType = FolderType.Tests;
 
             if (!CurrentSuiteSettings.Overwrite)

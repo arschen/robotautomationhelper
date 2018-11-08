@@ -75,7 +75,7 @@ namespace RobotAutomationHelper.Scripts
             if (e.KeyCode == Keys.Enter && e.KeyCode == Keys.Return)
             {
                 HideSuggestionsList();
-                Console.WriteLine("OnKeyDown Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
+                //Console.WriteLine("OnKeyDown Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
                 if (updateNeeded)
                     TriggerUpdate("", "");
                 else

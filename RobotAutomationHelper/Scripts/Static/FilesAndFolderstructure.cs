@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RobotAutomationHelper.Scripts
@@ -8,6 +9,8 @@ namespace RobotAutomationHelper.Scripts
         // list of saved files for the drop down menus
         private static List<string> SavedFiles = new List<string>();
         private static string OutputFolder;
+        internal static string resources = "Resources";
+        internal static string tests = "Tests";
 
         internal static void CleanUp()
         {
@@ -57,8 +60,8 @@ namespace RobotAutomationHelper.Scripts
         {
             switch (folderType)
             {
-                case FolderType.Resources: return OutputFolder + "Resources\\";
-                case FolderType.Tests: return OutputFolder + "Tests\\";
+                case FolderType.Resources: return OutputFolder + resources + "\\";
+                case FolderType.Tests: return OutputFolder + tests + "\\";
                 default: return OutputFolder;
             }
         }
@@ -100,7 +103,13 @@ namespace RobotAutomationHelper.Scripts
         internal static void FindAllRobotFilesAndAddToStructure()
         {
             DirectoryInfo d = new DirectoryInfo(OutputFolder);
-
+            foreach (var dir in d.GetDirectories())
+            {
+                if (dir.ToString().ToLower().Equals("tests"))
+                    tests = dir.ToString();
+                if (dir.ToString().ToLower().Equals("resources"))
+                    resources = dir.ToString();
+            }
             foreach (var file in d.GetFiles("*.robot", SearchOption.AllDirectories))
             {
                 AddFileToSavedFiles(file.FullName);
