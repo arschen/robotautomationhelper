@@ -131,7 +131,12 @@ namespace RobotAutomationHelper
                     for (int i = 1; i < splitKeyword.Length; i++)
                     {
                         if (!splitKeyword[i].Contains("="))
-                            Params[i - 1].Value = splitKeyword[i];
+                        {
+                            if (i - 1 < Params.Count)
+                                Params[i - 1].Value = splitKeyword[i];
+                            else
+                                Params[Params.Count - 1].Value += "  " + splitKeyword[i];
+                        }
                         else
                         {
                             // check if after spliting the first string matches any param name
