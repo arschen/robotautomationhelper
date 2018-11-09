@@ -172,7 +172,6 @@ namespace RobotAutomationHelper.Scripts
                 index++;
             }
             RobotFileHandler.FileLineAdd(name, fileName, index);
-            Console.WriteLine("Adding" + tag.ToString() + ": " + name);
             return index;
         }
 
