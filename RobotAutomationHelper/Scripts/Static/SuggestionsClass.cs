@@ -55,7 +55,7 @@ namespace RobotAutomationHelper.Scripts
                                 arrLine[i] = tempString[0] + "=" + tempString[tempString.Count() - 1];
                                 File.WriteAllLines(fileName, arrLine);
                             }
-                            return !toInclude;
+                            return toInclude;
                         }
                     }
                 }
