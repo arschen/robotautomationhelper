@@ -38,7 +38,7 @@ namespace RobotAutomationHelper
             {
                 if (presentInRobotFile)
                 {
-                    if (!ParentKeywords[ImplementationIndexFromTheParent].Overwrite)
+                    if (!ParentKeywords[ImplementationIndexFromTheParent].ToWrite)
                     {
                         DialogResult result = MessageBox.Show("Overwrite existing keyword in the output file?",
                             "Alert",
@@ -47,17 +47,17 @@ namespace RobotAutomationHelper
                         {
                             AddCurrentKeywordsToKeywordsList(sender, e);
                             SaveChangesToKeyword(true);
-                            ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
+                            ParentKeywords[ImplementationIndexFromTheParent].ToWrite = true;
                             Close();
                         }
                         else
-                            ParentKeywords[ImplementationIndexFromTheParent].Overwrite = false;
+                            ParentKeywords[ImplementationIndexFromTheParent].ToWrite = false;
                     }
                     else
                     {
                         AddCurrentKeywordsToKeywordsList(sender, e);
                         SaveChangesToKeyword(true);
-                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
+                        ParentKeywords[ImplementationIndexFromTheParent].ToWrite = true;
                         Close();
                     }
                 }
@@ -70,14 +70,14 @@ namespace RobotAutomationHelper
                     {
                         AddCurrentKeywordsToKeywordsList(sender, e);
                         SaveChangesToKeyword(true);
-                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = true;
+                        ParentKeywords[ImplementationIndexFromTheParent].ToWrite = true;
                         TestCasesListOperations.OverwriteOccurrencesInKeywordTree(KeywordName.Text,
                             FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
                             ParentKeywords[ImplementationIndexFromTheParent]);
                         Close();
                     }
                     else
-                        ParentKeywords[ImplementationIndexFromTheParent].Overwrite = false;
+                        ParentKeywords[ImplementationIndexFromTheParent].ToWrite = false;
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace RobotAutomationHelper
                 // add a single keyword field if no keywords are available
                 ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword)
+                    new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword, true)
                 };
                 AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, false);
                 NumberOfKeywordsInThisForm++;
@@ -176,7 +176,8 @@ namespace RobotAutomationHelper
             KeywordType.CUSTOM,
             ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex,
             "Custom",
-            ParentKeywords[ImplementationIndexFromTheParent].Parent);
+            ParentKeywords[ImplementationIndexFromTheParent].Parent,
+            true);
 
             if (addToSuggestions)
             {

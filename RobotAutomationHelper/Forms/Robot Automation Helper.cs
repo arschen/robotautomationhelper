@@ -400,13 +400,14 @@ namespace RobotAutomationHelper
             {
                 TestCase testCase = TestCases[index - 1];
                 if (testCase.Overwrite)
+                {
                     WriteToRobot.TestCaseKeywordRemove(testCase.Name, testCase.OutputFilePath, false);
+                }
 
                 if (testCase.Steps != null)
                     foreach (Keyword testStep in testCase.Steps)
                     {
-                        
-                        if (testStep.Overwrite)
+                        if (testStep.ToWrite)
                         {
                             WriteToRobot.RemoveKeywordChidrenOfKeywordForOverwriting(testStep);
                             WriteToRobot.TestCaseKeywordRemove(testStep.GetName(), testStep.OutputFilePath, true);

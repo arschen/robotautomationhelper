@@ -23,7 +23,7 @@ namespace RobotAutomationHelper
                 if (!IncludeImportFile) name = value;
                 else
                 {
-                    if (OutputFilePath != null)
+                    if (OutputFilePath != null && !OutputFilePath.Equals(""))
                         name = OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries).Length - 1].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
                     else
                         name = value;
@@ -50,17 +50,16 @@ namespace RobotAutomationHelper
             }
         }
         internal bool Implemented { get; set; }
-        internal bool Saved { get; private set; }
         internal KeywordType Type { get; set; }
         internal string KeywordString { get; set; }
         internal int SuggestionIndex { get; set; }
-        internal bool Overwrite { get; set; }
+        internal bool ToWrite { get; set; }
         internal bool Recursive { get; set; }
         internal string Comments { get; set; }
         internal bool IncludeImportFile = false;
         internal string ImportFileName { get; set; }
 
-        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent)
+        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent, bool ToWrite)
         {
             this.Name = Name;
             this.Documentation = Documentation;
@@ -82,8 +81,7 @@ namespace RobotAutomationHelper
             this.Arguments = Arguments;
             this.OutputFilePath = OutputFilePath;
             Implemented = true;
-            Overwrite = false;
-            this.Saved = Saved;
+            this.ToWrite = ToWrite;
             this.Type = Type;
             this.SuggestionIndex = SuggestionIndex;
             Recursive = false;
@@ -119,20 +117,21 @@ namespace RobotAutomationHelper
             Arguments = keyword.Arguments;
             OutputFilePath = keyword.OutputFilePath;
             Implemented = keyword.Implemented;
-            Saved = keyword.Saved;
+            ToWrite = keyword.ToWrite;
             Type = keyword.Type;
             SuggestionIndex = keyword.SuggestionIndex;
-            Overwrite = keyword.Overwrite;
+            ToWrite = keyword.ToWrite;
             KeywordString = keyword.KeywordString;
         }
 
-        internal Keyword(string Name, string OutputFilePath, Keyword Parent)
+        internal Keyword(string Name, string OutputFilePath, Keyword Parent, bool ToWrite)
         {
             this.Name = Name;
             this.OutputFilePath = OutputFilePath;
             Documentation = "";
             SuggestionIndex = -1;
             Recursive = false;
+            this.ToWrite = ToWrite;
             this.Parent = Parent;
         }
 

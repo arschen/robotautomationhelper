@@ -56,7 +56,7 @@ namespace RobotAutomationHelper.Scripts
                         Includes.Add(candidate);
                 }
 
-            if (keyword.Saved && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
+            if (keyword.ToWrite && addKeywordSteps && (keyword.Type == KeywordType.CUSTOM))
             {
                 //Add keyword to robot file
                 index = AddName(keyword.GetName().Trim(), fileName, index, FormType.Keyword);
@@ -68,7 +68,8 @@ namespace RobotAutomationHelper.Scripts
                 index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.Arguments, fileName, index);
             }
 
-            index = AddSteps(keyword.Keywords, fileName, index, addKeywordSteps, keyword.Overwrite);
+            if (keyword.ToWrite)
+                index = AddSteps(keyword.Keywords, fileName, index, addKeywordSteps, keyword.ToWrite);
         }
 
         //adds Steps
@@ -80,7 +81,7 @@ namespace RobotAutomationHelper.Scripts
                 {
                     if (addSteps)
                     {
-                        if (keywordKeyword.Saved && keywordKeyword.Type == KeywordType.CUSTOM)
+                        if (keywordKeyword.ToWrite && keywordKeyword.Type == KeywordType.CUSTOM)
                             Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
                         else
                             if (keywordKeyword.Type != KeywordType.CUSTOM)
@@ -103,7 +104,7 @@ namespace RobotAutomationHelper.Scripts
                                 index++;
                                 RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + key.GetName() + key.ParamsToString(), fileName, index);
 
-                                if (key.Saved && key.Type == KeywordType.CUSTOM)
+                                if (key.ToWrite && key.Type == KeywordType.CUSTOM)
                                     Includes[Includes.IndexOf(container)].AddToList(key.OutputFilePath);
                                 else
                                     if (keywordKeyword.Type != KeywordType.CUSTOM)
@@ -121,7 +122,7 @@ namespace RobotAutomationHelper.Scripts
                         }    
                     }
 
-                    if (!keywordKeyword.Recursive)
+                    if (!keywordKeyword.Recursive && keywordKeyword.ToWrite)
                         AddKeywordToRobot(keywordKeyword);
                 }
             return index;
@@ -171,6 +172,7 @@ namespace RobotAutomationHelper.Scripts
                 index++;
             }
             RobotFileHandler.FileLineAdd(name, fileName, index);
+            Console.WriteLine("Adding" + tag.ToString() + ": " + name);
             return index;
         }
 
@@ -267,7 +269,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.SuiteSetup);
                         AddIncludesFromSettingsKeyword(suiteSettings.SuiteSetup, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
-                        if (suiteSettings.SuiteSetup.Overwrite)
+                        if (suiteSettings.SuiteSetup.ToWrite)
                             TestCaseKeywordRemove(suiteSettings.SuiteSetup.GetName(), suiteSettings.SuiteSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteSetup);
                     }
@@ -275,7 +277,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.SuiteTeardown);
                         AddIncludesFromSettingsKeyword(suiteSettings.SuiteTeardown, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
-                        if (suiteSettings.SuiteTeardown.Overwrite)
+                        if (suiteSettings.SuiteTeardown.ToWrite)
                             TestCaseKeywordRemove(suiteSettings.SuiteTeardown.GetName(), suiteSettings.SuiteTeardown.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteTeardown);
                     }
@@ -283,7 +285,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.TestSetup);
                         AddIncludesFromSettingsKeyword(suiteSettings.TestSetup, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
-                        if (suiteSettings.TestSetup.Overwrite)
+                        if (suiteSettings.TestSetup.ToWrite)
                             TestCaseKeywordRemove(suiteSettings.TestSetup.GetName(), suiteSettings.TestSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.TestSetup);
                     }
@@ -291,7 +293,7 @@ namespace RobotAutomationHelper.Scripts
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.TestTeardown);
                         AddIncludesFromSettingsKeyword(suiteSettings.TestTeardown, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
-                        if (suiteSettings.TestTeardown.Overwrite)
+                        if (suiteSettings.TestTeardown.ToWrite)
                             TestCaseKeywordRemove(suiteSettings.TestTeardown.GetName(), suiteSettings.TestTeardown.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.TestTeardown);
                     }
@@ -335,7 +337,7 @@ namespace RobotAutomationHelper.Scripts
                 {
                     if (!step.Recursive)
                     {
-                        if (step.Overwrite)
+                        if (step.ToWrite)
                         {
                             TestCaseKeywordRemove(step.GetName(), step.OutputFilePath, true);
                             RemoveKeywordChidrenOfKeywordForOverwriting(step);
@@ -357,6 +359,7 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
         {
+            Console.WriteLine("Overwrite (remove): " + name + " " + (isKeyword ? "Keyword" : "Test") + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
             string[] arrLine;
             if (File.Exists(fileName))
                 arrLine = File.ReadAllLines(fileName);
@@ -385,7 +388,11 @@ namespace RobotAutomationHelper.Scripts
                 while (!endOfTestCaseKeyword)
                 {
                     if (index < temp.Count)
+                    {
+                        if (!temp[index].Trim().Equals(""))
+                            Console.WriteLine("TestCaseKeywordRemove | Remove line: " + temp[index] + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
                         temp.RemoveAt(index);
+                    } 
                     else
                         endOfTestCaseKeyword = true;
 

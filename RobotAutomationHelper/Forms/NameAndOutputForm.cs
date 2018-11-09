@@ -23,7 +23,7 @@ namespace RobotAutomationHelper.Forms
             FormType = FormType.NameAndOutput;
             ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("", "", keyword)
+                    new Keyword("", "", keyword, true)
                 };
         }
 

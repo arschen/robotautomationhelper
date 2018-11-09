@@ -81,19 +81,19 @@ namespace RobotAutomationHelper.Forms
 
             ThisFormKeywords = new List<Keyword>();
             if (CurrentSuiteSettings.TestSetup == null)
-                CurrentSuiteSettings.TestSetup = new Keyword("", "Auto.robot", null);
+                CurrentSuiteSettings.TestSetup = new Keyword("", "Auto.robot", null, true);
             ThisFormKeywords.Add(CurrentSuiteSettings.TestSetup);
 
             if (CurrentSuiteSettings.TestTeardown == null)
-                CurrentSuiteSettings.TestTeardown = new Keyword("", "Auto.robot", null);
+                CurrentSuiteSettings.TestTeardown = new Keyword("", "Auto.robot", null, true);
             ThisFormKeywords.Add(CurrentSuiteSettings.TestTeardown);
 
             if (CurrentSuiteSettings.SuiteSetup == null)
-                CurrentSuiteSettings.SuiteSetup = new Keyword("", "Auto.robot", null);
+                CurrentSuiteSettings.SuiteSetup = new Keyword("", "Auto.robot", null, true);
             ThisFormKeywords.Add(CurrentSuiteSettings.SuiteSetup);
 
             if (CurrentSuiteSettings.SuiteTeardown == null)
-                CurrentSuiteSettings.SuiteTeardown = new Keyword("", "Auto.robot", null);
+                CurrentSuiteSettings.SuiteTeardown = new Keyword("", "Auto.robot", null, true);
             ThisFormKeywords.Add(CurrentSuiteSettings.SuiteTeardown);
 
             SuiteDocumentation.Text = CurrentSuiteSettings.Documentation;

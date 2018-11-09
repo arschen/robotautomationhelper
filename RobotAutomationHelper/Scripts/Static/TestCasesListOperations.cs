@@ -20,7 +20,7 @@ namespace RobotAutomationHelper.Scripts
                 if (test.Steps != null)
                     foreach (Keyword keyword in test.Steps)
                     {
-                        if (keyword.Saved && !ReferenceEquals(keyword, thisKeyword)
+                        if (keyword.ToWrite && !ReferenceEquals(keyword, thisKeyword)
                             && keyword.Name.Trim().ToLower().Equals(name.ToLower())
                             && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
                             return test.Name + " | " + keyword.Name.Trim();
@@ -65,7 +65,7 @@ namespace RobotAutomationHelper.Scripts
                 if (test.Steps != null)
                     foreach (Keyword keyword in test.Steps)
                     {
-                        if (keyword.Saved && !ReferenceEquals(keyword, thisKeyword)
+                        if (keyword.ToWrite && !ReferenceEquals(keyword, thisKeyword)
                             && keyword.Name.Trim().ToLower().Equals(name.ToLower())
                             && keyword.OutputFilePath.ToLower().Equals(fileName.ToLower()))
                             if (keyword.SuggestionIndex == thisKeyword.SuggestionIndex)

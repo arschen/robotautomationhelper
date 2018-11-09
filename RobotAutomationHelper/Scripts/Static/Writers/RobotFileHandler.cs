@@ -248,6 +248,8 @@ namespace RobotAutomationHelper.Scripts
             else
                 temp.Add(newText);
             File.WriteAllLines(fileName, temp);
+            if (!newText.Equals(""))
+                Console.WriteLine("Line added: " + newText + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
         }
 
         // removes linesToReplace from fileName
@@ -270,7 +272,11 @@ namespace RobotAutomationHelper.Scripts
             temp.AddRange(arrLine);
             if (linesToRemove.Count != 0)
                 for (int i = 0; i < linesToRemove.Count; i++)
+                {
+                    if (!temp[linesToRemove[i] - i].Trim().Equals(""))
+                        Console.WriteLine("Line removed: " + temp[linesToRemove[i] - i] + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
                     temp.RemoveAt(linesToRemove[i] - i);
+                }
             File.WriteAllLines(fileName, temp);
         }
 
@@ -295,7 +301,10 @@ namespace RobotAutomationHelper.Scripts
             temp[linesToReplace[0]] = newText;
             if (linesToReplace.Count != 1)
                 for (int i = 1; i < linesToReplace.Count; i++)
+                {
+                    Console.WriteLine("Line replaced: " + temp[linesToReplace[i] - i + 1] + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
                     temp.RemoveAt(linesToReplace[i] - i + 1);
+                }
             File.WriteAllLines(fileName, temp);
         }
 
