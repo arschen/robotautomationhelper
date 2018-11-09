@@ -94,7 +94,7 @@ namespace RobotAutomationHelper
                 {
                     new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", null, true)
                 };
-                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, false);
+                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
                 NumberOfKeywordsInThisForm++;
             }
 

@@ -79,7 +79,7 @@ namespace RobotAutomationHelper.Forms
                     {
                         new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", keyword.Parent, true)
                     };
-                    AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, false);
+                    AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
                     NumberOfKeywordsInThisForm++;
                     FilesAndFolderStructure.AddFileToSavedFiles(ThisFormKeywords[0].OutputFilePath);
                 }

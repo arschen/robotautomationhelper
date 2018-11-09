@@ -123,7 +123,7 @@ namespace RobotAutomationHelper
                 {
                     new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword, true)
                 };
-                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, false);
+                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
                 NumberOfKeywordsInThisForm++;
                 FilesAndFolderStructure.AddFileToSavedFiles(ThisFormKeywords[0].OutputFilePath);
             }

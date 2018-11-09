@@ -268,10 +268,11 @@ namespace RobotAutomationHelper.Scripts
                     new EventHandler(InstantiateParamsAddForm),
                     this);
 
-            if (newKeyword && NameAndOutputToTestCaseFormCommunication.Value != null)
-                (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", NameAndOutputToTestCaseFormCommunication.Value);
-            else
-                (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", keyword.KeywordString);
+                if (newKeyword && NameAndOutputToTestCaseFormCommunication.Value != null)
+                    (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", NameAndOutputToTestCaseFormCommunication.Value);
+                else
+                    if (newKeyword)
+                    (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).TriggerUpdate("", keyword.KeywordString);
             (Controls["DynamicStep" + keywordsCounter + "Name"] as TextWithList).EnableKeywordFields();
         }
 
@@ -480,7 +481,7 @@ namespace RobotAutomationHelper.Scripts
                 ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, null, true);
 
             NumberOfKeywordsInThisForm++;
-            AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm, true);
+            AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm, false);
 
             for (int i = 1; i < NumberOfKeywordsInThisForm; i++)
                 Controls["DynamicStep" + i + "Name"].Text = ThisFormKeywords[i - 1].Name.Trim();
