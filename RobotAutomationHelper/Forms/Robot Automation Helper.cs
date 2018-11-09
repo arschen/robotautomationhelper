@@ -416,8 +416,7 @@ namespace RobotAutomationHelper
 
             foreach (int index in testCasesToAdd)
             {
-                TestCase testCase = TestCases[index - 1];
-                WriteToRobot.AddTestCaseToRobot(testCase);
+                WriteToRobot.AddTestCaseToRobot(TestCases[index - 1]);
             }
 
             WriteToRobot.WriteSuiteSettingsListToRobot();

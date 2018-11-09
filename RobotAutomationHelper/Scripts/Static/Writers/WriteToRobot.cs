@@ -336,8 +336,10 @@ namespace RobotAutomationHelper.Scripts
                     if (!step.Recursive)
                     {
                         if (step.Overwrite)
+                        {
                             TestCaseKeywordRemove(step.GetName(), step.OutputFilePath, true);
-                        RemoveKeywordChidrenOfKeywordForOverwriting(step);
+                            RemoveKeywordChidrenOfKeywordForOverwriting(step);
+                        }
                     }
                 }
         }
