@@ -348,13 +348,16 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void AddIncludesFromSettingsKeyword(Keyword keyword, string fileName)
         {
-            Includes container = new Includes(fileName);
-            if (keyword.Type == KeywordType.CUSTOM)
-                Includes[Includes.IndexOf(container)].AddToList(keyword.OutputFilePath);
-            else
-                if (keyword.Type != KeywordType.CUSTOM)
+            if (File.Exists(fileName))
+            {
+                Includes container = new Includes(fileName);
+                if (keyword.Type == KeywordType.CUSTOM)
+                    Includes[Includes.IndexOf(container)].AddToList(keyword.OutputFilePath);
+                else
+                    if (keyword.Type != KeywordType.CUSTOM)
                     if (!keyword.KeywordString.Equals("BuiltIn") && !keyword.KeywordString.Equals("ForLoop"))
                         Includes[Includes.IndexOf(container)].AddToList(keyword.KeywordString);
+            }
         }
 
         internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)

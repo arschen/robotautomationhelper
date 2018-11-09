@@ -200,8 +200,9 @@ namespace RobotAutomationHelper.Scripts
 
             if (TestCases != null)
                 foreach (TestCase test in TestCases)
-                    foreach (Keyword keyword in test.Steps)
-                        UpdateSuggestionsKeywordToIncludes(keyword);
+                    if (test.Steps != null)
+                        foreach (Keyword keyword in test.Steps)
+                            UpdateSuggestionsKeywordToIncludes(keyword);
 
             foreach (Keyword suiteKeyword in SuiteSettingsKeywordsList)
             {

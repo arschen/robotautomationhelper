@@ -358,27 +358,9 @@ namespace RobotAutomationHelper.Scripts
                 "BuiltIn"
             };
 
-            string[] arrLine = File.ReadAllLines(fileName);
-            if (arrLine.Length != 0)
+            if (File.Exists(fileName))
             {
-                bool start = false;
-                for (int i = 0; i < arrLine.Length; i++)
-                {
-                    if (start && arrLine[i].StartsWith("***"))
-                        break;
-                    if (arrLine[i].StartsWith("*** Settings ***"))
-                        start = true;
-
-                    if (start && arrLine[i].StartsWith("Library"))
-                    {
-                        Libraries.Add(arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
-                    }
-                }
-            }
-
-            foreach (string resourceFileName in GetResourcesFromFile(fileName))
-            {
-                arrLine = File.ReadAllLines(resourceFileName);
+                string[] arrLine = File.ReadAllLines(fileName);
                 if (arrLine.Length != 0)
                 {
                     bool start = false;
@@ -392,6 +374,27 @@ namespace RobotAutomationHelper.Scripts
                         if (start && arrLine[i].StartsWith("Library"))
                         {
                             Libraries.Add(arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        }
+                    }
+                }
+
+                foreach (string resourceFileName in GetResourcesFromFile(fileName))
+                {
+                    arrLine = File.ReadAllLines(resourceFileName);
+                    if (arrLine.Length != 0)
+                    {
+                        bool start = false;
+                        for (int i = 0; i < arrLine.Length; i++)
+                        {
+                            if (start && arrLine[i].StartsWith("***"))
+                                break;
+                            if (arrLine[i].StartsWith("*** Settings ***"))
+                                start = true;
+
+                            if (start && arrLine[i].StartsWith("Library"))
+                            {
+                                Libraries.Add(arrLine[i].Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                            }
                         }
                     }
                 }
