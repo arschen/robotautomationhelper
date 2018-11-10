@@ -407,11 +407,11 @@ namespace RobotAutomationHelper
                 if (testCase.Steps != null)
                     foreach (Keyword testStep in testCase.Steps)
                     {
-                        if (testStep.ToWrite)
+                        if (testStep.Type.Equals(KeywordType.CUSTOM))
                         {
                             WriteToRobot.RemoveKeywordChidrenOfKeywordForOverwriting(testStep);
                             WriteToRobot.TestCaseKeywordRemove(testStep.GetName(), testStep.OutputFilePath, true);
-                        }   
+                        }
                     }
             }
 
@@ -501,10 +501,7 @@ namespace RobotAutomationHelper
             for (int i = numberOfTestCases; i > testCaseIndex; i--)
                 TestCases[i] = TestCases[i - 1];
 
-            TestCases[testCaseIndex] = new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile)
-            {
-                Overwrite = NameAndOutputToTestCaseFormCommunication.Overwrite
-            };
+            TestCases[testCaseIndex] = new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile);
             numberOfTestCases++;
             AddTestCaseField(TestCases[numberOfTestCases - 1], numberOfTestCases);
 

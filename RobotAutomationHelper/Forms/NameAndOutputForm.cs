@@ -23,7 +23,7 @@ namespace RobotAutomationHelper.Forms
             FormType = FormType.NameAndOutput;
             ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("", "", keyword, true)
+                    new Keyword("", "", keyword)
                 };
         }
 
@@ -72,31 +72,13 @@ namespace RobotAutomationHelper.Forms
                 NameAndOutputToTestCaseFormCommunication.Save = true;
                 NameAndOutputToTestCaseFormCommunication.Name = ContentName.Text;
                 NameAndOutputToTestCaseFormCommunication.OutputFile = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests);
-                NameAndOutputToTestCaseFormCommunication.Overwrite = false;
                 Close();
             }
             else
             {
-                if (presentInRobotFile)
-                {
-                    DialogResult result = MessageBox.Show("Overwrite existing test case in the output file?",
-                        "Alert",
-                        MessageBoxButtons.YesNo);
-                    if (result.Equals(DialogResult.Yes))
-                    {
-                        NameAndOutputToTestCaseFormCommunication.Save = true;
-                        NameAndOutputToTestCaseFormCommunication.Name = ContentName.Text;
-                        NameAndOutputToTestCaseFormCommunication.OutputFile = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests);
-                        NameAndOutputToTestCaseFormCommunication.Overwrite = true;
-                        Close();
-                    }
-                }
-                else
-                {
-                    DialogResult result = MessageBox.Show("Test case with this name has already been implemented in the ouput file.",
-                        "Alert",
-                        MessageBoxButtons.OK);
-                }
+                DialogResult result = MessageBox.Show("Test case with this name has already been implemented in the ouput file.",
+                    "Alert",
+                    MessageBoxButtons.OK);
             }
         }
 
@@ -106,7 +88,6 @@ namespace RobotAutomationHelper.Forms
             NameAndOutputToTestCaseFormCommunication.Name = Controls["DynamicStep1Name"].Text;
             NameAndOutputToTestCaseFormCommunication.Value = ((TextWithList)Controls["DynamicStep1Name"]).updateValue;
             NameAndOutputToTestCaseFormCommunication.OutputFile = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources);
-            NameAndOutputToTestCaseFormCommunication.Overwrite = false;
             Close();
         }
 
@@ -201,28 +182,16 @@ namespace RobotAutomationHelper.Forms
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
-            presentInRobotFile = false;
             memoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(ContentName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests),
                 null);
 
             if (!memoryPath.Equals(""))
-                ContentName.ForeColor = Color.Red;
-            else
             {
-                if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests)
-                    , ContentName.Text, FormType.Test) != -1)
-                {
-                    ContentName.ForeColor = Color.DarkOrange;
-                    presentInRobotFile = true;
-                }
-                else
-                {
-                    ContentName.ForeColor = Color.Black;
-                    return false;
-                }
+                ContentName.ForeColor = Color.Red;
+                return true;
             }
-            return true;
+            return false;
         }
     }
 
@@ -232,6 +201,5 @@ namespace RobotAutomationHelper.Forms
         internal static string Value { get; set; }
         internal static string OutputFile { get; set; }
         internal static bool Save { get; set; }
-        internal static bool Overwrite { get; set; }
     }
 }

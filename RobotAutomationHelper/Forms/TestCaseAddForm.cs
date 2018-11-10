@@ -29,31 +29,9 @@ namespace RobotAutomationHelper
             }
             else
             {
-                if (presentInRobotFile)
-                {
-                    if (!RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite)
-                    {
-                        DialogResult result = MessageBox.Show("Overwrite existing test case in the output file?",
-                        "Alert",
-                        MessageBoxButtons.YesNo);
-                        if (result.Equals(DialogResult.Yes))
-                        {
-                            SaveChangesToTestCases();
-                            RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite = true;
-                            Close();
-                        }
-                        else
-                            RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Overwrite = false;
-                    }
-                    else
-                        Close();
-                }
-                else
-                {
-                    DialogResult result = MessageBox.Show("Test case with this name has already been implemented in the ouput file.",
-                        "Alert",
-                        MessageBoxButtons.OK);
-                }
+                DialogResult result = MessageBox.Show("Test case with this name has already been implemented in the ouput file.",
+                    "Alert",
+                    MessageBoxButtons.OK);
             }
         }
 
@@ -92,7 +70,7 @@ namespace RobotAutomationHelper
                 // add a single keyword field if no keywords are available
                 ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", null, true)
+                    new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", null)
                 };
                 AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
                 NumberOfKeywordsInThisForm++;
@@ -134,28 +112,16 @@ namespace RobotAutomationHelper
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
-            presentInRobotFile = false;
             memoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests),
                 RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent]);
 
             if (!memoryPath.Equals(""))
-                TestCaseName.ForeColor = Color.Red;
-            else
             {
-                if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests)
-                    , TestCaseName.Text, FormType.Test) != -1)
-                {
-                    TestCaseName.ForeColor = Color.DarkOrange;
-                    presentInRobotFile = true;
-                }
-                else
-                {
-                    TestCaseName.ForeColor = Color.Black;
-                    return false;
-                }
+                TestCaseName.ForeColor = Color.Red;
+                return true;
             }
-            return true;
+            return false;
         }
 
         internal void UpdateListNamesAndUpdateStateOfSave()

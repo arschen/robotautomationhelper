@@ -22,7 +22,6 @@ namespace RobotAutomationHelper.Scripts
         protected List<Keyword> ThisFormKeywords { get; set; }
 
         //Present in memory and robot files
-        protected bool presentInRobotFile;
         protected string memoryPath;
         internal FormType FormType { get; set; }
 
@@ -345,7 +344,7 @@ namespace RobotAutomationHelper.Scripts
 
             if (keyword.Type != KeywordType.CUSTOM)
             {
-                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot", keyword.Parent, true)); //CopyKeyword
+                keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot", keyword.Parent)); //CopyKeyword
                 keyword.Type = KeywordType.CUSTOM;
                 return;
             }
@@ -355,7 +354,7 @@ namespace RobotAutomationHelper.Scripts
                     foreach (Keyword seleniumKeyword in lib.LibKeywords)
                         if (seleniumKeyword.Name.Trim().ToLower().Equals(keyword.Name.Trim().ToLower()))
                         {
-                            keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot", keyword.Parent, true)); //CopyKeyword
+                            keyword.CopyKeyword(new Keyword(name, FilesAndFolderStructure.GetFolder(FilesAndFolderStructure.ConvertFormTypeToFolderType(FormType)) + "Auto.robot", keyword.Parent)); //CopyKeyword
                             keyword.Type = KeywordType.CUSTOM;
                             return;
                         }
@@ -406,12 +405,12 @@ namespace RobotAutomationHelper.Scripts
             {
                 ThisFormKeywords = new List<Keyword>();
                 for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
-                    ThisFormKeywords.Add(new Keyword(Controls["DynamicStep" + i + "Name"].Text, path, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].ToWrite));
+                    ThisFormKeywords.Add(new Keyword(Controls["DynamicStep" + i + "Name"].Text, path, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent));
             }
             else
             {
                 for (int i = ThisFormKeywords.Count + 1; i <= NumberOfKeywordsInThisForm; i++)
-                    ThisFormKeywords.Add(new Keyword(Controls["DynamicStep" + i + "Name"].Text, path, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].ToWrite));
+                    ThisFormKeywords.Add(new Keyword(Controls["DynamicStep" + i + "Name"].Text, path, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent));
             }
 
             AssignThisKeywordNamesFromTextFields();
@@ -468,17 +467,17 @@ namespace RobotAutomationHelper.Scripts
                 path = FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].OutputFilePath;
             
             if (FormParent.ThisFormKeywords != null)
-                ThisFormKeywords.Add(new Keyword("New Keyword", path, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].ToWrite));
+                ThisFormKeywords.Add(new Keyword("New Keyword", path, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent));
             else
-                ThisFormKeywords.Add(new Keyword("New Keyword", path, null, true));
+                ThisFormKeywords.Add(new Keyword("New Keyword", path, null));
 
             for (int i = NumberOfKeywordsInThisForm; i > keywordIndex; i--)
                 ThisFormKeywords[i].CopyKeyword(ThisFormKeywords[i - 1]);
 
             if (FormParent.ThisFormKeywords != null)
-                ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].ToWrite);
+                ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, FormParent.ThisFormKeywords[ImplementationIndexFromTheParent].Parent);
             else
-                ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, null, true);
+                ThisFormKeywords[keywordIndex] = new Keyword(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile, null);
 
             NumberOfKeywordsInThisForm++;
             AddKeywordField(ThisFormKeywords[NumberOfKeywordsInThisForm - 1], NumberOfKeywordsInThisForm, false);

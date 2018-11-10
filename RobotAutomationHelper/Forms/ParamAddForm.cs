@@ -77,7 +77,7 @@ namespace RobotAutomationHelper.Forms
                     // add a single keyword field if no keywords are available
                     ThisFormKeywords = new List<Keyword>
                     {
-                        new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", keyword.Parent, true)
+                        new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", keyword.Parent)
                     };
                     AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
                     NumberOfKeywordsInThisForm++;

@@ -59,13 +59,12 @@ namespace RobotAutomationHelper
         internal KeywordType Type { get; set; }
         internal string KeywordString { get; set; }
         internal int SuggestionIndex { get; set; }
-        internal bool ToWrite { get; set; }
         internal bool Recursive { get; set; }
         internal string Comments { get; set; }
         internal bool IncludeImportFile = false;
         internal string ImportFileName { get; set; }
 
-        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent, bool ToWrite, bool IncludeImportFile)
+        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent, bool IncludeImportFile)
         {
             this.OutputFilePath = OutputFilePath;
             this.IncludeImportFile = IncludeImportFile;
@@ -88,7 +87,6 @@ namespace RobotAutomationHelper
 
             this.Arguments = Arguments;
             Implemented = true;
-            this.ToWrite = ToWrite;
             this.Type = Type;
             this.SuggestionIndex = SuggestionIndex;
             Recursive = false;
@@ -124,21 +122,18 @@ namespace RobotAutomationHelper
             Arguments = keyword.Arguments;
             OutputFilePath = keyword.OutputFilePath;
             Implemented = keyword.Implemented;
-            ToWrite = keyword.ToWrite;
             Type = keyword.Type;
             SuggestionIndex = keyword.SuggestionIndex;
-            ToWrite = keyword.ToWrite;
             KeywordString = keyword.KeywordString;
         }
 
-        internal Keyword(string Name, string OutputFilePath, Keyword Parent, bool ToWrite)
+        internal Keyword(string Name, string OutputFilePath, Keyword Parent)
         {
             this.Name = Name;
             this.OutputFilePath = OutputFilePath;
             Documentation = "";
             SuggestionIndex = -1;
             Recursive = false;
-            this.ToWrite = ToWrite;
             this.Parent = Parent;
         }
 

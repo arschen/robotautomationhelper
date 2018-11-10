@@ -36,48 +36,17 @@ namespace RobotAutomationHelper
             }
             else
             {
-                if (presentInRobotFile)
+                DialogResult result = MessageBox.Show("This action will affect other test cases / keywords that are using this one \n" + memoryPath,
+                    "Alert",
+                    MessageBoxButtons.YesNo);
+                if (result.Equals(DialogResult.Yes))
                 {
-                    if (!ParentKeywords[ImplementationIndexFromTheParent].ToWrite)
-                    {
-                        DialogResult result = MessageBox.Show("Overwrite existing keyword in the output file?",
-                            "Alert",
-                            MessageBoxButtons.YesNo);
-                        if (result.Equals(DialogResult.Yes))
-                        {
-                            AddCurrentKeywordsToKeywordsList(sender, e);
-                            SaveChangesToKeyword(true);
-                            ParentKeywords[ImplementationIndexFromTheParent].ToWrite = true;
-                            Close();
-                        }
-                        else
-                            ParentKeywords[ImplementationIndexFromTheParent].ToWrite = false;
-                    }
-                    else
-                    {
-                        AddCurrentKeywordsToKeywordsList(sender, e);
-                        SaveChangesToKeyword(true);
-                        ParentKeywords[ImplementationIndexFromTheParent].ToWrite = true;
-                        Close();
-                    }
-                }
-                else
-                {
-                    DialogResult result = MessageBox.Show("This action will affect other test cases / keywords that are using this one \n" + memoryPath,
-                        "Alert",
-                        MessageBoxButtons.YesNo);
-                    if (result.Equals(DialogResult.Yes))
-                    {
-                        AddCurrentKeywordsToKeywordsList(sender, e);
-                        SaveChangesToKeyword(true);
-                        ParentKeywords[ImplementationIndexFromTheParent].ToWrite = true;
-                        TestCasesListOperations.OverwriteOccurrencesInKeywordTree(KeywordName.Text,
-                            FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
-                            ParentKeywords[ImplementationIndexFromTheParent]);
-                        Close();
-                    }
-                    else
-                        ParentKeywords[ImplementationIndexFromTheParent].ToWrite = false;
+                    AddCurrentKeywordsToKeywordsList(sender, e);
+                    SaveChangesToKeyword(true);
+                    TestCasesListOperations.OverwriteOccurrencesInKeywordTree(KeywordName.Text,
+                        FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
+                        ParentKeywords[ImplementationIndexFromTheParent]);
+                    Close();
                 }
             }
         }
@@ -121,7 +90,7 @@ namespace RobotAutomationHelper
                 // add a single keyword field if no keywords are available
                 ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword, true)
+                    new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword)
                 };
                 AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
                 NumberOfKeywordsInThisForm++;
@@ -177,7 +146,6 @@ namespace RobotAutomationHelper
             ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex,
             "Custom",
             ParentKeywords[ImplementationIndexFromTheParent].Parent,
-            true,
             ParentKeywords[ImplementationIndexFromTheParent].IncludeImportFile);
 
             if (addToSuggestions)
@@ -256,28 +224,15 @@ namespace RobotAutomationHelper
 
         private bool IsKeywordPresentInFilesOrMemoryTree()
         {
-            presentInRobotFile = false;
             memoryPath = TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
                 ParentKeywords[ImplementationIndexFromTheParent]);
 
-            if (!memoryPath.Equals(""))
+            if (!memoryPath.Equals("")) {
                 KeywordName.ForeColor = Color.DarkOrange;
-            else
-            {
-                if (RobotFileHandler.LocationOfTestCaseOrKeywordInFile(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources)
-                    , KeywordName.Text, FormType.Keyword) != -1)
-                {
-                    KeywordName.ForeColor = Color.DarkOrange;
-                    presentInRobotFile = true;
-                }
-                else
-                {
-                    KeywordName.ForeColor = Color.Black;
-                    return false;
-                }
+                return true;
             }
-            return true;
+            return false;
         }
 
         internal void UpdateNamesListAndUpdateStateOfSave()
