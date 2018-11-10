@@ -314,10 +314,10 @@ namespace RobotAutomationHelper.Scripts
             if (File.Exists(fileName))
             {
                 string[] arrLine = File.ReadAllLines(fileName);
+                List<string> temp = new List<string>();
 
                 if (!(arrLine == null) && !(arrLine.Length == 0))
                 {
-                    List<string> temp = new List<string>();
                     for (int i = 1; i < arrLine.Length; i++)
                     {
                         if (!(arrLine[i - 1].Trim().Equals("") && arrLine[i].Trim().Equals("")))
@@ -329,33 +329,46 @@ namespace RobotAutomationHelper.Scripts
                 }
 
                 // clears all tags ( settings / keywords / test cases ) that have no implementation inside them
-                arrLine = File.ReadAllLines(fileName);
-
-                if (!(arrLine == null) && !(arrLine.Length == 0))
+                if (!(temp == null) && !(temp.Count == 0))
                 {
-                    List<string> temp = new List<string>();
-                    temp.AddRange(arrLine);
                     List<int> indexesToRemove = new List<int>();
                     foreach (string line in temp)
                     {
                         if (line.StartsWith("***"))
                             if (temp.IndexOf(line) + 1 < temp.Count)
                             {
+                                int initialIndex = temp.IndexOf(line);
+                                int endIndex = initialIndex;
+                                bool addForRemoval = false;
                                 for (int j = temp.IndexOf(line) + 1; j < temp.Count; j++)
                                 {
                                     if (!temp[j].StartsWith("***") && !temp[j].Trim().Equals(""))
+                                    {
+                                        addForRemoval = false;
                                         break;
+                                    }
                                     else
                                     {
                                         if (temp[j].StartsWith("***"))
                                         {
-                                            for (int k = temp.IndexOf(line); k < j; k++)
-                                            {
-                                                indexesToRemove.Add(k);
-                                            }
+                                            addForRemoval = true;
+                                            endIndex = j - 1;
                                             break;
                                         }
                                     }
+
+                                    if (j == temp.Count - 1)
+                                    {
+                                        addForRemoval = true;
+                                        endIndex = j;
+                                        break;
+                                    }
+                                }
+
+                                if (addForRemoval)
+                                {
+                                    for (int indexes = initialIndex; indexes <= endIndex; indexes++)
+                                        indexesToRemove.Add(indexes);
                                 }
                             }
                             else
@@ -366,7 +379,10 @@ namespace RobotAutomationHelper.Scripts
                     if (indexesToRemove != null && indexesToRemove.Count != 0)
                     {
                         for (int i = indexesToRemove.Count - 1; i >= 0; i--)
-                            temp.RemoveAt(i);
+                        {
+                            Console.WriteLine("Trim: " + temp[indexesToRemove[i]] + "\t" + fileName);
+                            temp.RemoveAt(indexesToRemove[i]);
+                        }
                     }
                     File.WriteAllLines(fileName, temp);
                 }
