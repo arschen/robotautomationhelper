@@ -24,7 +24,13 @@ namespace RobotAutomationHelper
                 else
                 {
                     if (OutputFilePath != null && !OutputFilePath.Equals(""))
-                        name = OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries)[OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries).Length - 1].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
+                    {
+                        string[] temp = OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                        if (name != null)
+                            name = temp[temp.Length - 1].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        else
+                            name = temp[temp.Length - 1].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + value;
+                    }
                     else
                         name = value;
                 }
@@ -59,8 +65,10 @@ namespace RobotAutomationHelper
         internal bool IncludeImportFile = false;
         internal string ImportFileName { get; set; }
 
-        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent, bool ToWrite)
+        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent, bool ToWrite, bool IncludeImportFile)
         {
+            this.OutputFilePath = OutputFilePath;
+            this.IncludeImportFile = IncludeImportFile;
             this.Name = Name;
             this.Documentation = Documentation;
             if (Keywords != null)
@@ -79,7 +87,6 @@ namespace RobotAutomationHelper
                 this.Params = new List<Param>();
 
             this.Arguments = Arguments;
-            this.OutputFilePath = OutputFilePath;
             Implemented = true;
             this.ToWrite = ToWrite;
             this.Type = Type;

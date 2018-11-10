@@ -154,7 +154,7 @@ namespace RobotAutomationHelper.Scripts
 
         private static void AddKeywordAndResetValues(List<Keyword> keywordsList, KeywordType type, string Filename)
         {
-            keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1, Filename, null, false));
+            keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1, Filename, null, false, false));
             currentKeywordDocumentation = "";
             currentKeywordName = "";
             currentKeywordParams = new List<Param>();
@@ -198,7 +198,7 @@ namespace RobotAutomationHelper.Scripts
             }
 
             if (!removeTheKeyword)
-                keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1, Filename, null, false));
+                keywordsList.Add(new Keyword(currentKeywordName, currentKeywordDocumentation, null, "", currentKeywordParams, "", false, type, -1, Filename, null, false, false));
 
             currentKeywordDocumentation = "";
             currentKeywordName = "";

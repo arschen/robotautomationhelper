@@ -177,7 +177,8 @@ namespace RobotAutomationHelper
             ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex,
             "Custom",
             ParentKeywords[ImplementationIndexFromTheParent].Parent,
-            true);
+            true,
+            ParentKeywords[ImplementationIndexFromTheParent].IncludeImportFile);
 
             if (addToSuggestions)
             {
