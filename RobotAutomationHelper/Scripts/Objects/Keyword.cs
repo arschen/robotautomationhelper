@@ -17,7 +17,19 @@ namespace RobotAutomationHelper
         { get
             {
                 if (!IncludeImportFile) return name;
-                else return name.Split(new string[] { "." },StringSplitOptions.RemoveEmptyEntries)[1];
+                else
+                {
+                    string[] temp = name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+                    if (temp.Length == 2)
+                        return temp[1];
+                    else
+                    {
+                        string concat = temp[1];
+                        for (int i = 2; i < temp.Length; i++)
+                            concat += "." + temp[i];
+                        return concat;
+                    }
+                }
             }
             set {
                 if (!IncludeImportFile) name = value;

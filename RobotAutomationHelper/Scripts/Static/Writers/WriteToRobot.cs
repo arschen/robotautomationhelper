@@ -110,7 +110,7 @@ namespace RobotAutomationHelper.Scripts
                                         if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
                                                 Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
 
-                                if (!key.Recursive)
+                                if (!key.Recursive && !StringAndListOperations.StartsWithVariable(key.Name))
                                     AddKeywordToRobot(key);
                             }
                         }
@@ -121,7 +121,7 @@ namespace RobotAutomationHelper.Scripts
                         }    
                     }
 
-                    if (!keywordKeyword.Recursive)
+                    if (!keywordKeyword.Recursive && !StringAndListOperations.StartsWithVariable(keywordKeyword.Name))
                         AddKeywordToRobot(keywordKeyword);
                 }
             return index;
@@ -263,28 +263,32 @@ namespace RobotAutomationHelper.Scripts
                         RemoveFromSettings("Suite Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.SuiteSetup != null && !suiteSettings.SuiteSetup.GetName().Trim().Equals(""))
+                    if (suiteSettings.SuiteSetup != null && !suiteSettings.SuiteSetup.GetName().Trim().Equals("")
+                        && !StringAndListOperations.StartsWithVariable(suiteSettings.SuiteSetup.Name))
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.SuiteSetup);
                         AddIncludesFromSettingsKeyword(suiteSettings.SuiteSetup, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                         TestCaseKeywordRemove(suiteSettings.SuiteSetup.GetName(), suiteSettings.SuiteSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteSetup);
                     }
-                    if (suiteSettings.SuiteTeardown != null && !suiteSettings.SuiteTeardown.GetName().Trim().Equals(""))
+                    if (suiteSettings.SuiteTeardown != null && !suiteSettings.SuiteTeardown.GetName().Trim().Equals("")
+                         && !StringAndListOperations.StartsWithVariable(suiteSettings.SuiteTeardown.Name))
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.SuiteTeardown);
                         AddIncludesFromSettingsKeyword(suiteSettings.SuiteTeardown, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                         TestCaseKeywordRemove(suiteSettings.SuiteTeardown.GetName(), suiteSettings.SuiteTeardown.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.SuiteTeardown);
                     }
-                    if (suiteSettings.TestSetup != null && !suiteSettings.TestSetup.GetName().Trim().Equals(""))
+                    if (suiteSettings.TestSetup != null && !suiteSettings.TestSetup.GetName().Trim().Equals("")
+                        && !StringAndListOperations.StartsWithVariable(suiteSettings.TestSetup.Name))
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.TestSetup);
                         AddIncludesFromSettingsKeyword(suiteSettings.TestSetup, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                         TestCaseKeywordRemove(suiteSettings.TestSetup.GetName(), suiteSettings.TestSetup.OutputFilePath, true);
                         AddKeywordToRobot(suiteSettings.TestSetup);
                     }
-                    if (suiteSettings.TestTeardown != null && !suiteSettings.TestTeardown.GetName().Trim().Equals(""))
+                    if (suiteSettings.TestTeardown != null && !suiteSettings.TestTeardown.GetName().Trim().Equals("")
+                        && !StringAndListOperations.StartsWithVariable(suiteSettings.TestTeardown.Name))
                     {
                         RemoveKeywordChidrenOfKeywordForOverwriting(suiteSettings.TestTeardown);
                         AddIncludesFromSettingsKeyword(suiteSettings.TestTeardown, FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));

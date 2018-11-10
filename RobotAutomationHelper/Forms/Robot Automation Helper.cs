@@ -420,7 +420,9 @@ namespace RobotAutomationHelper
                 WriteToRobot.AddTestCaseToRobot(TestCases[index - 1]);
             }
 
+            Console.WriteLine("WriteSuiteSettingsListToRobot ===============================");
             WriteToRobot.WriteSuiteSettingsListToRobot();
+            Console.WriteLine("WriteIncludesToRobotFiles ===================================");
             WriteToRobot.WriteIncludesToRobotFiles();
 
             foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root))
