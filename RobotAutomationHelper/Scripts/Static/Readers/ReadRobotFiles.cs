@@ -126,11 +126,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                         {
                             //Setup test creation for previous Test case
                             AddTestCaseAndResetValues(fileName);
-                            _currentTestCase = !_currentTestCase.Equals(arrLine[i]) ? arrLine[i] : "";
-                        }
-                        else
-                        {
-                            _currentTestCase = arrLine[i];
+                            _currentTestCase = "";
                         }
                     }
 
