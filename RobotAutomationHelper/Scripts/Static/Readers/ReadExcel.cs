@@ -18,8 +18,6 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         {
             _testCases = new List<TestCase>();
             _currentTestCaseTestSteps = new List<Keyword>();
-            _currentTestCaseTags = "";
-            _currentTestCaseDocumentation = "";
             _currentTestCase = "";
             _outputFilePath = FilesAndFolderStructure.GetFolder(FolderType.Tests);
 
@@ -90,9 +88,9 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                 _outputFilePath = FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot";
             _testCases.Add(new TestCase(_currentTestCase, _currentTestCaseDocumentation, _currentTestCaseTags, _currentTestCaseTestSteps, _outputFilePath, false));
             _currentTestCaseTestSteps = new List<Keyword>();
-            _currentTestCaseDocumentation = "";
+            _currentTestCaseDocumentation = null;
             _currentTestCase = "";
-            _currentTestCaseTags = "";
+            _currentTestCaseTags = null;
             _outputFilePath = FilesAndFolderStructure.GetFolder(FolderType.Tests);
         }
     }

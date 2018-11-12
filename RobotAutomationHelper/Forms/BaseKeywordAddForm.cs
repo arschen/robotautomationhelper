@@ -579,6 +579,7 @@ namespace RobotAutomationHelper.Forms
         Test,
         Settings,
         NameAndOutput,
-        Params
+        Params,
+        Variable
     }
 }

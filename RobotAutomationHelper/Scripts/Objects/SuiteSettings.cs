@@ -1,4 +1,6 @@
-﻿namespace RobotAutomationHelper.Scripts.Objects
+﻿using System.Collections.Generic;
+
+namespace RobotAutomationHelper.Scripts.Objects
 {
     internal class SuiteSettings
     {
@@ -13,8 +15,17 @@
         internal SuiteSettings(string outputFilePath)
         {
             OutputFilePath = outputFilePath;
-            Documentation = "";
             Overwrite = false;
+        }
+
+        internal List<Keyword> GetKeywords()
+        {
+            var listOfKeywords = new List<Keyword>();
+            if (TestSetup != null) listOfKeywords.Add(TestSetup);
+            if (TestTeardown != null) listOfKeywords.Add(TestTeardown);
+            if (SuiteSetup != null) listOfKeywords.Add(SuiteSetup);
+            if (SuiteTeardown != null) listOfKeywords.Add(SuiteTeardown);
+            return listOfKeywords;
         }
 
         public override string ToString()

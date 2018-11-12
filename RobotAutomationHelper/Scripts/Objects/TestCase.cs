@@ -28,8 +28,6 @@ namespace RobotAutomationHelper.Scripts.Objects
         {
             Name = name;
             OutputFilePath = outputFilePath;
-            Documentation = "";
-            Tags = "";
         }
 
         public int CompareTo(TestCase other)

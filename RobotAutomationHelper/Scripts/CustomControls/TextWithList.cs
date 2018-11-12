@@ -197,12 +197,12 @@ namespace RobotAutomationHelper.Scripts.CustomControls
                             ? new SuggestionsListObjects
                             {
                                 Text = keyword.ToString(), ValueMember = keyword.Name,
-                                Documentation = keyword.Documentation
+                                Documentation = keyword.Documentation ?? ""
                             }
                             : new SuggestionsListObjects
                             {
                                 Text = keyword.ToString().Trim(), ValueMember = keyword.Name.Trim(),
-                                Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation.Trim()
+                                Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation ?? ""
                             });
                     }
                     return foundItems;

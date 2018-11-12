@@ -25,20 +25,7 @@ namespace RobotAutomationHelper.Forms
             var extLibsCounter = 0;
             var listKeyword = new List<Keyword>();
 
-            foreach (var temp in RobotAutomationHelper.SuiteSettingsList)
-                if (temp != null)
-                {
-                    if (temp.TestSetup != null)
-                        listKeyword.Add(temp.TestSetup);
-                    if (temp.SuiteSetup != null)
-                        listKeyword.Add(temp.SuiteSetup);
-                    if (temp.TestTeardown != null)
-                        listKeyword.Add(temp.TestTeardown);
-                    if (temp.SuiteTeardown != null)
-                        listKeyword.Add(temp.SuiteTeardown);
-                }
-
-            var lockedIncludes = SuggestionsClass.UpdateSuggestionsToIncludes(RobotAutomationHelper.TestCases, listKeyword);
+            var lockedIncludes = SuggestionsClass.UpdateSuggestionsToIncludes(RobotAutomationHelper.TestCases, RobotAutomationHelper.SuiteSettingsList);
 
             foreach (var lib in SuggestionsClass.Suggestions)
             {

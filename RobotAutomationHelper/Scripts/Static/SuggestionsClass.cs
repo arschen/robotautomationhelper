@@ -175,7 +175,7 @@ namespace RobotAutomationHelper.Scripts.Static
         }
 
         private static List<string> _suggestionsToInclude;
-        internal static List<string> UpdateSuggestionsToIncludes(List<TestCase> testCases, List<Keyword> suiteSettingsKeywordsList)
+        internal static List<string> UpdateSuggestionsToIncludes(List<TestCase> testCases, List<SuiteSettings> suiteSettingsKeywordsList)
         {
             _suggestionsToInclude = new List<string>
             {
@@ -190,7 +190,9 @@ namespace RobotAutomationHelper.Scripts.Static
 
             foreach (var suiteKeyword in suiteSettingsKeywordsList)
             {
-                UpdateSuggestionsKeywordToIncludes(suiteKeyword);
+                if (suiteKeyword.GetKeywords().Count == 0) continue;
+                foreach (Keyword keyword in suiteKeyword.GetKeywords())
+                    UpdateSuggestionsKeywordToIncludes(keyword);
             }
 
             return _suggestionsToInclude;

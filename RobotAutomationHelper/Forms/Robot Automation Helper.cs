@@ -16,10 +16,12 @@ namespace RobotAutomationHelper.Forms
     {
         internal static List<TestCase> TestCases = new List<TestCase>();
         internal static List<SuiteSettings> SuiteSettingsList = new List<SuiteSettings>();
-        private static int _numberOfTestCases;
-        private object _realSender;
+        internal static List<Variables> GlobalVariables = new List<Variables>();
 
         internal static bool Log = false;
+
+        private static int _numberOfTestCases;
+        private object _realSender;
         // index of the test case to be implemented
         private int _indexOfTheTestCaseToBeImplemented;
 
@@ -89,13 +91,16 @@ namespace RobotAutomationHelper.Forms
             TestCases = ReadRobotFiles.ReadAllTests();
             if (TestCases.Count != 0)
             {
-                var suiteSettingsKeywords = ReadRobotFiles.ReadAllSettings();
+                SuiteSettingsList = ReadRobotFiles.ReadAllSettings();
+                GlobalVariables = ReadRobotFiles.ReadAllVariables();
 
-                if (suiteSettingsKeywords.Count != 0)
+                if (SuiteSettingsList.Count != 0)
                 {
-                    foreach (var tempKeyword in suiteSettingsKeywords)
+                    foreach (var tempKeyword in SuiteSettingsList)
                     {
-                        KeywordToSuggestions(tempKeyword);
+                        if (tempKeyword.GetKeywords().Count == 0) continue;
+                        foreach (Keyword keyword in tempKeyword.GetKeywords())
+                            KeywordToSuggestions(keyword);
                     }
                 }
 
@@ -110,7 +115,7 @@ namespace RobotAutomationHelper.Forms
 
                 TestCases.Sort();
 
-                SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, suiteSettingsKeywords);
+                SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsList);
                 AddTestCaseToFormAndShow();
             }
             else
@@ -140,7 +145,8 @@ namespace RobotAutomationHelper.Forms
         internal void CheckForExistingCodeAndShowAlert()
         {
             var projectTestCases = ReadRobotFiles.ReadAllTests();
-            var suiteSettingsKeywordList = ReadRobotFiles.ReadAllSettings();
+            SuiteSettingsList = ReadRobotFiles.ReadAllSettings();
+            GlobalVariables = ReadRobotFiles.ReadAllVariables();
 
             if (projectTestCases.Count == 0) return;
             var result = MessageBox.Show(@"Use existing Test Cases in project folder?",
@@ -156,11 +162,15 @@ namespace RobotAutomationHelper.Forms
                     KeywordToSuggestions(keyword);
             }
 
-            if (suiteSettingsKeywordList.Count != 0) return;
-            foreach (var tempKeyword in suiteSettingsKeywordList)
-                KeywordToSuggestions(tempKeyword);
+            if (SuiteSettingsList.Count != 0) return;
+            foreach (var suiteSetting in SuiteSettingsList)
+            {
+                if (suiteSetting.GetKeywords().Count == 0) continue;
+                foreach (Keyword keyword in suiteSetting.GetKeywords())
+                    KeywordToSuggestions(keyword);
+            }
 
-            SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, suiteSettingsKeywordList);
+            SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsList);
         }
 
         private static void KeywordToSuggestions(Keyword tempKeyword)

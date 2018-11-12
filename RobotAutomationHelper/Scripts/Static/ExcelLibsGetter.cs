@@ -16,7 +16,6 @@ namespace RobotAutomationHelper.Scripts.Static
         {
             var listKeys = new List<Keyword>();
             _currentKeywordParams = new List<Param>();
-            _currentKeywordDocumentation = "";
             _currentKeywordName = "";
 
             var package = new ExcelPackage(new FileInfo(filename));
@@ -114,7 +113,7 @@ namespace RobotAutomationHelper.Scripts.Static
             if (!removeTheKeyword)
                 keywordsList.Add(new Keyword(_currentKeywordName, _currentKeywordDocumentation, null, "", _currentKeywordParams, "", type, -1, filename, null, false));
 
-            _currentKeywordDocumentation = "";
+            _currentKeywordDocumentation = null;
             _currentKeywordName = "";
             _currentKeywordParams = new List<Param>();
         }

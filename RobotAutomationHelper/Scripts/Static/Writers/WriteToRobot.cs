@@ -30,10 +30,12 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                 index = AddName(testCase.Name.Trim(), fileName, index, FormType.Test);
 
                 //adds documentation
-                index = AddTagsDocumentationArguments("[Documentation]", "\t" + testCase.Documentation, fileName, index);
+                if (testCase.Documentation != null)
+                    index = AddTagsDocumentationArguments("[Documentation]", "\t" + testCase.Documentation.Trim(), fileName, index);
 
                 //adds tags
-                index = AddTagsDocumentationArguments("[Tags]", "\t" + testCase.Tags, fileName, index);
+                if (testCase.Tags != null)
+                    index = AddTagsDocumentationArguments("[Tags]", "\t" + testCase.Tags.Trim(), fileName, index);
             }
 
             AddSteps(testCase.Steps, fileName, index, addTestCase);
@@ -51,7 +53,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
             var addKeywordSteps = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.GetName().Trim(), FormType.Keyword) == -1;
 
             if (addKeywordSteps)
-                if (keyword.Type == KeywordType.Custom)
+                if (keyword.Type == KeywordType.Custom && !StringAndListOperations.StartsWithVariable(keyword.Name))
                 {
                     var candidate = new Includes(fileName);
                     if (!Includes.Contains(candidate))
@@ -61,13 +63,15 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
             if (addKeywordSteps && (keyword.Type == KeywordType.Custom))
             {
                 //Add keyword to robot file
-                index = AddName(keyword.GetName().Trim(), fileName, index, FormType.Keyword);
+                index = AddName(keyword.Name.Trim(), fileName, index, FormType.Keyword);
 
                 //adds documentation
-                index = AddTagsDocumentationArguments("[Documentation]", "\t" + keyword.Documentation, fileName, index);
+                if (keyword.Documentation != null)
+                    index = AddTagsDocumentationArguments("[Documentation]", "\t" + keyword.Documentation.Trim(), fileName, index);
 
                 //adds arguments
-                index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.Arguments, fileName, index);
+                if (keyword.Arguments != null)
+                    index = AddTagsDocumentationArguments("[Arguments]", "\t" + keyword.Arguments.Trim(), fileName, index);
             }
 
             if (keyword.Type == KeywordType.Custom)
@@ -79,38 +83,39 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         {
             var container = new Includes(fileName);
             if (keywordKeywords == null) return;
-            foreach (var keywordKeyword in keywordKeywords)
+            foreach (var keyword in keywordKeywords)
             {
                 if (addSteps)
                 {
-                    if (keywordKeyword.Type == KeywordType.Custom)
-                        Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.OutputFilePath);
+                    if (keyword.Type == KeywordType.Custom && !StringAndListOperations.StartsWithVariable(keyword.Name))
+                        Includes[Includes.IndexOf(container)].AddToList(keyword.OutputFilePath);
                     else
-                    if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
-                        Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
+                    if (keyword.Type != KeywordType.Custom)
+                        if (!keyword.KeywordString.Equals("BuiltIn") && !keyword.KeywordString.Equals("ForLoop"))
+                            Includes[Includes.IndexOf(container)].AddToList(keyword.KeywordString);
 
                     //adds test steps
-                    if (keywordKeyword.Type == KeywordType.ForLoopElements || keywordKeyword.Type == KeywordType.ForLoopInRange)
+                    if (keyword.Type == KeywordType.ForLoopElements || keyword.Type == KeywordType.ForLoopInRange)
                     {
                         //add actual FOR Loop line + keywords inside it
                         index++;
-                        if (keywordKeyword.Type == KeywordType.ForLoopElements)
-                            RobotFileHandler.FileLineAdd("\t" + ":FOR" + "\t" + keywordKeyword.Params[0].Value + "\t" + "IN" + "\t" + keywordKeyword.Params[1].Value, fileName, index);
+                        if (keyword.Type == KeywordType.ForLoopElements)
+                            RobotFileHandler.FileLineAdd("\t" + ":FOR" + "\t" + keyword.Params[0].Value + "\t" + "IN" + "\t" + keyword.Params[1].Value, fileName, index);
                         else
-                        if (keywordKeyword.Type == KeywordType.ForLoopInRange)
-                            RobotFileHandler.FileLineAdd("\t" + ":FOR" + "\t" + keywordKeyword.Params[0].Value + "\t" + "IN RANGE" + "\t" + keywordKeyword.Params[1].Value + "\t" + keywordKeyword.Params[2].Value, fileName, index);
+                        if (keyword.Type == KeywordType.ForLoopInRange)
+                            RobotFileHandler.FileLineAdd("\t" + ":FOR" + "\t" + keyword.Params[0].Value + "\t" + "IN RANGE" + "\t" + keyword.Params[1].Value + "\t" + keyword.Params[2].Value, fileName, index);
 
-                        foreach (var key in keywordKeyword.ForLoopKeywords)
+                        foreach (var key in keyword.ForLoopKeywords)
                         {
                             index++;
                             RobotFileHandler.FileLineAdd("\t" + "\\" + "\t" + key.GetName() + key.ParamsToString(), fileName, index);
 
-                            if (key.Type == KeywordType.Custom)
+                            if (key.Type == KeywordType.Custom && !StringAndListOperations.StartsWithVariable(keyword.Name))
                                 Includes[Includes.IndexOf(container)].AddToList(key.OutputFilePath);
                             else
-                            if (keywordKeyword.Type != KeywordType.Custom)
-                                if (!keywordKeyword.KeywordString.Equals("BuiltIn") && !keywordKeyword.KeywordString.Equals("ForLoop"))
-                                    Includes[Includes.IndexOf(container)].AddToList(keywordKeyword.KeywordString);
+                            if (keyword.Type != KeywordType.Custom)
+                                if (!keyword.KeywordString.Equals("BuiltIn") && !keyword.KeywordString.Equals("ForLoop"))
+                                    Includes[Includes.IndexOf(container)].AddToList(keyword.KeywordString);
 
                             if (!key.Recursive && !StringAndListOperations.StartsWithVariable(key.Name))
                                 AddKeywordToRobot(key);
@@ -119,12 +124,12 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                     else
                     {
                         index++;
-                        RobotFileHandler.FileLineAdd("\t" + keywordKeyword.GetName() + keywordKeyword.ParamsToString(), fileName, index);
+                        RobotFileHandler.FileLineAdd("\t" + keyword.GetName() + keyword.ParamsToString(), fileName, index);
                     }    
                 }
 
-                if (!keywordKeyword.Recursive && !StringAndListOperations.StartsWithVariable(keywordKeyword.Name))
-                    AddKeywordToRobot(keywordKeyword);
+                if (!keyword.Recursive && !StringAndListOperations.StartsWithVariable(keyword.Name))
+                    AddKeywordToRobot(keyword);
             }
         }
 
@@ -222,7 +227,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                 if (suiteSettings.Overwrite)
                 {
                     const FolderType type = FolderType.Root;
-                    if (suiteSettings.Documentation != "")
+                    if (suiteSettings.Documentation != null && !suiteSettings.Documentation.Equals(""))
                         ReplaceInSettings("Documentation  " + suiteSettings.Documentation, "Documentation",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
@@ -342,7 +347,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         {
             if (!File.Exists(fileName)) return;
             var container = new Includes(fileName);
-            if (keyword.Type == KeywordType.Custom)
+            if (keyword.Type == KeywordType.Custom && !StringAndListOperations.StartsWithVariable(keyword.Name))
                 Includes[Includes.IndexOf(container)].AddToList(keyword.OutputFilePath);
             else
             if (keyword.Type != KeywordType.Custom)

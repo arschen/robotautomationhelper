@@ -113,7 +113,6 @@ namespace RobotAutomationHelper.Scripts.Objects
         {
             Name = name;
             OutputFilePath = outputFilePath;
-            Documentation = "";
             SuggestionIndex = -1;
             Recursive = false;
             Parent = parent;
@@ -129,7 +128,6 @@ namespace RobotAutomationHelper.Scripts.Objects
                 {
                     Comments = keywordString;
                     OutputFilePath = outputFilePath;
-                    Documentation = "";
                     SuggestionIndex = -1;
                     Type = KeywordType.Comment;
                 }
@@ -198,7 +196,6 @@ namespace RobotAutomationHelper.Scripts.Objects
                             }
                         }
                         OutputFilePath = outputFilePath;
-                        Documentation = "";
                         SuggestionIndex = -1;
                     }
                 }
@@ -207,7 +204,6 @@ namespace RobotAutomationHelper.Scripts.Objects
             {
                 Name = "";
                 OutputFilePath = outputFilePath;
-                Documentation = "";
                 SuggestionIndex = -1;
             }
         }

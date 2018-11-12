@@ -20,8 +20,6 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         {
             _testCases = new List<TestCase>();
             _currentTestCaseTestSteps = new List<Keyword>();
-            _currentTestCaseTags = "";
-            _currentTestCaseDocumentation = "";
             _currentTestCase = "";
 
             foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Tests))
@@ -260,33 +258,54 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         }
 
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        internal static List<Keyword> ReadAllSettings()
+        internal static List<SuiteSettings> ReadAllSettings()
         {
-            var settingsKeywords = new List<Keyword>();
+            var suiteSettings = new List<SuiteSettings>();
             foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Tests))
             {
-                var setupsAndTeardowns = new List<Keyword>
+                var _currentSuiteSettings = new SuiteSettings(fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root), ""))
                 {
-                    new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Test Setup").Replace("Test Setup", "").Trim(),
-                    fileName, GetLibs(fileName), null),
-                    new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(),
-                    fileName, GetLibs(fileName), null),
-                    new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(),
-                    fileName, GetLibs(fileName), null),
-                    new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(),
-                    fileName, GetLibs(fileName), null)
+                    Documentation = RobotFileHandler.OccurenceInSettings(fileName, "Documentation").Replace("Documentation", "").Trim(),
+                    TestSetup = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Test Setup").Replace("Test Setup", "").Trim(), fileName, GetLibs(fileName), null)
                 };
-
-                foreach (var settingsKeyword in setupsAndTeardowns)
-                {
-                    if (settingsKeyword.Name.Equals("")) continue;
-                    AddKeywordsFromKeyword(settingsKeyword, GetResourcesFromFile(fileName));
-                    var temp = new Keyword(null);
-                    temp.CopyKeyword(settingsKeyword);
-                    settingsKeywords.Add(temp);
-                }
+                AddKeywordsFromKeyword(_currentSuiteSettings.TestSetup, GetResourcesFromFile(fileName));
+                _currentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(), fileName, GetLibs(fileName), null);
+                AddKeywordsFromKeyword(_currentSuiteSettings.TestTeardown, GetResourcesFromFile(fileName));
+                _currentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(), fileName, GetLibs(fileName), null);
+                AddKeywordsFromKeyword(_currentSuiteSettings.SuiteSetup, GetResourcesFromFile(fileName));
+                _currentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(), fileName, GetLibs(fileName), null);
+                AddKeywordsFromKeyword(_currentSuiteSettings.SuiteTeardown, GetResourcesFromFile(fileName));
+                _currentSuiteSettings.Overwrite = true;
+                suiteSettings.Add(_currentSuiteSettings);
             }
-            return settingsKeywords;
+            return suiteSettings;
+        }
+
+        // returns the index of the specific tag - keyword / test cases / settings / variables
+        internal static List<Variables> ReadAllVariables()
+        {
+            var ListOfVariables = new List<Variables>();
+            foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Root))
+            {
+                if (!File.Exists(fileName)) continue;
+                var arrLine = File.ReadAllLines(fileName);
+
+                var index = RobotFileHandler.HasTag(fileName, FormType.Variable);
+                if (index == -1) continue;
+
+                var names = new List<string>();
+                for (int i = index + 1; i < arrLine.Length; i++)
+                {
+                    if (arrLine[i].StartsWith("***")) break;
+                    if (arrLine[i].Trim().Length == 0) continue;
+                    if (StringAndListOperations.StartsWithVariable(arrLine[i].Trim())) names.Add(arrLine[i].Trim());
+                }
+
+                if (names.Count == 0) continue;
+                var _currentSuiteSettings = new Variables(names, fileName);
+                ListOfVariables.Add(_currentSuiteSettings);
+            }
+            return ListOfVariables;
         }
 
         private static List<string> GetResourcesFromFile(string fileName)
@@ -380,9 +399,9 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         {
             _testCases.Add(new TestCase(_currentTestCase, _currentTestCaseDocumentation, _currentTestCaseTags, _currentTestCaseTestSteps, fileName, true));
             _currentTestCaseTestSteps = new List<Keyword>();
-            _currentTestCaseDocumentation = "";
+            _currentTestCaseDocumentation = null;
             _currentTestCase = "";
-            _currentTestCaseTags = "";
+            _currentTestCaseTags = null;
         }
     }
 }
