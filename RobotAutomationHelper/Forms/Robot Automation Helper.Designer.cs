@@ -1,11 +1,14 @@
-﻿namespace RobotAutomationHelper
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace RobotAutomationHelper.Forms
 {
     partial class RobotAutomationHelper
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -196,23 +199,23 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip MainMenu;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.Label IndexLabel;
-        private System.Windows.Forms.Label TestCaseNameLabel;
-        private System.Windows.Forms.Label AddLabel;
-        private System.Windows.Forms.ToolStripMenuItem saveToRobotToolStripMenuItem;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToRobotAndRunToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openExistingProjectToolStripMenuItem;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
-        private System.Windows.Forms.ToolStripMenuItem newProjectToolStripMenuItem;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog3;
-        private System.Windows.Forms.ToolStripMenuItem librariesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem suggestionsToolStripMenuItem;
+        private MenuStrip MainMenu;
+        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem toolStripMenuItem2;
+        private OpenFileDialog openFileDialog;
+        private Label IndexLabel;
+        private Label TestCaseNameLabel;
+        private Label AddLabel;
+        private ToolStripMenuItem saveToRobotToolStripMenuItem;
+        private FolderBrowserDialog folderBrowserDialog1;
+        private ToolStripMenuItem settingsToolStripMenuItem;
+        private ToolStripMenuItem saveToRobotAndRunToolStripMenuItem;
+        private ToolStripMenuItem openExistingProjectToolStripMenuItem;
+        private FolderBrowserDialog folderBrowserDialog2;
+        private ToolStripMenuItem newProjectToolStripMenuItem;
+        private FolderBrowserDialog folderBrowserDialog3;
+        private ToolStripMenuItem librariesToolStripMenuItem;
+        private ToolStripMenuItem suggestionsToolStripMenuItem;
     }
 }
 

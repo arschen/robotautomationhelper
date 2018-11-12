@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System;
+using System.Linq;
+using RobotAutomationHelper.Forms;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.Static.Writers
 {
     internal static class RobotFileHandler
     {
@@ -18,13 +20,13 @@ namespace RobotAutomationHelper.Scripts
         // get the index line where to add specific type ( keyword / test cases / settings )
         private static int GetWriteLocationOfType(string fileName, FormType type)
         {
-            int index = -1;
+            var index = -1;
             string[] arrLine;
             if (File.Exists(fileName))
                 arrLine = File.ReadAllLines(fileName);
             else
             {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                var directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
                 var myFile = File.Create(fileName);
@@ -44,36 +46,26 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = new string[0];
             }
 
-            if (arrLine.Length != 0)
+            if (arrLine.Length == 0) return index;
+            var start = false;
+            for (var i = 0; i < arrLine.Length; i++)
             {
-                bool start = false;
-                for (int i = 0; i < arrLine.Length; i++)
+                if (!arrLine[i].StartsWith("***")) continue;
+                if (start)
                 {
-                    if (arrLine[i].StartsWith("***"))
-                    {
-                        if (start)
-                        {
-                            index = i;
-                            break;
-                        }
-                        if (arrLine[i].ToLower().Contains(type.ToString().ToLower()))
-                            start = true;
-                    }
+                    index = i;
+                    break;
                 }
+                if (arrLine[i].ToLower().Contains(type.ToString().ToLower()))
+                    start = true;
+            }
 
-                if (!start)
-                    if (arrLine.Length - 1 >= 0)
-                        index = arrLine.Length;
-                    else
-                        index = 0;
-                else
-                    if (index == -1)
-                {
-                    if (arrLine.Length - 1 >= 0)
-                        index = arrLine.Length;
-                    else
-                        index = 0;
-                }
+            if (!start)
+                index = arrLine.Length - 1 >= 0 ? arrLine.Length : 0;
+            else
+            if (index == -1)
+            {
+                index = arrLine.Length - 1 >= 0 ? arrLine.Length : 0;
             }
 
             return index;
@@ -82,7 +74,7 @@ namespace RobotAutomationHelper.Scripts
         // returns the index of the specific tag - keyword / test cases / settings / variables
         internal static int HasTag(string fileName, FormType formType)
         {
-            int index = -1;
+            var index = -1;
 
             string[] arrLine;
 
@@ -95,7 +87,7 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             }
 
-            for (int i = 0; i < arrLine.Length; i++)
+            for (var i = 0; i < arrLine.Length; i++)
                 if (arrLine[i].StartsWith("***"))
                     if (arrLine[i].ToLower().Contains(formType.ToString().ToLower()))
                         index = i;
@@ -106,118 +98,86 @@ namespace RobotAutomationHelper.Scripts
         // returns index with the line if the file contains a keyword / test case with the same name
         internal static int LocationOfTestCaseOrKeywordInFile(string fileName, string name, FormType formType)
         {
-            if (File.Exists(fileName))
+            if (!File.Exists(fileName)) return -1;
+            var index = HasTag(fileName, formType);
+            if (index == -1) return -1;
+            var arrLine = File.ReadAllLines(fileName);
+            for (var ind = index; ind<arrLine.Length; ind++)
             {
-                int index = HasTag(fileName, formType);
-                if (index != -1)
-                {
-                    string[] arrLine;
-                    arrLine = File.ReadAllLines(fileName);
-                    for (int ind = index; ind<arrLine.Length; ind++)
-                    {
-                        if (!arrLine[ind].StartsWith("***"))
-                        {
-                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
-                            {
-
-                                string[] temp = arrLine[ind].ToLower().Split(new string[] { "  " }, System.StringSplitOptions.RemoveEmptyEntries);
-                                foreach (string s in temp)
-                                    if (s.Equals(name.ToLower()))
-                                    {
-                                        if (RobotAutomationHelper.Log) Console.WriteLine(arrLine[ind].StartsWith("	") + " | " + arrLine[ind]);
-                                        return ind;
-                                    }
-                            }
-                        }
-                    }
-                }
+                if (arrLine[ind].StartsWith("***")) continue;
+                if ((arrLine[ind].StartsWith(" ")) || (arrLine[ind].StartsWith("\\")) ||
+                    (arrLine[ind].StartsWith("."))) continue;
+                var temp = arrLine[ind].ToLower().Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                if (!temp.Any(s => s.Equals(name.ToLower()))) continue;
+                if (Forms.RobotAutomationHelper.Log) Console.WriteLine(arrLine[ind].StartsWith("	") + @" | " + arrLine[ind]);
+                return ind;
             }
             return -1;
         }
 
         // returns non empty string of the line where the specific include is found
-        internal static string OccuranceInSettings(string fileName, string name)
+        internal static string OccurenceInSettings(string fileName, string name)
         {
-            if (File.Exists(fileName))
+            if (!File.Exists(fileName)) return "";
+            var index = HasTag(fileName, FormType.Settings);
+            if (index == -1) return "";
+            var arrLine = File.ReadAllLines(fileName);
+            for (var ind = index; ind < arrLine.Length; ind++)
             {
-                int index = HasTag(fileName, FormType.Settings);
-                if (index != -1)
+                if (arrLine[ind].StartsWith("***")) continue;
+                if ((arrLine[ind].StartsWith(" ")) || (arrLine[ind].StartsWith("\t")) ||
+                    (arrLine[ind].StartsWith("\\")) || (arrLine[ind].StartsWith("."))) continue;
+                if (name.StartsWith("Library") || name.StartsWith("Resource"))
                 {
-                    string[] arrLine;
-                    arrLine = File.ReadAllLines(fileName);
-                    for (int ind = index; ind < arrLine.Length; ind++)
-                    {
-                        if (!arrLine[ind].StartsWith("***"))
-                        {
-                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
-                            {
-                                if (name.StartsWith("Library") || name.StartsWith("Resource"))
-                                {
-                                    if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
-                                        return arrLine[ind];
-                                }
-                                else
-                                {
-                                    if (arrLine[ind].ToLower().Trim().StartsWith(name.ToLower()))
-                                    {
-                                        string temp = arrLine[ind];
-                                        for (int j = ind + 1; j < arrLine.Length; j++)
-                                            if (arrLine[j].StartsWith("..."))
-                                                if (name.Equals("Documentation"))
-                                                    temp += " " + arrLine[j].Replace("...", "").Trim();
-                                                else
-                                                    temp += "  " + arrLine[j].Replace("...", "").Trim();
-                                        return temp;
-                                    }
-                                }          
-                            }
-                        }
-                    }
+                    if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
+                        return arrLine[ind];
+                }
+                else
+                {
+                    if (!arrLine[ind].ToLower().Trim().StartsWith(name.ToLower())) continue;
+                    var temp = arrLine[ind];
+                    for (var j = ind + 1; j < arrLine.Length; j++)
+                        if (arrLine[j].StartsWith("..."))
+                            if (name.Equals("Documentation"))
+                                temp += " " + arrLine[j].Replace("...", "").Trim();
+                            else
+                                temp += "  " + arrLine[j].Replace("...", "").Trim();
+                    return temp;
                 }
             }
             return "";
         }
 
-        // returns list of indexes with locations of specifig string
+        // returns list of indexes with locations of specific string
         internal static List<int> LocationInSettings(string fileName, string name)
         {
-            List<int> result = new List<int>();
+            var result = new List<int>();
             if (File.Exists(fileName))
             {
-                int index = HasTag(fileName, FormType.Settings);
+                var index = HasTag(fileName, FormType.Settings);
                 if (index != -1)
                 {
-                    string[] arrLine;
-                    arrLine = File.ReadAllLines(fileName);
-                    for (int ind = index; ind < arrLine.Length; ind++)
+                    var arrLine = File.ReadAllLines(fileName);
+                    for (var ind = index; ind < arrLine.Length; ind++)
                     {
-                        if (!arrLine[ind].StartsWith("***"))
+                        if (arrLine[ind].StartsWith("***")) continue;
+                        if ((arrLine[ind].StartsWith(" ")) || (arrLine[ind].StartsWith("\t")) ||
+                            (arrLine[ind].StartsWith("\\")) || (arrLine[ind].StartsWith("."))) continue;
+                        if (name.StartsWith("Library") || name.StartsWith("Resource"))
                         {
-                            if ((!arrLine[ind].StartsWith(" ")) && (!arrLine[ind].StartsWith("\t")) && (!arrLine[ind].StartsWith("\\")) && (!arrLine[ind].StartsWith(".")))
-                            {
-                                if (name.StartsWith("Library") || name.StartsWith("Resource"))
-                                {
-                                    if (arrLine[ind].ToLower().Trim().Equals(name.ToLower()))
-                                    {
-                                        result.Add(ind);
-                                        return result;
-                                    }
-                                }
-                                else
-                                {
-                                    if (arrLine[ind].ToLower().Trim().StartsWith(name.ToLower()))
-                                    {
-                                        result.Add(ind);
-                                        for (int j = ind + 1; j < arrLine.Length; j++)
-                                            if (arrLine[j].StartsWith("..."))
-                                                result.Add(j);
-                                            else
-                                                break;
-                                        return result;
-                                    }
-                                }
-                            }
+                            if (!arrLine[ind].ToLower().Trim().Equals(name.ToLower())) continue;
+                            result.Add(ind);
+                            return result;
                         }
+
+                        if (!arrLine[ind].ToLower().Trim().StartsWith(name.ToLower())) continue;
+                        result.Add(ind);
+                        for (var j = ind + 1; j < arrLine.Length; j++)
+                            if (arrLine[j].StartsWith("..."))
+                                result.Add(j);
+                            else
+                                break;
+                        return result;
                     }
                 }
             }
@@ -226,14 +186,14 @@ namespace RobotAutomationHelper.Scripts
         }
 
         // add newText on new line to file fileName after specified line
-        internal static void FileLineAdd(string newText, string fileName, int line_to_add_after)
+        internal static void FileLineAdd(string newText, string fileName, int lineToAddAfter)
         {
             string[] arrLine;
             if (File.Exists(fileName))
                 arrLine = File.ReadAllLines(fileName);
             else
             {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                var directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
                 var myFile = File.Create(fileName);
@@ -241,15 +201,15 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             }
 
-            List<string> temp = new List<string>();
+            var temp = new List<string>();
             temp.AddRange(arrLine);
-            if (!(line_to_add_after > arrLine.Length))
-                temp.Insert(line_to_add_after, newText);
+            if (!(lineToAddAfter > arrLine.Length))
+                temp.Insert(lineToAddAfter, newText);
             else
                 temp.Add(newText);
             File.WriteAllLines(fileName, temp);
             if (!newText.Equals(""))
-                Console.WriteLine("Line added: " + newText + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
+                Console.WriteLine(@"Line added: " + newText + @"	" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
         }
 
         // removes linesToReplace from fileName
@@ -260,7 +220,7 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             else
             {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                var directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
                 var myFile = File.Create(fileName);
@@ -268,13 +228,13 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             }
 
-            List<string> temp = new List<string>();
+            var temp = new List<string>();
             temp.AddRange(arrLine);
             if (linesToRemove.Count != 0)
-                for (int i = 0; i < linesToRemove.Count; i++)
+                for (var i = 0; i < linesToRemove.Count; i++)
                 {
                     if (!temp[linesToRemove[i] - i].Trim().Equals(""))
-                        Console.WriteLine("Line removed: " + temp[linesToRemove[i] - i] + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
+                        Console.WriteLine(@"Line removed: " + temp[linesToRemove[i] - i] + @"	" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
                     temp.RemoveAt(linesToRemove[i] - i);
                 }
             File.WriteAllLines(fileName, temp);
@@ -288,7 +248,7 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             else
             {
-                string directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
+                var directory = fileName.Replace(fileName.Split('\\')[fileName.Split('\\').Length - 1], "");
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
                 var myFile = File.Create(fileName);
@@ -296,13 +256,13 @@ namespace RobotAutomationHelper.Scripts
                 arrLine = File.ReadAllLines(fileName);
             }
 
-            List<string> temp = new List<string>();
+            var temp = new List<string>();
             temp.AddRange(arrLine);
             temp[linesToReplace[0]] = newText;
             if (linesToReplace.Count != 1)
-                for (int i = 1; i < linesToReplace.Count; i++)
+                for (var i = 1; i < linesToReplace.Count; i++)
                 {
-                    Console.WriteLine("Line replaced: " + temp[linesToReplace[i] - i + 1] + "\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
+                    Console.WriteLine(@"Line replaced: " + temp[linesToReplace[i] - i + 1] + @"\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
                     temp.RemoveAt(linesToReplace[i] - i + 1);
                 }
             File.WriteAllLines(fileName, temp);
@@ -311,81 +271,72 @@ namespace RobotAutomationHelper.Scripts
         // add newText on new line to file fileName after specified line
         internal static void TrimFile(string fileName)
         {
-            if (File.Exists(fileName))
+            if (!File.Exists(fileName)) return;
+            var arrLine = File.ReadAllLines(fileName);
+            var temp = new List<string>();
+
+            if (arrLine.Length != 0)
             {
-                string[] arrLine = File.ReadAllLines(fileName);
-                List<string> temp = new List<string>();
-
-                if (!(arrLine == null) && !(arrLine.Length == 0))
+                for (var i = 1; i < arrLine.Length; i++)
                 {
-                    for (int i = 1; i < arrLine.Length; i++)
-                    {
-                        if (!(arrLine[i - 1].Trim().Equals("") && arrLine[i].Trim().Equals("")))
-                            temp.Add(arrLine[i - 1]);
-                    }
-                    if (!arrLine[arrLine.Length - 1].Trim().Equals(""))
-                        temp.Add(arrLine[arrLine.Length - 1]);
-                    File.WriteAllLines(fileName, temp);
+                    if (!(arrLine[i - 1].Trim().Equals("") && arrLine[i].Trim().Equals("")))
+                        temp.Add(arrLine[i - 1]);
                 }
+                if (!arrLine[arrLine.Length - 1].Trim().Equals(""))
+                    temp.Add(arrLine[arrLine.Length - 1]);
+                File.WriteAllLines(fileName, temp);
+            }
 
-                // clears all tags ( settings / keywords / test cases ) that have no implementation inside them
-                if (!(temp == null) && !(temp.Count == 0))
+            // clears all tags ( settings / keywords / test cases ) that have no implementation inside them
+            if (temp.Count == 0) return;
+            {
+                var indexesToRemove = new List<int>();
+                foreach (var line in temp)
                 {
-                    List<int> indexesToRemove = new List<int>();
-                    foreach (string line in temp)
+                    if (!line.StartsWith("***")) continue;
+                    if (temp.IndexOf(line) + 1 < temp.Count)
                     {
-                        if (line.StartsWith("***"))
-                            if (temp.IndexOf(line) + 1 < temp.Count)
-                            {
-                                int initialIndex = temp.IndexOf(line);
-                                int endIndex = initialIndex;
-                                bool addForRemoval = false;
-                                for (int j = temp.IndexOf(line) + 1; j < temp.Count; j++)
-                                {
-                                    if (!temp[j].StartsWith("***") && !temp[j].Trim().Equals(""))
-                                    {
-                                        addForRemoval = false;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        if (temp[j].StartsWith("***"))
-                                        {
-                                            addForRemoval = true;
-                                            endIndex = j - 1;
-                                            break;
-                                        }
-                                    }
-
-                                    if (j == temp.Count - 1)
-                                    {
-                                        addForRemoval = true;
-                                        endIndex = j;
-                                        break;
-                                    }
-                                }
-
-                                if (addForRemoval)
-                                {
-                                    for (int indexes = initialIndex; indexes <= endIndex; indexes++)
-                                        indexesToRemove.Add(indexes);
-                                }
-                            }
-                            else
-                            {
-                                indexesToRemove.Add(temp.IndexOf(line));
-                            }
-                    }
-                    if (indexesToRemove != null && indexesToRemove.Count != 0)
-                    {
-                        for (int i = indexesToRemove.Count - 1; i >= 0; i--)
+                        var initialIndex = temp.IndexOf(line);
+                        var endIndex = initialIndex;
+                        var addForRemoval = false;
+                        for (var j = temp.IndexOf(line) + 1; j < temp.Count; j++)
                         {
-                            Console.WriteLine("Trim: " + temp[indexesToRemove[i]] + "\t" + fileName);
-                            temp.RemoveAt(indexesToRemove[i]);
+                            if (!temp[j].StartsWith("***") && !temp[j].Trim().Equals(""))
+                            {
+                                break;
+                            }
+
+                            if (temp[j].StartsWith("***"))
+                            {
+                                addForRemoval = true;
+                                endIndex = j - 1;
+                                break;
+                            }
+
+                            if (j != temp.Count - 1) continue;
+                            addForRemoval = true;
+                            endIndex = j;
+                            break;
                         }
+
+                        if (!addForRemoval) continue;
+                        for (var indexes = initialIndex; indexes <= endIndex; indexes++)
+                            indexesToRemove.Add(indexes);
                     }
-                    File.WriteAllLines(fileName, temp);
+                    else
+                    {
+                        indexesToRemove.Add(temp.IndexOf(line));
+                    }
                 }
+                if (indexesToRemove.Count != 0)
+                {
+                    for (var i = indexesToRemove.Count - 1; i >= 0; i--)
+                    {
+                        Console.WriteLine(@"Trim: " + temp[indexesToRemove[i]] + @"\t" + fileName);
+                        temp.RemoveAt(indexesToRemove[i]);
+                    }
+                }
+                File.WriteAllLines(fileName, temp);
             }
         }
     }

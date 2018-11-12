@@ -1,56 +1,52 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.CustomControls
 {
     internal partial class SuggestionsList : ListBox
     {
-        private Color HighlightColor { get; set; }
-        private TextWithList TextWithListControl;
+        private Color HighlightColor { get; }
+        private readonly TextWithList _textWithListControl;
         internal bool SelectionPerformed { get; set; }
 
-        internal SuggestionsList(TextWithList TextWithListControl)
+        internal SuggestionsList(TextWithList textWithListControl)
         {
             InitializeComponent();
             Name = "SuggestionsList";
             base.DrawMode = DrawMode.OwnerDrawFixed;
             HighlightColor = SystemColors.Highlight;
-            this.TextWithListControl = TextWithListControl;
+            _textWithListControl = textWithListControl;
             SelectionPerformed = false;
         }
 
-        private ToolTip toolTip = new ToolTip();
+        private readonly ToolTip _toolTip = new ToolTip();
 
         internal void HideToolTip()
         {
-            toolTip.Hide(this);
+            _toolTip.Hide(this);
         }
 
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
             base.OnDrawItem(e);
-            if (e.Index >= 0)
-            {
-                if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
-                {
-                    e.Graphics.FillRectangle(new SolidBrush(HighlightColor), e.Bounds);
-                }
-                else { e.Graphics.FillRectangle(new SolidBrush(BackColor), e.Bounds); }
+            if (e.Index < 0) return;
+            e.Graphics.FillRectangle(
+                (e.State & DrawItemState.Selected) == DrawItemState.Selected
+                    ? new SolidBrush(HighlightColor)
+                    : new SolidBrush(BackColor), e.Bounds);
 
-                e.Graphics.DrawString(((SuggestionsListObjects)Items[e.Index]).Text,
-                        e.Font, new SolidBrush(ForeColor),
-                        new Point(e.Bounds.X, e.Bounds.Y));
-                e.DrawFocusRectangle();
-            }
+            e.Graphics.DrawString(((SuggestionsListObjects)Items[e.Index]).Text,
+                e.Font, new SolidBrush(ForeColor),
+                new Point(e.Bounds.X, e.Bounds.Y));
+            e.DrawFocusRectangle();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
             //Get the item
-            int nIdx = IndexFromPoint(e.Location);
+            var nIdx = IndexFromPoint(e.Location);
             if ((nIdx >= 0) && (nIdx < Items.Count))
                 SelectedIndex = nIdx;
         }
@@ -62,16 +58,16 @@ namespace RobotAutomationHelper.Scripts
             if (e.KeyCode == Keys.Enter && e.KeyCode == Keys.Return)
             {
                 SelectionPerformed = true;
-                TextWithListControl.Focus();
+                _textWithListControl.Focus();
                 //TextWithListControl.Text = ((SuggestionsListObjects)Items[SelectedIndex]).ValueMember;
-                TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
+                _textWithListControl.SelectionStart = _textWithListControl.Text.Length;
             }
             else
             {
                 if (e.KeyCode == Keys.Escape)
                 {
-                    TextWithListControl.Focus();
-                    TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
+                    _textWithListControl.Focus();
+                    _textWithListControl.SelectionStart = _textWithListControl.Text.Length;
                 }
             }
 
@@ -81,15 +77,15 @@ namespace RobotAutomationHelper.Scripts
         {
             base.OnSelectedIndexChanged(e);
             if (SelectedIndex >= 0)
-                toolTip.Show(((SuggestionsListObjects)Items[SelectedIndex]).Documentation, this, Size.Width, ItemHeight * (SelectedIndex - TopIndex) + 3);
+                _toolTip.Show(((SuggestionsListObjects)Items[SelectedIndex]).Documentation, this, Size.Width, ItemHeight * (SelectedIndex - TopIndex) + 3);
             else
-                toolTip.Hide(this);
+                _toolTip.Hide(this);
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
             base.OnLostFocus(e);
-            TextWithListControl.EnableKeywordFields();
+            _textWithListControl.EnableKeywordFields();
             Visible = false;
         }
 
@@ -97,15 +93,15 @@ namespace RobotAutomationHelper.Scripts
         {
             base.OnMouseDown(e);
             //Get the item
-            int nIdx = IndexFromPoint(e.Location);
+            var nIdx = IndexFromPoint(e.Location);
             if ((nIdx >= 0) && (nIdx < Items.Count))
             {
                 SelectionPerformed = true;
-                TextWithListControl.Focus();
-                TextWithListControl.SelectionStart = TextWithListControl.Text.Length;
+                _textWithListControl.Focus();
+                _textWithListControl.SelectionStart = _textWithListControl.Text.Length;
             }
             else
-                toolTip.Hide(this);
+                _toolTip.Hide(this);
         }
     }
 }

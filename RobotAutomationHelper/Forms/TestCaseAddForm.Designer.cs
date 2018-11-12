@@ -1,13 +1,15 @@
-﻿using RobotAutomationHelper.Scripts.CustomControls;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.CustomControls;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Forms
 {
     partial class TestCaseAddForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -183,17 +185,17 @@ namespace RobotAutomationHelper
         }
 
         #endregion
-        private System.Windows.Forms.Label TestCaseNameLabel;
-        private System.Windows.Forms.Button Skip;
-        private System.Windows.Forms.Button Save;
-        private System.Windows.Forms.TextBox TestCaseName;
-        private System.Windows.Forms.Label TestCaseAddLabel;
-        private System.Windows.Forms.TextBox TestCaseDocumentation;
-        private System.Windows.Forms.Label TestStepsLabel;
-        private System.Windows.Forms.Label TestDocumentationLabel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox TestCaseTags;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox OutputFile;
+        private Label TestCaseNameLabel;
+        private Button Skip;
+        private Button Save;
+        private TextBox TestCaseName;
+        private Label TestCaseAddLabel;
+        private TextBox TestCaseDocumentation;
+        private Label TestStepsLabel;
+        private Label TestDocumentationLabel;
+        private Label label1;
+        private TextBox TestCaseTags;
+        private Label label2;
+        private ComboBox OutputFile;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Scripts.Objects
 {
     internal class TestCase: IComparable<TestCase>
     {
@@ -13,39 +13,28 @@ namespace RobotAutomationHelper
         internal bool Overwrite { get; set; }
         internal bool Implemented { get; set; }
 
-        internal TestCase(string Name, string Documentation, string Tags, List<Keyword> Steps, string outputFilePath, bool implemented)
+        internal TestCase(string name, string documentation, string tags, List<Keyword> steps, string outputFilePath, bool implemented)
         {
-            this.Name = Name;
-            this.Documentation = Documentation;
-            this.Tags = Tags;
-            this.Steps = Steps;
+            Name = name;
+            Documentation = documentation;
+            Tags = tags;
+            Steps = steps;
             OutputFilePath = outputFilePath;
             Overwrite = false;
             Implemented = implemented;
         }
 
-        internal TestCase(string Name, string OutputFilePath)
+        internal TestCase(string name, string outputFilePath)
         {
-            this.Name = Name;
-            this.OutputFilePath = OutputFilePath;
+            Name = name;
+            OutputFilePath = outputFilePath;
             Documentation = "";
             Tags = "";
         }
 
-        internal void CopyTestCase(TestCase testCase)
-        {
-            Steps = testCase.Steps;
-            Name = testCase.Name;
-            Documentation = testCase.Documentation;
-            Tags = testCase.Tags;
-            OutputFilePath = testCase.OutputFilePath;
-            Overwrite = testCase.Overwrite;
-            Implemented = testCase.Implemented;
-        }
-
         public int CompareTo(TestCase other)
         {
-            return Name.CompareTo(other.Name);
+            return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
         public override string ToString()

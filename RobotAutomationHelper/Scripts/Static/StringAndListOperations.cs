@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.Static
 {
     internal static class StringAndListOperations
     {
 
         internal static List<string> ReturnListOfArgs(string arguments)
         {
-            List<string> args = new List<string>();
+            var args = new List<string>();
             if (arguments != null)
-                args.AddRange(arguments.Replace("[Arguments]", "").Trim().Split(new string[] { "  " },StringSplitOptions.None));
+                args.AddRange(arguments.Replace("[Arguments]", "").Trim().Split(new[] { "  " },StringSplitOptions.None));
 
-            if (args != null)
-                for (int i = 0; i < args.Count; i++)
-                    if (args[i].Equals(""))
-                        args.RemoveAt(i);
+            for (var i = 0; i < args.Count; i++)
+                if (args[i].Equals(""))
+                    args.RemoveAt(i);
             return args;
         }
 
-        internal static bool StartsWithVariable(string Name)
+        internal static bool StartsWithVariable(string name)
         {
-            if (Name.StartsWith("${")
-                || Name.StartsWith("@{")
-                || Name.StartsWith("&{"))
-                    return true;
-            return false;
+            return name.StartsWith("${")
+                   || name.StartsWith("@{")
+                   || name.StartsWith("&{");
         }
     }
 }

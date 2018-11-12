@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Scripts
 {
     static class Program
     {
@@ -16,7 +13,7 @@ namespace RobotAutomationHelper
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new RobotAutomationHelper(null));
+            Application.Run(new Forms.RobotAutomationHelper(null));
         }
     }
 }

@@ -1,14 +1,16 @@
-﻿using RobotAutomationHelper.Scripts;
-using RobotAutomationHelper.Scripts.CustomControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using RobotAutomationHelper.Scripts.CustomControls;
+using RobotAutomationHelper.Scripts.Objects;
+using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Forms
 {
     internal partial class ParamAddForm : BaseKeywordAddForm
     {
-        private Keyword keyword;
-        internal int paramsCount = 0;
+        private Keyword _кeyword;
+        internal int ParamsCount;
 
         internal ParamAddForm(BaseKeywordAddForm parent) : base(parent)
         {
@@ -18,7 +20,7 @@ namespace RobotAutomationHelper.Forms
 
         internal void ShowParamContent(Keyword keyword)
         {
-            this.keyword = keyword;
+            _кeyword = keyword;
             ThisFormKeywords = new List<Keyword>();
             ThisFormKeywords = keyword.ForLoopKeywords;
 
@@ -29,44 +31,44 @@ namespace RobotAutomationHelper.Forms
             if (keyword.Documentation != null)
                 KeywordDocumentation.Text = keyword.Documentation.Replace("[Documentation]", "").Trim();
 
-            // adds args and paramList to lists for dynamicly adding them to fields
-            List<Param> paramsList = new List<Param>();
+            // adds args and paramList to lists for dynamically adding them to fields
+            var paramsList = new List<Param>();
             if (keyword.Params != null)
                 paramsList.AddRange(keyword.Params);
 
-            //List<string> args = StringAndListOperations.ReturnListOfArgs(keyword.Arguments);
+            //List<string> args = StringAndListOperations.ReturnListOfArgs(Кeyword.Arguments);
 
-            if (paramsList != null && paramsList.Count != 0)
-                foreach (Param param in paramsList)
+            if (paramsList.Count != 0)
+                foreach (var param in paramsList)
                 {
-                    paramsCount++;
-                    FormControls.AddControl("LabelWithToolTip", "DynamicStep" + paramsCount + "ParamName",
-                        paramsCount,
-                        new System.Drawing.Point(10 - this.HorizontalScroll.Value, 123 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
-                        new System.Drawing.Size(80, 20),
+                    ParamsCount++;
+                    FormControls.AddControl("LabelWithToolTip", "DynamicStep" + ParamsCount + "ParamName",
+                        ParamsCount,
+                        new Point(10 - HorizontalScroll.Value, 123 + (ParamsCount - 1) * 30 - VerticalScroll.Value),
+                        new Size(80, 20),
                         param.Name,
-                        System.Drawing.Color.Black,
+                        Color.Black,
                         null,
                         this);
 
-                    FormControls.AddControl("TextBox", "DynamicStep" + paramsCount + "ParamValue",
-                        paramsCount,
-                        new System.Drawing.Point(100 - this.HorizontalScroll.Value, 120 + (paramsCount - 1) * 30 - this.VerticalScroll.Value),
-                        new System.Drawing.Size(280, 20),
-                        paramsList[paramsCount - 1].Value,
-                        System.Drawing.Color.Black,
+                    FormControls.AddControl("TextBox", "DynamicStep" + ParamsCount + "ParamValue",
+                        ParamsCount,
+                        new Point(100 - HorizontalScroll.Value, 120 + (ParamsCount - 1) * 30 - VerticalScroll.Value),
+                        new Size(280, 20),
+                        paramsList[ParamsCount - 1].Value,
+                        Color.Black,
                         null,
                         this);
                 }
 
-            initialYValue = 120 + paramsCount * 30;
+            InitialYValue = 120 + ParamsCount * 30;
 
-            if (keyword.Type.Equals(KeywordType.FOR_LOOP_ELEMENTS) || keyword.Type.Equals(KeywordType.FOR_LOOP_IN_RANGE))
+            if (keyword.Type.Equals(KeywordType.ForLoopElements) || keyword.Type.Equals(KeywordType.ForLoopInRange))
             {
                 if (ThisFormKeywords != null && ThisFormKeywords.Count != 0)
                 {
                     // adds the keywords in the form
-                    foreach (Keyword steps in ThisFormKeywords)
+                    foreach (var steps in ThisFormKeywords)
                     {
                         AddKeywordField(steps, NumberOfKeywordsInThisForm + 1, false);
                         NumberOfKeywordsInThisForm++;
@@ -74,7 +76,7 @@ namespace RobotAutomationHelper.Forms
                 }
                 else
                 {
-                    // add a single keyword field if no keywords are available
+                    // add a single Кeyword field if no keywords are available
                     ThisFormKeywords = new List<Keyword>
                     {
                         new Keyword("New Keyword", FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", keyword.Parent)
@@ -85,47 +87,47 @@ namespace RobotAutomationHelper.Forms
                 }
             }
 
-            var dialogResult = this.ShowDialog();
+            ShowDialog();
         }
 
         internal void UpdateListNamesAndUpdateStateOfSave()
         {
-            List<string> namesList = new List<string>();
-            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            var namesList = new List<string>();
+            for (var i = 1; i <= NumberOfKeywordsInThisForm; i++)
             {
                 if (Controls.Find("DynamicStep" + i + "Name", false).Length > 0)
                     namesList.Add(Controls["DynamicStep" + i + "Name"].Text);
             }
-            (Save as ButtonWithToolTip).UpdateState(namesList, FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot");
+            ((ButtonWithToolTip) Save).UpdateState(namesList, FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot");
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-            List<Param> formParams = new List<Param>();
-            for (int i = 1; i <= paramsCount; i++)
-                formParams.Add(new Param(this.Controls["DynamicStep" + i + "ParamName"].Text, this.Controls["DynamicStep" + i + "ParamValue"].Text));
+            var formParams = new List<Param>();
+            for (var i = 1; i <= ParamsCount; i++)
+                formParams.Add(new Param(Controls["DynamicStep" + i + "ParamName"].Text, Controls["DynamicStep" + i + "ParamValue"].Text));
 
-            if (keyword.Type.Equals(KeywordType.FOR_LOOP_ELEMENTS) || keyword.Type.Equals(KeywordType.FOR_LOOP_IN_RANGE))
+            if (_кeyword.Type.Equals(KeywordType.ForLoopElements) || _кeyword.Type.Equals(KeywordType.ForLoopInRange))
             {
                 if (ThisFormKeywords != null && ThisFormKeywords.Count != 0)
                 {
-                    keyword.ForLoopKeywords = new List<Keyword>();
-                    foreach (Keyword step in ThisFormKeywords)
+                    _кeyword.ForLoopKeywords = new List<Keyword>();
+                    foreach (var step in ThisFormKeywords)
                     {
-                        Keyword temp = new Keyword(step.Parent);
+                        var temp = new Keyword(step.Parent);
                         temp.CopyKeyword(step);
-                        keyword.ForLoopKeywords.Add(temp);
+                        _кeyword.ForLoopKeywords.Add(temp);
                     }
                 }
             }
 
-            keyword.Params = formParams;
-            this.Close();
+            _кeyword.Params = formParams;
+            Close();
         }
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using RobotAutomationHelper.Forms;
+using RobotAutomationHelper.Scripts.Objects;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.Static
 {
     internal static class FilesAndFolderStructure
     {
         // list of saved files for the drop down menus
-        private static List<string> SavedFiles = new List<string>();
-        private static string OutputFolder;
-        internal static string resources = "Resources";
-        internal static string tests = "Tests";
+        private static List<string> _savedFiles = new List<string>();
+        private static string _outputRootFolder;
+        internal static string Resources = "Resources";
+        internal static string Tests = "Tests";
 
         internal static void CleanUp()
         {
-            SavedFiles = new List<string>();
-            OutputFolder = "";
+            _savedFiles = new List<string>();
+            _outputRootFolder = "";
         }
 
         internal static List<string> GetShortSavedFiles(FolderType folderType)
         {
-            List<string> results = new List<string>();
-            string pattern = GetFolder(folderType);
-            foreach (string temp in SavedFiles)
+            var results = new List<string>();
+            var pattern = GetFolder(folderType);
+            foreach (var temp in _savedFiles)
                 if (temp.Contains(pattern))
                 {
                     results.Add(temp.Replace(pattern, ""));
@@ -32,9 +33,9 @@ namespace RobotAutomationHelper.Scripts
 
         internal static List<string> GetFullSavedFiles(FolderType folderType)
         {
-            List<string> results = new List<string>();
-            string pattern = GetFolder(folderType);
-            foreach (string temp in SavedFiles)
+            var results = new List<string>();
+            var pattern = GetFolder(folderType);
+            foreach (var temp in _savedFiles)
                 if (temp.ToLower().Contains(pattern.ToLower()))
                 {
                     results.Add(temp);
@@ -44,71 +45,62 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void AddFileToSavedFiles(string filePath)
         {
-            if (!(filePath == null))
-            {
-                if (!SavedFiles.Contains(filePath))
-                    SavedFiles.Add(filePath);
-            }
+            if (filePath == null) return;
+            if (!_savedFiles.Contains(filePath))
+                _savedFiles.Add(filePath);
         }
 
         internal static void SetFolder(string outputFolder)
         {
-            OutputFolder = outputFolder;
+            _outputRootFolder = outputFolder;
         }
 
         internal static string GetFolder(FolderType folderType)
         {
             switch (folderType)
             {
-                case FolderType.Resources: return OutputFolder + resources + "\\";
-                case FolderType.Tests: return OutputFolder + tests + "\\";
-                default: return OutputFolder;
+                case FolderType.Resources: return _outputRootFolder + Resources + "\\";
+                case FolderType.Tests: return _outputRootFolder + Tests + "\\";
+                case FolderType.Root: return _outputRootFolder;
+                default: return _outputRootFolder;
             }
         }
 
-        internal static string ConcatFileNameToFolder(string FileName, FolderType folderType)
+        internal static string ConcatFileNameToFolder(string fileName, FolderType folderType)
         {
-            string outputFilePath = GetFolder(folderType);
-            if (!FileName.StartsWith("\\"))
-                outputFilePath = outputFilePath + FileName;
+            var outputFilePath = GetFolder(folderType);
+            if (!fileName.StartsWith("\\"))
+                outputFilePath = outputFilePath + fileName;
             else
-                outputFilePath = outputFilePath.Trim('\\') + FileName;
+                outputFilePath = outputFilePath.Trim('\\') + fileName;
             return outputFilePath;
         }
 
-        private static bool ContainsFile(string filePath)
+        internal static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> keywords, int implementedKeyword)
         {
-            foreach (string path in SavedFiles)
-                if (path.ToLower().Equals(filePath.ToLower()))
-                    return true;
-            return false;
+            AddFileToSavedFiles(keywords[implementedKeyword - 1].OutputFilePath);
+            if (keywords[implementedKeyword - 1].Keywords == null) return;
+            foreach (var key in keywords[implementedKeyword - 1].Keywords)
+                AddFilesFromKeywords(key);
         }
 
-        internal static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> Keywords, int implementedKeyword)
+        internal static void AddImplementedTestCasesFilesToSavedFiles(List<TestCase> testCases, int implementedKeyword)
         {
-            AddFileToSavedFiles(Keywords[implementedKeyword - 1].OutputFilePath);
-            if (Keywords[implementedKeyword - 1].Keywords != null)
-                foreach (Keyword key in Keywords[implementedKeyword - 1].Keywords)
-                    AddFilesFromKeywords(key);
-        }
-
-        internal static void AddImplementedTestCasesFilesToSavedFiles(List<TestCase> TestCases, int implementedKeyword)
-        {
-            AddFileToSavedFiles(TestCases[implementedKeyword - 1].OutputFilePath);
-            if (TestCases[implementedKeyword - 1].Steps != null)
-                foreach (Keyword key in TestCases[implementedKeyword - 1].Steps)
-                    AddFilesFromKeywords(key);
+            AddFileToSavedFiles(testCases[implementedKeyword - 1].OutputFilePath);
+            if (testCases[implementedKeyword - 1].Steps == null) return;
+            foreach (var key in testCases[implementedKeyword - 1].Steps)
+                AddFilesFromKeywords(key);
         }
 
         internal static void FindAllRobotFilesAndAddToStructure()
         {
-            DirectoryInfo d = new DirectoryInfo(OutputFolder);
+            var d = new DirectoryInfo(_outputRootFolder);
             foreach (var dir in d.GetDirectories())
             {
                 if (dir.ToString().ToLower().Equals("tests"))
-                    tests = dir.ToString();
+                    Tests = dir.ToString();
                 if (dir.ToString().ToLower().Equals("resources"))
-                    resources = dir.ToString();
+                    Resources = dir.ToString();
             }
             foreach (var file in d.GetFiles("*.robot", SearchOption.AllDirectories))
             {
@@ -116,14 +108,27 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
+        internal static void DeleteAllFiles()
+        {
+            var d = new DirectoryInfo(_outputRootFolder);
+            foreach (var file in d.GetFiles("*.robot", SearchOption.AllDirectories))
+            {
+                file.Delete();
+            }
+            foreach (var file in d.GetFiles("*.py", SearchOption.AllDirectories))
+            {
+                file.Delete();
+            }
+        }
+
         //Goes recursively through all keywords in given keyword
         internal static void AddFilesFromKeywords(Keyword keyword)
         {
             AddFileToSavedFiles(keyword.OutputFilePath);
-            if (keyword.Keywords != null)
-                foreach (Keyword key in keyword.Keywords)
-                    if (!key.Recursive)
-                        AddFilesFromKeywords(key);
+            if (keyword.Keywords == null) return;
+            foreach (var key in keyword.Keywords)
+                if (!key.Recursive)
+                    AddFilesFromKeywords(key);
         }
 
         internal static FolderType ConvertFormTypeToFolderType(FormType formType)
@@ -133,10 +138,7 @@ namespace RobotAutomationHelper.Scripts
                 folderType = FolderType.Resources;
             else
             {
-                if (formType.Equals(FormType.Test))
-                    folderType = FolderType.Tests;
-                else
-                    folderType = FolderType.Root;
+                folderType = formType.Equals(FormType.Test) ? FolderType.Tests : FolderType.Root;
             }
 
             return folderType;

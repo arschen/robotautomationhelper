@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.Objects
 {
     class Includes : IEquatable<Includes>
     {
@@ -16,16 +16,14 @@ namespace RobotAutomationHelper.Scripts
 
         internal void AddToList(string fileName)
         {
-            if (!FileName.Equals(fileName))
-                if (!FilesToInclude.Contains(fileName))
-                    FilesToInclude.Add(fileName);
+            if (FileName.Equals(fileName)) return;
+            if (!FilesToInclude.Contains(fileName))
+                FilesToInclude.Add(fileName);
         }
 
         public bool Equals(Includes other)
         {
-            if (other.FileName.Equals(FileName))
-                return true;
-            return false;
+            return other != null && other.FileName.Equals(FileName);
         }
     }
 }

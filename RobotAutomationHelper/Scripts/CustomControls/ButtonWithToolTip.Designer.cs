@@ -1,11 +1,13 @@
-﻿namespace RobotAutomationHelper.Scripts.CustomControls
+﻿using System.ComponentModel;
+
+namespace RobotAutomationHelper.Scripts.CustomControls
 {
     partial class ButtonWithToolTip
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary> 
         /// Clean up any resources being used.

@@ -1,20 +1,21 @@
-﻿using RobotAutomationHelper.Scripts;
-using RobotAutomationHelper.Scripts.CustomControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.CustomControls;
+using RobotAutomationHelper.Scripts.Objects;
+using RobotAutomationHelper.Scripts.Static;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Forms
 {
     internal partial class TestCaseAddForm : BaseKeywordAddForm
     {
 
         internal TestCaseAddForm(BaseKeywordAddForm parent) : base(parent)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("TestCaseAddForm [Constructor]");
+            if (RobotAutomationHelper.Log) Console.WriteLine(@"TestCaseAddForm [Constructor]");
             InitializeComponent();
-            initialYValue = 140;
+            InitialYValue = 140;
             FormType = FormType.Test;
             UpdateOutputFileSuggestions(OutputFile, FormType);
             ActiveControl = TestCaseNameLabel;
@@ -29,21 +30,21 @@ namespace RobotAutomationHelper
             }
             else
             {
-                DialogResult result = MessageBox.Show("Test case with this name has already been implemented in the ouput file.",
-                    "Alert",
+                MessageBox.Show(@"Test case with this name has already been implemented in the output file.",
+                    @"Alert",
                     MessageBoxButtons.OK);
             }
         }
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            skip = true;
+            SkipForm = true;
             Close();
         }
 
         internal void ShowTestCaseContent(TestCase testCase, int testIndex)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("ShowTestCaseContent " + testCase.Name + " " + testIndex);
+            if (RobotAutomationHelper.Log) Console.WriteLine(@"ShowTestCaseContent " + testCase.Name + @" " + testIndex);
             ImplementationIndexFromTheParent = testIndex;
             if (testCase.Name != null) { }
                 TestCaseName.Text = testCase.Name;
@@ -60,7 +61,7 @@ namespace RobotAutomationHelper
 
             NumberOfKeywordsInThisForm = 0;
             if (ThisFormKeywords != null && ThisFormKeywords.Count != 0)
-                foreach (Keyword testStep in testCase.Steps)
+                foreach (var testStep in testCase.Steps)
                 {
                     AddKeywordField(testStep, NumberOfKeywordsInThisForm + 1, false);
                     NumberOfKeywordsInThisForm++;
@@ -78,17 +79,17 @@ namespace RobotAutomationHelper
 
             UpdateListNamesAndUpdateStateOfSave();
             StartPosition = FormStartPosition.Manual;
-            var dialogResult = ShowDialog();
+            ShowDialog();
         }
 
         private void SaveChangesToTestCases()
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("SaveChangesToTestCases");
+            if (RobotAutomationHelper.Log) Console.WriteLine(@"SaveChangesToTestCases");
             if (RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Steps != null && RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Steps.Count > 0)
-                for (int counter = 1; counter <= RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Steps.Count; counter++)
+                for (var counter = 1; counter <= RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent].Steps.Count; counter++)
                     ThisFormKeywords[counter-1].Name = ((TextWithList) Controls["DynamicStep" + counter + "Name"]).Text.Trim();
             
-            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests);
+            var finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests);
 
             RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent] = new TestCase(TestCaseName.Text.Trim(),
                 "[Documentation]  " + TestCaseDocumentation.Text.Trim(),
@@ -112,11 +113,11 @@ namespace RobotAutomationHelper
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
-            memoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
+            MemoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(TestCaseName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests),
                 RobotAutomationHelper.TestCases[ImplementationIndexFromTheParent]);
 
-            if (!memoryPath.Equals(""))
+            if (!MemoryPath.Equals(""))
             {
                 TestCaseName.ForeColor = Color.Red;
                 return true;
@@ -126,16 +127,16 @@ namespace RobotAutomationHelper
 
         internal void UpdateListNamesAndUpdateStateOfSave()
         {
-            List<string> namesList = new List<string>
+            var namesList = new List<string>
             {
                 TestCaseName.Text
             };
-            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            for (var i = 1; i <= NumberOfKeywordsInThisForm; i++)
             {
                 if (Controls.Find("DynamicStep" + i + "Name", false).Length > 0)
                     namesList.Add(Controls["DynamicStep" + i + "Name"].Text);
             }
-            (Save as ButtonWithToolTip).UpdateState(namesList, OutputFile.Text);
+            ((ButtonWithToolTip) Save).UpdateState(namesList, OutputFile.Text);
         }
     }
 }

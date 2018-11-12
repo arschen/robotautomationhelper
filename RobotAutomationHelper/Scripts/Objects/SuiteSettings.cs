@@ -1,4 +1,4 @@
-﻿namespace RobotAutomationHelper.Scripts
+﻿namespace RobotAutomationHelper.Scripts.Objects
 {
     internal class SuiteSettings
     {
@@ -10,9 +10,9 @@
         internal bool Overwrite { get; set; }
         internal string OutputFilePath { get; }
 
-        internal SuiteSettings(string OutputFilePath)
+        internal SuiteSettings(string outputFilePath)
         {
-            this.OutputFilePath = OutputFilePath;
+            OutputFilePath = outputFilePath;
             Documentation = "";
             Overwrite = false;
         }

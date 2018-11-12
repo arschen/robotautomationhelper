@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Scripts.Objects
 {
     [Serializable]
     internal class Param
@@ -8,10 +8,10 @@ namespace RobotAutomationHelper
         internal string Name { get; set; }
         internal string Value { get; set; }
 
-        internal Param(string Name, string Value)
+        internal Param(string name, string value)
         {
-            this.Name = Name;
-            this.Value = Value;
+            Name = name;
+            Value = value;
         }
 
         public override string ToString()

@@ -1,4 +1,6 @@
-﻿using RobotAutomationHelper.Scripts.CustomControls;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.CustomControls;
 
 namespace RobotAutomationHelper.Forms
 {
@@ -7,7 +9,7 @@ namespace RobotAutomationHelper.Forms
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -93,8 +95,8 @@ namespace RobotAutomationHelper.Forms
         #endregion
 
         private ButtonWithToolTip Save;
-        private System.Windows.Forms.Button Skip;
-        private System.Windows.Forms.Label STDLIBlabel;
-        private System.Windows.Forms.Label EXTLIBlabel;
+        private Button Skip;
+        private Label STDLIBlabel;
+        private Label EXTLIBlabel;
     }
 }

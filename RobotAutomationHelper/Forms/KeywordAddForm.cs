@@ -1,26 +1,26 @@
-﻿using RobotAutomationHelper.Forms;
-using RobotAutomationHelper.Scripts;
-using RobotAutomationHelper.Scripts.CustomControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.CustomControls;
+using RobotAutomationHelper.Scripts.Objects;
+using RobotAutomationHelper.Scripts.Static;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Forms
 {
     internal partial class KeywordAddForm : BaseKeywordAddForm
     {
         // keywords of the parent
-        private List<Keyword> ParentKeywords;
+        private readonly List<Keyword> _parentKeywords;
         //keywords in this form
-        private List<Param> ThisKeywordParams = new List<Param>();
+        private readonly List<Param> _thisKeywordParams = new List<Param>();
 
         internal KeywordAddForm(List<Keyword> parentKeywords, BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
-            initialYValue = 185;
+            InitialYValue = 185;
             FormType = FormType.Keyword;
-            ParentKeywords = parentKeywords;
+            _parentKeywords = parentKeywords;
             UpdateOutputFileSuggestions(OutputFile, FormType);
             ActiveControl = KeywordNameLabel;
         }
@@ -31,29 +31,27 @@ namespace RobotAutomationHelper
             if (!IsKeywordPresentInFilesOrMemoryTree())
             {
                 AddCurrentKeywordsToKeywordsList(sender, e);
-                SaveChangesToKeyword(true);
+                SaveChangesToKeyword();
                 Close();
             }
             else
             {
-                DialogResult result = MessageBox.Show("This action will affect other test cases / keywords that are using this one \n" + memoryPath,
-                    "Alert",
+                var result = MessageBox.Show(@"This action will affect other test cases / keywords that are using this one " + MemoryPath,
+                    @"Alert",
                     MessageBoxButtons.YesNo);
-                if (result.Equals(DialogResult.Yes))
-                {
-                    AddCurrentKeywordsToKeywordsList(sender, e);
-                    SaveChangesToKeyword(true);
-                    TestCasesListOperations.OverwriteOccurrencesInKeywordTree(KeywordName.Text,
-                        FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
-                        ParentKeywords[ImplementationIndexFromTheParent]);
-                    Close();
-                }
+                if (!result.Equals(DialogResult.Yes)) return;
+                AddCurrentKeywordsToKeywordsList(sender, e);
+                SaveChangesToKeyword();
+                TestCasesListOperations.OverwriteOccurrencesInKeywordTree(KeywordName.Text,
+                    FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
+                    _parentKeywords[ImplementationIndexFromTheParent]);
+                Close();
             }
         }
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            skip = true;
+            SkipForm = true;
             Close();
         }
 
@@ -66,8 +64,9 @@ namespace RobotAutomationHelper
                 KeywordName.Text = keyword.Name.Trim();
             if (keyword.Documentation != null)
                 KeywordDocumentation.Text = keyword.Documentation.Replace("[Documentation]", "").Trim();
-            if (keyword.OutputFilePath != null || !keyword.OutputFilePath.Equals(""))
-                OutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Resources), "\\");
+            if (keyword.OutputFilePath != null)
+                if (!keyword.OutputFilePath.Equals(""))
+                    OutputFile.Text = keyword.OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Resources), "\\");
             if (keyword.Arguments != null)
                 KeywordArguments.Text = keyword.Arguments.Replace("[Arguments]", "").Trim();
 
@@ -79,7 +78,7 @@ namespace RobotAutomationHelper
             if (ThisFormKeywords != null && ThisFormKeywords.Count != 0)
             {
                 // adds the keywords in the form
-                foreach (Keyword testStep in ThisFormKeywords)
+                foreach (var testStep in ThisFormKeywords)
                 {
                     AddKeywordField(testStep, NumberOfKeywordsInThisForm + 1, false);
                     NumberOfKeywordsInThisForm++;
@@ -90,7 +89,7 @@ namespace RobotAutomationHelper
                 // add a single keyword field if no keywords are available
                 ThisFormKeywords = new List<Keyword>
                 {
-                    new Keyword("New Keyword", ParentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword)
+                    new Keyword("New Keyword", _parentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword)
                 };
                 AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
                 NumberOfKeywordsInThisForm++;
@@ -101,75 +100,70 @@ namespace RobotAutomationHelper
 
             // show the form dialog
             StartPosition = FormStartPosition.Manual;
-            var dialogResult = ShowDialog();
+            ShowDialog();
         }
 
-        // adds all field data to parentKeyword or testcaseaddform if not nested
-        private void SaveChangesToKeyword(bool save)
+        // adds all field data to parentKeyword or testCaseAddForm if not nested
+        private void SaveChangesToKeyword()
         {
-            string finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources);
+            var finalPath = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources);
 
-            List<string> args = StringAndListOperations.ReturnListOfArgs(KeywordArguments.Text);
+            var args = StringAndListOperations.ReturnListOfArgs(KeywordArguments.Text);
 
             if (args != null)
-                for (int i = 0; i < args.Count; i++)
-                    if (ParentKeywords[ImplementationIndexFromTheParent].Params != null
-                        && (ParentKeywords[ImplementationIndexFromTheParent].Params.Count > 0))
+                foreach (var arg in args)
+                    if (_parentKeywords[ImplementationIndexFromTheParent].Params != null
+                        && (_parentKeywords[ImplementationIndexFromTheParent].Params.Count > 0))
                     {
-                        bool foundMatch = false;
-                        foreach (Param parentParam in ParentKeywords[ImplementationIndexFromTheParent].Params)
-                            if (parentParam.Name.Equals(args[i]))
+                        var foundMatch = false;
+                        foreach (var parentParam in _parentKeywords[ImplementationIndexFromTheParent].Params)
+                            if (parentParam.Name.Equals(arg))
                             {
-                                ThisKeywordParams.Add(parentParam);
+                                _thisKeywordParams.Add(parentParam);
                                 foundMatch = true;
                                 break;
                             }
                         if (!foundMatch)
-                            ThisKeywordParams.Add(new Param(args[i], ""));
+                            _thisKeywordParams.Add(new Param(arg, ""));
                     }
                     else
-                        ThisKeywordParams.Add(new Param(args[i], ""));
+                        _thisKeywordParams.Add(new Param(arg, ""));
 
-            bool addToSuggestions = false;
+            var addToSuggestions = _parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex == -1;
 
-            if (ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex == -1)
-                addToSuggestions = true;
-
-            ParentKeywords[ImplementationIndexFromTheParent] = new Keyword(KeywordName.Text.Trim(),
+            _parentKeywords[ImplementationIndexFromTheParent] = new Keyword(KeywordName.Text.Trim(),
             "[Documentation]  " + KeywordDocumentation.Text.Trim(),
             ThisFormKeywords,
             "[Arguments]  " + KeywordArguments.Text.Trim(),
-            ThisKeywordParams,
+            _thisKeywordParams,
             finalPath,
-            save,
-            KeywordType.CUSTOM,
-            ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex,
+            KeywordType.Custom,
+            _parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex,
             "Custom",
-            ParentKeywords[ImplementationIndexFromTheParent].Parent,
-            ParentKeywords[ImplementationIndexFromTheParent].IncludeImportFile);
+            _parentKeywords[ImplementationIndexFromTheParent].Parent,
+            _parentKeywords[ImplementationIndexFromTheParent].IncludeImportFile);
 
             if (addToSuggestions)
             {
-                ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.GetCustomLibKeywords().Count;
-                Keyword temp = new Keyword(ParentKeywords[ImplementationIndexFromTheParent].Parent);
-                temp.CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
+                _parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.GetCustomLibKeywords().Count;
+                var temp = new Keyword(_parentKeywords[ImplementationIndexFromTheParent].Parent);
+                temp.CopyKeyword(_parentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
                 SuggestionsClass.GetCustomLibKeywords().Add(temp);
             }
             else
-                SuggestionsClass.GetCustomLibKeywords()[ParentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(ParentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
+                SuggestionsClass.GetCustomLibKeywords()[_parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(_parentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
         }
 
         // adding argument to the KeywordArguments.Text
         private void AddArgument_Click(object sender, EventArgs e)
         {
-            string arg = "";
-            bool add = false;
+            var arg = "";
+            var add = false;
             switch (ArgumentType.Text)
             {
                 case "Scalar": arg = "${"; break;
                 case "Dictionary": arg = "&{"; break;
                 case "List": arg = "@{"; break;
-                default: break;
             }
             if (!arg.Equals(""))
                 if (!ArgumentName.Text.Trim().Equals(""))
@@ -177,24 +171,24 @@ namespace RobotAutomationHelper
                     arg += ArgumentName.Text + "}";
                     add = true;
                 }
-            if (add && !KeywordArguments.Text.Contains(arg))
-                if (KeywordArguments.Text.Trim().Equals(""))
-                    KeywordArguments.Text += arg;
-                else
-                    KeywordArguments.Text += "  " + arg;
+
+            if (!add || KeywordArguments.Text.Contains(arg)) return;
+            if (KeywordArguments.Text.Trim().Equals(""))
+                KeywordArguments.Text += arg;
+            else
+                KeywordArguments.Text += @"  " + arg;
         }
 
         // removing argument from the KeywordArguments.Text
         private void RemoveArgument_Click(object sender, EventArgs e)
         {
-            string arg = "";
-            bool remove = false;
+            var arg = "";
+            var remove = false;
             switch (ArgumentType.Text)
             {
                 case "Scalar": arg = "${"; break;
                 case "Dictionary": arg = "&{"; break;
                 case "List": arg = "@{"; break;
-                default: break;
             }
             if (!arg.Equals(""))
                 if (!ArgumentName.Text.Trim().Equals(""))
@@ -202,12 +196,11 @@ namespace RobotAutomationHelper
                     arg += ArgumentName.Text + "}";
                     remove = true;
                 }
-            if (remove && KeywordArguments.Text.Contains(arg))
-            {
-                if (KeywordArguments.Text.IndexOf(arg) != 0)
-                    arg = "  " + arg;
-                KeywordArguments.Text = KeywordArguments.Text.Replace(arg, "").Trim();
-            } 
+
+            if (!remove || !KeywordArguments.Text.Contains(arg)) return;
+            if (KeywordArguments.Text.IndexOf(arg, StringComparison.Ordinal) != 0)
+                arg = "  " + arg;
+            KeywordArguments.Text = KeywordArguments.Text.Replace(arg, "").Trim();
         }
 
         private void KeywordName_TextChanged(object sender, EventArgs e)
@@ -224,29 +217,27 @@ namespace RobotAutomationHelper
 
         private bool IsKeywordPresentInFilesOrMemoryTree()
         {
-            memoryPath = TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
+            MemoryPath = TestCasesListOperations.IsPresentInTheKeywordTree(KeywordName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources),
-                ParentKeywords[ImplementationIndexFromTheParent]);
+                _parentKeywords[ImplementationIndexFromTheParent]);
 
-            if (!memoryPath.Equals("")) {
-                KeywordName.ForeColor = Color.DarkOrange;
-                return true;
-            }
-            return false;
+            if (MemoryPath.Equals("")) return false;
+            KeywordName.ForeColor = Color.DarkOrange;
+            return true;
         }
 
         internal void UpdateNamesListAndUpdateStateOfSave()
         {
-            List<string> namesList = new List<string>
+            var namesList = new List<string>
             {
                 KeywordName.Text
             };
-            for (int i = 1; i <= NumberOfKeywordsInThisForm; i++)
+            for (var i = 1; i <= NumberOfKeywordsInThisForm; i++)
             {
                 if (Controls.Find("DynamicStep" + i + "Name", false).Length > 0)
                     namesList.Add(Controls["DynamicStep" + i + "Name"].Text);
             }
-            (Save as ButtonWithToolTip).UpdateState(namesList, OutputFile.Text);
+            ((ButtonWithToolTip) Save).UpdateState(namesList, OutputFile.Text);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using RobotAutomationHelper.Scripts.CustomControls;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.CustomControls;
 
 namespace RobotAutomationHelper.Forms
 {
@@ -7,7 +9,7 @@ namespace RobotAutomationHelper.Forms
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -129,11 +131,11 @@ namespace RobotAutomationHelper.Forms
 
         #endregion
 
-        private System.Windows.Forms.ComboBox OutputFile;
-        private System.Windows.Forms.Label OutputLabel;
-        private System.Windows.Forms.Label SuiteDocumentationLabel;
-        private System.Windows.Forms.TextBox SuiteDocumentation;
-        private System.Windows.Forms.Label AddSettingsLabel;
+        private ComboBox OutputFile;
+        private Label OutputLabel;
+        private Label SuiteDocumentationLabel;
+        private TextBox SuiteDocumentation;
+        private Label AddSettingsLabel;
         private ButtonWithToolTip SaveAndExit;
         private ButtonWithToolTip Save;
     }

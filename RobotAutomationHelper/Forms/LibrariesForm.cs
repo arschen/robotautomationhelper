@@ -1,16 +1,18 @@
-﻿using RobotAutomationHelper.Scripts;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.Objects;
+using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Forms
 {
     internal partial class LibrariesForm : Form
     {
-        private int LabelLength = 100;
-        private int distanceBetweenLabelAndRadio = 10;
-        private int FieldHeight = 25;
-        private int initialY = 30;
+        private readonly int _labelLength = 100;
+        private readonly int _distanceBetweenLabelAndRadio = 10;
+        private readonly int _fieldHeight = 25;
+        private readonly int _initialY = 30;
 
         internal LibrariesForm()
         {
@@ -19,11 +21,11 @@ namespace RobotAutomationHelper.Forms
 
         internal void ShowLibrariesContent()
         {
-            int stdLibsCounter = 0;
-            int extLibsCounter = 0;
-            List<Keyword> listKeyword = new List<Keyword>();
+            var stdLibsCounter = 0;
+            var extLibsCounter = 0;
+            var listKeyword = new List<Keyword>();
 
-            foreach (SuiteSettings temp in RobotAutomationHelper.SuiteSettingsList)
+            foreach (var temp in RobotAutomationHelper.SuiteSettingsList)
                 if (temp != null)
                 {
                     if (temp.TestSetup != null)
@@ -36,23 +38,23 @@ namespace RobotAutomationHelper.Forms
                         listKeyword.Add(temp.SuiteTeardown);
                 }
 
-            List<string> LockedIncludes = SuggestionsClass.UpdateSuggestionsToIncludes(RobotAutomationHelper.TestCases, listKeyword);
+            var lockedIncludes = SuggestionsClass.UpdateSuggestionsToIncludes(RobotAutomationHelper.TestCases, listKeyword);
 
-            foreach (Lib lib in SuggestionsClass.Suggestions)
+            foreach (var lib in SuggestionsClass.Suggestions)
             {
-                if (lib.keyType.Equals(KeywordType.STANDARD))
+                if (lib.KeyType.Equals(KeywordType.Standard))
                 {
-                    ShowLibField(STDLIBlabel.Location.X, initialY + stdLibsCounter * FieldHeight, lib.Name, lib.ToInclude);
-                    if (LockedIncludes.Contains(lib.Name))
+                    ShowLibField(STDLIBlabel.Location.X, _initialY + stdLibsCounter * _fieldHeight, lib.Name, lib.ToInclude);
+                    if (lockedIncludes.Contains(lib.Name))
                         DisableLibField(lib.Name);
                     stdLibsCounter++;
                 }
                 else
                 {
-                    if (!lib.keyType.Equals(KeywordType.FOR_LOOP_ELEMENTS) && !lib.keyType.Equals(KeywordType.FOR_LOOP_IN_RANGE) && !lib.keyType.Equals(KeywordType.CUSTOM))
+                    if (!lib.KeyType.Equals(KeywordType.ForLoopElements) && !lib.KeyType.Equals(KeywordType.ForLoopInRange) && !lib.KeyType.Equals(KeywordType.Custom))
                     {
-                        ShowLibField(EXTLIBlabel.Location.X, initialY + extLibsCounter * FieldHeight, lib.Name, lib.ToInclude);
-                        if (LockedIncludes.Contains(lib.Name))
+                        ShowLibField(EXTLIBlabel.Location.X, _initialY + extLibsCounter * _fieldHeight, lib.Name, lib.ToInclude);
+                        if (lockedIncludes.Contains(lib.Name))
                             DisableLibField(lib.Name);
                         extLibsCounter++;
                     }
@@ -60,52 +62,52 @@ namespace RobotAutomationHelper.Forms
             }
 
             StartPosition = FormStartPosition.Manual;
-            var dialogResult = ShowDialog();
+            ShowDialog();
         }
 
-        private void DisableLibField(string Name)
+        private void DisableLibField(string name)
         {
-            Controls["checkbox" + Name].Enabled = false;
-            Controls[Name].Enabled = false;
+            Controls["checkbox" + name].Enabled = false;
+            Controls[name].Enabled = false;
         }
 
-        private void ShowLibField(int x, int y, string Name, bool check)
+        private void ShowLibField(int x, int y, string name, bool check)
         {
-            Label libName = new Label
+            var libName = new Label
             {
-                Name = Name,
-                Text = Name,
+                Name = name,
+                Text = name,
                 Location = new Point(x, y)
             };
-            CheckBox checkBox = new CheckBox
+            var checkBox = new CheckBox
             {
-                Name = "checkbox" + Name,
-                Checked = check
+                Name = "checkbox" + name,
+                Checked = check,
+                Location = new Point(x + _labelLength + _distanceBetweenLabelAndRadio, y - 5)
             };
-            checkBox.Location = new Point(x + LabelLength + distanceBetweenLabelAndRadio, y - 5);
 
             Controls.Add(libName);
             Controls.Add(checkBox);
         }
 
-        private void Skip_Click(object sender, System.EventArgs e)
+        private void Skip_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void Save_Click(object sender, System.EventArgs e)
+        private void Save_Click(object sender, EventArgs e)
         {
-            foreach (Lib lib in SuggestionsClass.Suggestions)
+            foreach (var lib in SuggestionsClass.Suggestions)
             {
-                if (lib.keyType.Equals(KeywordType.STANDARD))
+                if (lib.KeyType.Equals(KeywordType.Standard))
                 {
-                    lib.ToInclude = SuggestionsClass.ContainsName(lib.Name, (Controls["checkbox" + lib.Name] as CheckBox).Checked, false);
+                    lib.ToInclude = SuggestionsClass.ContainsName(lib.Name, ((CheckBox) Controls["checkbox" + lib.Name]).Checked, false);
                 }
                 else
                 {
-                    if (!lib.keyType.Equals(KeywordType.FOR_LOOP_ELEMENTS) && !lib.keyType.Equals(KeywordType.FOR_LOOP_IN_RANGE) && !lib.keyType.Equals(KeywordType.CUSTOM))
+                    if (!lib.KeyType.Equals(KeywordType.ForLoopElements) && !lib.KeyType.Equals(KeywordType.ForLoopInRange) && !lib.KeyType.Equals(KeywordType.Custom))
                     {
-                        lib.ToInclude = SuggestionsClass.ContainsName(lib.Name, (Controls["checkbox" + lib.Name] as CheckBox).Checked, false);
+                        lib.ToInclude = SuggestionsClass.ContainsName(lib.Name, ((CheckBox) Controls["checkbox" + lib.Name]).Checked, false);
                     }
                 }
             }

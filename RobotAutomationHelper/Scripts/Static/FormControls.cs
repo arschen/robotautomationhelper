@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using static System.Windows.Forms.Form;
+using RobotAutomationHelper.Forms;
+using RobotAutomationHelper.Scripts.CustomControls;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.Static
 {
     internal static class FormControls
     {
         internal static void AddControl(string type, string name, int indexOf, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("AddControl " + " " + type + " " + name + " " + text);
+            if (Forms.RobotAutomationHelper.Log) Console.WriteLine(@"AddControl " + @" " + type + @" " + name + @" " + text);
             Control tempControl;
 
             if (owner.Controls.Find(name, false).Length > 0)
                 //if (RobotAutomationHelper.Log) 
-                Console.WriteLine(name + " | " + owner.Controls.Find(name,false).Length);
+                Console.WriteLine(name + @" | " + owner.Controls.Find(name,false).Length);
 
             switch (type.ToLower())
             {
@@ -46,18 +46,10 @@ namespace RobotAutomationHelper.Scripts
             }
         }
 
-        internal static void RemoveControlByKey(string key, ControlCollection controlCollection)
-        {
-            if (RobotAutomationHelper.Log) Console.WriteLine("RemoveControlByKey " + key);
-            if (RobotAutomationHelper.Log) Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
-            while (controlCollection.Find(key, false).Length != 0)
-                controlCollection.RemoveByKey(key);
-        }
-
         internal static void RemoveControlByKey(string key, Control.ControlCollection controlCollection)
         {
-            if (RobotAutomationHelper.Log) Console.WriteLine("RemoveControlByKey " + key);
-            if (RobotAutomationHelper.Log) Console.WriteLine(key + " = " + controlCollection.Find(key, false).Length);
+            if (Forms.RobotAutomationHelper.Log) Console.WriteLine(@"RemoveControlByKey " + key);
+            if (Forms.RobotAutomationHelper.Log) Console.WriteLine(key + @" = " + controlCollection.Find(key, false).Length);
             while (controlCollection.Find(key, false).Length != 0)
                 controlCollection.RemoveByKey(key);
         }

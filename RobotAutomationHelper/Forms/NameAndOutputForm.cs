@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using RobotAutomationHelper.Scripts;
+using RobotAutomationHelper.Scripts.CustomControls;
+using RobotAutomationHelper.Scripts.Objects;
+using RobotAutomationHelper.Scripts.Static;
 using RobotAutomationHelper.Scripts.Static.Consts;
 
 namespace RobotAutomationHelper.Forms
@@ -10,15 +12,15 @@ namespace RobotAutomationHelper.Forms
     internal partial class NameAndOutputForm : BaseKeywordAddForm
     {
 
-        private FormType parentType;
-        private ToolTip toolTip = new ToolTip();
+        private readonly FormType _parentType;
+        private readonly ToolTip _toolTip = new ToolTip();
 
         internal NameAndOutputForm(FormType type, BaseKeywordAddForm parent, Keyword keyword) : base(parent)
         {
             InitializeComponent();
             NameAndOutputToTestCaseFormCommunication.Save = false;
             UpdateOutputFileSuggestions(OutputFile, type);
-            parentType = type;
+            _parentType = type;
             UpdateSaveButtonState();
             FormType = FormType.NameAndOutput;
             ThisFormKeywords = new List<Keyword>
@@ -27,16 +29,16 @@ namespace RobotAutomationHelper.Forms
                 };
         }
 
-        private void Save_Click(object sender, System.EventArgs e)
+        private void Save_Click(object sender, EventArgs e)
         {
-            if (parentType.Equals(FormType.Test))
-                TestCaseSave(sender, e);
+            if (_parentType.Equals(FormType.Test))
+                TestCaseSave();
             else
-                if (parentType.Equals(FormType.Keyword))
-                    KeywordSave(sender, e);
+                if (_parentType.Equals(FormType.Keyword))
+                    KeywordSave();
         }
 
-        private void Cancel_Click(object sender, System.EventArgs e)
+        private void Cancel_Click(object sender, EventArgs e)
         {
             NameAndOutputToTestCaseFormCommunication.Save = false;
             Close();
@@ -54,18 +56,18 @@ namespace RobotAutomationHelper.Forms
                 null,
                 this);
             Controls["DynamicStep1Name"].TextChanged += KeywordName_TextChanged;
-            (Controls["DynamicStep1Name"] as TextWithList).MaxItemsInSuggestionsList = 5;
-            var dialogResult = ShowDialog();
+            ((TextWithList) Controls["DynamicStep1Name"]).MaxItemsInSuggestionsList = 5;
+            ShowDialog();
         }
 
         internal void ShowTestCaseContent()
         {
             OutputLabel.Text = OutputLabel.Text.Replace("Keyword", "Test Case");
             NameLabel.Text = NameLabel.Text.Replace("Keyword", "Test Case");
-            var dialogResult = ShowDialog();
+            ShowDialog();
         }
 
-        private void TestCaseSave(object sender, EventArgs e)
+        private void TestCaseSave()
         {
             if (!IsTestCasePresentInFilesOrMemoryTree())
             {
@@ -76,22 +78,22 @@ namespace RobotAutomationHelper.Forms
             }
             else
             {
-                DialogResult result = MessageBox.Show("Test case with this name has already been implemented in the ouput file.",
-                    "Alert",
+                MessageBox.Show(@"Test case with this name has already been implemented in the output file.",
+                    @"Alert",
                     MessageBoxButtons.OK);
             }
         }
 
-        private void KeywordSave(object sender, EventArgs e)
+        private void KeywordSave()
         {
             NameAndOutputToTestCaseFormCommunication.Save = true;
             NameAndOutputToTestCaseFormCommunication.Name = Controls["DynamicStep1Name"].Text;
-            NameAndOutputToTestCaseFormCommunication.Value = ((TextWithList)Controls["DynamicStep1Name"]).updateValue;
+            NameAndOutputToTestCaseFormCommunication.Value = ((TextWithList)Controls["DynamicStep1Name"]).UpdateValue;
             NameAndOutputToTestCaseFormCommunication.OutputFile = FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Resources);
             Close();
         }
 
-        private void ContentName_TextChanged(object sender, System.EventArgs e)
+        private void ContentName_TextChanged(object sender, EventArgs e)
         {
             UpdateSaveButtonState();
             IsTestCasePresentInFilesOrMemoryTree();
@@ -105,24 +107,21 @@ namespace RobotAutomationHelper.Forms
         private void OutputFile_TextChanged(object sender, EventArgs e)
         {
             UpdateSaveButtonState();
-            if (parentType.Equals(FormType.Test))
+            if (_parentType.Equals(FormType.Test))
                 IsTestCasePresentInFilesOrMemoryTree();
         }
 
         private void UpdateSaveButtonState()
         {
             string name;
-            if (parentType.Equals(FormType.Test))
+            if (_parentType.Equals(FormType.Test))
                 name = ContentName.Text;
             else
             {
-                if (Controls.Find("DynamicStep1Name", false).Length > 0)
-                    name = Controls["DynamicStep1Name"].Text;
-                else
-                    name = "";
+                name = Controls.Find("DynamicStep1Name", false).Length > 0 ? Controls["DynamicStep1Name"].Text : "";
             }
 
-            if (parentType.Equals(FormType.Keyword))
+            if (_parentType.Equals(FormType.Keyword))
             {
                 if (Controls.Find("DynamicStep1Name", false).Length > 0)
                 {
@@ -131,7 +130,7 @@ namespace RobotAutomationHelper.Forms
                         OutputFile.Enabled = false;
                         if (IsNameValid(name))
                         {
-                            toolTip.Hide(this);
+                            _toolTip.Hide(this);
                             Save.Enabled = true;
                         }
                     }
@@ -140,12 +139,12 @@ namespace RobotAutomationHelper.Forms
                         OutputFile.Enabled = true;
                         if (IsNameValid(name) && OutputFileCheck(OutputFile.Text))
                         {
-                            toolTip.Hide(this);
+                            _toolTip.Hide(this);
                             Save.Enabled = true;
                         }
                         else
                         {
-                            toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
+                            _toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
                             Save.Enabled = false;
                         }
                     }  
@@ -155,12 +154,12 @@ namespace RobotAutomationHelper.Forms
                     OutputFile.Enabled = true;
                     if (IsNameValid(name) && OutputFileCheck(OutputFile.Text))
                     {
-                        toolTip.Hide(this);
+                        _toolTip.Hide(this);
                         Save.Enabled = true;
                     }
                     else
                     {
-                        toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
+                        _toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
                         Save.Enabled = false;
                     }
                 }
@@ -169,12 +168,12 @@ namespace RobotAutomationHelper.Forms
             {
                 if (IsNameValid(name) && OutputFileCheck(OutputFile.Text))
                 {
-                    toolTip.Hide(this);
+                    _toolTip.Hide(this);
                     Save.Enabled = true;
                 }
                 else
                 {
-                    toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
+                    _toolTip.Show("Invalid Name or OutputFile", Save, 0, Save.Size.Height);
                     Save.Enabled = false;
                 }
             }
@@ -182,11 +181,11 @@ namespace RobotAutomationHelper.Forms
 
         private bool IsTestCasePresentInFilesOrMemoryTree()
         {
-            memoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(ContentName.Text,
+            MemoryPath = TestCasesListOperations.IsPresentInTheTestCasesTree(ContentName.Text,
                 FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Tests),
                 null);
 
-            if (!memoryPath.Equals(""))
+            if (!MemoryPath.Equals(""))
             {
                 ContentName.ForeColor = Color.Red;
                 return true;

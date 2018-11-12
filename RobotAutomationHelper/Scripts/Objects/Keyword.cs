@@ -1,8 +1,8 @@
-﻿using RobotAutomationHelper.Scripts;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using RobotAutomationHelper.Scripts.Static;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Scripts.Objects
 {
     [Serializable]
     internal class Keyword
@@ -12,59 +12,50 @@ namespace RobotAutomationHelper
         internal List<Keyword> ForLoopKeywords { get; set; }
         internal string Arguments { get; set; }
         internal List<Param> Params { get; set; }
-        private string name;
+        private string _name;
         internal string Name
         { get
             {
-                if (!IncludeImportFile) return name;
-                else
-                {
-                    string[] temp = name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
-                    if (temp.Length == 2)
-                        return temp[1];
-                    else
-                    {
-                        string concat = temp[1];
-                        for (int i = 2; i < temp.Length; i++)
-                            concat += "." + temp[i];
-                        return concat;
-                    }
-                }
+                if (!IncludeImportFile) return _name;
+                var temp = _name.Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries);
+                if (temp.Length == 2)
+                    return temp[1];
+                var concat = temp[1];
+                for (var i = 2; i < temp.Length; i++)
+                    concat += "." + temp[i];
+                return concat;
             }
             set {
-                if (!IncludeImportFile) name = value;
+                if (!IncludeImportFile) _name = value;
                 else
                 {
                     if (OutputFilePath != null && !OutputFilePath.Equals(""))
                     {
-                        string[] temp = OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-                        if (name != null)
-                            name = temp[temp.Length - 1].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        var temp = OutputFilePath.Split(new [] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                        if (_name != null)
+                            _name = temp[temp.Length - 1].Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + _name.Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
                         else
-                            name = temp[temp.Length - 1].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + value;
+                            _name = temp[temp.Length - 1].Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + value;
                     }
                     else
-                        name = value;
+                        _name = value;
                 }
             }
         }
         internal string Documentation { get; set; }
 
-        private string outputFilePath;
+        private string _outputFilePath;
         internal string OutputFilePath
         {
-            get
-            {
-                return outputFilePath;
-            }
+            get => _outputFilePath;
             set
             {
-                if (IncludeImportFile && outputFilePath != null)
+                if (IncludeImportFile && _outputFilePath != null)
                 {
-                    string[] tempOutpuFileSplit = outputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-                    ImportFileName = tempOutpuFileSplit[tempOutpuFileSplit.Length - 1].Replace(".robot", "");
+                    var tempOutputFileSplit = _outputFilePath.Split(new [] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                    ImportFileName = tempOutputFileSplit[tempOutputFileSplit.Length - 1].Replace(".robot", "");
                 }
-                outputFilePath = value;
+                _outputFilePath = value;
             }
         }
         internal bool Implemented { get; set; }
@@ -73,42 +64,30 @@ namespace RobotAutomationHelper
         internal int SuggestionIndex { get; set; }
         internal bool Recursive { get; set; }
         internal string Comments { get; set; }
-        internal bool IncludeImportFile = false;
+        internal bool IncludeImportFile;
         internal string ImportFileName { get; set; }
 
-        internal Keyword(string Name, string Documentation, List<Keyword> Keywords, string Arguments, List<Param> Params, string OutputFilePath, bool Saved, KeywordType Type, int SuggestionIndex, string KeywordString, Keyword Parent, bool IncludeImportFile)
+        internal Keyword(string name, string documentation, List<Keyword> keywords, string arguments, List<Param> paramsList, string outputFilePath, KeywordType type, int suggestionIndex, string keywordString, Keyword parent, bool includeImportFile)
         {
-            this.OutputFilePath = OutputFilePath;
-            this.IncludeImportFile = IncludeImportFile;
-            this.Name = Name;
-            this.Documentation = Documentation;
-            if (Keywords != null)
-                this.Keywords = ExtensionMethods.DeepClone(Keywords);
-            else
-                this.Keywords = new List<Keyword>();
-
-            if (ForLoopKeywords != null)
-                ForLoopKeywords = ExtensionMethods.DeepClone(ForLoopKeywords);
-            else
-                ForLoopKeywords = new List<Keyword>();
-            
-            if (Params != null)
-                this.Params = ExtensionMethods.DeepClone(Params);
-            else
-                this.Params = new List<Param>();
-
-            this.Arguments = Arguments;
+            OutputFilePath = outputFilePath;
+            IncludeImportFile = includeImportFile;
+            Name = name;
+            Documentation = documentation;
+            Keywords = keywords != null ? keywords.DeepClone() : new List<Keyword>();
+            ForLoopKeywords = ForLoopKeywords != null ? ForLoopKeywords.DeepClone() : new List<Keyword>();
+            Params = paramsList != null ? paramsList.DeepClone() : new List<Param>();
+            Arguments = arguments;
             Implemented = true;
-            this.Type = Type;
-            this.SuggestionIndex = SuggestionIndex;
+            Type = type;
+            SuggestionIndex = suggestionIndex;
             Recursive = false;
-            this.KeywordString = KeywordString;
-            this.Parent = Parent;
+            KeywordString = keywordString;
+            Parent = parent;
         }
 
-        internal Keyword(Keyword Parent)
+        internal Keyword(Keyword parent)
         {
-            this.Parent = Parent;
+            Parent = parent;
         }
 
         internal void CopyKeyword(Keyword keyword)
@@ -116,20 +95,11 @@ namespace RobotAutomationHelper
             Name = keyword.Name;
             Documentation = keyword.Documentation;
 
-            if (keyword.Keywords != null)
-                Keywords = ExtensionMethods.DeepClone(keyword.Keywords);
-            else
-                Keywords = new List<Keyword>();
+            Keywords = keyword.Keywords != null ? keyword.Keywords.DeepClone() : new List<Keyword>();
 
-            if (keyword.ForLoopKeywords != null)
-                ForLoopKeywords = ExtensionMethods.DeepClone(keyword.ForLoopKeywords);
-            else
-                ForLoopKeywords = new List<Keyword>();
+            ForLoopKeywords = keyword.ForLoopKeywords != null ? keyword.ForLoopKeywords.DeepClone() : new List<Keyword>();
 
-            if (keyword.Params != null)
-                Params = ExtensionMethods.DeepClone(keyword.Params);
-            else
-                Params = new List<Param>();
+            Params = keyword.Params != null ? keyword.Params.DeepClone() : new List<Param>();
 
             Arguments = keyword.Arguments;
             OutputFilePath = keyword.OutputFilePath;
@@ -139,51 +109,46 @@ namespace RobotAutomationHelper
             KeywordString = keyword.KeywordString;
         }
 
-        internal Keyword(string Name, string OutputFilePath, Keyword Parent)
+        internal Keyword(string name, string outputFilePath, Keyword parent)
         {
-            this.Name = Name;
-            this.OutputFilePath = OutputFilePath;
+            Name = name;
+            OutputFilePath = outputFilePath;
             Documentation = "";
             SuggestionIndex = -1;
             Recursive = false;
-            this.Parent = Parent;
+            Parent = parent;
         }
 
         // convert keyword string taken from file into keyword
-        internal Keyword(string KeywordString, string OutputFilePath, bool IsKeywordString, List<string> LibsToCheck, Keyword Parent)
+        internal Keyword(string keywordString, string outputFilePath, ICollection<string> libsToCheck, Keyword parent)
         {
-            this.Parent = Parent;
-            if (!KeywordString.Equals(""))
+            Parent = parent;
+            if (!keywordString.Equals(""))
             {
-                if (KeywordString.Trim().StartsWith("#"))
+                if (keywordString.Trim().StartsWith("#"))
                 {
-                    Comments = KeywordString;
-                    this.OutputFilePath = OutputFilePath;
+                    Comments = keywordString;
+                    OutputFilePath = outputFilePath;
                     Documentation = "";
                     SuggestionIndex = -1;
-                    Type = KeywordType.COMMENT;
+                    Type = KeywordType.Comment;
                 }
                 else
                 {
                     Implemented = true;
-                    string[] splitKeyword;
-                    KeywordString = KeywordString.Trim();
-                    if (!StringAndListOperations.StartsWithVariable(KeywordString))
-                        splitKeyword = KeywordString.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
-                    else
-                        splitKeyword = new string[] { KeywordString };
+                    keywordString = keywordString.Trim();
+                    var splitKeyword = !StringAndListOperations.StartsWithVariable(keywordString) ? keywordString.Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries) : new [] { keywordString };
 
                     if (!splitKeyword[0].StartsWith("{") && splitKeyword[0].Contains("."))
                     {
-                        string[] tempOutpuFileSplit = OutputFilePath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
                         IncludeImportFile = true;
-                        ImportFileName = splitKeyword[0].Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0];
+                        ImportFileName = splitKeyword[0].Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[0];
                     }
 
-                    bool found = false;
-                    foreach (Lib lib in SuggestionsClass.Suggestions)
-                        if (LibsToCheck.Contains(lib.Name))
-                            foreach (Keyword key in lib.LibKeywords)
+                    var found = false;
+                    foreach (var lib in SuggestionsClass.Suggestions)
+                        if (libsToCheck.Contains(lib.Name))
+                            foreach (var key in lib.LibKeywords)
                             {
                                 if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
                                 {
@@ -195,7 +160,7 @@ namespace RobotAutomationHelper
 
                     if (found)
                     {
-                        for (int i = 1; i < splitKeyword.Length; i++)
+                        for (var i = 1; i < splitKeyword.Length; i++)
                         {
                             if (!splitKeyword[i].Contains("="))
                             {
@@ -206,9 +171,9 @@ namespace RobotAutomationHelper
                             }
                             else
                             {
-                                // check if after spliting the first string matches any param name
-                                string[] temp = splitKeyword[i].Split('=');
-                                foreach (Param tempParam in Params)
+                                // check if after splitting the first string matches any param name
+                                var temp = splitKeyword[i].Split('=');
+                                foreach (var tempParam in Params)
                                 {
                                     if (tempParam.Name.ToLower().Trim().Equals(temp[0].ToLower().Trim()))
                                         tempParam.Value = splitKeyword[i].Replace(temp[0] + "=", "");
@@ -221,18 +186,18 @@ namespace RobotAutomationHelper
                         Name = splitKeyword[0];
                         if (splitKeyword.Length > 1)
                             Params = new List<Param>();
-                        for (int i = 1; i < splitKeyword.Length; i++)
+                        for (var i = 1; i < splitKeyword.Length; i++)
                         {
                             if (!splitKeyword[i].Contains("="))
                                 Params.Add(new Param("", splitKeyword[i]));
                             else
                             {
-                                // check if after spliting the first string matches any param name
-                                string[] temp = splitKeyword[i].Split('=');
+                                // check if after splitting the first string matches any param name
+                                var temp = splitKeyword[i].Split('=');
                                 Params.Add(new Param(temp[0], temp[1]));
                             }
                         }
-                        this.OutputFilePath = OutputFilePath;
+                        OutputFilePath = outputFilePath;
                         Documentation = "";
                         SuggestionIndex = -1;
                     }
@@ -241,7 +206,7 @@ namespace RobotAutomationHelper
             else
             {
                 Name = "";
-                this.OutputFilePath = OutputFilePath;
+                OutputFilePath = outputFilePath;
                 Documentation = "";
                 SuggestionIndex = -1;
             }
@@ -249,10 +214,10 @@ namespace RobotAutomationHelper
 
         internal string ParamsToString()
         {
-            string paramsString = "";
-            if (Params != null)
-                foreach (Param tempParam in Params)
-                    paramsString += "  " + tempParam.Value;
+            var paramsString = "";
+            if (Params == null) return paramsString;
+            foreach (var tempParam in Params)
+                paramsString += "  " + tempParam.Value;
             return paramsString;
         }
 
@@ -260,65 +225,69 @@ namespace RobotAutomationHelper
         {
             switch (Type)
             {
-                case KeywordType.SELENIUMLIBRARY: return "[SEL] " + Name;
-                case KeywordType.STANDARD: return "[STD] " + Name;
-                case KeywordType.FOR_LOOP_ELEMENTS: return "[FORE] " + Name;
-                case KeywordType.FOR_LOOP_IN_RANGE: return "[FORR] " + Name;
-                case KeywordType.APPIUMLIBRARY: return "[APPIUM] " + Name;
-                case KeywordType.REST: return "[REST] " + Name;
-                case KeywordType.FAKERLIBRARY: return "[FAKE] " + Name;
+                case KeywordType.SeleniumLibrary: return "[SEL] " + Name;
+                case KeywordType.Standard: return "[STD] " + Name;
+                case KeywordType.ForLoopElements: return "[FORE] " + Name;
+                case KeywordType.ForLoopInRange: return "[FORR] " + Name;
+                case KeywordType.AppiumLibrary: return "[APPIUM] " + Name;
+                case KeywordType.Rest: return "[REST] " + Name;
+                case KeywordType.FakerLibrary: return "[FAKE] " + Name;
+                case KeywordType.Custom:
+                    return Name;
+                case KeywordType.Comment:
+                    return Name;
+                case KeywordType.Empty:
+                    return Name;
                 default: return Name;
             }
         }
 
-        public KeywordType GetTypeBasedOnSuggestionStart(string SuggestionStartsWith)
+        public KeywordType GetTypeBasedOnSuggestionStart(string suggestionStartsWith)
         {
-            SuggestionStartsWith = SuggestionStartsWith.Split(' ')[0];
-            switch (SuggestionStartsWith)
+            suggestionStartsWith = suggestionStartsWith.Split(' ')[0];
+            switch (suggestionStartsWith)
             {
-                case "[SEL]": return KeywordType.SELENIUMLIBRARY;
-                case "[STD]": return KeywordType.STANDARD;
-                case "[FORE]": return KeywordType.FOR_LOOP_ELEMENTS;
-                case "[FORR]": return KeywordType.FOR_LOOP_IN_RANGE;
-                case "[APPIUM]": return KeywordType.APPIUMLIBRARY;
-                case "[REST]": return KeywordType.REST;
-                case "[FAKE]": return KeywordType.FAKERLIBRARY;
-                default: return KeywordType.CUSTOM;
+                case "[SEL]": return KeywordType.SeleniumLibrary;
+                case "[STD]": return KeywordType.Standard;
+                case "[FORE]": return KeywordType.ForLoopElements;
+                case "[FORR]": return KeywordType.ForLoopInRange;
+                case "[APPIUM]": return KeywordType.AppiumLibrary;
+                case "[REST]": return KeywordType.Rest;
+                case "[FAKE]": return KeywordType.FakerLibrary;
+                default: return KeywordType.Custom;
             }
         }
 
-        private bool recursive = false;
+        private bool _recursive;
         internal bool IsRecursive(Keyword keyword)
         {
             if (keyword.Parent != null)
                 if (Name.ToLower().Equals(keyword.Parent.Name.Trim().ToLower()))
                 {
-                    recursive = true;
+                    _recursive = true;
                     return true;
                 }
                 else
                 {
                     IsRecursive(keyword.Parent);
                 }
-            if (recursive)
+            if (_recursive)
             {
-                recursive = false;
+                _recursive = false;
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         internal string GetName()
         {
-            return name;
+            return _name;
         }
     }
 
     internal enum KeywordType
     {
-        CUSTOM, SELENIUMLIBRARY, APPIUMLIBRARY, FAKERLIBRARY, REST, STANDARD, FOR_LOOP_IN_RANGE, FOR_LOOP_ELEMENTS, COMMENT, EMPTY
+        Custom, SeleniumLibrary, AppiumLibrary, FakerLibrary, Rest, Standard, ForLoopInRange, ForLoopElements, Comment, Empty
     }
 }

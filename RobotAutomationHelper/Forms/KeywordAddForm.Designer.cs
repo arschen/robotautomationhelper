@@ -1,13 +1,15 @@
-﻿using RobotAutomationHelper.Scripts.CustomControls;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.CustomControls;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Forms
 {
     partial class KeywordAddForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -257,23 +259,23 @@ namespace RobotAutomationHelper
 
         #endregion
 
-        private System.Windows.Forms.Label KeywordDocumentationLabel;
-        private System.Windows.Forms.TextBox KeywordDocumentation;
-        private System.Windows.Forms.Label KeywordNameLabel;
-        private System.Windows.Forms.TextBox KeywordName;
-        private System.Windows.Forms.Label AddKeywordLabel;
-        private System.Windows.Forms.Button Skip;
-        private System.Windows.Forms.Button Save;
-        private System.Windows.Forms.ComboBox ArgumentType;
-        private System.Windows.Forms.ComboBox OutputFile;
-        private System.Windows.Forms.Label KeywordOutputLabel;
-        private System.Windows.Forms.Label KeywordArgumentsLabel;
-        private System.Windows.Forms.TextBox KeywordArguments;
-        private System.Windows.Forms.Button AddArgument;
-        private System.Windows.Forms.TextBox ArgumentName;
-        private System.Windows.Forms.Label ArgumentTypeLabel;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button RemoveArgument;
-        private System.Windows.Forms.Label KeywordStepsLabel;
+        private Label KeywordDocumentationLabel;
+        private TextBox KeywordDocumentation;
+        private Label KeywordNameLabel;
+        private TextBox KeywordName;
+        private Label AddKeywordLabel;
+        private Button Skip;
+        private Button Save;
+        private ComboBox ArgumentType;
+        private ComboBox OutputFile;
+        private Label KeywordOutputLabel;
+        private Label KeywordArgumentsLabel;
+        private TextBox KeywordArguments;
+        private Button AddArgument;
+        private TextBox ArgumentName;
+        private Label ArgumentTypeLabel;
+        private Label label2;
+        private Button RemoveArgument;
+        private Label KeywordStepsLabel;
     }
 }

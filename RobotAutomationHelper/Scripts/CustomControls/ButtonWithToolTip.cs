@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Scripts.CustomControls
 {
     internal partial class ButtonWithToolTip : Button
     {
-        private ToolTip toolTip = new ToolTip();
-        private string toolTipText = "";
-        private bool ContainsTwoEmptySpaces;
-        private bool EmptyName;
-        private bool OutpuFileEndsWithRobot;
+        private readonly ToolTip _toolTip = new ToolTip();
+        private string _toolTipText = "";
+        private bool _containsTwoEmptySpaces;
+        private bool _emptyName;
+        private bool _outputFileEndsWithRobot;
 
         internal ButtonWithToolTip()
         {
@@ -19,75 +20,71 @@ namespace RobotAutomationHelper.Scripts.CustomControls
 
         internal void SetupToolTipText()
         {
-            toolTipText = "";
-            if (ContainsTwoEmptySpaces)
-                toolTipText += "Cannot have names with 2 empty spaces.\n";
-            if (EmptyName)
-                toolTipText += "Cannot have empty names.\n";
-            if (OutpuFileEndsWithRobot)
-                toolTipText += "Output file name should end with '.robot'";
+            _toolTipText = "";
+            if (_containsTwoEmptySpaces)
+                _toolTipText += "Cannot have names with 2 empty spaces.\n";
+            if (_emptyName)
+                _toolTipText += "Cannot have empty names.\n";
+            if (_outputFileEndsWithRobot)
+                _toolTipText += "Output file name should end with '.robot'";
         }
 
-        internal void UpdateState(List<string> Names, string OutputFile)
+        internal void UpdateState(List<string> names, string outputFile)
         {
-            bool name = NameCheck(Names);
-            bool file = OutputFileCheck(OutputFile);
+            var name = NameCheck(names);
+            var file = OutputFileCheck(outputFile);
             if (name && file)
             {
                 Enabled = true;
-                toolTip.Hide(this);
+                _toolTip.Hide(this);
             }
             else
             {
                 Enabled = false;
                 SetupToolTipText();
-                toolTip.Show(toolTipText, this, Width, 0);
+                _toolTip.Show(_toolTipText, this, Width, 0);
             }
         }
 
-        private bool OutputFileCheck(string OutputFileText)
+        private bool OutputFileCheck(string outputFileText)
         {
-            if (!OutputFileText.ToLower().EndsWith(".robot"))
+            if (!outputFileText.ToLower().EndsWith(".robot"))
             {
-                OutpuFileEndsWithRobot = true;
+                _outputFileEndsWithRobot = true;
                 return false;
             }
-            else
-            {
-                OutpuFileEndsWithRobot = false;
-                return true;
-            }
+
+            _outputFileEndsWithRobot = false;
+            return true;
         }
 
-        private bool NameCheck(List<string> Names)
+        private bool NameCheck(List<string> names)
         {
-            foreach (string Name in Names)
+            foreach (var name in names)
             {
-                if (Name.Trim().Length == 0)
+                if (name.Trim().Length == 0)
                 {
-                    EmptyName = true;
-                    ContainsTwoEmptySpaces = false;
+                    _emptyName = true;
+                    _containsTwoEmptySpaces = false;
                     return false;
                 }
-                else
-                {
-                    string[] checkForVariables = Name.Trim().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                    if (checkForVariables != null && checkForVariables.Length != 0)
-                        if (StringAndListOperations.StartsWithVariable(checkForVariables[0]))
-                                return true;
 
-                    for (int i = 0; i < Name.Trim().Length - 1; i++)
-                        if (Name.Trim()[i].Equals(' '))
-                            if (Name.Trim()[i + 1].Equals(' '))
-                            {
-                                EmptyName = false;
-                                ContainsTwoEmptySpaces = true;
-                                return false;
-                            }
-                }
+                var checkForVariables = name.Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if (checkForVariables.Length != 0)
+                    if (StringAndListOperations.StartsWithVariable(checkForVariables[0]))
+                        return true;
+
+                for (var i = 0; i < name.Trim().Length - 1; i++)
+                    if (name.Trim()[i].Equals(' '))
+                        if (name.Trim()[i + 1].Equals(' '))
+                        {
+                            _emptyName = false;
+                            _containsTwoEmptySpaces = true;
+                            return false;
+                        }
             }
-            EmptyName = false;
-            ContainsTwoEmptySpaces = false;
+            _emptyName = false;
+            _containsTwoEmptySpaces = false;
             return true;
         }
     }

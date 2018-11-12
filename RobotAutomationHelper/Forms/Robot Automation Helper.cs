@@ -1,25 +1,27 @@
-﻿using RobotAutomationHelper.Forms;
-using RobotAutomationHelper.Scripts;
-using RobotAutomationHelper.Scripts.Static;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using RobotAutomationHelper.Scripts.Objects;
+using RobotAutomationHelper.Scripts.Static;
+using RobotAutomationHelper.Scripts.Static.Readers;
+using RobotAutomationHelper.Scripts.Static.Writers;
 
-namespace RobotAutomationHelper
+namespace RobotAutomationHelper.Forms
 {
     internal partial class RobotAutomationHelper : BaseKeywordAddForm
     {
         internal static List<TestCase> TestCases = new List<TestCase>();
         internal static List<SuiteSettings> SuiteSettingsList = new List<SuiteSettings>();
-        private static int numberOfTestCases;
-        private object realSender;
+        private static int _numberOfTestCases;
+        private object _realSender;
 
         internal static bool Log = false;
         // index of the test case to be implemented
-        private int IndexOfTheTestCaseToBeImplemented = 0;
+        private int _indexOfTheTestCaseToBeImplemented;
 
         internal RobotAutomationHelper(BaseKeywordAddForm parent) : base(parent)
         {
@@ -55,7 +57,7 @@ namespace RobotAutomationHelper
         }
 
         // browse folders for output directory after file has been opened
-        private void OpenFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OpenFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -65,106 +67,67 @@ namespace RobotAutomationHelper
 
         private void BrowseFolderButtonNewProject()
         {
-            Cache.ClearCache();
-            SuggestionsClass.PopulateSuggestionsList();
-            ClearDynamicElements();
+            FormSetup();
             TestCases = new List<TestCase>();
-            settingsToolStripMenuItem.Visible = true;
-            librariesToolStripMenuItem.Visible = true;
-            SetStructureFolder(folderBrowserDialog3.SelectedPath);
-            List<TestCase> ProjectTestCases = ReadRobotFiles.ReadAllTests();
-            List<Keyword> SuiteSettingsKeywordList = ReadRobotFiles.ReadAllSettings();
-
-            if (ProjectTestCases.Count != 0)
-            {
-                DialogResult result = MessageBox.Show("Use existing Test Cases in project folder?",
-                    "Alert",
-                    MessageBoxButtons.YesNo);
-                if (result.Equals(DialogResult.Yes))
-                {
-                    TestCases = ProjectTestCases;
-                    foreach (TestCase tempProj in ProjectTestCases)
-                    {
-                        if (SuiteSettingsKeywordList != null && SuiteSettingsKeywordList.Count != 0)
-                        {
-                            foreach (Keyword tempKeyword in SuiteSettingsKeywordList)
-                            {
-                                KeywordToSuggestions(tempKeyword);
-                            }
-                        }
-                    }
-                }
-            }
-
-            SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsKeywordList);
-            AddTestCasesToMainForm();
-            ShowTestCasePanels();
+            CheckForExistingCodeAndShowAlert();
+            AddTestCaseToFormAndShow();
         }
 
         private void BrowseFolderButtonOpenExcel()
         {
-            Cache.ClearCache();
-            SuggestionsClass.PopulateSuggestionsList();
-            ClearDynamicElements();
-            settingsToolStripMenuItem.Visible = true;
-            librariesToolStripMenuItem.Visible = true;
-            SetStructureFolder(folderBrowserDialog1.SelectedPath);
+            FormSetup();
             TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
             TestCases.Sort();
-            List<TestCase> ProjectTestCases = ReadRobotFiles.ReadAllTests();
-            List<Keyword> SuiteSettingsKeywordList = ReadRobotFiles.ReadAllSettings();
+            CheckForExistingCodeAndShowAlert();
+            AddTestCaseToFormAndShow();
+        }
 
-            bool showAlert = false;
-            if (ProjectTestCases.Count != 0)
-                foreach (TestCase tempProj in ProjectTestCases)
-                {
-                    if (tempProj.Steps != null)
-                        foreach (Keyword tempKeyword in tempProj.Steps)
-                        {
-                            KeywordToSuggestions(tempKeyword);
-                        }
-                }
-            foreach (TestCase tempProj in ProjectTestCases)
+        private void BrowseFolderButtonExistingProject()
+        {
+            FormSetup();
+
+            TestCases = ReadRobotFiles.ReadAllTests();
+            if (TestCases.Count != 0)
             {
-                foreach (TestCase tempExc in TestCases)
+                var suiteSettingsKeywords = ReadRobotFiles.ReadAllSettings();
+
+                if (suiteSettingsKeywords.Count != 0)
                 {
-                    if (tempProj.Name.Equals(tempExc.Name))
+                    foreach (var tempKeyword in suiteSettingsKeywords)
                     {
-                        showAlert = true;
-                        break;
+                        KeywordToSuggestions(tempKeyword);
                     }
                 }
-                if (showAlert)
-                    break;
-            }
-            if (showAlert)
-            {
-                DialogResult result = MessageBox.Show("Use existing Test Cases in project folder?",
-                    "Alert",
-                    MessageBoxButtons.YesNo);
-                if (result.Equals(DialogResult.Yes))
-                {
-                    foreach (TestCase tempProj in ProjectTestCases)
-                    {
-                        if (SuiteSettingsKeywordList != null && SuiteSettingsKeywordList.Count != 0)
-                        {
-                            foreach (Keyword tempKeyword in SuiteSettingsKeywordList)
-                            {
-                                KeywordToSuggestions(tempKeyword);
-                            }
-                        }
 
-                        TestCases = ProjectTestCases;
+                foreach (var testCase in TestCases)
+                {
+                    if (testCase.Steps == null) continue;
+                    foreach (var tempKeyword in testCase.Steps)
+                    {
+                        KeywordToSuggestions(tempKeyword);
                     }
                 }
-            }
 
-            SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsKeywordList);
+                TestCases.Sort();
+
+                SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, suiteSettingsKeywords);
+                AddTestCaseToFormAndShow();
+            }
+            else
+            {
+                MessageBox.Show(@"No test cases in the selected folder!",
+                    @"Alert",
+                    MessageBoxButtons.OK);
+            }
+        }
+
+        internal void AddTestCaseToFormAndShow()
+        {
             AddTestCasesToMainForm();
             ShowTestCasePanels();
         }
 
-        private void BrowseFolderButtonExistingProject()
+        internal void FormSetup()
         {
             Cache.ClearCache();
             SuggestionsClass.PopulateSuggestionsList();
@@ -172,58 +135,48 @@ namespace RobotAutomationHelper
             settingsToolStripMenuItem.Visible = true;
             librariesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog2.SelectedPath);
-            TestCases = ReadRobotFiles.ReadAllTests();
-
-            if (TestCases.Count != 0)
-            {
-                List<Keyword> SuiteSettingsKeywords = ReadRobotFiles.ReadAllSettings();
-                if (SuiteSettingsKeywords != null && SuiteSettingsKeywords.Count != 0)
-                {
-                    foreach (Keyword tempKeyword in SuiteSettingsKeywords)
-                    {
-                        KeywordToSuggestions(tempKeyword);
-                    }
-                }
-
-                foreach (TestCase testCase in TestCases)
-                {
-                    if (testCase.Steps != null)
-                        foreach (Keyword tempKeyword in testCase.Steps)
-                        {
-                            KeywordToSuggestions(tempKeyword);
-                        }
-                }
-                TestCases.Sort();
-
-                SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsKeywords);
-                AddTestCasesToMainForm();
-                ShowTestCasePanels();
-            }
-            else
-            {
-                DialogResult result = MessageBox.Show("No test cases in the selected folder!",
-                    "Alert",
-                    MessageBoxButtons.OK);
-            }
         }
 
-        private void KeywordToSuggestions(Keyword tempKeyword)
+        internal void CheckForExistingCodeAndShowAlert()
+        {
+            var projectTestCases = ReadRobotFiles.ReadAllTests();
+            var suiteSettingsKeywordList = ReadRobotFiles.ReadAllSettings();
+
+            if (projectTestCases.Count == 0) return;
+            var result = MessageBox.Show(@"Use existing Test Cases in project folder?",
+                @"Alert",
+                MessageBoxButtons.YesNo);
+            if (!result.Equals(DialogResult.Yes)) return;
+            TestCases = projectTestCases;
+
+            foreach (var testCase in projectTestCases)
+            {
+                if (testCase.Steps == null) continue;
+                foreach (var keyword in testCase.Steps)
+                    KeywordToSuggestions(keyword);
+            }
+
+            if (suiteSettingsKeywordList.Count != 0) return;
+            foreach (var tempKeyword in suiteSettingsKeywordList)
+                KeywordToSuggestions(tempKeyword);
+
+            SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, suiteSettingsKeywordList);
+        }
+
+        private static void KeywordToSuggestions(Keyword tempKeyword)
         {
             if (tempKeyword.SuggestionIndex == -1 && !tempKeyword.OutputFilePath.Equals("") && !StringAndListOperations.StartsWithVariable(tempKeyword.Name))
             {
-                bool toAdd = true;
-                foreach (Lib lib in SuggestionsClass.Suggestions)
+                var toAdd = true;
+                foreach (var lib in SuggestionsClass.Suggestions)
                     if (lib.ToInclude)
-                        foreach (Keyword suggested in lib.LibKeywords)
+                        foreach (var suggested in lib.LibKeywords)
                         {
-                            if (!suggested.OutputFilePath.Equals(""))
-                            {
-                                if (suggested.Name.Equals(tempKeyword.Name) && suggested.OutputFilePath.Equals(tempKeyword.OutputFilePath))
-                                {
-                                    toAdd = false;
-                                    break;
-                                }
-                            }
+                            if (suggested.OutputFilePath.Equals("")) continue;
+                            if (!suggested.Name.Equals(tempKeyword.Name) ||
+                                !suggested.OutputFilePath.Equals(tempKeyword.OutputFilePath)) continue;
+                            toAdd = false;
+                            break;
                         }
                         if (toAdd)
                         {
@@ -232,21 +185,24 @@ namespace RobotAutomationHelper
                         }
             }
             if (tempKeyword.Keywords != null)
-                foreach (Keyword nestedKeyword in tempKeyword.Keywords)
+                foreach (var nestedKeyword in tempKeyword.Keywords)
                 {
                     KeywordToSuggestions(nestedKeyword);
                 }
-            if (tempKeyword.ForLoopKeywords != null)
-                foreach (Keyword nestedKeyword in tempKeyword.ForLoopKeywords)
+
+            if (tempKeyword.ForLoopKeywords == null) return;
+            {
+                foreach (var nestedKeyword in tempKeyword.ForLoopKeywords)
                 {
                     KeywordToSuggestions(nestedKeyword);
                 }
+            }
         }
 
         //Clear dynamic elements when new file is opened
         private void ClearDynamicElements()
         {
-            bool cleared = false;
+            var cleared = false;
             while (!cleared)
             {
                 foreach (Control tempControl in Controls)
@@ -256,21 +212,19 @@ namespace RobotAutomationHelper
                 cleared = true;
                 foreach (Control tempControl in Controls)
                 {
-                    if (tempControl.Name.ToLower().StartsWith("dynamictest"))
-                    {
-                        cleared = false;
-                        break;
-                    }
+                    if (!tempControl.Name.ToLower().StartsWith("dynamictest")) continue;
+                    cleared = false;
+                    break;
                 }
             }
         }
 
         private void AddTestCasesToMainForm()
         {
-            numberOfTestCases = TestCases.Count;
-            int testCasesCounter = 1;
+            _numberOfTestCases = TestCases.Count;
+            var testCasesCounter = 1;
             if (TestCases != null && TestCases.Count != 0)
-                foreach (TestCase testCase in TestCases)
+                foreach (var testCase in TestCases)
                 {
                     AddTestCaseField(testCase, testCasesCounter);
                     testCasesCounter++;
@@ -279,8 +233,7 @@ namespace RobotAutomationHelper
             {
                 TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
                 AddTestCaseField(TestCases[0], testCasesCounter);
-                testCasesCounter++;
-                numberOfTestCases = 1;
+                _numberOfTestCases = 1;
                 FilesAndFolderStructure.AddFileToSavedFiles(TestCases[0].OutputFilePath);
             }
         }
@@ -312,16 +265,14 @@ namespace RobotAutomationHelper
                 null,
                 this);
 
-            string ImplementationText = "Add Implementation";
-            if (TestCases[testCasesCounter - 1].Implemented)
-                ImplementationText = "Edit Implementation";
+            var implementationText = TestCases[testCasesCounter - 1].Implemented? "Edit Implementation" : "Add Implementation";
             FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddImplementation",
                 testCasesCounter,
                 new Point(345 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(120, 20),
-                ImplementationText,
+                implementationText,
                 Color.Black,
-                new EventHandler(InstantiateAddTestCaseForm),
+                InstantiateAddTestCaseForm,
                 this);
 
             FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddTestCase",
@@ -330,7 +281,7 @@ namespace RobotAutomationHelper
                 new Size(20, 20),
                 "+",
                 Color.Black,
-                new EventHandler(InstantiateNameAndOutputForm),
+                InstantiateNameAndOutputForm,
                 this);
             FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "RemoveTestCase",
                 testCasesCounter,
@@ -338,11 +289,11 @@ namespace RobotAutomationHelper
                 new Size(20, 20),
                 "-",
                 Color.Black,
-                new EventHandler(RemoveTestCaseFromProject),
+                RemoveTestCaseFromProject,
                 this);
         }
 
-        private void SetStructureFolder(string outputFolder)
+        private static void SetStructureFolder(string outputFolder)
         {
             if (!outputFolder.EndsWith("\\"))
                 outputFolder = outputFolder + "\\";
@@ -356,28 +307,25 @@ namespace RobotAutomationHelper
 
         protected void InstantiateAddTestCaseForm(object sender, EventArgs e)
         {
-            int testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
-            IndexOfTheTestCaseToBeImplemented = testIndex;
-            TestCase testCase = TestCases[testIndex - 1];
+            var testIndex = int.Parse(((Button)sender).Name.Replace("AddImplementation", "").Replace("DynamicTest", ""));
+            _indexOfTheTestCaseToBeImplemented = testIndex;
+            var testCase = TestCases[testIndex - 1];
             testCase.Name = Controls["DynamicTest" + testIndex + "Name"].Text;
-            TestCaseAddForm testCaseAddForm = new TestCaseAddForm(this);
-            testCaseAddForm.FormClosing += new FormClosingEventHandler(UpdateThisFormTestCaseAddFormClosing);
+            var testCaseAddForm = new TestCaseAddForm(this);
+            testCaseAddForm.FormClosing += UpdateThisFormTestCaseAddFormClosing;
             testCaseAddForm.ShowTestCaseContent(testCase, testIndex - 1);
         }
 
         private void UpdateThisFormTestCaseAddFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!((TestCaseAddForm) sender).skip)
+            if (!((TestCaseAddForm) sender).SkipForm)
             {
-                Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[IndexOfTheTestCaseToBeImplemented - 1].Name;
-                if (TestCases[IndexOfTheTestCaseToBeImplemented - 1].Implemented)
-                    Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Edit implementation";
-                else
-                    Controls["DynamicTest" + IndexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = "Add implementation";
+                Controls["DynamicTest" + _indexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[_indexOfTheTestCaseToBeImplemented - 1].Name;
+                Controls["DynamicTest" + _indexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = TestCases[_indexOfTheTestCaseToBeImplemented - 1].Implemented ? "Edit implementation" : "Add implementation";
             }
 
-            //Adds file path + name to the Files And Folder structure for use in the drop down lists when chosing output file
-            FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, IndexOfTheTestCaseToBeImplemented);
+            //Adds file path + name to the Files And Folder structure for use in the drop down lists when choosing output file
+            FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, _indexOfTheTestCaseToBeImplemented);
         }
 
         internal void ShowTestCasePanels()
@@ -390,42 +338,19 @@ namespace RobotAutomationHelper
         private void SaveToRobotToolStripMenuItem_Click(object sender, EventArgs e)
         {
             WriteToRobot.Includes = new List<Includes>();
-            List<int> testCasesToAdd = new List<int>();
-            foreach (Control tempControl in Controls)
-                if (tempControl.Name.EndsWith("CheckBox") && ((CheckBox)tempControl).Checked)
-                    testCasesToAdd.Add(int.Parse(tempControl.Name.Replace("CheckBox", "").Replace("DynamicTest", "")));
+            //Cleanup
+            FilesAndFolderStructure.DeleteAllFiles();
 
-            testCasesToAdd.Sort();
-            foreach (int index in testCasesToAdd)
-            {
-                TestCase testCase = TestCases[index - 1];
-                if (testCase.Overwrite)
-                {
-                    WriteToRobot.TestCaseKeywordRemove(testCase.Name, testCase.OutputFilePath, false);
-                }
+            TestCases.Sort();
+            foreach (var testCase in TestCases)
+                WriteToRobot.AddTestCaseToRobot(testCase);
 
-                if (testCase.Steps != null)
-                    foreach (Keyword testStep in testCase.Steps)
-                    {
-                        if (testStep.Type.Equals(KeywordType.CUSTOM))
-                        {
-                            WriteToRobot.RemoveKeywordChidrenOfKeywordForOverwriting(testStep);
-                            WriteToRobot.TestCaseKeywordRemove(testStep.GetName(), testStep.OutputFilePath, true);
-                        }
-                    }
-            }
-
-            foreach (int index in testCasesToAdd)
-            {
-                WriteToRobot.AddTestCaseToRobot(TestCases[index - 1]);
-            }
-
-            Console.WriteLine("WriteSuiteSettingsListToRobot ===============================");
+            Console.WriteLine(@"WriteSuiteSettingsListToRobot ===============================");
             WriteToRobot.WriteSuiteSettingsListToRobot();
-            Console.WriteLine("WriteIncludesToRobotFiles ===================================");
+            Console.WriteLine(@"WriteIncludesToRobotFiles ===================================");
             WriteToRobot.WriteIncludesToRobotFiles();
 
-            foreach (string fileName in FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root))
+            foreach (var fileName in FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root))
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName, FolderType.Root));
         }
 
@@ -435,9 +360,9 @@ namespace RobotAutomationHelper
                 InstantiateSettingsAddForm(sender, e);
             else
             {
-                DialogResult result = MessageBox.Show("You haven't saved any keywords or test cases to files yet.",
-                "Alert",
-                MessageBoxButtons.OK);
+                MessageBox.Show(@"You haven't saved any keywords or test cases to files yet.",
+                    @"Alert",
+                    MessageBoxButtons.OK);
             }
         }
 
@@ -447,21 +372,26 @@ namespace RobotAutomationHelper
                 InstantiateLibrariesAddForm(sender, e);
             else
             {
-                DialogResult result = MessageBox.Show("No libraries loaded.",
-                "Alert",
-                MessageBoxButtons.OK);
+                MessageBox.Show(@"No libraries loaded.",
+                    @"Alert",
+                    MessageBoxButtons.OK);
             }
         }
 
-        private void RunCom(string command)
+        private static void RunCom(string command)
         {
-            Process cmd = new Process();
-            cmd.StartInfo.FileName = "cmd.exe";
-            cmd.StartInfo.Arguments = "/c" + command;
-            cmd.StartInfo.RedirectStandardInput = false;
-            cmd.StartInfo.RedirectStandardOutput = false;
-            cmd.StartInfo.CreateNoWindow = false;
-            cmd.StartInfo.UseShellExecute = false;
+            var cmd = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "cmd.exe",
+                    Arguments = "/c" + command,
+                    RedirectStandardInput = false,
+                    RedirectStandardOutput = false,
+                    CreateNoWindow = false,
+                    UseShellExecute = false
+                }
+            };
             cmd.Start();
         }
 
@@ -473,41 +403,37 @@ namespace RobotAutomationHelper
 
         internal new void InstantiateNameAndOutputForm(object sender, EventArgs e)
         {
-            realSender = sender;
-            if (RobotAutomationHelper.Log) Console.WriteLine("InstantiateParamsAddForm " + ((Button)sender).Name);
-            FormType formType;
-            if (Name.Contains("RobotAutomationHelper"))
-                formType = FormType.Test;
-            else
-                formType = FormType.Keyword;
+            _realSender = sender;
+            if (Log) Console.WriteLine(@"InstantiateParamsAddForm " + ((Button)sender).Name);
+            var formType = Name.Contains("RobotAutomationHelper") ? FormType.Test : FormType.Keyword;
 
-            NameAndOutputForm nameAndOutputForm = new NameAndOutputForm(formType, this, null);
-            nameAndOutputForm.FormClosing += new FormClosingEventHandler(UpdateAfterClosingNameAndOutputForm);
+            var nameAndOutputForm = new NameAndOutputForm(formType, this, null);
+            nameAndOutputForm.FormClosing += UpdateAfterClosingNameAndOutputForm;
             nameAndOutputForm.ShowTestCaseContent();
         }
 
         private void UpdateAfterClosingNameAndOutputForm(object sender, EventArgs e)
         {
             if (NameAndOutputToTestCaseFormCommunication.Save)
-                AddTestCaseToProject(realSender, e);
+                AddTestCaseToProject(_realSender, e);
         }
 
         internal void AddTestCaseToProject(object sender, EventArgs e)
         {
-            int testCaseIndex = int.Parse(((Button)sender).Name.Replace("DynamicTest", "").Replace("AddTestCase", ""));
+            var testCaseIndex = int.Parse(((Button)sender).Name.Replace("DynamicTest", "").Replace("AddTestCase", ""));
 
             AssignThisTestCasesNamesFromTextFields();
 
             TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
 
-            for (int i = numberOfTestCases; i > testCaseIndex; i--)
+            for (var i = _numberOfTestCases; i > testCaseIndex; i--)
                 TestCases[i] = TestCases[i - 1];
 
             TestCases[testCaseIndex] = new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile);
-            numberOfTestCases++;
-            AddTestCaseField(TestCases[numberOfTestCases - 1], numberOfTestCases);
+            _numberOfTestCases++;
+            AddTestCaseField(TestCases[_numberOfTestCases - 1], _numberOfTestCases);
 
-            for (int i = 1; i < numberOfTestCases; i++)
+            for (var i = 1; i < _numberOfTestCases; i++)
                 Controls["DynamicTest" + i + "Name"].Text = TestCases[i - 1].Name.Trim();
         }
 
@@ -515,21 +441,18 @@ namespace RobotAutomationHelper
         {
             AssignThisTestCasesNamesFromTextFields();
 
-            if (numberOfTestCases > 1)
-            {
-                int testCaseIndex = int.Parse(((Button)sender).Name.Replace("DynamicTest", "").Replace("RemoveTestCase", ""));
-                RemoveTestCaseField(numberOfTestCases, false);
-                TestCases.RemoveAt(testCaseIndex - 1);
-                numberOfTestCases--;
-                List<string> args = new List<string>();
-                for (int i = 1; i <= numberOfTestCases; i++)
-                    Controls["DynamicTest" + i + "Name"].Text = TestCases[i - 1].Name.Trim();
-            }
+            if (_numberOfTestCases <= 1) return;
+            var testCaseIndex = int.Parse(((Button)sender).Name.Replace("DynamicTest", "").Replace("RemoveTestCase", ""));
+            RemoveTestCaseField(_numberOfTestCases, false);
+            TestCases.RemoveAt(testCaseIndex - 1);
+            _numberOfTestCases--;
+            for (var i = 1; i <= _numberOfTestCases; i++)
+                Controls["DynamicTest" + i + "Name"].Text = TestCases[i - 1].Name.Trim();
         }
 
         private void AssignThisTestCasesNamesFromTextFields()
         {
-            for (int i = 1; i <= numberOfTestCases; i++)
+            for (var i = 1; i <= _numberOfTestCases; i++)
                 if (Controls.Find("DynamicTest" + i + "Name", false).Length != 0)
                     TestCases[i - 1].Name = Controls["DynamicTest" + i + "Name"].Text;
         }

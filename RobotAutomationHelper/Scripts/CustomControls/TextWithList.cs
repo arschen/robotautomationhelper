@@ -1,69 +1,69 @@
-﻿using RobotAutomationHelper.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using RobotAutomationHelper.Forms;
+using RobotAutomationHelper.Scripts.Objects;
+using RobotAutomationHelper.Scripts.Static;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.CustomControls
 {
     internal class TextWithList : TextBox
     {
 
         // Fields and Properties ===================================================
-        private SuggestionsList SuggestionsList;
-        private BaseKeywordAddForm ParentForm;
-        private readonly int IndexOf;
-        private bool JustGotFocused = false;
-        private bool ChangedImmediatelyAfterSelection = false;
+        private readonly SuggestionsList _suggestionsList;
+        private readonly BaseKeywordAddForm _parentForm;
+        private readonly int _indexOf;
+        private bool _justGotFocused;
+        private bool _changedImmediatelyAfterSelection;
         internal int MaxItemsInSuggestionsList { get; set; }
-        private bool updateNeeded = false;
-        internal string updateValue = "";
+        private bool _updateNeeded;
+        internal string UpdateValue = "";
 
         // Methods =================================================================
-        internal TextWithList(BaseKeywordAddForm Parent, int IndexOf)
+        internal TextWithList(BaseKeywordAddForm parent, int indexOf)
         {
-            ParentForm = Parent;
-            SuggestionsList = new SuggestionsList(this);
-            this.IndexOf = IndexOf;
+            _parentForm = parent;
+            _suggestionsList = new SuggestionsList(this);
+            _indexOf = indexOf;
         }
 
         protected override void OnTextChanged(EventArgs e)
         {
             UpdateListNamesAndUpdateStateOfSave();
-            updateNeeded = true;
-            if (Focused || SuggestionsList.SelectionPerformed)
-            {
-                base.OnTextChanged(e);
-                string txt = Text;
+            _updateNeeded = true;
+            if (!Focused && !_suggestionsList.SelectionPerformed) return;
+            base.OnTextChanged(e);
+            var txt = Text;
 
-                // if an item is selected from the list, then TriggerUpdate
-                if (SuggestionsList.SelectionPerformed)
+            // if an item is selected from the list, then TriggerUpdate
+            if (_suggestionsList.SelectionPerformed)
+            {
+                var realName = ((SuggestionsListObjects)_suggestionsList.Items[_suggestionsList.SelectedIndex]).ValueMember;
+                _suggestionsList.SelectionPerformed = false;
+                _changedImmediatelyAfterSelection = true;
+                _updateNeeded = false;
+                //Console.WriteLine("OnTextChanged.SelectionPerformed Trigger Update: " + ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text);
+                UpdateValue = ((SuggestionsListObjects)_suggestionsList.Items[_suggestionsList.SelectedIndex]).Text;
+                TriggerUpdate(realName, ((SuggestionsListObjects)_suggestionsList.Items[_suggestionsList.SelectedIndex]).Text);
+                HideSuggestionsList();
+                EnableKeywordFields();
+            }
+            else
+            {
+                if (!_justGotFocused)
+                    DisableKeywordFields();
+                else
+                    _justGotFocused = false;
+
+                if (_changedImmediatelyAfterSelection)
                 {
-                    string realName = ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).ValueMember;
-                    SuggestionsList.SelectionPerformed = false;
-                    ChangedImmediatelyAfterSelection = true;
-                    updateNeeded = false;
-                    //Console.WriteLine("OnTextChanged.SelectionPerformed Trigger Update: " + ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text);
-                    updateValue = ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text;
-                    TriggerUpdate(realName, ((SuggestionsListObjects)SuggestionsList.Items[SuggestionsList.SelectedIndex]).Text);
-                    HideSuggestionsList();
-                    EnableKeywordFields();
+                    _changedImmediatelyAfterSelection = false;
                 }
                 else
                 {
-                    if (!JustGotFocused)
-                        DisableKeywordFields();
-                    else
-                        JustGotFocused = false;
-
-                    if (ChangedImmediatelyAfterSelection)
-                    {
-                        ChangedImmediatelyAfterSelection = false;
-                    }
-                    else
-                    {
-                        ShowSuggestions(txt);
-                    }
+                    ShowSuggestions(txt);
                 }
             }
         }
@@ -72,34 +72,29 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (e.KeyCode == Keys.Enter && e.KeyCode == Keys.Return)
+            if (e.KeyCode != Keys.Enter || e.KeyCode != Keys.Return)
             {
-                HideSuggestionsList();
-                //Console.WriteLine("OnKeyDown Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
-                if (updateNeeded)
-                    TriggerUpdate("", "");
-                else
-                    TriggerUpdate("", updateValue);
-                EnableKeywordFields();
-                SelectionStart = Text.Length;
-            }
-            else
-            {
-                if (e.KeyCode == Keys.Down)
+                if (e.KeyCode != Keys.Down)
                 {
+                    if (e.KeyCode != Keys.Up) return;
                     ShowSuggestions(Text);
-                    SuggestionsList.SelectedIndex = 0;
+                    _suggestionsList.SelectedIndex = _suggestionsList.Items.Count - 1;
                     Parent.Controls["SuggestionsList"].Focus();
                 }
                 else
                 {
-                    if (e.KeyCode == Keys.Up)
-                    {
-                        ShowSuggestions(Text);
-                        SuggestionsList.SelectedIndex = SuggestionsList.Items.Count - 1;
-                        Parent.Controls["SuggestionsList"].Focus();
-                    }
+                    ShowSuggestions(Text);
+                    _suggestionsList.SelectedIndex = 0;
+                    Parent.Controls["SuggestionsList"].Focus();
                 }
+            }
+            else
+            {
+                HideSuggestionsList();
+                //Console.WriteLine("OnKeyDown Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
+                TriggerUpdate("", _updateNeeded ? "" : UpdateValue);
+                EnableKeywordFields();
+                SelectionStart = Text.Length;
             }
         }
         protected override void OnLeave(EventArgs e)
@@ -107,25 +102,17 @@ namespace RobotAutomationHelper.Scripts
             base.OnLeave(e);
             if (Parent.Controls.Find("SuggestionsList", false).Length > 0)
             {
-                if (!Parent.Controls["SuggestionsList"].Focused)
-                {
-                    HideSuggestionsList();
-                    //Console.WriteLine("OnLeave Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
-                    if (updateNeeded)
-                        TriggerUpdate("", "");
-                    else
-                        TriggerUpdate("", updateValue);
-                    EnableKeywordFields();
-                }
+                if (Parent.Controls["SuggestionsList"].Focused) return;
+                HideSuggestionsList();
+                //Console.WriteLine("OnLeave Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
+                TriggerUpdate("", _updateNeeded ? "" : UpdateValue);
+                EnableKeywordFields();
             }
             else
             {
                 HideSuggestionsList();
                 //Console.WriteLine("OnLeave Trigger Update " + updateNeeded.ToString() + " / " + updateValue);
-                if (updateNeeded)
-                    TriggerUpdate("", "");
-                else
-                    TriggerUpdate("", updateValue);
+                TriggerUpdate("", _updateNeeded ? "" : UpdateValue);
                 EnableKeywordFields();
             }
         }
@@ -133,104 +120,90 @@ namespace RobotAutomationHelper.Scripts
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
-            JustGotFocused = true;
+            _justGotFocused = true;
             OnTextChanged(e);
-            updateNeeded = false;
+            _updateNeeded = false;
         }
 
         internal void TriggerUpdate(string textChangedPassed, string keywordType)
         {
-            if (ParentForm.FormType == FormType.Keyword)
-                (ParentForm as KeywordAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
-            else
+            switch (_parentForm.FormType)
             {
-                if (ParentForm.FormType == FormType.Settings)
-                {
-                    (ParentForm as SettingsAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
-                }
-                else
-                {
-                    if (ParentForm.FormType == FormType.Params)
-                    {
-                        (ParentForm as ParamAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
-                    }
-                    else
-                    {
-                        if (ParentForm.FormType == FormType.Test)
-                        {
-                            (ParentForm as TestCaseAddForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
-                        }
-                        else
-                        {
-                            if (ParentForm.FormType == FormType.NameAndOutput)
-                            {
-                                (ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
-                            }
-                        }
-                    }
-                }
+                case FormType.Keyword:
+                    ((KeywordAddForm) _parentForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
+                    break;
+                case FormType.Settings:
+                    ((SettingsAddForm) _parentForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
+                    break;
+                case FormType.Params:
+                    ((ParamAddForm) _parentForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
+                    break;
+                case FormType.Test:
+                    ((TestCaseAddForm) _parentForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
+                    break;
+                case FormType.NameAndOutput:
+                    ((NameAndOutputForm) _parentForm).UpdateTheKeywordOnNameChange(this, textChangedPassed, keywordType);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         private void UpdateListNamesAndUpdateStateOfSave()
         {
-            if (ParentForm.FormType == FormType.Keyword)
-                (ParentForm as KeywordAddForm).UpdateNamesListAndUpdateStateOfSave();
-            else
+            switch (_parentForm.FormType)
             {
-                if (ParentForm.FormType == FormType.Settings)
-                {
-                    (ParentForm as SettingsAddForm).UpdateNamesListAndUpdateStateOfSave();
-                }
-                else
-                {
-                    if (ParentForm.FormType == FormType.Params)
-                    {
-                        (ParentForm as ParamAddForm).UpdateListNamesAndUpdateStateOfSave();
-                    }
-                    else
-                    {
-                        if (ParentForm.FormType == FormType.Test)
-                        {
-                            (ParentForm as TestCaseAddForm).UpdateListNamesAndUpdateStateOfSave();
-                        }
-                        else
-                        {
-                            if (ParentForm.FormType == FormType.NameAndOutput)
-                            {
-                                //(ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
-                            }
-                        }
-                    }
-                }
+                case FormType.Keyword:
+                    ((KeywordAddForm) _parentForm).UpdateNamesListAndUpdateStateOfSave();
+                    break;
+                case FormType.Settings:
+                    ((SettingsAddForm) _parentForm).UpdateNamesListAndUpdateStateOfSave();
+                    break;
+                case FormType.Params:
+                    ((ParamAddForm) _parentForm).UpdateListNamesAndUpdateStateOfSave();
+                    break;
+                case FormType.Test:
+                    ((TestCaseAddForm) _parentForm).UpdateListNamesAndUpdateStateOfSave();
+                    break;
+                case FormType.NameAndOutput:
+                    //(ParentForm as NameAndOutputForm).UpdateTheKeywordOnNameChange(this, textChangedPassed);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         private List<SuggestionsListObjects> ReturnSuggestionsMatches(string txt)
         {
-            List<SuggestionsListObjects> foundItems = new List<SuggestionsListObjects>();
-            foreach (Lib lib in SuggestionsClass.Suggestions)
+            var foundItems = new List<SuggestionsListObjects>();
+            foreach (var lib in SuggestionsClass.Suggestions)
                 if (lib.ToInclude)
-                    foreach (Keyword keyword in lib.LibKeywords)
+                    foreach (var keyword in lib.LibKeywords)
                     //if (!keyword.Name.ToLower().Trim().Equals(txt.ToLower().Trim()))
                     {
-                        bool containsAll = true;
-                        foreach (string temp in txt.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                        var containsAll = true;
+                        foreach (var temp in txt.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            if (RobotAutomationHelper.Log) Console.WriteLine(keyword.ToString());
+                            if (Forms.RobotAutomationHelper.Log) Console.WriteLine(keyword.ToString());
                             if (!keyword.Name.ToLower().Contains(temp))
                             {
                                 containsAll = false;
                                 break;
                             }
                         }
-                        if (containsAll)
-                        {
-                            if (keyword.Type != KeywordType.CUSTOM)
-                                foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString(), ValueMember = keyword.Name, Documentation = keyword.Documentation });
-                            else
-                                foundItems.Add(new SuggestionsListObjects { Text = keyword.ToString().Trim(), ValueMember = keyword.Name.Trim(), Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation.Trim() });
-                        }
+
+                        if (!containsAll) continue;
+                        foundItems.Add(keyword.Type != KeywordType.Custom
+                            ? new SuggestionsListObjects
+                            {
+                                Text = keyword.ToString(), ValueMember = keyword.Name,
+                                Documentation = keyword.Documentation
+                            }
+                            : new SuggestionsListObjects
+                            {
+                                Text = keyword.ToString().Trim(), ValueMember = keyword.Name.Trim(),
+                                Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation.Trim()
+                            });
                     }
                     return foundItems;
         }
@@ -238,20 +211,21 @@ namespace RobotAutomationHelper.Scripts
         private void ShowSuggestions(string textInTheField)
         {
             // find all the items in suggestion that match the current text
-            List<SuggestionsListObjects> foundItems = ReturnSuggestionsMatches(textInTheField);
+            var foundItems = ReturnSuggestionsMatches(textInTheField);
 
             if (foundItems.Count > 0)
             {
                 //show suggestions list
-                SuggestionsList.Items.Clear();
-                SuggestionsList.Items.AddRange(foundItems.ToArray());
-                SuggestionsList.Visible = true;
-                SuggestionsList.Location = new Point(Location.X, Location.Y + Height);
-                SuggestionsList.Size = new Size(Size.Width, foundItems.Count >= MaxItemsInSuggestionsList ? (MaxItemsInSuggestionsList + 1) * SuggestionsList.ItemHeight : (foundItems.Count + 1) * SuggestionsList.ItemHeight);
-                SuggestionsList.IntegralHeight = true;
-                FormControls.RemoveControlByKey(SuggestionsList.Name, ParentForm.Controls);
-                ParentForm.Controls.Add(SuggestionsList);
-                SuggestionsList.BringToFront();
+                _suggestionsList.Items.Clear();
+                // ReSharper disable once CoVariantArrayConversion
+                _suggestionsList.Items.AddRange(foundItems.ToArray());
+                _suggestionsList.Visible = true;
+                _suggestionsList.Location = new Point(Location.X, Location.Y + Height);
+                _suggestionsList.Size = new Size(Size.Width, foundItems.Count >= MaxItemsInSuggestionsList ? (MaxItemsInSuggestionsList + 1) * _suggestionsList.ItemHeight : (foundItems.Count + 1) * _suggestionsList.ItemHeight);
+                _suggestionsList.IntegralHeight = true;
+                FormControls.RemoveControlByKey(_suggestionsList.Name, _parentForm.Controls);
+                _parentForm.Controls.Add(_suggestionsList);
+                _suggestionsList.BringToFront();
             }
             else
             {
@@ -261,53 +235,53 @@ namespace RobotAutomationHelper.Scripts
         }
         internal void HideSuggestionsList()
         {
-            SuggestionsList.Visible = false;
-            SuggestionsList.HideToolTip();
-            ParentForm.Controls.Remove(SuggestionsList);
+            _suggestionsList.Visible = false;
+            _suggestionsList.HideToolTip();
+            _parentForm.Controls.Remove(_suggestionsList);
         }
 
         internal void DisableKeywordFields()
         {
-            if (ParentForm.FormType == FormType.Keyword)
-                (ParentForm as KeywordAddForm).DisableKeywordFields(IndexOf);
-            else
+            switch (_parentForm.FormType)
             {
-                if (ParentForm.FormType == FormType.Params)
-                {
-                    (ParentForm as ParamAddForm).DisableKeywordFields(IndexOf);
-                }
-                else
-                {
-                    if (ParentForm.FormType == FormType.Settings)
-                    {
-                        (ParentForm as SettingsAddForm).DisableKeywordFields(IndexOf);
-                    }
-                    else
-                    if (ParentForm.FormType == FormType.Test)
-                        (ParentForm as TestCaseAddForm).DisableKeywordFields(IndexOf);
-                }
+                case FormType.Keyword:
+                    ((KeywordAddForm) _parentForm).DisableKeywordFields(_indexOf);
+                    break;
+                case FormType.Params:
+                    ((ParamAddForm) _parentForm).DisableKeywordFields(_indexOf);
+                    break;
+                case FormType.Settings:
+                    ((SettingsAddForm) _parentForm).DisableKeywordFields(_indexOf);
+                    break;
+                case FormType.Test:
+                    ((TestCaseAddForm) _parentForm).DisableKeywordFields(_indexOf);
+                    break;
+                case FormType.NameAndOutput:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
         internal void EnableKeywordFields()
         {
-            if (ParentForm.FormType == FormType.Keyword)
-                (ParentForm as KeywordAddForm).EnableKeywordFields(IndexOf);
-            else
+            switch (_parentForm.FormType)
             {
-                if (ParentForm.FormType == FormType.Params)
-                {
-                    (ParentForm as ParamAddForm).EnableKeywordFields(IndexOf);
-                }
-                else
-                {
-                    if (ParentForm.FormType == FormType.Settings)
-                    {
-                        (ParentForm as SettingsAddForm).EnableKeywordFields(IndexOf);
-                    }
-                    else
-                    if (ParentForm.FormType == FormType.Test)
-                        (ParentForm as TestCaseAddForm).EnableKeywordFields(IndexOf);
-                }
+                case FormType.Keyword:
+                    ((KeywordAddForm) _parentForm).EnableKeywordFields(_indexOf);
+                    break;
+                case FormType.Params:
+                    ((ParamAddForm) _parentForm).EnableKeywordFields(_indexOf);
+                    break;
+                case FormType.Settings:
+                    ((SettingsAddForm) _parentForm).EnableKeywordFields(_indexOf);
+                    break;
+                case FormType.Test:
+                    ((TestCaseAddForm) _parentForm).EnableKeywordFields(_indexOf);
+                    break;
+                case FormType.NameAndOutput:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

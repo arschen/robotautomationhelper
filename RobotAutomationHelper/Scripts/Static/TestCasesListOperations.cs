@@ -1,12 +1,12 @@
-﻿using System;
+﻿using RobotAutomationHelper.Scripts.Objects;
 
-namespace RobotAutomationHelper.Scripts
+namespace RobotAutomationHelper.Scripts.Static
 {
     internal static class TestCasesListOperations
     {
         internal static string IsPresentInTheTestCasesTree(string name, string fileName, TestCase thisTestCase)
         {
-            foreach (TestCase test in RobotAutomationHelper.TestCases)
+            foreach (var test in Forms.RobotAutomationHelper.TestCases)
                 if (test.Name.Trim().ToLower().Equals(name.ToLower()))
                     if (!ReferenceEquals(test, thisTestCase))
                         if (test.OutputFilePath.ToLower().Equals(fileName.ToLower()))
@@ -16,9 +16,9 @@ namespace RobotAutomationHelper.Scripts
 
         internal static string IsPresentInTheKeywordTree(string name, string fileName, Keyword thisKeyword)
         {
-            foreach (TestCase test in RobotAutomationHelper.TestCases)
+            foreach (var test in Forms.RobotAutomationHelper.TestCases)
                 if (test.Steps != null)
-                    foreach (Keyword keyword in test.Steps)
+                    foreach (var keyword in test.Steps)
                     {
                         if (!ReferenceEquals(keyword, thisKeyword)
                             && keyword.Name.Trim().ToLower().Equals(name.ToLower())
@@ -26,11 +26,11 @@ namespace RobotAutomationHelper.Scripts
                             return test.Name + " | " + keyword.Name.Trim();
 
                         if (keyword.Keywords != null)
-                            foreach (Keyword key in keyword.Keywords)
+                            foreach (var key in keyword.Keywords)
                             {
                                 if (!key.Recursive)
                                 {
-                                    string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, test.Name + " | " + keyword.Name.Trim());
+                                    var temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, test.Name + " | " + keyword.Name.Trim());
                                     if (!temp.Equals(""))
                                         return temp;
                                 }
@@ -47,11 +47,11 @@ namespace RobotAutomationHelper.Scripts
                 return path + " | " + keyword.Name.Trim();
 
             if (keyword.Keywords != null)
-                foreach (Keyword key in keyword.Keywords)
+                foreach (var key in keyword.Keywords)
                 {
                     if (!key.Recursive)
                     {
-                        string temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, path + " | " + keyword.Name.Trim());
+                        var temp = IsPresentInChildrenKeywords(name, key, fileName, thisKeyword, path + " | " + keyword.Name.Trim());
                         if (!temp.Equals(""))
                             return temp;
                     }
@@ -61,9 +61,9 @@ namespace RobotAutomationHelper.Scripts
 
         internal static void OverwriteOccurrencesInKeywordTree(string name, string fileName, Keyword thisKeyword)
         {
-            foreach (TestCase test in RobotAutomationHelper.TestCases)
+            foreach (var test in Forms.RobotAutomationHelper.TestCases)
                 if (test.Steps != null)
-                    foreach (Keyword keyword in test.Steps)
+                    foreach (var keyword in test.Steps)
                     {
                         if (!ReferenceEquals(keyword, thisKeyword)
                             && keyword.Name.Trim().ToLower().Equals(name.ToLower())
@@ -72,7 +72,7 @@ namespace RobotAutomationHelper.Scripts
                                 keyword.CopyKeyword(thisKeyword);
 
                         if (keyword.Keywords != null)
-                            foreach (Keyword key in keyword.Keywords)
+                            foreach (var key in keyword.Keywords)
                             {
                                 if (!key.Recursive)
                                 {
@@ -91,7 +91,7 @@ namespace RobotAutomationHelper.Scripts
                     keyword.CopyKeyword(thisKeyword);
 
             if (keyword.Keywords != null)
-                foreach (Keyword key in keyword.Keywords)
+                foreach (var key in keyword.Keywords)
                 {
                     if (!key.Recursive)
                     {
