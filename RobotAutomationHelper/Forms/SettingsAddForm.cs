@@ -10,9 +10,8 @@ namespace RobotAutomationHelper.Forms
 {
     internal partial class SettingsAddForm : BaseKeywordAddForm
     {
-
-        private SuiteSettings _currentSuiteSettings;
         private int _selectedIndex;
+        internal SuiteSettings CurrentSuiteSettings { get; set; }
 
         internal SettingsAddForm(BaseKeywordAddForm parent) : base(parent)
         {
@@ -46,20 +45,20 @@ namespace RobotAutomationHelper.Forms
             foreach (var temp in RobotAutomationHelper.SuiteSettingsList)
                 if (temp.ToString().Equals(OutputFile.Items[OutputFile.SelectedIndex]))
                 {
-                    _currentSuiteSettings = temp;
+                    CurrentSuiteSettings = temp;
                     break;
                 }
 
 
             var folderType = FolderType.Root;
-            if (_currentSuiteSettings.OutputFilePath.Contains(FilesAndFolderStructure.Resources))
+            if (CurrentSuiteSettings.OutputFilePath.Contains(FilesAndFolderStructure.Resources))
                 folderType = FolderType.Resources;
-            if (_currentSuiteSettings.OutputFilePath.Contains(FilesAndFolderStructure.Tests))
+            if (CurrentSuiteSettings.OutputFilePath.Contains(FilesAndFolderStructure.Tests))
                 folderType = FolderType.Tests;
 
-            if (!_currentSuiteSettings.Overwrite)
+            if (!CurrentSuiteSettings.Overwrite)
             {
-                var realOutput = _currentSuiteSettings.OutputFilePath;
+                var realOutput = CurrentSuiteSettings.OutputFilePath;
                 switch (folderType)
                 {
                     case FolderType.Tests:
@@ -74,36 +73,36 @@ namespace RobotAutomationHelper.Forms
                         throw new ArgumentOutOfRangeException();
                 }
 
-                _currentSuiteSettings.Documentation = RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root), 
+                CurrentSuiteSettings.Documentation = RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), 
                     "Documentation").Replace("Documentation", "").Trim();
-                _currentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root), "Test Setup").Replace("Test Setup", "").Trim(),
-                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root)), null);
-                _currentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root), "Test Teardown").Replace("Test Teardown", "").Trim(),
-                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root)), null);
-                _currentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root), "Suite Setup").Replace("Suite Setup", "").Trim(),
-                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root)), null);
-                _currentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root), "Suite Teardown").Replace("Suite Teardown", "").Trim(),
-                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(_currentSuiteSettings.OutputFilePath, FolderType.Root)), null);
+                CurrentSuiteSettings.TestSetup = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Test Setup").Replace("Test Setup", "").Trim(),
+                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root)), null);
+                CurrentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Test Teardown").Replace("Test Teardown", "").Trim(),
+                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root)), null);
+                CurrentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Suite Setup").Replace("Suite Setup", "").Trim(),
+                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root)), null);
+                CurrentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root), "Suite Teardown").Replace("Suite Teardown", "").Trim(),
+                    realOutput, ReadRobotFiles.GetLibs(FilesAndFolderStructure.ConcatFileNameToFolder(CurrentSuiteSettings.OutputFilePath, FolderType.Root)), null);
             }
 
             ThisFormKeywords = new List<Keyword>();
-            if (_currentSuiteSettings.TestSetup == null)
-                _currentSuiteSettings.TestSetup = new Keyword("", "Auto.robot", null);
-            ThisFormKeywords.Add(_currentSuiteSettings.TestSetup);
+            if (CurrentSuiteSettings.TestSetup == null)
+                CurrentSuiteSettings.TestSetup = new Keyword("", "Auto.robot", null);
+            ThisFormKeywords.Add(CurrentSuiteSettings.TestSetup);
 
-            if (_currentSuiteSettings.TestTeardown == null)
-                _currentSuiteSettings.TestTeardown = new Keyword("", "Auto.robot", null);
-            ThisFormKeywords.Add(_currentSuiteSettings.TestTeardown);
+            if (CurrentSuiteSettings.TestTeardown == null)
+                CurrentSuiteSettings.TestTeardown = new Keyword("", "Auto.robot", null);
+            ThisFormKeywords.Add(CurrentSuiteSettings.TestTeardown);
 
-            if (_currentSuiteSettings.SuiteSetup == null)
-                _currentSuiteSettings.SuiteSetup = new Keyword("", "Auto.robot", null);
-            ThisFormKeywords.Add(_currentSuiteSettings.SuiteSetup);
+            if (CurrentSuiteSettings.SuiteSetup == null)
+                CurrentSuiteSettings.SuiteSetup = new Keyword("", "Auto.robot", null);
+            ThisFormKeywords.Add(CurrentSuiteSettings.SuiteSetup);
 
-            if (_currentSuiteSettings.SuiteTeardown == null)
-                _currentSuiteSettings.SuiteTeardown = new Keyword("", "Auto.robot", null);
-            ThisFormKeywords.Add(_currentSuiteSettings.SuiteTeardown);
+            if (CurrentSuiteSettings.SuiteTeardown == null)
+                CurrentSuiteSettings.SuiteTeardown = new Keyword("", "Auto.robot", null);
+            ThisFormKeywords.Add(CurrentSuiteSettings.SuiteTeardown);
 
-            SuiteDocumentation.Text = _currentSuiteSettings.Documentation;
+            SuiteDocumentation.Text = CurrentSuiteSettings.Documentation;
 
             if (folderType != FolderType.Tests) return;
             for (var i = 1; i <=4; i++)

@@ -18,7 +18,7 @@ namespace RobotAutomationHelper.Scripts.Objects
 
         public override string ToString()
         {
-            return VariableNames + " | " + _outputFilePath;
+            return _outputFilePath;
         }
     }
 }

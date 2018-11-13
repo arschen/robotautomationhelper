@@ -48,6 +48,7 @@ namespace RobotAutomationHelper.Forms
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
+            this.variablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,7 +57,8 @@ namespace RobotAutomationHelper.Forms
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.settingsToolStripMenuItem,
-            this.librariesToolStripMenuItem});
+            this.librariesToolStripMenuItem,
+            this.variablesToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(784, 24);
@@ -176,6 +178,13 @@ namespace RobotAutomationHelper.Forms
             // 
             this.folderBrowserDialog2.Description = "Choose Robot Project Folder";
             // 
+            // variablesToolStripMenuItem
+            // 
+            this.variablesToolStripMenuItem.Name = "variablesToolStripMenuItem";
+            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.variablesToolStripMenuItem.Text = "Variables";
+            this.variablesToolStripMenuItem.Click += new System.EventHandler(this.VariablesToolStripMenuItem_Click);
+            // 
             // RobotAutomationHelper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -216,6 +225,7 @@ namespace RobotAutomationHelper.Forms
         private FolderBrowserDialog folderBrowserDialog3;
         private ToolStripMenuItem librariesToolStripMenuItem;
         private ToolStripMenuItem suggestionsToolStripMenuItem;
+        private ToolStripMenuItem variablesToolStripMenuItem;
     }
 }
 

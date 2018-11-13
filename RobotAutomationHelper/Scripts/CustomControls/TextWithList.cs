@@ -202,7 +202,7 @@ namespace RobotAutomationHelper.Scripts.CustomControls
                             : new SuggestionsListObjects
                             {
                                 Text = keyword.ToString().Trim(), ValueMember = keyword.Name.Trim(),
-                                Documentation = keyword.OutputFilePath + "\n" + keyword.Documentation ?? ""
+                                Documentation = keyword.OutputFilePath + @"\n" + (keyword.Documentation ?? "")
                             });
                     }
                     return foundItems;

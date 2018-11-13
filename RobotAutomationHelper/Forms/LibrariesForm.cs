@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using RobotAutomationHelper.Scripts.Objects;
@@ -9,10 +8,10 @@ namespace RobotAutomationHelper.Forms
 {
     internal partial class LibrariesForm : Form
     {
-        private readonly int _labelLength = 100;
-        private readonly int _distanceBetweenLabelAndRadio = 10;
-        private readonly int _fieldHeight = 25;
-        private readonly int _initialY = 30;
+        private const int LabelLength = 100;
+        private const int DistanceBetweenLabelAndRadio = 10;
+        private const int FieldHeight = 25;
+        private const int InitialY = 30;
 
         internal LibrariesForm()
         {
@@ -23,7 +22,6 @@ namespace RobotAutomationHelper.Forms
         {
             var stdLibsCounter = 0;
             var extLibsCounter = 0;
-            var listKeyword = new List<Keyword>();
 
             var lockedIncludes = SuggestionsClass.UpdateSuggestionsToIncludes(RobotAutomationHelper.TestCases, RobotAutomationHelper.SuiteSettingsList);
 
@@ -31,20 +29,20 @@ namespace RobotAutomationHelper.Forms
             {
                 if (lib.KeyType.Equals(KeywordType.Standard))
                 {
-                    ShowLibField(STDLIBlabel.Location.X, _initialY + stdLibsCounter * _fieldHeight, lib.Name, lib.ToInclude);
+                    ShowLibField(STDLIBlabel.Location.X, InitialY + stdLibsCounter * FieldHeight, lib.Name, lib.ToInclude);
                     if (lockedIncludes.Contains(lib.Name))
                         DisableLibField(lib.Name);
                     stdLibsCounter++;
                 }
                 else
                 {
-                    if (!lib.KeyType.Equals(KeywordType.ForLoopElements) && !lib.KeyType.Equals(KeywordType.ForLoopInRange) && !lib.KeyType.Equals(KeywordType.Custom))
-                    {
-                        ShowLibField(EXTLIBlabel.Location.X, _initialY + extLibsCounter * _fieldHeight, lib.Name, lib.ToInclude);
-                        if (lockedIncludes.Contains(lib.Name))
-                            DisableLibField(lib.Name);
-                        extLibsCounter++;
-                    }
+                    if (lib.KeyType.Equals(KeywordType.ForLoopElements) ||
+                        lib.KeyType.Equals(KeywordType.ForLoopInRange) ||
+                        lib.KeyType.Equals(KeywordType.Custom)) continue;
+                    ShowLibField(EXTLIBlabel.Location.X, InitialY + extLibsCounter * FieldHeight, lib.Name, lib.ToInclude);
+                    if (lockedIncludes.Contains(lib.Name))
+                        DisableLibField(lib.Name);
+                    extLibsCounter++;
                 }
             }
 
@@ -70,7 +68,7 @@ namespace RobotAutomationHelper.Forms
             {
                 Name = "checkbox" + name,
                 Checked = check,
-                Location = new Point(x + _labelLength + _distanceBetweenLabelAndRadio, y - 5)
+                Location = new Point(x + LabelLength + DistanceBetweenLabelAndRadio, y - 5)
             };
 
             Controls.Add(libName);

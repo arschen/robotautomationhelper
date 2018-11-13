@@ -86,6 +86,12 @@
     <Compile Include="Forms\BaseKeywordAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\VariablesAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VariablesAddForm.Designer.cs">
+      <DependentUpon>VariablesAddForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Scripts\CustomControls\ButtonWithToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -162,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Robot Automation Helper.resx">
       <DependentUpon>Robot Automation Helper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VariablesAddForm.resx">
+      <DependentUpon>VariablesAddForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

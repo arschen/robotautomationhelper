@@ -259,20 +259,20 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
             var suiteSettings = new List<SuiteSettings>();
             foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Tests))
             {
-                var _currentSuiteSettings = new SuiteSettings(fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root), ""))
+                var currentSuiteSettings = new SuiteSettings(fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root), ""))
                 {
                     Documentation = RobotFileHandler.OccurenceInSettings(fileName, "Documentation").Replace("Documentation", "").Trim(),
                     TestSetup = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Test Setup").Replace("Test Setup", "").Trim(), fileName, GetLibs(fileName), null)
                 };
-                AddKeywordsFromKeyword(_currentSuiteSettings.TestSetup, GetResourcesFromFile(fileName));
-                _currentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(), fileName, GetLibs(fileName), null);
-                AddKeywordsFromKeyword(_currentSuiteSettings.TestTeardown, GetResourcesFromFile(fileName));
-                _currentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(), fileName, GetLibs(fileName), null);
-                AddKeywordsFromKeyword(_currentSuiteSettings.SuiteSetup, GetResourcesFromFile(fileName));
-                _currentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(), fileName, GetLibs(fileName), null);
-                AddKeywordsFromKeyword(_currentSuiteSettings.SuiteTeardown, GetResourcesFromFile(fileName));
-                _currentSuiteSettings.Overwrite = true;
-                suiteSettings.Add(_currentSuiteSettings);
+                AddKeywordsFromKeyword(currentSuiteSettings.TestSetup, GetResourcesFromFile(fileName));
+                currentSuiteSettings.TestTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Test Teardown").Replace("Test Teardown", "").Trim(), fileName, GetLibs(fileName), null);
+                AddKeywordsFromKeyword(currentSuiteSettings.TestTeardown, GetResourcesFromFile(fileName));
+                currentSuiteSettings.SuiteSetup = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Setup").Replace("Suite Setup", "").Trim(), fileName, GetLibs(fileName), null);
+                AddKeywordsFromKeyword(currentSuiteSettings.SuiteSetup, GetResourcesFromFile(fileName));
+                currentSuiteSettings.SuiteTeardown = new Keyword(RobotFileHandler.OccurenceInSettings(fileName, "Suite Teardown").Replace("Suite Teardown", "").Trim(), fileName, GetLibs(fileName), null);
+                AddKeywordsFromKeyword(currentSuiteSettings.SuiteTeardown, GetResourcesFromFile(fileName));
+                currentSuiteSettings.Overwrite = true;
+                suiteSettings.Add(currentSuiteSettings);
             }
             return suiteSettings;
         }
@@ -280,7 +280,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         // returns the index of the specific tag - keyword / test cases / settings / variables
         internal static List<Variables> ReadAllVariables()
         {
-            var ListOfVariables = new List<Variables>();
+            var listOfVariables = new List<Variables>();
             foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Root))
             {
                 if (!File.Exists(fileName)) continue;
@@ -298,10 +298,10 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                 }
 
                 if (names.Count == 0) continue;
-                var _currentSuiteSettings = new Variables(names, fileName);
-                ListOfVariables.Add(_currentSuiteSettings);
+                var currentSuiteSettings = new Variables(names, fileName);
+                listOfVariables.Add(currentSuiteSettings);
             }
-            return ListOfVariables;
+            return listOfVariables;
         }
 
         private static List<string> GetResourcesFromFile(string fileName)

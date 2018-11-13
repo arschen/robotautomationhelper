@@ -376,6 +376,18 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
+        private void VariablesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root) != null && FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root).Count > 0)
+                InstantiateVariablesAddForm(sender, e);
+            else
+            {
+                MessageBox.Show(@"You haven't saved any keywords or test cases to files yet.",
+                    @"Alert",
+                    MessageBoxButtons.OK);
+            }
+        }
+
         private void SuggestionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SuggestionsClass.Suggestions != null && SuggestionsClass.Suggestions.Count > 0)

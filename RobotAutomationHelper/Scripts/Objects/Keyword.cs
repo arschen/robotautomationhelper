@@ -7,17 +7,34 @@ namespace RobotAutomationHelper.Scripts.Objects
     [Serializable]
     internal class Keyword
     {
-        internal Keyword Parent;
-        internal List<Keyword> Keywords { get; set; }
-        internal List<Keyword> ForLoopKeywords { get; set; }
-        internal string Arguments { get; set; }
-        internal List<Param> Params { get; set; }
+        private bool _includeImportFile;
         private string _name;
+        private string _outputFilePath;
+        private bool _recursive;
+        private List<Keyword> _keywords;
+        private List<Keyword> _forLoopKeywords;
+        private string _arguments;
+        private List<Param> _params;
+        private string _documentation;
+        private bool _implemented;
+        private KeywordType _type;
+        private string _keywordString;
+        private int _suggestionIndex;
+        private bool _recursive1;
+        private string _comments;
+        private string _importFileName;
+
+        internal Keyword Parent;
+        internal List<Keyword> Keywords { get => _keywords; set => _keywords = value; }
+        internal List<Keyword> ForLoopKeywords { get => _forLoopKeywords; set => _forLoopKeywords = value; }
+        internal string Arguments { get => _arguments; set => _arguments = value; }
+        internal List<Param> Params { get => _params; set => _params = value; }
         internal string Name
-        { get
+        {
+            get
             {
                 if (!IncludeImportFile) return _name;
-                var temp = _name.Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries);
+                var temp = _name.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
                 if (temp.Length == 2)
                     return temp[1];
                 var concat = temp[1];
@@ -25,26 +42,25 @@ namespace RobotAutomationHelper.Scripts.Objects
                     concat += "." + temp[i];
                 return concat;
             }
-            set {
+            set
+            {
                 if (!IncludeImportFile) _name = value;
                 else
                 {
                     if (OutputFilePath != null && !OutputFilePath.Equals(""))
                     {
-                        var temp = OutputFilePath.Split(new [] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                        var temp = OutputFilePath.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
                         if (_name != null)
-                            _name = temp[temp.Length - 1].Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + _name.Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
+                            _name = temp[temp.Length - 1].Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + _name.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries)[1];
                         else
-                            _name = temp[temp.Length - 1].Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + value;
+                            _name = temp[temp.Length - 1].Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0] + "." + value;
                     }
                     else
                         _name = value;
                 }
             }
         }
-        internal string Documentation { get; set; }
-
-        private string _outputFilePath;
+        internal string Documentation { get => _documentation; set => _documentation = value; }
         internal string OutputFilePath
         {
             get => _outputFilePath;
@@ -52,20 +68,20 @@ namespace RobotAutomationHelper.Scripts.Objects
             {
                 if (IncludeImportFile && _outputFilePath != null)
                 {
-                    var tempOutputFileSplit = _outputFilePath.Split(new [] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+                    var tempOutputFileSplit = _outputFilePath.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
                     ImportFileName = tempOutputFileSplit[tempOutputFileSplit.Length - 1].Replace(".robot", "");
                 }
                 _outputFilePath = value;
             }
         }
-        internal bool Implemented { get; set; }
-        internal KeywordType Type { get; set; }
-        internal string KeywordString { get; set; }
-        internal int SuggestionIndex { get; set; }
-        internal bool Recursive { get; set; }
-        internal string Comments { get; set; }
-        internal bool IncludeImportFile;
-        internal string ImportFileName { get; set; }
+        internal bool Implemented { get => _implemented; set => _implemented = value; }
+        internal KeywordType Type { get => _type; set => _type = value; }
+        internal string KeywordString { get => _keywordString; set => _keywordString = value; }
+        internal int SuggestionIndex { get => _suggestionIndex; set => _suggestionIndex = value; }
+        internal bool Recursive { get => _recursive1; set => _recursive1 = value; }
+        internal string Comments { get => _comments; set => _comments = value; }
+        internal string ImportFileName { get => _importFileName; set => _importFileName = value; }
+        internal bool IncludeImportFile { get => _includeImportFile; set => _includeImportFile = value; }
 
         internal Keyword(string name, string documentation, List<Keyword> keywords, string arguments, List<Param> paramsList, string outputFilePath, KeywordType type, int suggestionIndex, string keywordString, Keyword parent, bool includeImportFile)
         {
@@ -135,12 +151,12 @@ namespace RobotAutomationHelper.Scripts.Objects
                 {
                     Implemented = true;
                     keywordString = keywordString.Trim();
-                    var splitKeyword = !StringAndListOperations.StartsWithVariable(keywordString) ? keywordString.Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries) : new [] { keywordString };
+                    var splitKeyword = !StringAndListOperations.StartsWithVariable(keywordString) ? keywordString.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries) : new[] { keywordString };
 
                     if (!splitKeyword[0].StartsWith("{") && splitKeyword[0].Contains("."))
                     {
                         IncludeImportFile = true;
-                        ImportFileName = splitKeyword[0].Split(new [] { "." }, StringSplitOptions.RemoveEmptyEntries)[0];
+                        ImportFileName = splitKeyword[0].Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries)[0];
                     }
 
                     var found = false;
@@ -254,7 +270,6 @@ namespace RobotAutomationHelper.Scripts.Objects
             }
         }
 
-        private bool _recursive;
         internal bool IsRecursive(Keyword keyword)
         {
             if (keyword.Parent != null)
@@ -267,13 +282,11 @@ namespace RobotAutomationHelper.Scripts.Objects
                 {
                     IsRecursive(keyword.Parent);
                 }
-            if (_recursive)
-            {
-                _recursive = false;
-                return true;
-            }
 
-            return false;
+            if (!_recursive) return false;
+            _recursive = false;
+            return true;
+
         }
 
         internal string GetName()

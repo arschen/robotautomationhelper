@@ -150,6 +150,14 @@ namespace RobotAutomationHelper.Forms
             addSettingsForm.ShowSettingsContent();
         }
 
+        protected void InstantiateVariablesAddForm(object sender, EventArgs e)
+        {
+            if (RobotAutomationHelper.Log) Console.WriteLine(@"InstantiateVariablesAddForm " + ((Button)sender).Name);
+            var addVariablesForm = new VariablesAddForm(this);
+            //AddSettingsForm.FormClosing += new FormClosingEventHandler(UpdateThisFormAfterImplementedChildKeyword);
+            addVariablesForm.ShowVariablesContent();
+        }
+
         protected void InstantiateLibrariesAddForm(object sender, EventArgs e)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"InstantiateLibrariesAddForm " + ((Button)sender).Name);
