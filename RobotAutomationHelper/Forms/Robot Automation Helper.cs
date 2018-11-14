@@ -29,6 +29,9 @@ namespace RobotAutomationHelper.Forms
         {
             InitializeComponent();
             ActiveControl = TestCaseNameLabel;
+            settingsToolStripMenuItem.Visible = false;
+            librariesToolStripMenuItem.Visible = false;
+            variablesToolStripMenuItem.Visible = false;
         }
 
         private void ApplicationMain_Load(object sender, EventArgs e)
@@ -139,6 +142,7 @@ namespace RobotAutomationHelper.Forms
             ClearDynamicElements();
             settingsToolStripMenuItem.Visible = true;
             librariesToolStripMenuItem.Visible = true;
+            variablesToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog2.SelectedPath);
         }
 

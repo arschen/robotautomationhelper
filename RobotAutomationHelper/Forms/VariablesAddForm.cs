@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using RobotAutomationHelper.Scripts;
 using RobotAutomationHelper.Scripts.Objects;
 using RobotAutomationHelper.Scripts.Static;
 using RobotAutomationHelper.Scripts.Static.Consts;
@@ -45,7 +46,7 @@ namespace RobotAutomationHelper.Forms
             foreach (var temp in RobotAutomationHelper.GlobalVariables)
                 if (temp.ToString().Equals(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Items[OutputFile.SelectedIndex].ToString(), FolderType.Root)))
                 {
-                    CurrentVariables = temp;
+                    CurrentVariables = temp.DeepClone();
                     break;
                 }
 
@@ -85,8 +86,8 @@ namespace RobotAutomationHelper.Forms
         {
             if (OutputFile.SelectedIndex == -1 || _selectedIndex == OutputFile.SelectedIndex) return;
             _selectedIndex = OutputFile.SelectedIndex;
-            for (var i = 1; i <= 4; i++)
-                RemoveKeywordField(i, false);
+            for (var i = _variablesCounter; i > 0; i--)
+                RemoveVariableField(i, true);
             SetupsVariablesAddForm();
         }
 
@@ -114,22 +115,66 @@ namespace RobotAutomationHelper.Forms
                 null,
                 this);
 
-            FormControls.AddControl("Button", "DynamicStep" + _variablesCounter + "AddKeyword",
+            FormControls.AddControl("Button", "DynamicStep" + _variablesCounter + "AddVariable",
                 _variablesCounter,
                 new Point(settingsLabel + KeywordFieldConsts.AddKeywordX - HorizontalScroll.Value, InitialYValue + (_variablesCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
                 new Size(KeywordFieldConsts.AddKeywordWidth, KeywordFieldConsts.FieldsHeight),
                 "+",
                 Color.Black,
-                InstantiateNameAndOutputForm,
+                AddVariableToTheForm,
                 this);
-            FormControls.AddControl("Button", "DynamicStep" + _variablesCounter + "RemoveKeyword",
+            FormControls.AddControl("Button", "DynamicStep" + _variablesCounter + "RemoveVariable",
                 _variablesCounter,
                 new Point(settingsLabel + KeywordFieldConsts.RemoveKeywordX - HorizontalScroll.Value, InitialYValue + (_variablesCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
                 new Size(KeywordFieldConsts.RemoveKeywordWidth, KeywordFieldConsts.FieldsHeight),
                 "-",
                 Color.Black,
-                RemoveKeywordFromThisForm,
+                RemoveVariableFromThisForm,
                 this);
+        }
+
+        protected void RemoveVariableField(int variableIndex, bool removeFromList)
+        {
+            FormControls.RemoveControlByKey("DynamicStep" + variableIndex + "Name", Controls);
+            FormControls.RemoveControlByKey("DynamicStep" + variableIndex + "Label", Controls);
+            FormControls.RemoveControlByKey("DynamicStep" + variableIndex + "AddVariable", Controls);
+            FormControls.RemoveControlByKey("DynamicStep" + variableIndex + "RemoveVariable", Controls);
+            if (removeFromList)
+                CurrentVariables.VariableNames.RemoveAt(variableIndex - 1);
+        }
+
+        internal void RemoveVariableFromThisForm(object sender, EventArgs e)
+        {
+            TextFieldsToCurrentVariablesNames();
+            var variableIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("RemoveVariable", ""));
+            RemoveVariableField(_variablesCounter, false);
+            CurrentVariables.VariableNames.RemoveAt(variableIndex - 1);
+            _variablesCounter--;
+            AssignNamesFromCurrentVariablesToTextFields();
+        }
+
+        internal void AddVariableToTheForm(object sender, EventArgs e)
+        {
+            TextFieldsToCurrentVariablesNames();
+            _variablesCounter++;
+            var variableIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("AddVariable", ""));
+            CurrentVariables.VariableNames.Insert(variableIndex, "");
+            AddVariableField();
+            AssignNamesFromCurrentVariablesToTextFields();
+        }
+
+        private void AssignNamesFromCurrentVariablesToTextFields()
+        {
+            for (var i = 1; i <= _variablesCounter; i++)
+            {
+                Controls["DynamicStep" + i + "Name"].Text = CurrentVariables.VariableNames[i - 1].Trim();
+            }
+        }
+
+        private void TextFieldsToCurrentVariablesNames()
+        {
+            for (var i = 0; i < _variablesCounter; i++)
+                CurrentVariables.VariableNames[i] = Controls["DynamicStep" + (i + 1) + "Name"].Text;
         }
     }
 }
