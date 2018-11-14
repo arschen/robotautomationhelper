@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using RobotAutomationHelper.Scripts;
@@ -42,6 +43,7 @@ namespace RobotAutomationHelper.Forms
             }
 
             ActiveControl = AddVariablesLabel;
+            CurrentVariables = new Variables(new List<string>(),"");
 
             foreach (var temp in RobotAutomationHelper.GlobalVariables)
                 if (temp.ToString().Equals(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Items[OutputFile.SelectedIndex].ToString(), FolderType.Root)))
@@ -51,8 +53,18 @@ namespace RobotAutomationHelper.Forms
                 }
 
             _variablesCounter = 0;
-            if (CurrentVariables != null && CurrentVariables.VariableNames == null) return;
-            if (CurrentVariables == null) return;
+            if (CurrentVariables.VariableNames.Count == 0)
+            {
+                FormControls.AddControl("Button", "DynamicStep" + _variablesCounter + "AddVariable",
+                    _variablesCounter,
+                    new Point(KeywordFieldConsts.LabelX - HorizontalScroll.Value, InitialYValue + (_variablesCounter - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                    new Size(KeywordFieldConsts.AddKeywordWidth, KeywordFieldConsts.FieldsHeight),
+                    "+",
+                    Color.Black,
+                    AddVariableToTheForm,
+                    this);
+                return;
+            }
             foreach (var unused in CurrentVariables.VariableNames)
             {
                 _variablesCounter++;
@@ -84,10 +96,14 @@ namespace RobotAutomationHelper.Forms
 
         private void OutputFile_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_variablesCounter == 0)
+            {
+                FormControls.RemoveControlByKey("DynamicStep" + 0 + "AddVariable", Controls);
+            }
             if (OutputFile.SelectedIndex == -1 || _selectedIndex == OutputFile.SelectedIndex) return;
             _selectedIndex = OutputFile.SelectedIndex;
             for (var i = _variablesCounter; i > 0; i--)
-                RemoveVariableField(i, true);
+                RemoveVariableField(i, true, false);
             SetupsVariablesAddForm();
         }
 
@@ -133,7 +149,7 @@ namespace RobotAutomationHelper.Forms
                 this);
         }
 
-        protected void RemoveVariableField(int variableIndex, bool removeFromList)
+        protected void RemoveVariableField(int variableIndex, bool removeFromList, bool removeButton)
         {
             FormControls.RemoveControlByKey("DynamicStep" + variableIndex + "Name", Controls);
             FormControls.RemoveControlByKey("DynamicStep" + variableIndex + "Label", Controls);
@@ -141,13 +157,22 @@ namespace RobotAutomationHelper.Forms
             FormControls.RemoveControlByKey("DynamicStep" + variableIndex + "RemoveVariable", Controls);
             if (removeFromList)
                 CurrentVariables.VariableNames.RemoveAt(variableIndex - 1);
+            if (!removeButton || CurrentVariables.VariableNames.Count > 1) return;
+            FormControls.AddControl("Button", "DynamicStep" + 0 + "AddVariable",
+                _variablesCounter,
+                new Point(KeywordFieldConsts.LabelX - HorizontalScroll.Value, InitialYValue + (0 - 1) * KeywordFieldConsts.VerticalDistanceBetweenKeywords - VerticalScroll.Value),
+                new Size(KeywordFieldConsts.AddKeywordWidth, KeywordFieldConsts.FieldsHeight),
+                "+",
+                Color.Black,
+                AddVariableToTheForm,
+                this);
         }
 
         internal void RemoveVariableFromThisForm(object sender, EventArgs e)
         {
             TextFieldsToCurrentVariablesNames();
             var variableIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("RemoveVariable", ""));
-            RemoveVariableField(_variablesCounter, false);
+            RemoveVariableField(_variablesCounter, false, true);
             CurrentVariables.VariableNames.RemoveAt(variableIndex - 1);
             _variablesCounter--;
             AssignNamesFromCurrentVariablesToTextFields();
@@ -156,9 +181,16 @@ namespace RobotAutomationHelper.Forms
         internal void AddVariableToTheForm(object sender, EventArgs e)
         {
             TextFieldsToCurrentVariablesNames();
+            if (_variablesCounter == 0)
+            {
+                FormControls.RemoveControlByKey("DynamicStep" + 0 + "AddVariable", Controls);
+            }
             _variablesCounter++;
             var variableIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("AddVariable", ""));
-            CurrentVariables.VariableNames.Insert(variableIndex, "");
+            if (CurrentVariables.VariableNames.Count != 0)
+                CurrentVariables.VariableNames.Insert(variableIndex, "");
+            else
+                CurrentVariables.VariableNames.Add("");
             AddVariableField();
             AssignNamesFromCurrentVariablesToTextFields();
         }
