@@ -138,11 +138,11 @@
     <Compile Include="Forms\TestCaseAddForm.Designer.cs">
       <DependentUpon>TestCaseAddForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Robot Automation Helper.cs">
+    <Compile Include="Forms\RobotAutomationHelper.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Robot Automation Helper.Designer.cs">
-      <DependentUpon>Robot Automation Helper.cs</DependentUpon>
+    <Compile Include="Forms\RobotAutomationHelper.Designer.cs">
+      <DependentUpon>RobotAutomationHelper.cs</DependentUpon>
     </Compile>
     <Compile Include="Scripts\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -166,8 +166,8 @@
     <EmbeddedResource Include="Forms\TestCaseAddForm.resx">
       <DependentUpon>TestCaseAddForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Robot Automation Helper.resx">
-      <DependentUpon>Robot Automation Helper.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\RobotAutomationHelper.resx">
+      <DependentUpon>RobotAutomationHelper.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VariablesAddForm.resx">
       <DependentUpon>VariablesAddForm.cs</DependentUpon>

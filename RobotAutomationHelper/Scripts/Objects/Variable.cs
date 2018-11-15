@@ -8,17 +8,17 @@ namespace RobotAutomationHelper.Scripts.Objects
     internal class Variables
     {
         internal List<string> VariableNames { get; set; }
-        private readonly string _outputFilePath;
+        internal string OutputFilePath;
 
         internal Variables(List<string> names, string outputFilePath)
         {
             VariableNames = names;
-            _outputFilePath = outputFilePath;
+            OutputFilePath = outputFilePath;
         }
 
         public override string ToString()
         {
-            return _outputFilePath;
+            return OutputFilePath;
         }
     }
 }

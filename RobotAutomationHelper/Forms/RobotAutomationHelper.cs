@@ -363,6 +363,8 @@ namespace RobotAutomationHelper.Forms
             WriteToRobot.WriteSuiteSettingsListToRobot();
             Console.WriteLine(@"WriteIncludesToRobotFiles ===================================");
             WriteToRobot.WriteIncludesToRobotFiles();
+            Console.WriteLine(@"WriteVariablesToRobotFiles ===================================");
+            WriteToRobot.WriteVariablesToRobotFiles();
 
             foreach (var fileName in FilesAndFolderStructure.GetShortSavedFiles(FolderType.Root))
                 RobotFileHandler.TrimFile(FilesAndFolderStructure.ConcatFileNameToFolder(fileName, FolderType.Root));

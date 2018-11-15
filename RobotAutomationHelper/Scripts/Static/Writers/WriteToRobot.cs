@@ -221,6 +221,39 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
             }
         }
 
+        //Add variables to test case and keywords files
+        internal static void WriteVariablesToRobotFiles()
+        {
+            const FormType tag = FormType.Variable;
+            foreach (var temp in Forms.RobotAutomationHelper.GlobalVariables)
+            {
+                if (temp.VariableNames != null && temp.VariableNames.Count > 0)
+                {
+                    var fileName = temp.OutputFilePath;
+                    var index = RobotFileHandler.HasTag(fileName, FormType.Test);
+                    if (index == -1)
+                        index = RobotFileHandler.HasTag(fileName, FormType.Keyword);
+                    if (index == -1)
+                        index = 0;
+                    var tempTagIndex = RobotFileHandler.HasTag(fileName, tag);
+                    if (tempTagIndex == -1)
+                    {
+                        RobotFileHandler.FileLineAdd("*** Variables ***", fileName, index);
+                        index++;
+                    }
+                    else
+                        index = tempTagIndex + 1;
+
+                    temp.VariableNames.Sort();
+                    foreach (var variable in temp.VariableNames)
+                    {
+                        RobotFileHandler.FileLineAdd(variable, fileName, index);
+                        index++;
+                    }
+                }
+            }
+        }
+
         internal static void WriteSuiteSettingsListToRobot()
         {
             foreach (var suiteSettings in Forms.RobotAutomationHelper.SuiteSettingsList)
