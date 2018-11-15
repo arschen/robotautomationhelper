@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Scripts.Objects
@@ -232,7 +231,12 @@ namespace RobotAutomationHelper.Scripts.Objects
             foreach (var key in SuggestionsClass.GetLibKeywordsByName(KeywordString))
                 if (key.Name.Equals((Name)))
                 {
-                    return Params.Where((t, i) => !t.Value.Equals(key.Params[i].Value)).Aggregate(paramsString, (current, t) => current + ("  " + t.Value));
+                    for (var i = 0; i < Params.Count; i++)
+                    {
+                        if (Params[i].Value.Equals(key.Params[i].Value)) continue;
+                        paramsString += "  " + Params[i].Value;
+                    }
+                    return paramsString;
                 }
             foreach (var tempParam in Params)
                 paramsString += "  " + tempParam.Value;
