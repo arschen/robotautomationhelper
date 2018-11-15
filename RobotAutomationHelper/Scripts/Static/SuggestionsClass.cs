@@ -91,11 +91,9 @@ namespace RobotAutomationHelper.Scripts.Static
                 var type = KeywordType.Standard;
                 foreach (KeywordType temp in Enum.GetValues(typeof(KeywordType)))
                 {
-                    if (temp.ToString().ToLower().Equals(file.Name.Replace(".xlsx","").ToLower()))
-                    {
-                        type = temp;
-                        break;
-                    }
+                    if (!temp.ToString().ToLower().Equals(file.Name.Replace(".xlsx", "").ToLower())) continue;
+                    type = temp;
+                    break;
                 }
 
                 lib = new Lib
@@ -166,10 +164,10 @@ namespace RobotAutomationHelper.Scripts.Static
             return null;
         }
 
-        internal static List<Keyword> GetCustomLibKeywords()
+        internal static List<Keyword> GetLibKeywordsByName(string Name)
         {
             foreach (var lib in Suggestions)
-                if (lib.Name.Equals("CUSTOM"))
+                if (lib.Name.Equals(Name))
                     return lib.LibKeywords;
             return null;
         }

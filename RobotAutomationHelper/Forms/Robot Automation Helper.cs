@@ -194,8 +194,8 @@ namespace RobotAutomationHelper.Forms
                         }
                         if (toAdd)
                         {
-                            tempKeyword.SuggestionIndex = SuggestionsClass.GetCustomLibKeywords().Count;
-                            SuggestionsClass.GetCustomLibKeywords().Add(tempKeyword);
+                            tempKeyword.SuggestionIndex = SuggestionsClass.GetLibKeywordsByName("CUSTOM").Count;
+                            SuggestionsClass.GetLibKeywordsByName("CUSTOM").Add(tempKeyword);
                         }
             }
             if (tempKeyword.Keywords != null)

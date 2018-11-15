@@ -27,16 +27,18 @@ namespace RobotAutomationHelper.Scripts.Static
                                     i <= workSheet.Dimension.End.Row;
                                     i++)
             {
-                if (i > 1)
-                    for (var j = workSheet.Dimension.Start.Column;
-                                j <= workSheet.Dimension.End.Column;
-                                j++)
+                if (i <= 1) continue;
+                for (var j = workSheet.Dimension.Start.Column;
+                    j <= workSheet.Dimension.End.Column;
+                    j++)
+                {
+                    if (workSheet.Cells[i, j].Value == null) continue;
+                    var cellValue = workSheet.Cells[i, j].Value.ToString().Trim();
+                    switch (j)
                     {
-                        if (workSheet.Cells[i, j].Value != null)
-                        {
-                            var cellValue = workSheet.Cells[i, j].Value.ToString().Trim();
-                            //key column equals test name in robot
-                            if (j == 1 && !cellValue.Equals(""))
+                        //key column equals test name in robot
+                        //summary column equals documentation in robot
+                        case 1 when !cellValue.Equals(""):
                             {
                                 if (!_currentKeywordName.Equals(""))
                                 {
@@ -48,9 +50,11 @@ namespace RobotAutomationHelper.Scripts.Static
                                 {
                                     _currentKeywordName = cellValue;
                                 }
+
+                                break;
                             }
-                            //summary column equals documentation in robot
-                            else if (j == 2 && !cellValue.Equals(""))
+                        //summary column equals documentation in robot
+                        case 2 when !cellValue.Equals(""):
                             {
                                 var paramString = cellValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach (var occurrence in paramString)
@@ -59,14 +63,14 @@ namespace RobotAutomationHelper.Scripts.Static
                                         ? new Param(occurrence.Trim().Split('=')[0], occurrence.Trim().Split('=')[1])
                                         : new Param(occurrence.Trim(), ""));
                                 }
+
+                                break;
                             }
-                            //summary column equals documentation in robot
-                            else if (j == 3 && !cellValue.Equals(""))
-                            {
-                                _currentKeywordDocumentation = cellValue;
-                            }
-                        }
+                        case 3 when !cellValue.Equals(""):
+                            _currentKeywordDocumentation = cellValue;
+                            break;
                     }
+                }
             }
 
             if (!_currentKeywordName.Equals(""))
@@ -93,21 +97,17 @@ namespace RobotAutomationHelper.Scripts.Static
                         break;
                     }
 
-                    if (!temp.Params[i].Value.Equals(_currentKeywordParams[i].Value))
-                    {
-                        check = false;
-                        break;
-                    }
+                    if (temp.Params[i].Value.Equals(_currentKeywordParams[i].Value)) continue;
+                    check = false;
+                    break;
                 }
 
                 if (check)
                     removeTheKeyword = true;
 
-                if (removeTheKeyword)
-                {
-                    keywordsList.Remove(temp);
-                    break;
-                }
+                if (!removeTheKeyword) continue;
+                keywordsList.Remove(temp);
+                break;
             }
 
             if (!removeTheKeyword)

@@ -145,13 +145,13 @@ namespace RobotAutomationHelper.Forms
 
             if (addToSuggestions)
             {
-                _parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.GetCustomLibKeywords().Count;
+                _parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex = SuggestionsClass.GetLibKeywordsByName("CUSTOM").Count;
                 var temp = new Keyword(_parentKeywords[ImplementationIndexFromTheParent].Parent);
                 temp.CopyKeyword(_parentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
-                SuggestionsClass.GetCustomLibKeywords().Add(temp);
+                SuggestionsClass.GetLibKeywordsByName("CUSTOM").Add(temp);
             }
             else
-                SuggestionsClass.GetCustomLibKeywords()[_parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(_parentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
+                SuggestionsClass.GetLibKeywordsByName("CUSTOM")[_parentKeywords[ImplementationIndexFromTheParent].SuggestionIndex].CopyKeyword(_parentKeywords[ImplementationIndexFromTheParent]); //CopyKeyword
         }
 
         // adding argument to the KeywordArguments.Text
