@@ -50,7 +50,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
 
             if (index < 0) index = 0;
 
-            var addKeywordSteps = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.GetName().Trim(), FormType.Keyword) == -1;
+            var addKeywordSteps = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), FormType.Keyword) == -1;
 
             if (addKeywordSteps)
                 if (keyword.Type == KeywordType.Custom && !StringAndListOperations.StartsWithVariable(keyword.Name))

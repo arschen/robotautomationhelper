@@ -213,6 +213,7 @@ namespace RobotAutomationHelper.Scripts.Objects
                         }
                         OutputFilePath = outputFilePath;
                         SuggestionIndex = -1;
+                        KeywordString = "Custom";
                     }
                 }
             }
@@ -221,6 +222,7 @@ namespace RobotAutomationHelper.Scripts.Objects
                 Name = "";
                 OutputFilePath = outputFilePath;
                 SuggestionIndex = -1;
+                KeywordString = "Custom";
             }
         }
 

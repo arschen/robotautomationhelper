@@ -77,6 +77,12 @@
     <Compile Include="Forms\ParamAddForm.Designer.cs">
       <DependentUpon>ParamAddForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RunOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RunOptionsForm.Designer.cs">
+      <DependentUpon>RunOptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SettingsAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ParamAddForm.resx">
       <DependentUpon>ParamAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RunOptionsForm.resx">
+      <DependentUpon>RunOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsAddForm.resx">
       <DependentUpon>SettingsAddForm.cs</DependentUpon>

@@ -32,6 +32,7 @@ namespace RobotAutomationHelper.Forms
             settingsToolStripMenuItem.Visible = false;
             librariesToolStripMenuItem.Visible = false;
             variablesToolStripMenuItem.Visible = false;
+            runOptionsToolStripMenuItem.Visible = false;
         }
 
         private void ApplicationMain_Load(object sender, EventArgs e)
@@ -143,6 +144,7 @@ namespace RobotAutomationHelper.Forms
             settingsToolStripMenuItem.Visible = true;
             librariesToolStripMenuItem.Visible = true;
             variablesToolStripMenuItem.Visible = true;
+            runOptionsToolStripMenuItem.Visible = true;
             SetStructureFolder(folderBrowserDialog2.SelectedPath);
         }
 
@@ -194,8 +196,8 @@ namespace RobotAutomationHelper.Forms
                         }
                         if (toAdd)
                         {
-                            tempKeyword.SuggestionIndex = SuggestionsClass.GetLibKeywordsByName("CUSTOM").Count;
-                            SuggestionsClass.GetLibKeywordsByName("CUSTOM").Add(tempKeyword);
+                            tempKeyword.SuggestionIndex = SuggestionsClass.GetLibKeywordsByName("Custom").Count;
+                            SuggestionsClass.GetLibKeywordsByName("Custom").Add(tempKeyword);
                         }
             }
             if (tempKeyword.Keywords != null)
@@ -394,6 +396,11 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
+        private void RunOptionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InstantiateRunOptionsForm(sender, e);
+        }
+
         private void SuggestionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SuggestionsClass.Suggestions != null && SuggestionsClass.Suggestions.Count > 0)
@@ -426,7 +433,7 @@ namespace RobotAutomationHelper.Forms
         private void SaveToRobotAndRunToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveToRobotToolStripMenuItem_Click(sender, e);
-            RunCom("cd " + FilesAndFolderStructure.GetFolder(FolderType.Root) + "&robot tests");
+            RunCom("cd " + FilesAndFolderStructure.GetFolder(FolderType.Root) + "&robot " + RunOptionsForm.RunOptionsString + " tests");
         }
 
         internal new void InstantiateNameAndOutputForm(object sender, EventArgs e)

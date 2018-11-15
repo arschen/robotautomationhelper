@@ -150,6 +150,13 @@ namespace RobotAutomationHelper.Forms
             addSettingsForm.ShowSettingsContent();
         }
 
+        protected void InstantiateRunOptionsForm(object sender, EventArgs e)
+        {
+            if (RobotAutomationHelper.Log) Console.WriteLine(@"InstantiateRunOptionsForm " + ((Button)sender).Name);
+            var runOptionsForm = new RunOptionsForm();
+            runOptionsForm.ShowRunOptionsContent();
+        }
+
         protected void InstantiateVariablesAddForm(object sender, EventArgs e)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"InstantiateVariablesAddForm " + ((Button)sender).Name);

@@ -41,6 +41,7 @@ namespace RobotAutomationHelper.Forms
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.librariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.suggestionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.variablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.IndexLabel = new System.Windows.Forms.Label();
             this.TestCaseNameLabel = new System.Windows.Forms.Label();
@@ -48,7 +49,7 @@ namespace RobotAutomationHelper.Forms
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
-            this.variablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +59,8 @@ namespace RobotAutomationHelper.Forms
             this.toolStripMenuItem1,
             this.settingsToolStripMenuItem,
             this.librariesToolStripMenuItem,
-            this.variablesToolStripMenuItem});
+            this.variablesToolStripMenuItem,
+            this.runOptionsToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(784, 24);
@@ -132,9 +134,17 @@ namespace RobotAutomationHelper.Forms
             // suggestionsToolStripMenuItem
             // 
             this.suggestionsToolStripMenuItem.Name = "suggestionsToolStripMenuItem";
-            this.suggestionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.suggestionsToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.suggestionsToolStripMenuItem.Text = "Suggestions";
             this.suggestionsToolStripMenuItem.Click += new System.EventHandler(this.SuggestionsToolStripMenuItem_Click);
+            // 
+            // variablesToolStripMenuItem
+            // 
+            this.variablesToolStripMenuItem.Name = "variablesToolStripMenuItem";
+            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.variablesToolStripMenuItem.Text = "Variables";
+            this.variablesToolStripMenuItem.Visible = false;
+            this.variablesToolStripMenuItem.Click += new System.EventHandler(this.VariablesToolStripMenuItem_Click);
             // 
             // openFileDialog
             // 
@@ -178,12 +188,13 @@ namespace RobotAutomationHelper.Forms
             // 
             this.folderBrowserDialog2.Description = "Choose Robot Project Folder";
             // 
-            // variablesToolStripMenuItem
+            // runOptionsToolStripMenuItem
             // 
-            this.variablesToolStripMenuItem.Name = "variablesToolStripMenuItem";
-            this.variablesToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
-            this.variablesToolStripMenuItem.Text = "Variables";
-            this.variablesToolStripMenuItem.Click += new System.EventHandler(this.VariablesToolStripMenuItem_Click);
+            this.runOptionsToolStripMenuItem.Name = "runOptionsToolStripMenuItem";
+            this.runOptionsToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.runOptionsToolStripMenuItem.Text = "Run options";
+            this.runOptionsToolStripMenuItem.Visible = false;
+            this.runOptionsToolStripMenuItem.Click += new System.EventHandler(this.RunOptionsToolStripMenuItem_Click);
             // 
             // RobotAutomationHelper
             // 
@@ -226,6 +237,7 @@ namespace RobotAutomationHelper.Forms
         private ToolStripMenuItem librariesToolStripMenuItem;
         private ToolStripMenuItem suggestionsToolStripMenuItem;
         private ToolStripMenuItem variablesToolStripMenuItem;
+        private ToolStripMenuItem runOptionsToolStripMenuItem;
     }
 }
 

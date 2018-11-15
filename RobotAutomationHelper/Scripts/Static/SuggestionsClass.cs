@@ -63,9 +63,9 @@ namespace RobotAutomationHelper.Scripts.Static
         {
             var lib = new Lib
             {
-                Name = "CUSTOM",
+                Name = "Custom",
                 LibKeywords = new List<Keyword>(),
-                ToInclude = ContainsName("CUSTOM", true, true),
+                ToInclude = ContainsName("Custom", true, true),
                 KeyType = KeywordType.Custom
             };
             Suggestions.Add(lib);
