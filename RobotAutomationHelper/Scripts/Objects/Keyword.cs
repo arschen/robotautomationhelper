@@ -231,10 +231,19 @@ namespace RobotAutomationHelper.Scripts.Objects
             foreach (var key in SuggestionsClass.GetLibKeywordsByName(KeywordString))
                 if (key.Name.Equals((Name)))
                 {
+                    bool isConsequtive = true;
                     for (var i = 0; i < Params.Count; i++)
                     {
-                        if (Params[i].Value.Equals(key.Params[i].Value)) continue;
-                        paramsString += "  " + Params[i].Value;
+                        if (Params[i].Value.Equals(key.Params[i].Value)) { isConsequtive = false; continue; }
+                        if (key.Params[i].Value.Equals(""))
+                            paramsString += @"  " + Params[i].Value;
+                        else
+                        {
+                            if (!isConsequtive)
+                                paramsString += @"  " + Params[i].Name + @"=" + Params[i].Value;
+                            else
+                                paramsString += @"  " + Params[i].Value;
+                        }
                     }
                     return paramsString;
                 }
