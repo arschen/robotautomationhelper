@@ -196,6 +196,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                     {
                         RobotFileHandler.FileLineAdd("*** Settings ***", fileName, index);
                         index++;
+                        RobotFileHandler.FileLineAdd("", fileName, index);
                     }
                     else
                         index = tempTagIndex + 1;
@@ -240,6 +241,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                     {
                         RobotFileHandler.FileLineAdd("*** Variables ***", fileName, index);
                         index++;
+                        RobotFileHandler.FileLineAdd("", fileName, index);
                     }
                     else
                         index = tempTagIndex + 1;
@@ -260,11 +262,13 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                 if (suiteSettings.Overwrite)
                 {
                     const FolderType type = FolderType.Root;
-                    if (suiteSettings.Documentation != null && !suiteSettings.Documentation.Equals(""))
-                        ReplaceInSettings("Documentation  " + suiteSettings.Documentation, "Documentation",
+
+                    if (suiteSettings.TestTeardown.GetName() != "")
+                        ReplaceInSettings("Test Teardown  " + suiteSettings.TestTeardown.GetName() + suiteSettings.TestTeardown.ParamsToString()
+                            , "Test Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
-                        RemoveFromSettings("Documentation",
+                        RemoveFromSettings("Test Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.TestSetup.GetName() != "")
@@ -275,12 +279,12 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                         RemoveFromSettings("Test Setup",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.TestTeardown.GetName() != "")
-                        ReplaceInSettings("Test Teardown  " + suiteSettings.TestTeardown.GetName() + suiteSettings.TestTeardown.ParamsToString()
-                            , "Test Teardown",
+                    if (suiteSettings.SuiteTeardown.GetName() != "")
+                        ReplaceInSettings("Suite Teardown  " + suiteSettings.SuiteTeardown.GetName() + suiteSettings.SuiteTeardown.ParamsToString()
+                            , "Suite Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
-                        RemoveFromSettings("Test Teardown",
+                        RemoveFromSettings("Suite Teardown",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.SuiteSetup.GetName() != "")
@@ -291,12 +295,11 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                         RemoveFromSettings("Suite Setup",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
-                    if (suiteSettings.SuiteTeardown.GetName() != "")
-                        ReplaceInSettings("Suite Teardown  " + suiteSettings.SuiteTeardown.GetName() + suiteSettings.SuiteTeardown.ParamsToString()
-                            , "Suite Teardown",
+                    if (suiteSettings.Documentation != null && !suiteSettings.Documentation.Equals(""))
+                        ReplaceInSettings("Documentation  " + suiteSettings.Documentation, "Documentation",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
                     else
-                        RemoveFromSettings("Suite Teardown",
+                        RemoveFromSettings("Documentation",
                             FilesAndFolderStructure.ConcatFileNameToFolder(suiteSettings.OutputFilePath, type));
 
                     if (suiteSettings.SuiteSetup != null && !suiteSettings.SuiteSetup.GetName().Trim().Equals("")
@@ -341,9 +344,10 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
 
             //Add settings tag if not present in the file
             if (RobotFileHandler.HasTag(outputFileName , FormType.Settings) == -1)
-                RobotFileHandler.FileLineAdd("*** Settings ***"
-                    , outputFileName
-                    , 0);
+            {
+                RobotFileHandler.FileLineAdd("*** Settings ***", outputFileName, 0);
+                RobotFileHandler.FileLineAdd("", outputFileName, 1);
+            }
 
             if (location[0] == -1)
                 RobotFileHandler.FileLineAdd(replacementText

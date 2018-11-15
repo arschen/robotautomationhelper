@@ -1,4 +1,3 @@
-Support for variables
 Support for comments # ( reading done )
 Support for custom Python libraries
 Easy implementation of other robot framework libraries ( By adding xlsx in specific format and ENUM edit in code )
@@ -8,5 +7,4 @@ Support for Gerkhin
 
 BugFixes:
   Bug with Auto.robot files added when not saved ( requires investigation, no repro)
-  Fix placement of Settings in new files ( currently all are written at line 1 )
-  Trim function not working correctly
+  Validation when adding variables
