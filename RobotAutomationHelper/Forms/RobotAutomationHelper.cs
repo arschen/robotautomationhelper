@@ -358,7 +358,7 @@ namespace RobotAutomationHelper.Forms
             if (((TestCaseAddForm) sender).SkipForm) return;
             FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, _indexOfTheTestCaseToBeImplemented);
             _currentFilename = TestCases[_indexOfTheTestCaseToBeImplemented - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), "");
-            _selectedIndex = OutputFile.Items.IndexOf(_currentFilename);
+            _selectedIndex = OutputFile.Items.IndexOf(TestCases[_indexOfTheTestCaseToBeImplemented - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), ""));
             ClearDynamicElements();
             AddTestCaseToFormAndShow(false);
         }
