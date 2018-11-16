@@ -20,7 +20,7 @@ namespace RobotAutomationHelper.Forms
 
         internal static bool Log = false;
 
-        private static int _numberOfTestCases = 0;
+        private static int _numberOfTestCases;
         private object _realSender;
         // index of the test case to be implemented
         private int _indexOfTheTestCaseToBeImplemented;
@@ -137,7 +137,6 @@ namespace RobotAutomationHelper.Forms
 
         internal void AddTestCaseToFormAndShow(bool fileValueChanged)
         {
-            _selectedIndex = fileValueChanged? OutputFile.Items.IndexOf(_currentFilename) : 0;
             AddTestCasesToMainForm(OutputFile.Items.Count == 0 ? "": OutputFile.Items[_selectedIndex].ToString());
             ShowTestCasePanels();
         }
@@ -252,7 +251,7 @@ namespace RobotAutomationHelper.Forms
 
         private void AddTestCasesToMainForm(string fileName)
         {
-            Console.WriteLine("AddTestCasesToMainForm: " + fileName);
+            Console.WriteLine(@"AddTestCasesToMainForm: " + fileName);
             UpdateOutputFileSuggestions(OutputFile, FormType.Test);
             OutputFile.SelectedIndex = _selectedIndex;
             var testCasesCounter = 1;
@@ -267,7 +266,9 @@ namespace RobotAutomationHelper.Forms
                 }
             else
             {
-                TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
+                if (TestCases == null) return;
+                TestCases.Add(new TestCase("New Test Case",
+                    FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
                 AddTestCaseField(TestCases[0], testCasesCounter, 1);
                 _numberOfTestCases = 1;
                 FilesAndFolderStructure.AddFileToSavedFiles(TestCases[0].OutputFilePath);
@@ -354,13 +355,12 @@ namespace RobotAutomationHelper.Forms
 
         private void UpdateThisFormTestCaseAddFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!((TestCaseAddForm)sender).SkipForm)
-            {
-                FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, _indexOfTheTestCaseToBeImplemented);
-                _currentFilename = TestCases[_indexOfTheTestCaseToBeImplemented - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), "");
-                ClearDynamicElements();
-                AddTestCaseToFormAndShow(false);
-            }
+            if (((TestCaseAddForm) sender).SkipForm) return;
+            FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, _indexOfTheTestCaseToBeImplemented);
+            _currentFilename = TestCases[_indexOfTheTestCaseToBeImplemented - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), "");
+            _selectedIndex = OutputFile.Items.IndexOf(_currentFilename);
+            ClearDynamicElements();
+            AddTestCaseToFormAndShow(false);
         }
 
         internal void ShowTestCasePanels()
@@ -476,7 +476,8 @@ namespace RobotAutomationHelper.Forms
         {
             TestCases.Add(new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile));
             _currentFilename = TestCases[TestCases.Count - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), "");
-            Console.WriteLine("After Name and output form: " + _currentFilename);
+            _selectedIndex = OutputFile.Items.IndexOf(_currentFilename);
+            Console.WriteLine(@"After Name and output form: " + _currentFilename);
             TestCases.Sort();
             ClearDynamicElements();
             AddTestCaseToFormAndShow(false);
@@ -497,7 +498,7 @@ namespace RobotAutomationHelper.Forms
             if (OutputFile.SelectedIndex == -1 || _selectedIndex == OutputFile.SelectedIndex) return;
             _selectedIndex = OutputFile.SelectedIndex;
             _currentFilename = OutputFile.Text;
-            Console.WriteLine("Index changed: " + _currentFilename);
+            Console.WriteLine(@"Index changed: " + _currentFilename);
             ClearDynamicElements();
             AddTestCaseToFormAndShow(true);
         }
