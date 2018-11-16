@@ -189,7 +189,7 @@ namespace RobotAutomationHelper.Scripts.Static
             foreach (var suiteKeyword in suiteSettingsKeywordsList)
             {
                 if (suiteKeyword.GetKeywords().Count == 0) continue;
-                foreach (Keyword keyword in suiteKeyword.GetKeywords())
+                foreach (var keyword in suiteKeyword.GetKeywords())
                     UpdateSuggestionsKeywordToIncludes(keyword);
             }
 

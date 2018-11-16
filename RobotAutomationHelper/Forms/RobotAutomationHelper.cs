@@ -103,7 +103,7 @@ namespace RobotAutomationHelper.Forms
                     foreach (var tempKeyword in SuiteSettingsList)
                     {
                         if (tempKeyword.GetKeywords().Count == 0) continue;
-                        foreach (Keyword keyword in tempKeyword.GetKeywords())
+                        foreach (var keyword in tempKeyword.GetKeywords())
                             KeywordToSuggestions(keyword);
                     }
                 }
