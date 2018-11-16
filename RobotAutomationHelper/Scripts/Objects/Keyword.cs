@@ -164,12 +164,10 @@ namespace RobotAutomationHelper.Scripts.Objects
                         if (libsToCheck.Contains(lib.Name))
                             foreach (var key in lib.LibKeywords)
                             {
-                                if (splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim()))
-                                {
-                                    CopyKeyword(key);
-                                    found = true;
-                                    break;
-                                }
+                                if (!splitKeyword[0].ToLower().Trim().Equals(key.Name.ToLower().Trim())) continue;
+                                CopyKeyword(key);
+                                found = true;
+                                break;
                             }
 
                     if (found)
@@ -233,15 +231,15 @@ namespace RobotAutomationHelper.Scripts.Objects
             foreach (var key in SuggestionsClass.GetLibKeywordsByName(KeywordString))
                 if (key.Name.Equals((Name)))
                 {
-                    bool isConsequtive = true;
+                    var isConsecutive = true;
                     for (var i = 0; i < Params.Count; i++)
                     {
-                        if (Params[i].Value.Equals(key.Params[i].Value)) { isConsequtive = false; continue; }
+                        if (Params[i].Value.Equals(key.Params[i].Value)) { isConsecutive = false; continue; }
                         if (key.Params[i].Value.Equals(""))
                             paramsString += @"  " + Params[i].Value;
                         else
                         {
-                            if (!isConsequtive)
+                            if (!isConsecutive)
                                 paramsString += @"  " + Params[i].Name + @"=" + Params[i].Value;
                             else
                                 paramsString += @"  " + Params[i].Value;

@@ -164,10 +164,10 @@ namespace RobotAutomationHelper.Scripts.Static
             return null;
         }
 
-        internal static List<Keyword> GetLibKeywordsByName(string Name)
+        internal static List<Keyword> GetLibKeywordsByName(string name)
         {
             foreach (var lib in Suggestions)
-                if (lib.Name.Equals(Name))
+                if (lib.Name.Equals(name))
                     return lib.LibKeywords;
             return null;
         }
