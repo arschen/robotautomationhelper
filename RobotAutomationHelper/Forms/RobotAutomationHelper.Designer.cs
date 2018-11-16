@@ -42,6 +42,7 @@ namespace RobotAutomationHelper.Forms
             this.librariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.suggestionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.variablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.IndexLabel = new System.Windows.Forms.Label();
             this.TestCaseNameLabel = new System.Windows.Forms.Label();
@@ -49,7 +50,8 @@ namespace RobotAutomationHelper.Forms
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
-            this.runOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OutputFile = new System.Windows.Forms.ComboBox();
+            this.OutputLabel = new System.Windows.Forms.Label();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -146,6 +148,14 @@ namespace RobotAutomationHelper.Forms
             this.variablesToolStripMenuItem.Visible = false;
             this.variablesToolStripMenuItem.Click += new System.EventHandler(this.VariablesToolStripMenuItem_Click);
             // 
+            // runOptionsToolStripMenuItem
+            // 
+            this.runOptionsToolStripMenuItem.Name = "runOptionsToolStripMenuItem";
+            this.runOptionsToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.runOptionsToolStripMenuItem.Text = "Run options";
+            this.runOptionsToolStripMenuItem.Visible = false;
+            this.runOptionsToolStripMenuItem.Click += new System.EventHandler(this.RunOptionsToolStripMenuItem_Click);
+            // 
             // openFileDialog
             // 
             this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFileDialog1_FileOk);
@@ -153,7 +163,7 @@ namespace RobotAutomationHelper.Forms
             // IndexLabel
             // 
             this.IndexLabel.AutoSize = true;
-            this.IndexLabel.Location = new System.Drawing.Point(15, 30);
+            this.IndexLabel.Location = new System.Drawing.Point(15, 70);
             this.IndexLabel.Name = "IndexLabel";
             this.IndexLabel.Size = new System.Drawing.Size(14, 13);
             this.IndexLabel.TabIndex = 4;
@@ -163,7 +173,7 @@ namespace RobotAutomationHelper.Forms
             // TestCaseNameLabel
             // 
             this.TestCaseNameLabel.AutoSize = true;
-            this.TestCaseNameLabel.Location = new System.Drawing.Point(30, 30);
+            this.TestCaseNameLabel.Location = new System.Drawing.Point(30, 70);
             this.TestCaseNameLabel.Name = "TestCaseNameLabel";
             this.TestCaseNameLabel.Size = new System.Drawing.Size(86, 13);
             this.TestCaseNameLabel.TabIndex = 5;
@@ -173,7 +183,7 @@ namespace RobotAutomationHelper.Forms
             // AddLabel
             // 
             this.AddLabel.AutoSize = true;
-            this.AddLabel.Location = new System.Drawing.Point(325, 30);
+            this.AddLabel.Location = new System.Drawing.Point(325, 70);
             this.AddLabel.Name = "AddLabel";
             this.AddLabel.Size = new System.Drawing.Size(29, 13);
             this.AddLabel.TabIndex = 6;
@@ -188,13 +198,27 @@ namespace RobotAutomationHelper.Forms
             // 
             this.folderBrowserDialog2.Description = "Choose Robot Project Folder";
             // 
-            // runOptionsToolStripMenuItem
+            // OutputFile
             // 
-            this.runOptionsToolStripMenuItem.Name = "runOptionsToolStripMenuItem";
-            this.runOptionsToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
-            this.runOptionsToolStripMenuItem.Text = "Run options";
-            this.runOptionsToolStripMenuItem.Visible = false;
-            this.runOptionsToolStripMenuItem.Click += new System.EventHandler(this.RunOptionsToolStripMenuItem_Click);
+            this.OutputFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.OutputFile.FormattingEnabled = true;
+            this.OutputFile.Location = new System.Drawing.Point(32, 39);
+            this.OutputFile.Name = "OutputFile";
+            this.OutputFile.Size = new System.Drawing.Size(280, 21);
+            this.OutputFile.TabIndex = 27;
+            this.OutputFile.Visible = false;
+            this.OutputFile.SelectedIndexChanged += new System.EventHandler(this.OutputFile_SelectedIndexChanged);
+            // 
+            // OutputLabel
+            // 
+            this.OutputLabel.AutoSize = true;
+            this.OutputLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OutputLabel.Location = new System.Drawing.Point(12, 23);
+            this.OutputLabel.Name = "OutputLabel";
+            this.OutputLabel.Size = new System.Drawing.Size(82, 13);
+            this.OutputLabel.TabIndex = 26;
+            this.OutputLabel.Text = "Test Cases File:";
+            this.OutputLabel.Visible = false;
             // 
             // RobotAutomationHelper
             // 
@@ -202,6 +226,8 @@ namespace RobotAutomationHelper.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(784, 461);
+            this.Controls.Add(this.OutputFile);
+            this.Controls.Add(this.OutputLabel);
             this.Controls.Add(this.AddLabel);
             this.Controls.Add(this.TestCaseNameLabel);
             this.Controls.Add(this.IndexLabel);
@@ -238,6 +264,8 @@ namespace RobotAutomationHelper.Forms
         private ToolStripMenuItem suggestionsToolStripMenuItem;
         private ToolStripMenuItem variablesToolStripMenuItem;
         private ToolStripMenuItem runOptionsToolStripMenuItem;
+        private ComboBox OutputFile;
+        private Label OutputLabel;
     }
 }
 

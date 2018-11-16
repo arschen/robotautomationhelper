@@ -20,19 +20,24 @@ namespace RobotAutomationHelper.Forms
 
         internal static bool Log = false;
 
-        private static int _numberOfTestCases;
+        private static int _numberOfTestCases = 0;
         private object _realSender;
         // index of the test case to be implemented
         private int _indexOfTheTestCaseToBeImplemented;
+        private int _selectedIndex = -1;
+        private string _currentFilename;
 
         internal RobotAutomationHelper(BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
             ActiveControl = TestCaseNameLabel;
+            InitialYValue = 90;
             settingsToolStripMenuItem.Visible = false;
             librariesToolStripMenuItem.Visible = false;
             variablesToolStripMenuItem.Visible = false;
             runOptionsToolStripMenuItem.Visible = false;
+            OutputLabel.Visible = false;
+            OutputFile.Visible = false;
         }
 
         private void ApplicationMain_Load(object sender, EventArgs e)
@@ -73,24 +78,24 @@ namespace RobotAutomationHelper.Forms
 
         private void BrowseFolderButtonNewProject()
         {
-            FormSetup();
+            FormSetup(folderBrowserDialog3.SelectedPath);
             TestCases = new List<TestCase>();
             CheckForExistingCodeAndShowAlert();
-            AddTestCaseToFormAndShow();
+            AddTestCaseToFormAndShow(false);
         }
 
         private void BrowseFolderButtonOpenExcel()
         {
-            FormSetup();
+            FormSetup(folderBrowserDialog1.SelectedPath);
             TestCases = ReadExcel.ReadAllTestCasesFromExcel(openFileDialog.FileName);
             TestCases.Sort();
             CheckForExistingCodeAndShowAlert();
-            AddTestCaseToFormAndShow();
+            AddTestCaseToFormAndShow(false);
         }
 
         private void BrowseFolderButtonExistingProject()
         {
-            FormSetup();
+            FormSetup(folderBrowserDialog2.SelectedPath);
 
             TestCases = ReadRobotFiles.ReadAllTests();
             if (TestCases.Count != 0)
@@ -120,7 +125,7 @@ namespace RobotAutomationHelper.Forms
                 TestCases.Sort();
 
                 SuggestionsClass.UpdateSuggestionsToIncludes(TestCases, SuiteSettingsList);
-                AddTestCaseToFormAndShow();
+                AddTestCaseToFormAndShow(false);
             }
             else
             {
@@ -130,13 +135,14 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
-        internal void AddTestCaseToFormAndShow()
+        internal void AddTestCaseToFormAndShow(bool fileValueChanged)
         {
-            AddTestCasesToMainForm();
+            _selectedIndex = fileValueChanged? OutputFile.Items.IndexOf(_currentFilename) : 0;
+            AddTestCasesToMainForm(OutputFile.Items.Count == 0 ? "": OutputFile.Items[_selectedIndex].ToString());
             ShowTestCasePanels();
         }
 
-        internal void FormSetup()
+        internal void FormSetup(string path)
         {
             Cache.ClearCache();
             SuggestionsClass.PopulateSuggestionsList();
@@ -145,7 +151,9 @@ namespace RobotAutomationHelper.Forms
             librariesToolStripMenuItem.Visible = true;
             variablesToolStripMenuItem.Visible = true;
             runOptionsToolStripMenuItem.Visible = true;
-            SetStructureFolder(folderBrowserDialog2.SelectedPath);
+            OutputLabel.Visible = true;
+            OutputFile.Visible = true;
+            SetStructureFolder(path);
         }
 
         internal void CheckForExistingCodeAndShowAlert()
@@ -242,46 +250,51 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
-        private void AddTestCasesToMainForm()
+        private void AddTestCasesToMainForm(string fileName)
         {
-            _numberOfTestCases = TestCases.Count;
+            Console.WriteLine("AddTestCasesToMainForm: " + fileName);
+            UpdateOutputFileSuggestions(OutputFile, FormType.Test);
+            OutputFile.SelectedIndex = _selectedIndex;
             var testCasesCounter = 1;
+            _numberOfTestCases = 0;
             if (TestCases != null && TestCases.Count != 0)
-                foreach (var testCase in TestCases)
+                for (var i = 0; i < TestCases.Count; i++)
                 {
-                    AddTestCaseField(testCase, testCasesCounter);
+                    if (!FilesAndFolderStructure.ConcatFileNameToFolder(fileName, FolderType.Tests).ToLower().Equals(TestCases[i].OutputFilePath.ToLower())) continue;
+                    AddTestCaseField(TestCases[i], testCasesCounter, i + 1);
                     testCasesCounter++;
+                    _numberOfTestCases++;
                 }
             else
             {
                 TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
-                AddTestCaseField(TestCases[0], testCasesCounter);
+                AddTestCaseField(TestCases[0], testCasesCounter, 1);
                 _numberOfTestCases = 1;
                 FilesAndFolderStructure.AddFileToSavedFiles(TestCases[0].OutputFilePath);
             }
         }
 
-        private void AddTestCaseField(TestCase testCase, int testCasesCounter)
+        private void AddTestCaseField(TestCase testCase, int testCasesCounter, int index)
         {
-            FormControls.AddControl("TextBox", "DynamicTest" + testCasesCounter + "Name",
+            FormControls.AddControl("TextBox", "DynamicTest" + index + "Name",
                 testCasesCounter,
-                new Point(30 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                new Point(30 - HorizontalScroll.Value, InitialYValue + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(280, 20),
                 testCase.Name.Trim(),
                 Color.Black,
                 null,
                 this);
-            FormControls.AddControl("Label", "DynamicTest" + testCasesCounter + "Label",
+            FormControls.AddControl("Label", "DynamicTest" + index + "Label",
                 testCasesCounter,
-                new Point(10 - HorizontalScroll.Value, 53 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                new Point(10 - HorizontalScroll.Value, InitialYValue + 3 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 testCasesCounter + ".",
                 Color.Black,
                 null,
                 this);
-            FormControls.AddControl("CheckBox", "DynamicTest" + testCasesCounter + "CheckBox",
+            FormControls.AddControl("CheckBox", "DynamicTest" + index + "CheckBox",
                 testCasesCounter,
-                new Point(325 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                new Point(325 - HorizontalScroll.Value, InitialYValue + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 "Add",
                 Color.Black,
@@ -289,26 +302,26 @@ namespace RobotAutomationHelper.Forms
                 this);
 
             var implementationText = TestCases[testCasesCounter - 1].Implemented? "Edit Implementation" : "Add Implementation";
-            FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddImplementation",
+            FormControls.AddControl("Button", "DynamicTest" + index + "AddImplementation",
                 testCasesCounter,
-                new Point(345 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                new Point(345 - HorizontalScroll.Value, InitialYValue + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(120, 20),
                 implementationText,
                 Color.Black,
                 InstantiateAddTestCaseForm,
                 this);
 
-            FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "AddTestCase",
+            FormControls.AddControl("Button", "DynamicTest" + index + "AddTestCase",
                 testCasesCounter,
-                new Point(470 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                new Point(470 - HorizontalScroll.Value, InitialYValue + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 "+",
                 Color.Black,
                 InstantiateNameAndOutputForm,
                 this);
-            FormControls.AddControl("Button", "DynamicTest" + testCasesCounter + "RemoveTestCase",
+            FormControls.AddControl("Button", "DynamicTest" + index + "RemoveTestCase",
                 testCasesCounter,
-                new Point(490 - HorizontalScroll.Value, 50 + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
+                new Point(490 - HorizontalScroll.Value, InitialYValue + (testCasesCounter - 1) * 25 - VerticalScroll.Value),
                 new Size(20, 20),
                 "-",
                 Color.Black,
@@ -341,14 +354,13 @@ namespace RobotAutomationHelper.Forms
 
         private void UpdateThisFormTestCaseAddFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!((TestCaseAddForm) sender).SkipForm)
+            if (!((TestCaseAddForm)sender).SkipForm)
             {
-                Controls["DynamicTest" + _indexOfTheTestCaseToBeImplemented + "Name"].Text = TestCases[_indexOfTheTestCaseToBeImplemented - 1].Name;
-                Controls["DynamicTest" + _indexOfTheTestCaseToBeImplemented + "AddImplementation"].Text = TestCases[_indexOfTheTestCaseToBeImplemented - 1].Implemented ? "Edit implementation" : "Add implementation";
+                FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, _indexOfTheTestCaseToBeImplemented);
+                _currentFilename = TestCases[_indexOfTheTestCaseToBeImplemented - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), "");
+                ClearDynamicElements();
+                AddTestCaseToFormAndShow(false);
             }
-
-            //Adds file path + name to the Files And Folder structure for use in the drop down lists when choosing output file
-            FilesAndFolderStructure.AddImplementedTestCasesFilesToSavedFiles(TestCases, _indexOfTheTestCaseToBeImplemented);
         }
 
         internal void ShowTestCasePanels()
@@ -462,54 +474,32 @@ namespace RobotAutomationHelper.Forms
 
         internal void AddTestCaseToProject(object sender, EventArgs e)
         {
-            var testCaseIndex = int.Parse(((Button)sender).Name.Replace("DynamicTest", "").Replace("AddTestCase", ""));
-
-            AssignThisTestCasesNamesFromTextFields();
-
-            TestCases.Add(new TestCase("New Test Case", FilesAndFolderStructure.GetFolder(FolderType.Tests) + "Auto.robot"));
-
-            for (var i = _numberOfTestCases; i > testCaseIndex; i--)
-                TestCases[i] = TestCases[i - 1];
-
-            TestCases[testCaseIndex] = new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile);
-            _numberOfTestCases++;
-            AddTestCaseField(TestCases[_numberOfTestCases - 1], _numberOfTestCases);
-
-            for (var i = 1; i < _numberOfTestCases; i++)
-                Controls["DynamicTest" + i + "Name"].Text = TestCases[i - 1].Name.Trim();
+            TestCases.Add(new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile));
+            _currentFilename = TestCases[TestCases.Count - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), "");
+            Console.WriteLine("After Name and output form: " + _currentFilename);
+            TestCases.Sort();
+            ClearDynamicElements();
+            AddTestCaseToFormAndShow(false);
         }
 
         internal void RemoveTestCaseFromProject(object sender, EventArgs e)
         {
-            AssignThisTestCasesNamesFromTextFields();
-
             if (_numberOfTestCases <= 1) return;
             var testCaseIndex = int.Parse(((Button)sender).Name.Replace("DynamicTest", "").Replace("RemoveTestCase", ""));
-            RemoveTestCaseField(_numberOfTestCases, false);
+
             TestCases.RemoveAt(testCaseIndex - 1);
-            _numberOfTestCases--;
-            for (var i = 1; i <= _numberOfTestCases; i++)
-                Controls["DynamicTest" + i + "Name"].Text = TestCases[i - 1].Name.Trim();
+            ClearDynamicElements();
+            AddTestCaseToFormAndShow(true);
         }
 
-        private void AssignThisTestCasesNamesFromTextFields()
+        private void OutputFile_SelectedIndexChanged(object sender, EventArgs e)
         {
-            for (var i = 1; i <= _numberOfTestCases; i++)
-                if (Controls.Find("DynamicTest" + i + "Name", false).Length != 0)
-                    TestCases[i - 1].Name = Controls["DynamicTest" + i + "Name"].Text;
-        }
-
-        // Removes TextBox / Label / Add implementation / Add and remove keyword / Params
-        private void RemoveTestCaseField(int testCaseIndex, bool removeFromList)
-        {
-            FormControls.RemoveControlByKey("DynamicTest" + testCaseIndex + "Name", Controls);
-            FormControls.RemoveControlByKey("DynamicTest" + testCaseIndex + "Label", Controls);
-            FormControls.RemoveControlByKey("DynamicTest" + testCaseIndex + "AddImplementation", Controls);
-            FormControls.RemoveControlByKey("DynamicTest" + testCaseIndex + "CheckBox", Controls);
-            FormControls.RemoveControlByKey("DynamicTest" + testCaseIndex + "AddTestCase", Controls);
-            FormControls.RemoveControlByKey("DynamicTest" + testCaseIndex + "RemoveTestCase", Controls);
-            if (removeFromList)
-                TestCases.RemoveAt(testCaseIndex - 1);
+            if (OutputFile.SelectedIndex == -1 || _selectedIndex == OutputFile.SelectedIndex) return;
+            _selectedIndex = OutputFile.SelectedIndex;
+            _currentFilename = OutputFile.Text;
+            Console.WriteLine("Index changed: " + _currentFilename);
+            ClearDynamicElements();
+            AddTestCaseToFormAndShow(true);
         }
     }
 }
