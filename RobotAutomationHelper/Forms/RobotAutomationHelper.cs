@@ -197,7 +197,14 @@ namespace RobotAutomationHelper.Forms
                         if (toAdd)
                         {
                             tempKeyword.SuggestionIndex = SuggestionsClass.GetLibKeywordsByName("Custom").Count;
-                            SuggestionsClass.GetLibKeywordsByName("Custom").Add(tempKeyword);
+                            Keyword temp = new Keyword(null);
+                            temp.CopyKeyword(tempKeyword);
+                            if (temp.Params != null && temp.Params.Count > 0)
+                                foreach (Param param in temp.Params)
+                                    if (!temp.Arguments.ToLower().Contains(param.Name + @"=" + param.Value))
+                                        param.Value = "";
+
+                            SuggestionsClass.GetLibKeywordsByName("Custom").Add(temp);
                         }
             }
             if (tempKeyword.Keywords != null)
