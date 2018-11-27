@@ -254,7 +254,8 @@ namespace RobotAutomationHelper.Forms
         {
             Console.WriteLine("AddTestCasesToMainForm: " + fileName);
             UpdateOutputFileSuggestions(OutputFile, FormType.Test);
-            OutputFile.SelectedIndex = _selectedIndex;
+            if (OutputFile.Items.Count != 0)
+                OutputFile.SelectedIndex = _selectedIndex;
             var testCasesCounter = 1;
             _numberOfTestCases = 0;
             if (TestCases != null && TestCases.Count != 0)
