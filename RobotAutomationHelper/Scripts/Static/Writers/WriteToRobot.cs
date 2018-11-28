@@ -394,6 +394,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
 
         internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
         {
+            if (fileName.Equals("")) return;
             Console.WriteLine(@"Overwrite (remove): " + name + @" " + (isKeyword ? "Keyword" : "Test") + @"\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));
             string[] arrLine;
             if (File.Exists(fileName))
