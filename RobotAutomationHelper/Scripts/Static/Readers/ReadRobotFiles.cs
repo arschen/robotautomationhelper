@@ -163,7 +163,19 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                         else
                         if (arrLine[i].Trim().StartsWith("[Arguments]"))
                         {
-                            var splitKeyword = arrLine[i].Replace("[Arguments]", "").Trim().Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                            int j = i;
+                            if (i + 1 < arrLine.Length)
+                            {
+                                string temp = "";
+                                while (arrLine[i + 1].Trim().StartsWith("..."))
+                                {
+                                    temp += "  " + arrLine[i + 1].Replace("...", "");
+                                    i++;
+                                }
+                                temp.Trim();
+                            }
+
+                            var splitKeyword = arrLine[j].Replace("[Arguments]", "").Trim().Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                             for (var counter = 0; counter < splitKeyword.Length; counter++)
                             {
                                 if (!splitKeyword[counter].Contains("="))
@@ -192,16 +204,28 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                                         keyword.Params.Add(new Param(temp[0], temp[1]));
                                 }
                             }
-                            keyword.Arguments = arrLine[i];
+                            keyword.Arguments = arrLine[j];
                         }
                         else
                         {
+                            int j = i;
+                            if (i + 1 < arrLine.Length)
+                            {
+                                string temp = "";
+                                while (arrLine[i + 1].Trim().StartsWith("..."))
+                                {
+                                    temp += "  " + arrLine[i + 1].Replace("...", "");
+                                    i++;
+                                }
+                                temp.Trim();
+                            }
+
                             if (keyword.Keywords == null)
                                 keyword.Keywords = new List<Keyword>();
-                            if (!arrLine[i].Trim().ToLower().StartsWith(":for")
-                                && !arrLine[i].Trim().ToLower().StartsWith("\\"))
+                            if (!arrLine[j].Trim().ToLower().StartsWith(":for")
+                                && !arrLine[j].Trim().ToLower().StartsWith("\\"))
                             {
-                                keyword.Keywords.Add(new Keyword(arrLine[i],
+                                keyword.Keywords.Add(new Keyword(arrLine[j],
                                     FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", GetLibs(fileName), keyword));
                                 if (keyword.Keywords[keyword.Keywords.Count - 1].IsRecursive(keyword.Keywords[keyword.Keywords.Count - 1]))
                                 {
@@ -213,15 +237,15 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                             }
                             else
                             {
-                                if (arrLine[i].Trim().ToLower().StartsWith(":for"))
+                                if (arrLine[j].Trim().ToLower().StartsWith(":for"))
                                 {
-                                    if (arrLine[i].Trim().ToLower().Contains("range"))
+                                    if (arrLine[j].Trim().ToLower().Contains("range"))
                                     {
                                         var temp = new Keyword(keyword);
                                         temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.ForLoopInRange));
-                                        var splitKeyword = arrLine[i].Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                                        var splitKeyword = arrLine[j].Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                         if (splitKeyword.Length == 1)
-                                            splitKeyword = arrLine[i].Split(new [] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                            splitKeyword = arrLine[j].Split(new [] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
                                         temp.Params[0].Value = splitKeyword[1];
                                         temp.Params[1].Value = splitKeyword[3];
                                         temp.Params[2].Value = splitKeyword[4];
@@ -232,9 +256,9 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                                     {
                                         var temp = new Keyword(keyword);
                                         temp.CopyKeyword(SuggestionsClass.GetForLoop(KeywordType.ForLoopElements));
-                                        var splitKeyword = arrLine[i].Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                                        var splitKeyword = arrLine[j].Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                                         if (splitKeyword.Length == 1)
-                                            splitKeyword = arrLine[i].Split(new [] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                            splitKeyword = arrLine[j].Split(new [] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
                                         temp.Params[0].Value = splitKeyword[1];
                                         temp.Params[1].Value = splitKeyword[3];
                                         keyword.Keywords.Add(temp);
@@ -244,7 +268,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                                 else
                                 {
                                     keyword.Keywords[keyword.Keywords.Count - 1].ForLoopKeywords.Add(
-                                        new Keyword(arrLine[i].Trim().Remove(0, 1).Trim(),
+                                        new Keyword(arrLine[j].Trim().Remove(0, 1).Trim(),
                                             FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", GetLibs(fileName), keyword));
                                     if (keyword.Keywords[keyword.Keywords.Count - 1].IsRecursive(keyword.Keywords[keyword.Keywords.Count - 1]))
                                     {
