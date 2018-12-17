@@ -20,7 +20,7 @@ namespace RobotAutomationHelper.Scripts.Static
 
         internal static bool StartsWithVariable(string name)
         {
-            return name.StartsWith("${")
+            return name == null ? false : name.StartsWith("${")
                    || name.StartsWith("@{")
                    || name.StartsWith("&{");
         }

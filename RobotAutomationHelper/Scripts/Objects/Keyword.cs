@@ -143,6 +143,7 @@ namespace RobotAutomationHelper.Scripts.Objects
                 if (keywordString.Trim().StartsWith("#"))
                 {
                     Comments = keywordString;
+                    Name = keywordString;
                     OutputFilePath = outputFilePath;
                     SuggestionIndex = -1;
                     Type = KeywordType.Comment;
@@ -291,7 +292,7 @@ namespace RobotAutomationHelper.Scripts.Objects
 
         internal bool IsRecursive(Keyword keyword)
         {
-            if (keyword.Parent != null)
+            if (keyword.Parent != null && keyword.Comments == null)
                 if (Name.ToLower().Equals(keyword.Parent.Name.Trim().ToLower()))
                 {
                     _recursive = true;

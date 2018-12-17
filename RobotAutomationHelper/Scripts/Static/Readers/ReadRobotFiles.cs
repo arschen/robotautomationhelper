@@ -143,7 +143,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
             {
                 var continueLoop = !(keyword.IncludeImportFile && !fileName.Contains(keyword.ImportFileName + ".robot"));
                 if (!continueLoop) continue;
-                var index = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name.Trim(), FormType.Keyword);
+                var index = RobotFileHandler.LocationOfTestCaseOrKeywordInFile(fileName, keyword.Name == null? "":keyword.Name.Trim(), FormType.Keyword);
                 if (index == -1) continue;
                 keyword.OutputFilePath = fileName;
                 var arrLine = File.ReadAllLines(fileName);
@@ -163,19 +163,20 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                         else
                         if (arrLine[i].Trim().StartsWith("[Arguments]"))
                         {
-                            int j = i;
+                            var j = i;
+                            var multiLine = "";
                             if (i + 1 < arrLine.Length)
                             {
-                                string temp = "";
                                 while (arrLine[i + 1].Trim().StartsWith("..."))
                                 {
-                                    temp += "  " + arrLine[i + 1].Replace("...", "");
+                                    multiLine += "  " + arrLine[i + 1].Replace("...", "");
                                     i++;
+                                    if (i + 1 >= arrLine.Length) break;
                                 }
-                                temp.Trim();
+                                multiLine.TrimEnd();
                             }
 
-                            var splitKeyword = arrLine[j].Replace("[Arguments]", "").Trim().Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+                            var splitKeyword = (arrLine[j] + multiLine).Replace("[Arguments]", "").Trim().Split(new [] { "  " }, StringSplitOptions.RemoveEmptyEntries);
                             for (var counter = 0; counter < splitKeyword.Length; counter++)
                             {
                                 if (!splitKeyword[counter].Contains("="))
@@ -208,16 +209,17 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                         }
                         else
                         {
-                            int j = i;
+                            var j = i;
+                            var multiLine = "";
                             if (i + 1 < arrLine.Length)
                             {
-                                string temp = "";
                                 while (arrLine[i + 1].Trim().StartsWith("..."))
                                 {
-                                    temp += "  " + arrLine[i + 1].Replace("...", "");
+                                    multiLine += "  " + arrLine[i + 1].Replace("...", "");
                                     i++;
+                                    if (i + 1 >= arrLine.Length) break;
                                 }
-                                temp.Trim();
+                                multiLine.TrimEnd();
                             }
 
                             if (keyword.Keywords == null)
@@ -225,7 +227,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                             if (!arrLine[j].Trim().ToLower().StartsWith(":for")
                                 && !arrLine[j].Trim().ToLower().StartsWith("\\"))
                             {
-                                keyword.Keywords.Add(new Keyword(arrLine[j],
+                                keyword.Keywords.Add(new Keyword(arrLine[j] + multiLine,
                                     FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", GetLibs(fileName), keyword));
                                 if (keyword.Keywords[keyword.Keywords.Count - 1].IsRecursive(keyword.Keywords[keyword.Keywords.Count - 1]))
                                 {
