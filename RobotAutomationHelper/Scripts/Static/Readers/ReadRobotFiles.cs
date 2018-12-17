@@ -167,7 +167,16 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                             for (var counter = 0; counter < splitKeyword.Length; counter++)
                             {
                                 if (!splitKeyword[counter].Contains("="))
-                                    keyword.Params[counter].Name = splitKeyword[counter];
+                                {
+                                    if (keyword.Params != null)
+                                        keyword.Params[counter].Name = splitKeyword[counter];
+                                    else
+                                    {
+                                        keyword.Params = new List<Param>(){
+                                            new Param(splitKeyword[counter], "")
+                                        };
+                                    }
+                                }
                                 else
                                 {
                                     // check if after splitting the first string matches any param name
@@ -325,7 +334,16 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                 if (!start || !line.StartsWith("Resource")) continue;
                 if (line.Contains("../"))
                 {
-                    resources.Add(FilesAndFolderStructure.GetFolder(FolderType.Root) + line.Replace("../","").Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/", "\\"));
+                    string temp = line;
+                    string tempFileName = fileName;
+                    tempFileName = tempFileName.Replace("\\", "/");
+                    tempFileName = tempFileName.Remove(tempFileName.LastIndexOf('/'));
+                    while (temp.Contains("../"))
+                    {
+                        tempFileName = tempFileName.Remove(tempFileName.LastIndexOf('/'));
+                        temp = temp.Replace("../", "");
+                    }
+                    resources.Add(tempFileName.Replace("/", "\\") + "\\" + temp.Replace("../", "").Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/", "\\"));
                 }
                 else
                 {
