@@ -39,7 +39,7 @@ namespace RobotAutomationHelper.Forms
                         break;
                     }
                 if (add)
-                    RobotAutomationHelper.GlobalVariables.Add(new Variables(null, fileName));
+                    RobotAutomationHelper.GlobalVariables.Add(new Variables(new List<string>(), FilesAndFolderStructure.ConcatFileNameToFolder(fileName, FolderType.Root)));
             }
 
             ActiveControl = AddVariablesLabel;
@@ -80,9 +80,10 @@ namespace RobotAutomationHelper.Forms
 
         private void Save_Click(object sender, EventArgs e)
         {
+            TextFieldsToCurrentVariablesNames();
             foreach (var temp in RobotAutomationHelper.GlobalVariables)
             {
-                if (!temp.ToString().Equals(OutputFile.Text)) continue;
+                if (!temp.ToString().Equals(FilesAndFolderStructure.ConcatFileNameToFolder(OutputFile.Text, FolderType.Root))) continue;
                 temp.VariableNames = CurrentVariables.VariableNames;
                 break;
             }
