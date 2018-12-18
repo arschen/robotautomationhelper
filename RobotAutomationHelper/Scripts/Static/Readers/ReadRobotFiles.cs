@@ -66,7 +66,20 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                                 if (!arrLine[i].Trim().ToLower().StartsWith(":for")
                                     && !arrLine[i].Trim().ToLower().StartsWith("\\"))
                                 {
-                                    _currentTestCaseTestSteps.Add(new Keyword(arrLine[i],
+                                    var j = i;
+                                    var multiLine = "";
+                                    if (i + 1 < arrLine.Length)
+                                    {
+                                        while (arrLine[i + 1].Trim().StartsWith("..."))
+                                        {
+                                            multiLine += "  " + arrLine[i + 1].Replace("...", "");
+                                            i++;
+                                            if (i + 1 >= arrLine.Length) break;
+                                        }
+                                        multiLine.TrimEnd();
+                                    }
+
+                                    _currentTestCaseTestSteps.Add(new Keyword(arrLine[j] + multiLine,
                                         FilesAndFolderStructure.GetFolder(FolderType.Resources) + "Auto.robot", GetLibs(fileName), null));
                                     AddKeywordsFromKeyword(_currentTestCaseTestSteps[_currentTestCaseTestSteps.Count - 1],
                                         GetResourcesFromFile(fileName));
@@ -367,14 +380,25 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
                     while (temp.Contains("../"))
                     {
                         tempFileName = tempFileName.Remove(tempFileName.LastIndexOf('/'));
-                        temp = temp.Replace("../", "");
+                        temp = temp.Remove(temp.LastIndexOf("../"), 3);
+                        //Console.WriteLine(temp + " || " + tempFileName);
                     }
                     resources.Add(tempFileName.Replace("/", "\\") + "\\" + temp.Replace("../", "").Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/", "\\"));
                 }
                 else
                 {
                     if (!line.Contains("./"))
-                        resources.Add(FilesAndFolderStructure.GetFolder(FolderType.Root) + line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/", "\\"));
+                    {
+                        if (!line.Contains("/"))
+                        {
+                            string tempFileName = fileName;
+                            tempFileName = tempFileName.Replace("\\", "/");
+                            tempFileName = tempFileName.Remove(tempFileName.LastIndexOf('/'));
+                            resources.Add(tempFileName.Replace("/", "\\") + "\\" + line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/", "\\"));
+                        }
+                        else
+                            resources.Add(FilesAndFolderStructure.GetFolder(FolderType.Root) + line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/", "\\"));
+                    }
                     else
                     {
                         resources.Add(fileName.Remove(fileName.LastIndexOf('\\') + 1, fileName.Length - fileName.LastIndexOf('\\') - 1) + line.Replace("./", "").Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("/", "\\"));

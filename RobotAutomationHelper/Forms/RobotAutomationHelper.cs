@@ -189,6 +189,11 @@ namespace RobotAutomationHelper.Forms
 
         private static void KeywordToSuggestions(Keyword tempKeyword)
         {
+            //TODO
+            if (tempKeyword.Name.ToLower().Equals("[return]"))
+                return;
+            if (tempKeyword.Name.Equals(""))
+                return;
             if (tempKeyword.SuggestionIndex == -1 && !tempKeyword.OutputFilePath.Equals("") && !StringAndListOperations.StartsWithVariable(tempKeyword.Name))
             {
                 var toAdd = true;
@@ -196,24 +201,24 @@ namespace RobotAutomationHelper.Forms
                     if (lib.ToInclude)
                         foreach (var suggested in lib.LibKeywords)
                         {
-                            if (suggested.OutputFilePath.Equals("")) continue;
-                            if (!suggested.Name.Equals(tempKeyword.Name) ||
-                                !suggested.OutputFilePath.Equals(tempKeyword.OutputFilePath)) continue;
+                            if (!suggested.Name.ToLower().Equals(tempKeyword.Name.ToLower())) continue;
+                            if (lib.Name.Equals("Custom") && !suggested.OutputFilePath.ToLower().Equals(tempKeyword.OutputFilePath.ToLower())) continue;
                             toAdd = false;
                             break;
                         }
-                        if (toAdd)
-                        {
-                            tempKeyword.SuggestionIndex = SuggestionsClass.GetLibKeywordsByName("Custom").Count;
-                            Keyword temp = new Keyword(null);
-                            temp.CopyKeyword(tempKeyword);
-                            if (temp.Params != null && temp.Params.Count > 0)
-                                foreach (Param param in temp.Params)
-                                    if (!temp.Arguments.ToLower().Contains(param.Name + @"=" + param.Value))
-                                        param.Value = "";
 
-                            SuggestionsClass.GetLibKeywordsByName("Custom").Add(temp);
-                        }
+                if (toAdd)
+                {
+                    tempKeyword.SuggestionIndex = SuggestionsClass.GetLibKeywordsByName("Custom").Count;
+                    Keyword temp = new Keyword(null);
+                    temp.CopyKeyword(tempKeyword);
+                    if (temp.Params != null && temp.Params.Count > 0)
+                        foreach (Param param in temp.Params)
+                            if (!temp.Arguments.ToLower().Contains(param.Name + @"=" + param.Value))
+                                param.Value = "";
+
+                    SuggestionsClass.GetLibKeywordsByName("Custom").Add(temp);
+                }
             }
             if (tempKeyword.Keywords != null)
                 foreach (var nestedKeyword in tempKeyword.Keywords)
