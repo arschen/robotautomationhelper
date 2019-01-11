@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts.CustomControls
 {
-    internal class LabelWithToolTip : Label
+    public class LabelWithToolTip : Label
     {
         private readonly ToolTip _toolTip = new ToolTip();
 

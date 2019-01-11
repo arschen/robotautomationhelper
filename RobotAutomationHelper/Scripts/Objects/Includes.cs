@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace RobotAutomationHelper.Scripts.Objects
 {
-    class Includes : IEquatable<Includes>
+    public class Includes : IEquatable<Includes>
     {
-        internal string FileName { get; }
-        internal List<string> FilesToInclude { get; }
+        public string FileName { get; }
+        public List<string> FilesToInclude { get; }
 
-        internal Includes(string fileName)
+        public Includes(string fileName)
         {
             FileName = fileName;
             FilesToInclude = new List<string>();
         }
 
-        internal void AddToList(string fileName)
+        public void AddToList(string fileName)
         {
             if (FileName.Equals(fileName)) return;
             if (!FilesToInclude.Contains(fileName))

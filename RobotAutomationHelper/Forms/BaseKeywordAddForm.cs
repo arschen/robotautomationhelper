@@ -9,15 +9,15 @@ using RobotAutomationHelper.Scripts.Static.Consts;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal class BaseKeywordAddForm : Form
+    public class BaseKeywordAddForm : Form
     {
         private readonly BaseKeywordAddForm _formParent;
         // index and keywords of the parent
         protected int ImplementationIndexFromTheParent;
-        internal int NumberOfKeywordsInThisForm { get; set; }
+        public int NumberOfKeywordsInThisForm { get; set; }
         //y value for dynamic buttons
         protected int InitialYValue;
-        internal bool SkipForm = false;
+        public bool SkipForm = false;
         //index of the keyword to be implemented after Add/Edit Implementation
         protected int IndexOfTheKeywordToBeImplemented;
         //Keywords in the form
@@ -25,20 +25,20 @@ namespace RobotAutomationHelper.Forms
 
         //Present in memory and robot files
         protected string MemoryPath;
-        internal FormType FormType { get; set; }
+        public FormType FormType { get; set; }
 
-        internal BaseKeywordAddForm()
+        public BaseKeywordAddForm()
         {
 
         }
 
-        internal BaseKeywordAddForm(BaseKeywordAddForm parentForm)
+        public BaseKeywordAddForm(BaseKeywordAddForm parentForm)
         {
             _formParent = parentForm;
         }
 
         // change the field when the keyword name is changed
-        internal void UpdateTheKeywordOnNameChange(object sender, string textChangePassed, string keywordType)
+        public void UpdateTheKeywordOnNameChange(object sender, string textChangePassed, string keywordType)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"ChangeTheKeywordFieldAfterSelection " + ((TextWithList) sender).Name + @" " + Name);
 
@@ -172,7 +172,7 @@ namespace RobotAutomationHelper.Forms
             librariesForm.ShowLibrariesContent();
         }
 
-        internal void InstantiateParamsAddForm(object sender, EventArgs e)
+        public void InstantiateParamsAddForm(object sender, EventArgs e)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"InstantiateParamsAddForm " + ((Button)sender).Name);
 
@@ -189,7 +189,7 @@ namespace RobotAutomationHelper.Forms
 
         private object _realSender;
 
-        internal void InstantiateNameAndOutputForm(object sender, EventArgs e)
+        public void InstantiateNameAndOutputForm(object sender, EventArgs e)
         {
             _realSender = sender;
             if (RobotAutomationHelper.Log) Console.WriteLine(@"InstantiateParamsAddForm " + ((Button)sender).Name);
@@ -437,7 +437,7 @@ namespace RobotAutomationHelper.Forms
                     ThisFormKeywords[i - 1].Name = Controls["DynamicStep" + i + "Name"].Text;
         }
 
-        internal void RemoveKeywordFromThisForm(object sender, EventArgs e)
+        public void RemoveKeywordFromThisForm(object sender, EventArgs e)
         {
             AssignThisKeywordNamesFromTextFields();
 
@@ -498,7 +498,7 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
-        internal static void UpdateOutputFileSuggestions(ComboBox comboBox, FormType formType)
+        public static void UpdateOutputFileSuggestions(ComboBox comboBox, FormType formType)
         {
             var folderType = FilesAndFolderStructure.ConvertFormTypeToFolderType(formType);
             if (RobotAutomationHelper.Log) Console.WriteLine(@"UpdateOutputFileSuggestions " + comboBox.Name);
@@ -513,7 +513,7 @@ namespace RobotAutomationHelper.Forms
         }
 
         // Block fields
-        internal void DisableKeywordFields(int keywordIndex)
+        public void DisableKeywordFields(int keywordIndex)
         {
             if (Controls.Find("DynamicStep" + keywordIndex + "Label", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "Label"].Enabled = false;
@@ -528,7 +528,7 @@ namespace RobotAutomationHelper.Forms
         }
 
         // Enable fields
-        internal void EnableKeywordFields(int keywordIndex)
+        public void EnableKeywordFields(int keywordIndex)
         {
             if (Controls.Find("DynamicStep" + keywordIndex + "Label", false).Length != 0)
                 Controls["DynamicStep" + keywordIndex + "Label"].Enabled = true;
@@ -588,7 +588,7 @@ namespace RobotAutomationHelper.Forms
         }
     }
 
-    internal enum FormType
+    public enum FormType
     {
         Keyword,
         Test,

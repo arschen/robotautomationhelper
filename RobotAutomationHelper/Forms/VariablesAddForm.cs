@@ -9,13 +9,13 @@ using RobotAutomationHelper.Scripts.Static.Consts;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class VariablesAddForm : BaseKeywordAddForm
+    public partial class VariablesAddForm : BaseKeywordAddForm
     {
         private int _selectedIndex;
-        internal Variables CurrentVariables { get; set; }
+        public Variables CurrentVariables { get; set; }
         private int _variablesCounter;
 
-        internal VariablesAddForm(BaseKeywordAddForm parent) : base(parent)
+        public VariablesAddForm(BaseKeywordAddForm parent) : base(parent)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"VariablesAddForm Constructor");
             InitializeComponent();
@@ -72,7 +72,7 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
-        internal void ShowVariablesContent()
+        public void ShowVariablesContent()
         {
             StartPosition = FormStartPosition.Manual;
             ShowDialog();
@@ -169,7 +169,7 @@ namespace RobotAutomationHelper.Forms
                 this);
         }
 
-        internal void RemoveVariableFromThisForm(object sender, EventArgs e)
+        public void RemoveVariableFromThisForm(object sender, EventArgs e)
         {
             TextFieldsToCurrentVariablesNames();
             var variableIndex = int.Parse(((Button)sender).Name.Replace("DynamicStep", "").Replace("RemoveVariable", ""));
@@ -179,7 +179,7 @@ namespace RobotAutomationHelper.Forms
             AssignNamesFromCurrentVariablesToTextFields();
         }
 
-        internal void AddVariableToTheForm(object sender, EventArgs e)
+        public void AddVariableToTheForm(object sender, EventArgs e)
         {
             TextFieldsToCurrentVariablesNames();
             if (_variablesCounter == 0)

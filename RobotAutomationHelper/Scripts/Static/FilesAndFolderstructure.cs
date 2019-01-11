@@ -5,21 +5,21 @@ using RobotAutomationHelper.Scripts.Objects;
 
 namespace RobotAutomationHelper.Scripts.Static
 {
-    internal static class FilesAndFolderStructure
+    public static class FilesAndFolderStructure
     {
         // list of saved files for the drop down menus
         private static List<string> _savedFiles = new List<string>();
         private static string _outputRootFolder;
-        internal static string Resources = "Resources";
-        internal static string Tests = "Tests";
+        public static string Resources = "Resources";
+        public static string Tests = "Tests";
 
-        internal static void CleanUp()
+        public static void CleanUp()
         {
             _savedFiles = new List<string>();
             _outputRootFolder = "";
         }
 
-        internal static List<string> GetShortSavedFiles(FolderType folderType)
+        public static List<string> GetShortSavedFiles(FolderType folderType)
         {
             var results = new List<string>();
             var pattern = GetFolder(folderType);
@@ -31,7 +31,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return results;
         }
 
-        internal static List<string> GetFullSavedFiles(FolderType folderType)
+        public static List<string> GetFullSavedFiles(FolderType folderType)
         {
             var results = new List<string>();
             var pattern = GetFolder(folderType);
@@ -43,19 +43,19 @@ namespace RobotAutomationHelper.Scripts.Static
             return results;
         }
 
-        internal static void AddFileToSavedFiles(string filePath)
+        public static void AddFileToSavedFiles(string filePath)
         {
             if (filePath == null) return;
             if (!_savedFiles.Contains(filePath))
                 _savedFiles.Add(filePath);
         }
 
-        internal static void SetFolder(string outputFolder)
+        public static void SetFolder(string outputFolder)
         {
             _outputRootFolder = outputFolder;
         }
 
-        internal static string GetFolder(FolderType folderType)
+        public static string GetFolder(FolderType folderType)
         {
             switch (folderType)
             {
@@ -66,7 +66,7 @@ namespace RobotAutomationHelper.Scripts.Static
             }
         }
 
-        internal static string ConcatFileNameToFolder(string fileName, FolderType folderType)
+        public static string ConcatFileNameToFolder(string fileName, FolderType folderType)
         {
             var outputFilePath = GetFolder(folderType);
             if (!fileName.StartsWith("\\"))
@@ -76,7 +76,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return outputFilePath;
         }
 
-        internal static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> keywords, int implementedKeyword)
+        public static void AddImplementedKeywordFilesToSavedFiles(List<Keyword> keywords, int implementedKeyword)
         {
             AddFileToSavedFiles(keywords[implementedKeyword - 1].OutputFilePath);
             if (keywords[implementedKeyword - 1].Keywords == null) return;
@@ -84,7 +84,7 @@ namespace RobotAutomationHelper.Scripts.Static
                 AddFilesFromKeywords(key);
         }
 
-        internal static void AddImplementedTestCasesFilesToSavedFiles(List<TestCase> testCases, int implementedKeyword)
+        public static void AddImplementedTestCasesFilesToSavedFiles(List<TestCase> testCases, int implementedKeyword)
         {
             AddFileToSavedFiles(testCases[implementedKeyword - 1].OutputFilePath);
             if (testCases[implementedKeyword - 1].Steps == null) return;
@@ -92,7 +92,7 @@ namespace RobotAutomationHelper.Scripts.Static
                 AddFilesFromKeywords(key);
         }
 
-        internal static void FindAllRobotFilesAndAddToStructure()
+        public static void FindAllRobotFilesAndAddToStructure()
         {
             var d = new DirectoryInfo(_outputRootFolder);
             foreach (var dir in d.GetDirectories())
@@ -108,7 +108,7 @@ namespace RobotAutomationHelper.Scripts.Static
             }
         }
 
-        internal static void DeleteAllFiles()
+        public static void DeleteAllFiles()
         {
             var d = new DirectoryInfo(_outputRootFolder);
             foreach (var file in d.GetFiles("*.robot", SearchOption.AllDirectories))
@@ -122,7 +122,7 @@ namespace RobotAutomationHelper.Scripts.Static
         }
 
         //Goes recursively through all keywords in given keyword
-        internal static void AddFilesFromKeywords(Keyword keyword)
+        public static void AddFilesFromKeywords(Keyword keyword)
         {
             AddFileToSavedFiles(keyword.OutputFilePath);
             if (keyword.Keywords == null) return;
@@ -131,7 +131,7 @@ namespace RobotAutomationHelper.Scripts.Static
                     AddFilesFromKeywords(key);
         }
 
-        internal static FolderType ConvertFormTypeToFolderType(FormType formType)
+        public static FolderType ConvertFormTypeToFolderType(FormType formType)
         {
             FolderType folderType;
             if (formType.Equals(FormType.Keyword))
@@ -145,7 +145,7 @@ namespace RobotAutomationHelper.Scripts.Static
         }
     }
 
-    internal enum FolderType
+    public enum FolderType
     {
         Resources,
         Tests,

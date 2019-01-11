@@ -7,7 +7,7 @@ using RobotAutomationHelper.Scripts.Static.Writers;
 
 namespace RobotAutomationHelper.Scripts.Static.Readers
 {
-    internal static class ReadRobotFiles
+    public static class ReadRobotFiles
     {
         private static List<TestCase> _testCases;
         private static List<Keyword> _currentTestCaseTestSteps;
@@ -16,7 +16,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         private static string _currentTestCase;
 
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        internal static List<TestCase> ReadAllTests()
+        public static List<TestCase> ReadAllTests()
         {
             _testCases = new List<TestCase>();
             _currentTestCaseTestSteps = new List<Keyword>();
@@ -302,7 +302,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         }
 
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        internal static List<SuiteSettings> ReadAllSettings()
+        public static List<SuiteSettings> ReadAllSettings()
         {
             var suiteSettings = new List<SuiteSettings>();
             foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Tests))
@@ -326,7 +326,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         }
 
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        internal static List<Variables> ReadAllVariables()
+        public static List<Variables> ReadAllVariables()
         {
             var listOfVariables = new List<Variables>();
             foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Root))
@@ -352,7 +352,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
             return listOfVariables;
         }
 
-        private static List<string> GetResourcesFromFile(string fileName)
+        public static List<string> GetResourcesFromFile(string fileName)
         {
             var arrLine = File.ReadAllLines(fileName);
             // find all resources
@@ -408,7 +408,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
             return resources;
         }
 
-        internal static List<string> GetLibs(string fileName)
+        public static List<string> GetLibs(string fileName)
         {
             // find all libraries
             var libraries = new List<string>

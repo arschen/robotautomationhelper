@@ -6,9 +6,9 @@ using RobotAutomationHelper.Scripts.CustomControls;
 
 namespace RobotAutomationHelper.Scripts.Static
 {
-    internal static class FormControls
+    public static class FormControls
     {
-        internal static void AddControl(string type, string name, int indexOf, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
+        public static void AddControl(string type, string name, int indexOf, Point location, Size size, string text, Color color, EventHandler eventHandler, Control owner)
         {
             if (Forms.RobotAutomationHelper.Log) Console.WriteLine(@"AddControl " + @" " + type + @" " + name + @" " + text);
             Control tempControl;
@@ -46,7 +46,7 @@ namespace RobotAutomationHelper.Scripts.Static
             }
         }
 
-        internal static void RemoveControlByKey(string key, Control.ControlCollection controlCollection)
+        public static void RemoveControlByKey(string key, Control.ControlCollection controlCollection)
         {
             if (Forms.RobotAutomationHelper.Log) Console.WriteLine(@"RemoveControlByKey " + key);
             if (Forms.RobotAutomationHelper.Log) Console.WriteLine(key + @" = " + controlCollection.Find(key, false).Length);

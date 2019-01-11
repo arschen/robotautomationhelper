@@ -8,12 +8,12 @@ using RobotAutomationHelper.Scripts.Static.Writers;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class SettingsAddForm : BaseKeywordAddForm
+    public partial class SettingsAddForm : BaseKeywordAddForm
     {
         private int _selectedIndex;
-        internal SuiteSettings CurrentSuiteSettings { get; set; }
+        public SuiteSettings CurrentSuiteSettings { get; set; }
 
-        internal SettingsAddForm(BaseKeywordAddForm parent) : base(parent)
+        public SettingsAddForm(BaseKeywordAddForm parent) : base(parent)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"SettingsAddForm Constructor");
             InitializeComponent();
@@ -112,7 +112,7 @@ namespace RobotAutomationHelper.Forms
                     AddKeywordField(ThisFormKeywords[i-1], i, false);
         }
 
-        internal void ShowSettingsContent()
+        public void ShowSettingsContent()
         {
             StartPosition = FormStartPosition.Manual;
             ShowDialog();
@@ -148,7 +148,7 @@ namespace RobotAutomationHelper.Forms
             SetupsSettingsAddForm();
         }
 
-        internal void UpdateNamesListAndUpdateStateOfSave()
+        public void UpdateNamesListAndUpdateStateOfSave()
         {
             var namesList = new List<string>();
             for (var i = 1; i <= NumberOfKeywordsInThisForm; i++)

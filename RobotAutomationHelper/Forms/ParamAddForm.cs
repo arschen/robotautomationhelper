@@ -7,18 +7,18 @@ using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class ParamAddForm : BaseKeywordAddForm
+    public partial class ParamAddForm : BaseKeywordAddForm
     {
         private Keyword _кeyword;
-        internal int ParamsCount;
+        public int ParamsCount;
 
-        internal ParamAddForm(BaseKeywordAddForm parent) : base(parent)
+        public ParamAddForm(BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
             FormType = FormType.Params;
         }
 
-        internal void ShowParamContent(Keyword keyword)
+        public void ShowParamContent(Keyword keyword)
         {
             _кeyword = keyword;
             ThisFormKeywords = new List<Keyword>();
@@ -90,7 +90,7 @@ namespace RobotAutomationHelper.Forms
             ShowDialog();
         }
 
-        internal void UpdateListNamesAndUpdateStateOfSave()
+        public void UpdateListNamesAndUpdateStateOfSave()
         {
             var namesList = new List<string>();
             for (var i = 1; i <= NumberOfKeywordsInThisForm; i++)

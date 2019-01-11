@@ -3,10 +3,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace RobotAutomationHelper.Scripts
 {
-    internal static class ExtensionMethods
+    public static class ExtensionMethods
     {
         // Deep clone
-        internal static T DeepClone<T>(this T a)
+        public static T DeepClone<T>(this T a)
         {
             using (var stream = new MemoryStream())
             {

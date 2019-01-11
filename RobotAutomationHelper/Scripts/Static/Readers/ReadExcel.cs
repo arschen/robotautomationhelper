@@ -5,7 +5,7 @@ using RobotAutomationHelper.Scripts.Objects;
 
 namespace RobotAutomationHelper.Scripts.Static.Readers
 {
-    internal static class ReadExcel
+    public static class ReadExcel
     {
         private static List<TestCase> _testCases;
         private static List<Keyword> _currentTestCaseTestSteps;
@@ -14,7 +14,7 @@ namespace RobotAutomationHelper.Scripts.Static.Readers
         private static string _currentTestCase;
         private static string _outputFilePath;
 
-        internal static List<TestCase> ReadAllTestCasesFromExcel(string filename)
+        public static List<TestCase> ReadAllTestCasesFromExcel(string filename)
         {
             _testCases = new List<TestCase>();
             _currentTestCaseTestSteps = new List<Keyword>();

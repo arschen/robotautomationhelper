@@ -30,7 +30,7 @@ namespace RobotAutomationHelper.Properties
     [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [DebuggerNonUserCode()]
     [CompilerGenerated()]
-    internal class Resources
+    public class Resources
     {
 
         private static ResourceManager resourceMan;
@@ -38,7 +38,7 @@ namespace RobotAutomationHelper.Properties
         private static CultureInfo resourceCulture;
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
+        public Resources()
         {
         }
 
@@ -46,7 +46,7 @@ namespace RobotAutomationHelper.Properties
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        internal static ResourceManager ResourceManager
+        public static ResourceManager ResourceManager
         {
             get
             {
@@ -64,7 +64,7 @@ namespace RobotAutomationHelper.Properties
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        internal static CultureInfo Culture
+        public static CultureInfo Culture
         {
             get
             {

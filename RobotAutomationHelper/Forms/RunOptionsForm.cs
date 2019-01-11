@@ -3,17 +3,17 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class RunOptionsForm : Form
+    public partial class RunOptionsForm : Form
     {
-        internal static string RunOptionsString = "";
+        public static string RunOptionsString = "";
 
-        internal RunOptionsForm()
+        public RunOptionsForm()
         {
             InitializeComponent();
             RunOptionsText.Text = RunOptionsString;
         }
 
-        internal void ShowRunOptionsContent()
+        public void ShowRunOptionsContent()
         {
             StartPosition = FormStartPosition.Manual;
             ShowDialog();

@@ -5,12 +5,12 @@ namespace RobotAutomationHelper.Scripts.Objects
 {
 
     [Serializable]
-    internal class Variables
+    public class Variables
     {
-        internal List<string> VariableNames { get; set; }
-        internal string OutputFilePath;
+        public List<string> VariableNames { get; set; }
+        public string OutputFilePath;
 
-        internal Variables(List<string> names, string outputFilePath)
+        public Variables(List<string> names, string outputFilePath)
         {
             VariableNames = names;
             OutputFilePath = outputFilePath;

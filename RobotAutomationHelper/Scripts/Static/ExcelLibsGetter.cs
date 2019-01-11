@@ -6,13 +6,13 @@ using RobotAutomationHelper.Scripts.Objects;
 
 namespace RobotAutomationHelper.Scripts.Static
 {
-    internal static class ExcelLibsGetter
+    public static class ExcelLibsGetter
     {
         private static string _currentKeywordDocumentation;
         private static string _currentKeywordName;
         private static List<Param> _currentKeywordParams;
 
-        internal static List<Keyword> ReadAllKeywordsFromExcelSecondType(string filename, KeywordType type)
+        public static List<Keyword> ReadAllKeywordsFromExcelSecondType(string filename, KeywordType type)
         {
             var listKeys = new List<Keyword>();
             _currentKeywordParams = new List<Param>();

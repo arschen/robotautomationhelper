@@ -4,13 +4,13 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts.CustomControls
 {
-    internal partial class SuggestionsList : ListBox
+    public partial class SuggestionsList : ListBox
     {
         private Color HighlightColor { get; }
         private readonly TextWithList _textWithListControl;
-        internal bool SelectionPerformed { get; set; }
+        public bool SelectionPerformed { get; set; }
 
-        internal SuggestionsList(TextWithList textWithListControl)
+        public SuggestionsList(TextWithList textWithListControl)
         {
             InitializeComponent();
             Name = "SuggestionsList";
@@ -22,7 +22,7 @@ namespace RobotAutomationHelper.Scripts.CustomControls
 
         private readonly ToolTip _toolTip = new ToolTip();
 
-        internal void HideToolTip()
+        public void HideToolTip()
         {
             _toolTip.Hide(this);
         }

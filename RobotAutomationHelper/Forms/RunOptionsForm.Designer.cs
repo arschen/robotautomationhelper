@@ -33,7 +33,7 @@
             this.RunOptionsLabel = new System.Windows.Forms.Label();
             this.RunOptionsText = new System.Windows.Forms.TextBox();
             this.Save = new System.Windows.Forms.Button();
-            this.Close = new System.Windows.Forms.Button();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // RunOptionAgendaLabel
@@ -73,20 +73,20 @@
             // 
             // Close
             // 
-            this.Close.Location = new System.Drawing.Point(624, 24);
-            this.Close.Name = "Close";
-            this.Close.Size = new System.Drawing.Size(100, 30);
-            this.Close.TabIndex = 4;
-            this.Close.Text = "Close";
-            this.Close.UseVisualStyleBackColor = true;
-            this.Close.Click += new System.EventHandler(this.Close_Click);
+            this.CloseButton.Location = new System.Drawing.Point(624, 24);
+            this.CloseButton.Name = "Close";
+            this.CloseButton.Size = new System.Drawing.Size(100, 30);
+            this.CloseButton.TabIndex = 4;
+            this.CloseButton.Text = "Close";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.Close_Click);
             // 
             // RunOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 461);
-            this.Controls.Add(this.Close);
+            this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.RunOptionsText);
             this.Controls.Add(this.RunOptionsLabel);
@@ -104,6 +104,6 @@
         private System.Windows.Forms.Label RunOptionsLabel;
         private System.Windows.Forms.TextBox RunOptionsText;
         private System.Windows.Forms.Button Save;
-        private System.Windows.Forms.Button Close;
+        private System.Windows.Forms.Button CloseButton;
     }
 }

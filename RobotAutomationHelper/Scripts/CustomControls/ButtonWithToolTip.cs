@@ -5,7 +5,7 @@ using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Scripts.CustomControls
 {
-    internal partial class ButtonWithToolTip : Button
+    public partial class ButtonWithToolTip : Button
     {
         private readonly ToolTip _toolTip = new ToolTip();
         private string _toolTipText = "";
@@ -13,12 +13,12 @@ namespace RobotAutomationHelper.Scripts.CustomControls
         private bool _emptyName;
         private bool _outputFileEndsWithRobot;
 
-        internal ButtonWithToolTip()
+        public ButtonWithToolTip()
         {
             InitializeComponent();
         }
 
-        internal void SetupToolTipText()
+        public void SetupToolTipText()
         {
             _toolTipText = "";
             if (_containsTwoEmptySpaces)
@@ -29,7 +29,7 @@ namespace RobotAutomationHelper.Scripts.CustomControls
                 _toolTipText += "Output file name should end with '.robot'";
         }
 
-        internal void UpdateState(List<string> names, string outputFile)
+        public void UpdateState(List<string> names, string outputFile)
         {
             var name = NameCheck(names);
             var file = OutputFileCheck(outputFile);

@@ -8,14 +8,14 @@ using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class KeywordAddForm : BaseKeywordAddForm
+    public partial class KeywordAddForm : BaseKeywordAddForm
     {
         // keywords of the parent
         private readonly List<Keyword> _parentKeywords;
         //keywords in this form
         private readonly List<Param> _thisKeywordParams = new List<Param>();
 
-        internal KeywordAddForm(List<Keyword> parentKeywords, BaseKeywordAddForm parent) : base(parent)
+        public KeywordAddForm(List<Keyword> parentKeywords, BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
             InitialYValue = 185;
@@ -55,7 +55,7 @@ namespace RobotAutomationHelper.Forms
             Close();
         }
 
-        internal void ShowKeywordContent(Keyword keyword, int keywordIndex)
+        public void ShowKeywordContent(Keyword keyword, int keywordIndex)
         {
             //index variable gets the keyword index coming from the parent form
             ImplementationIndexFromTheParent = keywordIndex;
@@ -226,7 +226,7 @@ namespace RobotAutomationHelper.Forms
             return true;
         }
 
-        internal void UpdateNamesListAndUpdateStateOfSave()
+        public void UpdateNamesListAndUpdateStateOfSave()
         {
             var namesList = new List<string>
             {

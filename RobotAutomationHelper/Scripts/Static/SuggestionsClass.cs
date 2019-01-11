@@ -6,16 +6,16 @@ using RobotAutomationHelper.Scripts.Objects;
 
 namespace RobotAutomationHelper.Scripts.Static
 {
-    internal static class SuggestionsClass
+    public static class SuggestionsClass
     {
-        internal static List<Lib> Suggestions = new List<Lib>();
+        public static List<Lib> Suggestions = new List<Lib>();
 
-        internal static void CleanUp()
+        public static void CleanUp()
         {
             Suggestions = new List<Lib>();
         }
 
-        internal static bool IsInSuggestionsList(string name)
+        public static bool IsInSuggestionsList(string name)
         {
             foreach (var lib in Suggestions)
                 if (lib.ToInclude)
@@ -27,7 +27,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return false;
         }
 
-        internal static bool ContainsName(string name, bool toInclude, bool isPopulating)
+        public static bool ContainsName(string name, bool toInclude, bool isPopulating)
         {
             var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "Preferences.txt";
             if (File.Exists(fileName))
@@ -59,7 +59,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return toInclude;
         }
 
-        internal static void PopulateSuggestionsList()
+        public static void PopulateSuggestionsList()
         {
             var lib = new Lib
             {
@@ -154,7 +154,7 @@ namespace RobotAutomationHelper.Scripts.Static
             Suggestions.Add(lib1);
         }
 
-        internal static Keyword GetForLoop(KeywordType keywordType)
+        public static Keyword GetForLoop(KeywordType keywordType)
         {
             foreach (var lib in Suggestions)
                 if (lib.ToInclude)
@@ -164,7 +164,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return null;
         }
 
-        internal static List<Keyword> GetLibKeywordsByName(string name)
+        public static List<Keyword> GetLibKeywordsByName(string name)
         {
             foreach (var lib in Suggestions)
                 if (lib.Name.Equals(name))
@@ -173,7 +173,7 @@ namespace RobotAutomationHelper.Scripts.Static
         }
 
         private static List<string> _suggestionsToInclude;
-        internal static List<string> UpdateSuggestionsToIncludes(List<TestCase> testCases, List<SuiteSettings> suiteSettingsKeywordsList)
+        public static List<string> UpdateSuggestionsToIncludes(List<TestCase> testCases, List<SuiteSettings> suiteSettingsKeywordsList)
         {
             _suggestionsToInclude = new List<string>
             {
@@ -220,12 +220,12 @@ namespace RobotAutomationHelper.Scripts.Static
         }
     }
 
-    internal class Lib
+    public class Lib
     {
-        internal List<Keyword> LibKeywords;
-        internal string Name { get; set; }
-        internal bool ToInclude;
-        internal KeywordType KeyType;
+        public List<Keyword> LibKeywords;
+        public string Name { get; set; }
+        public bool ToInclude;
+        public KeywordType KeyType;
 
         public override string ToString()
         {

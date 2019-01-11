@@ -2,9 +2,9 @@
 
 namespace RobotAutomationHelper.Scripts.Static
 {
-    internal static class TestCasesListOperations
+    public static class TestCasesListOperations
     {
-        internal static string IsPresentInTheTestCasesTree(string name, string fileName, TestCase thisTestCase)
+        public static string IsPresentInTheTestCasesTree(string name, string fileName, TestCase thisTestCase)
         {
             foreach (var test in Forms.RobotAutomationHelper.TestCases)
                 if (test.Name.Trim().ToLower().Equals(name.ToLower()))
@@ -14,7 +14,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return "";
         }
 
-        internal static string IsPresentInTheKeywordTree(string name, string fileName, Keyword thisKeyword)
+        public static string IsPresentInTheKeywordTree(string name, string fileName, Keyword thisKeyword)
         {
             foreach (var test in Forms.RobotAutomationHelper.TestCases)
                 if (test.Steps != null)
@@ -59,7 +59,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return "";
         }
 
-        internal static void OverwriteOccurrencesInKeywordTree(string name, string fileName, Keyword thisKeyword)
+        public static void OverwriteOccurrencesInKeywordTree(string name, string fileName, Keyword thisKeyword)
         {
             foreach (var test in Forms.RobotAutomationHelper.TestCases)
                 if (test.Steps != null)

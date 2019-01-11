@@ -108,6 +108,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Scripts\ExtensionMethods.cs" />
+    <Compile Include="Scripts\Objects\RobotFile.cs" />
     <Compile Include="Scripts\Objects\Variable.cs" />
     <Compile Include="Scripts\Static\Cache.cs" />
     <Compile Include="Scripts\Static\Consts\KeywordFieldConsts.cs" />

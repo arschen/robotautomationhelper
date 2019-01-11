@@ -6,19 +6,19 @@ using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class LibrariesForm : Form
+    public partial class LibrariesForm : Form
     {
         private const int LabelLength = 100;
         private const int DistanceBetweenLabelAndRadio = 10;
         private const int FieldHeight = 25;
         private const int InitialY = 30;
 
-        internal LibrariesForm()
+        public LibrariesForm()
         {
             InitializeComponent();
         }
 
-        internal void ShowLibrariesContent()
+        public void ShowLibrariesContent()
         {
             var stdLibsCounter = 0;
             var extLibsCounter = 0;

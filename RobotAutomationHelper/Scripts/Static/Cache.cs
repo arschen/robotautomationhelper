@@ -1,8 +1,8 @@
 ﻿namespace RobotAutomationHelper.Scripts.Static
 {
-    internal static class Cache
+    public static class Cache
     {
-        internal static void ClearCache()
+        public static void ClearCache()
         {
             FilesAndFolderStructure.CleanUp();
             SuggestionsClass.CleanUp();

@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2019
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotAutomationHelper", "RobotAutomationHelper\RobotAutomationHelper.csproj", "{1F354DDA-5C7C-4C26-AE25-28B056BD8F5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotAutomationHelperTests", "RobotAutomationHelperTests\RobotAutomationHelperTests.csproj", "{9A49F396-0E4A-4608-B737-D105DFACEF45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1F354DDA-5C7C-4C26-AE25-28B056BD8F5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F354DDA-5C7C-4C26-AE25-28B056BD8F5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F354DDA-5C7C-4C26-AE25-28B056BD8F5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A49F396-0E4A-4608-B737-D105DFACEF45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A49F396-0E4A-4608-B737-D105DFACEF45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A49F396-0E4A-4608-B737-D105DFACEF45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A49F396-0E4A-4608-B737-D105DFACEF45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

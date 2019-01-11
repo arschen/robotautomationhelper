@@ -5,7 +5,7 @@ using RobotAutomationHelper.Scripts.Static;
 namespace RobotAutomationHelper.Scripts.Objects
 {
     [Serializable]
-    internal class Keyword
+    public class Keyword
     {
         private bool _includeImportFile;
         private string _name;
@@ -24,12 +24,12 @@ namespace RobotAutomationHelper.Scripts.Objects
         private string _comments;
         private string _importFileName;
 
-        internal Keyword Parent;
-        internal List<Keyword> Keywords { get => _keywords; set => _keywords = value; }
-        internal List<Keyword> ForLoopKeywords { get => _forLoopKeywords; set => _forLoopKeywords = value; }
-        internal string Arguments { get => _arguments; set => _arguments = value; }
-        internal List<Param> Params { get => _params; set => _params = value; }
-        internal string Name
+        public Keyword Parent;
+        public List<Keyword> Keywords { get => _keywords; set => _keywords = value; }
+        public List<Keyword> ForLoopKeywords { get => _forLoopKeywords; set => _forLoopKeywords = value; }
+        public string Arguments { get => _arguments; set => _arguments = value; }
+        public List<Param> Params { get => _params; set => _params = value; }
+        public string Name
         {
             get
             {
@@ -60,8 +60,8 @@ namespace RobotAutomationHelper.Scripts.Objects
                 }
             }
         }
-        internal string Documentation { get => _documentation; set => _documentation = value; }
-        internal string OutputFilePath
+        public string Documentation { get => _documentation; set => _documentation = value; }
+        public string OutputFilePath
         {
             get => _outputFilePath;
             set
@@ -74,16 +74,16 @@ namespace RobotAutomationHelper.Scripts.Objects
                 _outputFilePath = value;
             }
         }
-        internal bool Implemented { get => _implemented; set => _implemented = value; }
-        internal KeywordType Type { get => _type; set => _type = value; }
-        internal string KeywordString { get => _keywordString; set => _keywordString = value; }
-        internal int SuggestionIndex { get => _suggestionIndex; set => _suggestionIndex = value; }
-        internal bool Recursive { get => _recursive1; set => _recursive1 = value; }
-        internal string Comments { get => _comments; set => _comments = value; }
-        internal string ImportFileName { get => _importFileName; set => _importFileName = value; }
-        internal bool IncludeImportFile { get => _includeImportFile; set => _includeImportFile = value; }
+        public bool Implemented { get => _implemented; set => _implemented = value; }
+        public KeywordType Type { get => _type; set => _type = value; }
+        public string KeywordString { get => _keywordString; set => _keywordString = value; }
+        public int SuggestionIndex { get => _suggestionIndex; set => _suggestionIndex = value; }
+        public bool Recursive { get => _recursive1; set => _recursive1 = value; }
+        public string Comments { get => _comments; set => _comments = value; }
+        public string ImportFileName { get => _importFileName; set => _importFileName = value; }
+        public bool IncludeImportFile { get => _includeImportFile; set => _includeImportFile = value; }
 
-        internal Keyword(string name, string documentation, List<Keyword> keywords, string arguments, List<Param> paramsList, string outputFilePath, KeywordType type, int suggestionIndex, string keywordString, Keyword parent, bool includeImportFile)
+        public Keyword(string name, string documentation, List<Keyword> keywords, string arguments, List<Param> paramsList, string outputFilePath, KeywordType type, int suggestionIndex, string keywordString, Keyword parent, bool includeImportFile)
         {
             OutputFilePath = outputFilePath;
             IncludeImportFile = includeImportFile;
@@ -101,12 +101,12 @@ namespace RobotAutomationHelper.Scripts.Objects
             Parent = parent;
         }
 
-        internal Keyword(Keyword parent)
+        public Keyword(Keyword parent)
         {
             Parent = parent;
         }
 
-        internal void CopyKeyword(Keyword keyword)
+        public void CopyKeyword(Keyword keyword)
         {
             Name = keyword.Name;
             Documentation = keyword.Documentation;
@@ -125,7 +125,7 @@ namespace RobotAutomationHelper.Scripts.Objects
             KeywordString = keyword.KeywordString;
         }
 
-        internal Keyword(string name, string outputFilePath, Keyword parent)
+        public Keyword(string name, string outputFilePath, Keyword parent)
         {
             Name = name;
             OutputFilePath = outputFilePath;
@@ -135,7 +135,7 @@ namespace RobotAutomationHelper.Scripts.Objects
         }
 
         // convert keyword string taken from file into keyword
-        internal Keyword(string keywordString, string outputFilePath, ICollection<string> libsToCheck, Keyword parent)
+        public Keyword(string keywordString, string outputFilePath, ICollection<string> libsToCheck, Keyword parent)
         {
             Parent = parent;
             if (!keywordString.Equals(""))
@@ -206,7 +206,7 @@ namespace RobotAutomationHelper.Scripts.Objects
                             else
                             {
                                 // check if after splitting the first string matches any param name
-                                var temp = splitKeyword[i].Split('=');
+                                var temp = splitKeyword[i].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                                 Params.Add(new Param(temp[0], temp[1]));
                             }
                         }
@@ -225,7 +225,7 @@ namespace RobotAutomationHelper.Scripts.Objects
             }
         }
 
-        internal string ParamsToString()
+        public string ParamsToString()
         {
             var paramsString = "";
             if (Params == null) return paramsString;
@@ -290,7 +290,7 @@ namespace RobotAutomationHelper.Scripts.Objects
             }
         }
 
-        internal bool IsRecursive(Keyword keyword)
+        public bool IsRecursive(Keyword keyword)
         {
             if (keyword.Parent != null && keyword.Comments == null)
                 if (Name.ToLower().Equals(keyword.Parent.Name.Trim().ToLower()))
@@ -309,13 +309,13 @@ namespace RobotAutomationHelper.Scripts.Objects
 
         }
 
-        internal string GetName()
+        public string GetName()
         {
             return _name;
         }
     }
 
-    internal enum KeywordType
+    public enum KeywordType
     {
         Custom, SeleniumLibrary, AppiumLibrary, FakerLibrary, Rest, Standard, ForLoopInRange, ForLoopElements, Comment, Empty
     }

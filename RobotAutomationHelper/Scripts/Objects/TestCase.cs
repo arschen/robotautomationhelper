@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace RobotAutomationHelper.Scripts.Objects
 {
-    internal class TestCase: IComparable<TestCase>
+    public class TestCase: IComparable<TestCase>
     {
-        internal List<Keyword> Steps { get; set; }
-        internal string Name { get; set; }
-        internal string Documentation { get; set;  }
-        internal string Tags { get; set; }
-        internal string OutputFilePath { get; set;  }
-        internal bool Overwrite { get; set; }
-        internal bool Implemented { get; set; }
+        public List<Keyword> Steps { get; set; }
+        public string Name { get; set; }
+        public string Documentation { get; set;  }
+        public string Tags { get; set; }
+        public string OutputFilePath { get; set;  }
+        public bool Overwrite { get; set; }
+        public bool Implemented { get; set; }
 
-        internal TestCase(string name, string documentation, string tags, List<Keyword> steps, string outputFilePath, bool implemented)
+        public TestCase(string name, string documentation, string tags, List<Keyword> steps, string outputFilePath, bool implemented)
         {
             Name = name;
             Documentation = documentation;
@@ -24,7 +24,7 @@ namespace RobotAutomationHelper.Scripts.Objects
             Implemented = implemented;
         }
 
-        internal TestCase(string name, string outputFilePath)
+        public TestCase(string name, string outputFilePath)
         {
             Name = name;
             OutputFilePath = outputFilePath;

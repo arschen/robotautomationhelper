@@ -6,14 +6,14 @@ using RobotAutomationHelper.Scripts.Objects;
 
 namespace RobotAutomationHelper.Scripts.Static.Writers
 {
-    internal static class WriteToRobot
+    public static class WriteToRobot
     {
 
         // Fields and Properties ===================================================
-        internal static List<Includes> Includes;
+        public static List<Includes> Includes;
 
         // Methods =================================================================
-        internal static void AddTestCaseToRobot(TestCase testCase)
+        public static void AddTestCaseToRobot(TestCase testCase)
         {
             var fileName = testCase.OutputFilePath;
             var index = RobotFileHandler.GetLineAfterLastTestCase(fileName);
@@ -41,7 +41,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
             AddSteps(testCase.Steps, fileName, index, addTestCase);
         }
 
-        internal static void AddKeywordToRobot(Keyword keyword)
+        public static void AddKeywordToRobot(Keyword keyword)
         {
             var fileName = keyword.OutputFilePath;
             var index = 0;
@@ -181,7 +181,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         //Add includes to test case and keywords files
-        internal static void WriteIncludesToRobotFiles()
+        public static void WriteIncludesToRobotFiles()
         {
             const FormType tag = FormType.Settings;
 
@@ -223,7 +223,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         //Add variables to test case and keywords files
-        internal static void WriteVariablesToRobotFiles()
+        public static void WriteVariablesToRobotFiles()
         {
             const FormType tag = FormType.Variable;
             foreach (var temp in Forms.RobotAutomationHelper.GlobalVariables)
@@ -256,7 +256,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
             }
         }
 
-        internal static void WriteSuiteSettingsListToRobot()
+        public static void WriteSuiteSettingsListToRobot()
         {
             foreach (var suiteSettings in Forms.RobotAutomationHelper.SuiteSettingsList)
                 if (suiteSettings.Overwrite)
@@ -368,7 +368,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                                 , location);
         }
 
-        internal static void RemoveKeywordChildrenOfKeywordForOverwriting(Keyword keyword)
+        public static void RemoveKeywordChildrenOfKeywordForOverwriting(Keyword keyword)
         {
             if (keyword.Keywords == null) return;
             foreach (var step in keyword.Keywords)
@@ -380,7 +380,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
             }
         }
 
-        internal static void AddIncludesFromSettingsKeyword(Keyword keyword, string fileName)
+        public static void AddIncludesFromSettingsKeyword(Keyword keyword, string fileName)
         {
             if (!File.Exists(fileName)) return;
             var container = new Includes(fileName);
@@ -392,7 +392,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
                     Includes[Includes.IndexOf(container)].AddToList(keyword.KeywordString);
         }
 
-        internal static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
+        public static void TestCaseKeywordRemove(string name, string fileName, bool isKeyword)
         {
             if (fileName.Equals("")) return;
             Console.WriteLine(@"Overwrite (remove): " + name + @" " + (isKeyword ? "Keyword" : "Test") + @"\t" + fileName.Replace(FilesAndFolderStructure.GetFolder(FolderType.Root),""));

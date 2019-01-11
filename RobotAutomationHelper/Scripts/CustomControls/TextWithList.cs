@@ -8,7 +8,7 @@ using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Scripts.CustomControls
 {
-    internal class TextWithList : TextBox
+    public class TextWithList : TextBox
     {
 
         // Fields and Properties ===================================================
@@ -17,12 +17,12 @@ namespace RobotAutomationHelper.Scripts.CustomControls
         private readonly int _indexOf;
         private bool _justGotFocused;
         private bool _changedImmediatelyAfterSelection;
-        internal int MaxItemsInSuggestionsList { get; set; }
+        public int MaxItemsInSuggestionsList { get; set; }
         private bool _updateNeeded;
-        internal string UpdateValue = "";
+        public string UpdateValue = "";
 
         // Methods =================================================================
-        internal TextWithList(BaseKeywordAddForm parent, int indexOf)
+        public TextWithList(BaseKeywordAddForm parent, int indexOf)
         {
             _parentForm = parent;
             _suggestionsList = new SuggestionsList(this);
@@ -125,7 +125,7 @@ namespace RobotAutomationHelper.Scripts.CustomControls
             _updateNeeded = false;
         }
 
-        internal void TriggerUpdate(string textChangedPassed, string keywordType)
+        public void TriggerUpdate(string textChangedPassed, string keywordType)
         {
             switch (_parentForm.FormType)
             {
@@ -233,14 +233,14 @@ namespace RobotAutomationHelper.Scripts.CustomControls
                 HideSuggestionsList();
             }
         }
-        internal void HideSuggestionsList()
+        public void HideSuggestionsList()
         {
             _suggestionsList.Visible = false;
             _suggestionsList.HideToolTip();
             _parentForm.Controls.Remove(_suggestionsList);
         }
 
-        internal void DisableKeywordFields()
+        public void DisableKeywordFields()
         {
             switch (_parentForm.FormType)
             {
@@ -262,7 +262,7 @@ namespace RobotAutomationHelper.Scripts.CustomControls
                     throw new ArgumentOutOfRangeException();
             }
         }
-        internal void EnableKeywordFields()
+        public void EnableKeywordFields()
         {
             switch (_parentForm.FormType)
             {

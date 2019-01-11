@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace RobotAutomationHelper.Scripts.Static
 {
-    internal static class StringAndListOperations
+    public static class StringAndListOperations
     {
 
-        internal static List<string> ReturnListOfArgs(string arguments)
+        public static List<string> ReturnListOfArgs(string arguments)
         {
             var args = new List<string>();
             if (arguments != null)
@@ -18,7 +18,7 @@ namespace RobotAutomationHelper.Scripts.Static
             return args;
         }
 
-        internal static bool StartsWithVariable(string name)
+        public static bool StartsWithVariable(string name)
         {
             return name == null ? false : name.StartsWith("${")
                    || name.StartsWith("@{")

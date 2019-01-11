@@ -9,13 +9,13 @@ using RobotAutomationHelper.Scripts.Static.Consts;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class NameAndOutputForm : BaseKeywordAddForm
+    public partial class NameAndOutputForm : BaseKeywordAddForm
     {
 
         private readonly FormType _parentType;
         private readonly ToolTip _toolTip = new ToolTip();
 
-        internal NameAndOutputForm(FormType type, BaseKeywordAddForm parent, Keyword keyword) : base(parent)
+        public NameAndOutputForm(FormType type, BaseKeywordAddForm parent, Keyword keyword) : base(parent)
         {
             InitializeComponent();
             NameAndOutputToTestCaseFormCommunication.Save = false;
@@ -44,7 +44,7 @@ namespace RobotAutomationHelper.Forms
             Close();
         }
 
-        internal void ShowKeywordContent()
+        public void ShowKeywordContent()
         {
             FormControls.RemoveControlByKey(ContentName.Name, Controls);
             FormControls.AddControl("TextWithList", "DynamicStep1Name",
@@ -60,7 +60,7 @@ namespace RobotAutomationHelper.Forms
             ShowDialog();
         }
 
-        internal void ShowTestCaseContent()
+        public void ShowTestCaseContent()
         {
             OutputLabel.Text = OutputLabel.Text.Replace("Keyword", "Test Case");
             NameLabel.Text = NameLabel.Text.Replace("Keyword", "Test Case");
@@ -194,11 +194,11 @@ namespace RobotAutomationHelper.Forms
         }
     }
 
-    internal static class NameAndOutputToTestCaseFormCommunication
+    public static class NameAndOutputToTestCaseFormCommunication
     {
-        internal static string Name { get; set; }
-        internal static string Value { get; set; }
-        internal static string OutputFile { get; set; }
-        internal static bool Save { get; set; }
+        public static string Name { get; set; }
+        public static string Value { get; set; }
+        public static string OutputFile { get; set; }
+        public static bool Save { get; set; }
     }
 }

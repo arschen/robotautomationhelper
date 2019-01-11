@@ -3,12 +3,12 @@
 namespace RobotAutomationHelper.Scripts.Objects
 {
     [Serializable]
-    internal class Param
+    public class Param
     {
-        internal string Name { get; set; }
-        internal string Value { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
 
-        internal Param(string name, string value)
+        public Param(string name, string value)
         {
             Name = name;
             Value = value;

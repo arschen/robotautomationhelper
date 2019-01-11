@@ -8,10 +8,10 @@ using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class TestCaseAddForm : BaseKeywordAddForm
+    public partial class TestCaseAddForm : BaseKeywordAddForm
     {
 
-        internal TestCaseAddForm(BaseKeywordAddForm parent) : base(parent)
+        public TestCaseAddForm(BaseKeywordAddForm parent) : base(parent)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"TestCaseAddForm [Constructor]");
             InitializeComponent();
@@ -42,7 +42,7 @@ namespace RobotAutomationHelper.Forms
             Close();
         }
 
-        internal void ShowTestCaseContent(TestCase testCase, int testIndex)
+        public void ShowTestCaseContent(TestCase testCase, int testIndex)
         {
             if (RobotAutomationHelper.Log) Console.WriteLine(@"ShowTestCaseContent " + testCase.Name + @" " + testIndex);
             ImplementationIndexFromTheParent = testIndex;
@@ -125,7 +125,7 @@ namespace RobotAutomationHelper.Forms
             return false;
         }
 
-        internal void UpdateListNamesAndUpdateStateOfSave()
+        public void UpdateListNamesAndUpdateStateOfSave()
         {
             var namesList = new List<string>
             {

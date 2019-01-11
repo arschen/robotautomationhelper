@@ -6,13 +6,13 @@ using RobotAutomationHelper.Forms;
 
 namespace RobotAutomationHelper.Scripts.Static.Writers
 {
-    internal static class RobotFileHandler
+    public static class RobotFileHandler
     {
-        internal static int GetLineAfterLastKeyword(string fileName)
+        public static int GetLineAfterLastKeyword(string fileName)
         {
             return GetWriteLocationOfType(fileName, FormType.Keyword);
         }
-        internal static int GetLineAfterLastTestCase(string fileName)
+        public static int GetLineAfterLastTestCase(string fileName)
         {
             return GetWriteLocationOfType(fileName, FormType.Test);
         }
@@ -72,7 +72,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        internal static int HasTag(string fileName, FormType formType)
+        public static int HasTag(string fileName, FormType formType)
         {
             var index = -1;
 
@@ -88,7 +88,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
             }
 
             for (var i = 0; i < arrLine.Length; i++)
-                if (arrLine[i].StartsWith("***"))
+                if (arrLine[i].StartsWith("*"))
                     if (arrLine[i].ToLower().Contains(formType.ToString().ToLower()))
                         index = i;
 
@@ -96,7 +96,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // returns index with the line if the file contains a keyword / test case with the same name
-        internal static int LocationOfTestCaseOrKeywordInFile(string fileName, string name, FormType formType)
+        public static int LocationOfTestCaseOrKeywordInFile(string fileName, string name, FormType formType)
         {
             if (!File.Exists(fileName)) return -1;
             var index = HasTag(fileName, formType);
@@ -116,7 +116,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // returns non empty string of the line where the specific include is found
-        internal static string OccurenceInSettings(string fileName, string name)
+        public static string OccurenceInSettings(string fileName, string name)
         {
             if (!File.Exists(fileName)) return "";
             var index = HasTag(fileName, FormType.Settings);
@@ -149,7 +149,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // returns list of indexes with locations of specific string
-        internal static List<int> LocationInSettings(string fileName, string name)
+        public static List<int> LocationInSettings(string fileName, string name)
         {
             var result = new List<int>();
             if (File.Exists(fileName))
@@ -186,7 +186,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // add newText on new line to file fileName after specified line
-        internal static void FileLineAdd(string newText, string fileName, int lineToAddAfter)
+        public static void FileLineAdd(string newText, string fileName, int lineToAddAfter)
         {
             string[] arrLine;
             if (File.Exists(fileName))
@@ -213,7 +213,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // removes linesToReplace from fileName
-        internal static void FileLineRemove(string fileName, List<int> linesToRemove)
+        public static void FileLineRemove(string fileName, List<int> linesToRemove)
         {
             string[] arrLine;
             if (File.Exists(fileName))
@@ -241,7 +241,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // replace linesToReplace with single line newText
-        internal static void FileLineReplace(string newText, string fileName, List<int> linesToReplace)
+        public static void FileLineReplace(string newText, string fileName, List<int> linesToReplace)
         {
             string[] arrLine;
             if (File.Exists(fileName))
@@ -269,7 +269,7 @@ namespace RobotAutomationHelper.Scripts.Static.Writers
         }
 
         // add newText on new line to file fileName after specified line
-        internal static void TrimFile(string fileName)
+        public static void TrimFile(string fileName)
         {
             if (!File.Exists(fileName)) return;
             var arrLine = File.ReadAllLines(fileName);

@@ -12,13 +12,13 @@ using RobotAutomationHelper.Scripts.Static.Writers;
 
 namespace RobotAutomationHelper.Forms
 {
-    internal partial class RobotAutomationHelper : BaseKeywordAddForm
+    public partial class RobotAutomationHelper : BaseKeywordAddForm
     {
-        internal static List<TestCase> TestCases = new List<TestCase>();
-        internal static List<SuiteSettings> SuiteSettingsList = new List<SuiteSettings>();
-        internal static List<Variables> GlobalVariables = new List<Variables>();
+        public static List<TestCase> TestCases = new List<TestCase>();
+        public static List<SuiteSettings> SuiteSettingsList = new List<SuiteSettings>();
+        public static List<Variables> GlobalVariables = new List<Variables>();
 
-        internal static bool Log = false;
+        public static bool Log = false;
 
         private static int _numberOfTestCases;
         private object _realSender;
@@ -27,7 +27,7 @@ namespace RobotAutomationHelper.Forms
         private int _selectedIndex = -1;
         private string _currentFilename;
 
-        internal RobotAutomationHelper(BaseKeywordAddForm parent) : base(parent)
+        public RobotAutomationHelper(BaseKeywordAddForm parent) : base(parent)
         {
             InitializeComponent();
             ActiveControl = TestCaseNameLabel;
@@ -135,14 +135,14 @@ namespace RobotAutomationHelper.Forms
             }
         }
 
-        internal void AddTestCaseToFormAndShow(bool fileValueChanged)
+        public void AddTestCaseToFormAndShow(bool fileValueChanged)
         {
             if (!(OutputFile.Items.Count == 0 && _selectedIndex != -1))
                 AddTestCasesToMainForm(OutputFile.Items.Count == 0 ? "": OutputFile.Items[_selectedIndex].ToString());
             ShowTestCasePanels();
         }
 
-        internal void FormSetup(string path)
+        public void FormSetup(string path)
         {
             Cache.ClearCache();
             SuggestionsClass.PopulateSuggestionsList();
@@ -156,7 +156,7 @@ namespace RobotAutomationHelper.Forms
             SetStructureFolder(path);
         }
 
-        internal void CheckForExistingCodeAndShowAlert()
+        public void CheckForExistingCodeAndShowAlert()
         {
             var projectTestCases = ReadRobotFiles.ReadAllTests();
             SuiteSettingsList = ReadRobotFiles.ReadAllSettings();
@@ -370,7 +370,7 @@ namespace RobotAutomationHelper.Forms
             AddTestCaseToFormAndShow(false);
         }
 
-        internal void ShowTestCasePanels()
+        public void ShowTestCasePanels()
         {
             IndexLabel.Visible = true;
             TestCaseNameLabel.Visible = true;
@@ -462,7 +462,7 @@ namespace RobotAutomationHelper.Forms
             RunCom("cd " + FilesAndFolderStructure.GetFolder(FolderType.Root) + "&robot " + RunOptionsForm.RunOptionsString + " tests");
         }
 
-        internal new void InstantiateNameAndOutputForm(object sender, EventArgs e)
+        public new void InstantiateNameAndOutputForm(object sender, EventArgs e)
         {
             _realSender = sender;
             if (Log) Console.WriteLine(@"InstantiateParamsAddForm " + ((Button)sender).Name);
@@ -479,7 +479,7 @@ namespace RobotAutomationHelper.Forms
                 AddTestCaseToProject(_realSender, e);
         }
 
-        internal void AddTestCaseToProject(object sender, EventArgs e)
+        public void AddTestCaseToProject(object sender, EventArgs e)
         {
             TestCases.Add(new TestCase(NameAndOutputToTestCaseFormCommunication.Name, NameAndOutputToTestCaseFormCommunication.OutputFile));
             _currentFilename = TestCases[TestCases.Count - 1].OutputFilePath.Replace(FilesAndFolderStructure.GetFolder(FolderType.Tests), "");
@@ -490,7 +490,7 @@ namespace RobotAutomationHelper.Forms
             AddTestCaseToFormAndShow(false);
         }
 
-        internal void RemoveTestCaseFromProject(object sender, EventArgs e)
+        public void RemoveTestCaseFromProject(object sender, EventArgs e)
         {
             if (_numberOfTestCases <= 1) return;
             var testCaseIndex = int.Parse(((Button)sender).Name.Replace("DynamicTest", "").Replace("RemoveTestCase", ""));

@@ -18,12 +18,12 @@ namespace RobotAutomationHelper.Properties
 
     [CompilerGenerated()]
     [GeneratedCode("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : ApplicationSettingsBase
+    public sealed partial class Settings : ApplicationSettingsBase
     {
 
         private static Settings defaultInstance = ((Settings)(Synchronized(new Settings())));
 
-        internal static Settings Default
+        public static Settings Default
         {
             get
             {

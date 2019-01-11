@@ -4,9 +4,9 @@ using System.Windows.Forms;
 
 namespace RobotAutomationHelper.Scripts.CustomControls
 {
-    internal class SuggestionsListObjects : ListControl
+    public class SuggestionsListObjects : ListControl
     {
-        internal string Documentation { get; set; }
+        public string Documentation { get; set; }
 
         public override int SelectedIndex { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
