@@ -16,12 +16,12 @@ namespace RobotAutomationHelper.Scripts.Objects.Tests
             string FileName = "C:\\Development\\robot-scripts\\jennyvegas\\Resources\\RegisterForm.robot";
             ThisFile = new RobotFile(FileName);
             List<Variables> VariablesList = new List<Variables>();
-            VariablesList = ThisFile.ReadVariablesFromFile(ThisFile.ReadAllLines(FileName));
+            VariablesList = ThisFile.ReadVariablesFromFile();
             Assert.AreEqual(1, VariablesList[0].VariableNames.Count);
 
             FileName = "C:\\Development\\robot-scripts\\jennyvegas\\Data\\DepositLocators.robot";
             ThisFile = new RobotFile(FileName);
-            VariablesList = ThisFile.ReadVariablesFromFile(ThisFile.ReadAllLines(FileName));
+            VariablesList = ThisFile.ReadVariablesFromFile();
             Assert.AreEqual(35, VariablesList[0].VariableNames.Count);
         }
 
@@ -30,9 +30,9 @@ namespace RobotAutomationHelper.Scripts.Objects.Tests
         {
             string FileName = "C:\\Development\\robot-scripts\\jennyvegas\\Resources\\RegisterForm.robot";
             ThisFile = new RobotFile(FileName);
-            Assert.AreEqual(0, ThisFile.HasTag(ThisFile.ReadAllLines(FileName), Forms.FormType.Settings));
-            Assert.AreEqual(6, ThisFile.HasTag(ThisFile.ReadAllLines(FileName), Forms.FormType.Variable));
-            Assert.AreEqual(9, ThisFile.HasTag(ThisFile.ReadAllLines(FileName), Forms.FormType.Keyword));
+            Assert.AreEqual(0, ThisFile.HasTag(Forms.FormType.Settings));
+            Assert.AreEqual(6, ThisFile.HasTag(Forms.FormType.Variable));
+            Assert.AreEqual(9, ThisFile.HasTag(Forms.FormType.Keyword));
         }
 
         [TestMethod()]
@@ -41,17 +41,19 @@ namespace RobotAutomationHelper.Scripts.Objects.Tests
             string FileName = "C:\\Development\\robot-scripts\\jennyvegas\\Resources\\RegisterForm.robot";
             ThisFile = new RobotFile(FileName);
             List<Keyword> KeywordsList = new List<Keyword>();
-            KeywordsList = ThisFile.ReadKeywordsFromFile(ThisFile.ReadAllLines(FileName));
+            KeywordsList = ThisFile.ReadKeywordsFromFile();
             Assert.AreEqual(29, KeywordsList.Count);
+            /*
             foreach (Keyword temp in KeywordsList)
             {
                 Console.WriteLine(temp.Name);
-                /*if (temp.Documentation != null)
+                if (temp.Documentation != null)
                     Console.WriteLine(temp.Documentation);
                 if (temp.Keywords != null)
                     foreach (Keyword t in temp.Keywords)
-                        Console.WriteLine("\t" + t.GetName());*/
+                        Console.WriteLine("\t" + t.GetName());
             }
+            */
         }
     }
 }

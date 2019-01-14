@@ -77,7 +77,7 @@ namespace RobotAutomationHelper.Scripts.CustomControls
         {
             base.OnSelectedIndexChanged(e);
             if (SelectedIndex >= 0)
-                _toolTip.Show(((SuggestionsListObjects)Items[SelectedIndex]).Documentation, this, Size.Width, ItemHeight * (SelectedIndex - TopIndex) + 3);
+                _toolTip.Show(((SuggestionsListObjects)Items[SelectedIndex]).Documentation, this, Size.Width, ItemHeight * (SelectedIndex - TopIndex + 1) + 3);
             else
                 _toolTip.Hide(this);
         }
