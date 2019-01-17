@@ -93,6 +93,7 @@ namespace RobotAutomationHelper.Scripts.Readers
         public Keyword GetDataForInternalKeywords(Keyword keyword, RobotFile file)
         {
             var returnKeyword = new Keyword(keyword.Parent);
+            returnKeyword.CopyKeyword(keyword);
             foreach (Keyword currentKeyword in keyword.Keywords)
             {
                 var tempKeyword = new Keyword(keyword);
@@ -155,9 +156,10 @@ namespace RobotAutomationHelper.Scripts.Readers
                 else
                     tempKeyword.CopyKeyword(currentKeyword);
 
-                if (returnKeyword.Keywords == null)
-                    returnKeyword.Keywords = new List<Keyword>();
-                returnKeyword.Keywords.Add(tempKeyword);
+                returnKeyword.Keywords = new List<Keyword>
+                {
+                    tempKeyword
+                };
                 Console.WriteLine("     " + tempKeyword.Name + " " + tempKeyword.OutputFilePath);
             }
 
