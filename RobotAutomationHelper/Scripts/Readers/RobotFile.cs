@@ -139,8 +139,10 @@ namespace RobotAutomationHelper.Scripts.Objects
             var index = HasTag(FormType.Keyword);
             if (index == -1) return listOfKeywords;
 
-            var currentKeyword = new Keyword(null);
-            currentKeyword.OutputFilePath = fileName;
+            var currentKeyword = new Keyword(null)
+            {
+                OutputFilePath = fileName
+            };
 
             for (int i = index + 1; i < fileLines.Length; i++)
             {
@@ -158,8 +160,10 @@ namespace RobotAutomationHelper.Scripts.Objects
                     if (currentKeyword.Name != null)
                     {
                         listOfKeywords.Add(currentKeyword);
-                        currentKeyword = new Keyword(null);
-                        currentKeyword.OutputFilePath = fileName;
+                        currentKeyword = new Keyword(null)
+                        {
+                            OutputFilePath = fileName
+                        };
                     }
                     currentKeyword.Name = fileLines[i].Trim();
                     continue;
@@ -314,7 +318,7 @@ namespace RobotAutomationHelper.Scripts.Objects
                     if (start && line.StartsWith("Library"))
                     {
                         if (!libraries.Contains(line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]))
-                            libraries.Add(line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                            libraries.Add(line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Trim());
                     }
                 }
             }
@@ -334,7 +338,7 @@ namespace RobotAutomationHelper.Scripts.Objects
                     if (start && line.StartsWith("Library"))
                     {
                         if (!libraries.Contains(line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]))
-                            libraries.Add(line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                            libraries.Add(line.Split(new[] { "  " }, StringSplitOptions.RemoveEmptyEntries)[1].Trim());
                     }
                 }
             }

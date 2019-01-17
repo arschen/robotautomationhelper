@@ -35,63 +35,133 @@ namespace RobotAutomationHelper.Scripts.Readers
                                 if (currentKeyword.Type == KeywordType.Custom)
                                 {
                                     tempKeyword.CopyKeyword(currentKeyword);
-                                    if (currentKeyword.Params != null && currentKeyword.Params.Count > 0)
-                                        if (currentKeyword.ImportFileName != null && !currentKeyword.ImportFileName.Equals(""))
-                                            foreach (RobotFile tempFile in RobotFiles)
-                                                if (tempFile.fileName.EndsWith("\\" + currentKeyword.ImportFileName + ".robot"))
-                                                {
-                                                    foreach (Keyword importKeyword in tempFile.KeywordsList)
-                                                        if (importKeyword.Name.Equals(currentKeyword.Name))
-                                                        {
+                                    if (currentKeyword.ImportFileName != null && !currentKeyword.ImportFileName.Equals(""))
+                                    {
+                                        foreach (RobotFile importFile in RobotFiles)
+                                            if (importFile.fileName.EndsWith("\\" + currentKeyword.ImportFileName + ".robot"))
+                                            {
+                                                foreach (Keyword importKeyword in importFile.KeywordsList)
+                                                    if (importKeyword.Name.Equals(currentKeyword.Name))
+                                                    {
+                                                        if (currentKeyword.Params != null && currentKeyword.Params.Count > 0)
                                                             for (int i = 0; i < currentKeyword.Params.Count; i++)
                                                                 tempKeyword.Params[i].Name = importKeyword.Params[i].Name;
+                                                        tempKeyword.Keywords.AddRange(importKeyword.Keywords);
+                                                        tempKeyword.OutputFilePath = importFile.fileName;
+                                                        break;
+                                                    }
+                                                break;
+                                            }
+                                    }
+                                    else
+                                    {
+                                        bool isFound = false;
+                                        foreach (string fileName in currentFile.resources)
+                                        {
+                                            foreach (RobotFile importFile in RobotFiles)
+                                                if (importFile.fileName.Equals(fileName))
+                                                {
+                                                    foreach (Keyword importKeyword in importFile.KeywordsList)
+                                                        if (importKeyword.Name.Equals(currentKeyword.Name))
+                                                        {
+                                                            if (currentKeyword.Params != null && currentKeyword.Params.Count > 0)
+                                                                for (int i = 0; i < currentKeyword.Params.Count; i++)
+                                                                    tempKeyword.Params[i].Name = importKeyword.Params[i].Name;
+                                                            tempKeyword.Keywords.AddRange(importKeyword.Keywords);
+                                                            tempKeyword.OutputFilePath = importFile.fileName;
+                                                            isFound = true;
                                                             break;
                                                         }
                                                     break;
                                                 }
+                                        }
+                                        if (isFound) break;
+                                    }
 
                                     if (tempKeyword.Keywords != null && tempKeyword.Keywords.Count > 0)
-                                        GetDataForInternalKeywords(tempKeyword);
+                                        tempKeyword = GetDataForInternalKeywords(tempKeyword, currentFile);
                                 }
                                 else
                                     tempKeyword.CopyKeyword(currentKeyword);
                                 tempTestCase.Steps.Add(tempKeyword);
                             }
                         testCases.Add(tempTestCase);
+                        Console.WriteLine(tempTestCase.Name + " " + tempTestCase.OutputFilePath);
                     }
         }
 
-        public void GetDataForInternalKeywords(Keyword keyword)
+        public Keyword GetDataForInternalKeywords(Keyword keyword, RobotFile file)
         {
+            var returnKeyword = new Keyword(keyword.Parent);
             foreach (Keyword currentKeyword in keyword.Keywords)
             {
                 var tempKeyword = new Keyword(keyword);
                 if (currentKeyword.Type == KeywordType.Custom)
                 {
                     tempKeyword.CopyKeyword(currentKeyword);
-                    if (currentKeyword.Params != null && currentKeyword.Params.Count > 0)
-                        if (currentKeyword.ImportFileName != null && !currentKeyword.ImportFileName.Equals(""))
-                            foreach (RobotFile tempFile in RobotFiles)
-                                if (tempFile.fileName.EndsWith("\\" + currentKeyword.ImportFileName + ".robot"))
-                                {
-                                    foreach (Keyword importKeyword in tempFile.KeywordsList)
-                                        if (importKeyword.Name.Equals(currentKeyword.Name))
-                                        {
+                    if (currentKeyword.ImportFileName != null && !currentKeyword.ImportFileName.Equals(""))
+                    {
+                        foreach (RobotFile importFile in RobotFiles)
+                            if (importFile.fileName.EndsWith("\\" + currentKeyword.ImportFileName + ".robot"))
+                            {
+                                foreach (Keyword importKeyword in importFile.KeywordsList)
+                                    if (importKeyword.Name.Equals(currentKeyword.Name))
+                                    {
+                                        if (currentKeyword.Params != null && currentKeyword.Params.Count > 0)
                                             for (int i = 0; i < currentKeyword.Params.Count; i++)
                                                 tempKeyword.Params[i].Name = importKeyword.Params[i].Name;
+                                        tempKeyword.Keywords.AddRange(importKeyword.Keywords);
+                                        tempKeyword.OutputFilePath = importFile.fileName;
+                                        break;
+                                    }
+                                break;
+                            }
+                    }
+                    else
+                    {
+                        bool isFound = false;
+                        foreach (string fileName in file.resources)
+                        {
+                            foreach (RobotFile importFile in RobotFiles)
+                                if (importFile.fileName.Equals(fileName))
+                                {
+                                    foreach (Keyword importKeyword in importFile.KeywordsList)
+                                        if (importKeyword.Name.Equals(currentKeyword.Name))
+                                        {
+                                            if (currentKeyword.Params != null && currentKeyword.Params.Count > 0)
+                                                for (int i = 0; i < currentKeyword.Params.Count; i++)
+                                                    tempKeyword.Params[i].Name = importKeyword.Params[i].Name;
                                             tempKeyword.Keywords.AddRange(importKeyword.Keywords);
+                                            tempKeyword.OutputFilePath = importFile.fileName;
+                                            isFound = true;
                                             break;
                                         }
                                     break;
                                 }
+                            if (isFound) break;
+                        }
+                    }
 
                     if (tempKeyword.Keywords != null && tempKeyword.Keywords.Count > 0)
-                        GetDataForInternalKeywords(tempKeyword);
+                    {
+                        foreach (RobotFile importFile in RobotFiles)
+                            if (importFile.fileName.Equals(tempKeyword.OutputFilePath))
+                            {
+                                GetDataForInternalKeywords(tempKeyword, importFile);
+                                break;
+                            }
+                    }
                 }
                 else
                     tempKeyword.CopyKeyword(currentKeyword);
-                currentKeyword.Keywords.Add(tempKeyword);
+
+                if (returnKeyword.Keywords == null)
+                    returnKeyword.Keywords = new List<Keyword>();
+                returnKeyword.Keywords.Add(tempKeyword);
+                Console.WriteLine("     " + tempKeyword.Name + " " + tempKeyword.OutputFilePath);
             }
+
+            return returnKeyword;
         }
     }
 }
