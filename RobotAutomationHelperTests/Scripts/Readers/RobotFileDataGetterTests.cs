@@ -18,7 +18,7 @@ namespace RobotAutomationHelper.Scripts.Readers.Tests
         public void GetTheDataFromAllTheRobotFilesTest()
         {
             SuggestionsClass.PopulateSuggestionsList();
-            FilesAndFolderStructure.SetFolder("C:\\Development\\robot-scripts\\FirstScript");
+            FilesAndFolderStructure.SetFolder("C:\\Development\\robot-scripts\\jennyvegas_v005\\jennyvegas");
             FilesAndFolderStructure.FindAllRobotFilesAndAddToStructure();
             DataGetter = new RobotFileDataGetter();
             DataGetter.GetTheDataFromAllTheRobotFiles();

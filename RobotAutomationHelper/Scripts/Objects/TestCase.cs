@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace RobotAutomationHelper.Scripts.Objects
 {
+
+    [Serializable]
     public class TestCase: IComparable<TestCase>
     {
         public List<Keyword> Steps { get; set; }
@@ -22,6 +24,17 @@ namespace RobotAutomationHelper.Scripts.Objects
             OutputFilePath = outputFilePath;
             Overwrite = false;
             Implemented = implemented;
+        }
+
+        public void CopyTestCase(TestCase testCase)
+        {
+            Name = testCase.Name;
+            Documentation = testCase.Documentation;
+            Tags = testCase.Tags;
+            Steps = testCase.Steps.DeepClone();
+            OutputFilePath = testCase.OutputFilePath;
+            Overwrite = false;
+            Implemented = testCase.Implemented;
         }
 
         public TestCase(string name, string outputFilePath)
