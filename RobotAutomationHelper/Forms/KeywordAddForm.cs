@@ -80,7 +80,7 @@ namespace RobotAutomationHelper.Forms
                 // adds the keywords in the form
                 foreach (var testStep in ThisFormKeywords)
                 {
-                    AddKeywordField(testStep, NumberOfKeywordsInThisForm + 1, false);
+                    AddKeywordField(testStep, NumberOfKeywordsInThisForm + 1, false, true);
                     NumberOfKeywordsInThisForm++;
                 }
             }
@@ -91,7 +91,7 @@ namespace RobotAutomationHelper.Forms
                 {
                     new Keyword("New Keyword", _parentKeywords[ImplementationIndexFromTheParent].OutputFilePath, keyword)
                 };
-                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true);
+                AddKeywordField(ThisFormKeywords[0], NumberOfKeywordsInThisForm + 1, true, true);
                 NumberOfKeywordsInThisForm++;
                 FilesAndFolderStructure.AddFileToSavedFiles(ThisFormKeywords[0].OutputFilePath);
             }
