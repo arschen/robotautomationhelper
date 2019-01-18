@@ -2,9 +2,6 @@
 using RobotAutomationHelper.Scripts.Static;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RobotAutomationHelper.Scripts.Readers
 {
@@ -28,6 +25,7 @@ namespace RobotAutomationHelper.Scripts.Readers
                         {
                             Steps = new List<Keyword>()
                         };
+
                         if (currentTestCase.Steps != null && currentTestCase.Steps.Count > 0)
                             foreach (Keyword currentKeyword in currentTestCase.Steps)
                             {
@@ -74,32 +72,40 @@ namespace RobotAutomationHelper.Scripts.Readers
                                                         }
                                                     break;
                                                 }
+                                            if (isFound) break;
                                         }
-                                        if (isFound) break;
                                     }
 
                                     if (tempKeyword.Keywords != null && tempKeyword.Keywords.Count > 0)
-                                        tempKeyword = GetDataForInternalKeywords(tempKeyword, currentFile);
+                                        tempKeyword.CopyKeyword(GetDataForInternalKeywords(tempKeyword, currentFile));
                                 }
                                 else
                                     tempKeyword.CopyKeyword(currentKeyword);
                                 tempTestCase.Steps.Add(tempKeyword);
                             }
                         testCases.Add(tempTestCase);
-                        Console.WriteLine(tempTestCase.Name + " " + tempTestCase.OutputFilePath);
                     }
+
+            foreach (TestCase tempCase in testCases)
+            {
+                Console.WriteLine(tempCase.Name + " " + tempCase.OutputFilePath);
+                foreach (Keyword tempStep in tempCase.Steps)
+                    Console.WriteLine("     " + tempStep.Name + " " + tempStep.OutputFilePath);
+            }
         }
 
         public Keyword GetDataForInternalKeywords(Keyword keyword, RobotFile file)
         {
             var returnKeyword = new Keyword(keyword.Parent);
             returnKeyword.CopyKeyword(keyword);
+            returnKeyword.Keywords = new List<Keyword>();
+
             foreach (Keyword currentKeyword in keyword.Keywords)
             {
                 var tempKeyword = new Keyword(keyword);
+                tempKeyword.CopyKeyword(currentKeyword);
                 if (currentKeyword.Type == KeywordType.Custom)
-                {
-                    tempKeyword.CopyKeyword(currentKeyword);
+                {  
                     if (currentKeyword.ImportFileName != null && !currentKeyword.ImportFileName.Equals(""))
                     {
                         foreach (RobotFile importFile in RobotFiles)
@@ -153,14 +159,8 @@ namespace RobotAutomationHelper.Scripts.Readers
                             }
                     }
                 }
-                else
-                    tempKeyword.CopyKeyword(currentKeyword);
 
-                returnKeyword.Keywords = new List<Keyword>
-                {
-                    tempKeyword
-                };
-                Console.WriteLine("     " + tempKeyword.Name + " " + tempKeyword.OutputFilePath);
+                returnKeyword.Keywords.Add(tempKeyword);
             }
 
             return returnKeyword;

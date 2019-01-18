@@ -22,7 +22,6 @@ namespace RobotAutomationHelper.Scripts.Readers.Tests
             FilesAndFolderStructure.FindAllRobotFilesAndAddToStructure();
             DataGetter = new RobotFileDataGetter();
             DataGetter.GetTheDataFromAllTheRobotFiles();
-            Console.WriteLine("test");
         }
     }
 }

@@ -116,7 +116,7 @@ namespace RobotAutomationHelper.Scripts.Objects
             ForLoopKeywords = keyword.ForLoopKeywords != null ? keyword.ForLoopKeywords.DeepClone() : new List<Keyword>();
 
             Params = keyword.Params != null ? keyword.Params.DeepClone() : new List<Param>();
-
+            Comments = keyword.Comments;
             Arguments = keyword.Arguments;
             OutputFilePath = keyword.OutputFilePath;
             Implemented = keyword.Implemented;

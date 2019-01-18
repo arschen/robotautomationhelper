@@ -76,7 +76,7 @@ namespace RobotAutomationHelper.Scripts.Objects
 
                 if (fileLines[i].Trim().Length == 0) continue;
 
-                if (!fileLines[i].StartsWith(" ") && !fileLines[i].StartsWith("\t"))
+                if (!fileLines[i].StartsWith(" ") && !fileLines[i].StartsWith("\t") && !fileLines[i].Trim().StartsWith("#"))
                 {
                     if (currentTestCase.Name != "")
                     {
