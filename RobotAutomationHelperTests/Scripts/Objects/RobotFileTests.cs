@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using RobotAutomationHelper.Scripts.Static;
 
 namespace RobotAutomationHelper.Scripts.Objects.Tests
 {
@@ -13,6 +14,8 @@ namespace RobotAutomationHelper.Scripts.Objects.Tests
         [TestMethod()]
         public void ReadVariablesFromFile()
         {
+            FilesAndFolderStructure.SetFolder("C:\\Development\\robot-scripts\\jennyvegas");
+            FilesAndFolderStructure.FindAllRobotFilesAndAddToStructure();
             string FileName = "C:\\Development\\robot-scripts\\jennyvegas\\Resources\\RegisterForm.robot";
             ThisFile = new RobotFile(FileName);
             List<Variables> VariablesList = new List<Variables>();
@@ -28,6 +31,8 @@ namespace RobotAutomationHelper.Scripts.Objects.Tests
         [TestMethod()]
         public void HasTagTest()
         {
+            FilesAndFolderStructure.SetFolder("C:\\Development\\robot-scripts\\jennyvegas");
+            FilesAndFolderStructure.FindAllRobotFilesAndAddToStructure();
             string FileName = "C:\\Development\\robot-scripts\\jennyvegas\\Resources\\RegisterForm.robot";
             ThisFile = new RobotFile(FileName);
             Assert.AreEqual(0, ThisFile.HasTag(Forms.FormType.Settings));
@@ -38,6 +43,8 @@ namespace RobotAutomationHelper.Scripts.Objects.Tests
         [TestMethod()]
         public void ReadKeywordsFromFileTest()
         {
+            FilesAndFolderStructure.SetFolder("C:\\Development\\robot-scripts\\jennyvegas");
+            FilesAndFolderStructure.FindAllRobotFilesAndAddToStructure();
             string FileName = "C:\\Development\\robot-scripts\\jennyvegas\\Resources\\RegisterForm.robot";
             ThisFile = new RobotFile(FileName);
             List<Keyword> KeywordsList = new List<Keyword>();

@@ -9,13 +9,17 @@ namespace RobotAutomationHelper.Scripts.Readers
     {
         List<RobotFile> RobotFiles = new List<RobotFile>();
 
+        public RobotFileDataGetter()
+        {
+            foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Root))
+                RobotFiles.Add(new RobotFile(fileName));
+        }
+
         // returns the index of the specific tag - keyword / test cases / settings / variables
-        public void GetTheDataFromAllTheRobotFiles()
+        public List<TestCase> GetTheDataFromAllTheRobotFiles()
         {
             var testCases = new List<TestCase>();
             var listOfVariables = new List<Variables>();
-            foreach (var fileName in FilesAndFolderStructure.GetFullSavedFiles(FolderType.Root))
-                RobotFiles.Add(new RobotFile(fileName));
 
             foreach (RobotFile currentFile in RobotFiles)
                 if (currentFile.TestCasesList != null && currentFile.TestCasesList.Count > 0)
@@ -85,13 +89,7 @@ namespace RobotAutomationHelper.Scripts.Readers
                             }
                         testCases.Add(tempTestCase);
                     }
-
-            foreach (TestCase tempCase in testCases)
-            {
-                Console.WriteLine(tempCase.Name + " " + tempCase.OutputFilePath);
-                foreach (Keyword tempStep in tempCase.Steps)
-                    Console.WriteLine("     " + tempStep.Name + " " + tempStep.OutputFilePath);
-            }
+            return testCases;
         }
 
         public Keyword GetDataForInternalKeywords(Keyword keyword, RobotFile file)
