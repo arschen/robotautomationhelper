@@ -138,7 +138,12 @@ namespace RobotAutomationHelper.Forms
         public void AddTestCaseToFormAndShow(bool fileValueChanged)
         {
             if (!(OutputFile.Items.Count == 0 && _selectedIndex != -1))
-                AddTestCasesToMainForm(OutputFile.Items.Count == 0 ? "": OutputFile.Items[_selectedIndex].ToString());
+            {
+                if (_selectedIndex < OutputFile.Items.Count)
+                    AddTestCasesToMainForm(OutputFile.Items.Count == 0 ? "" : OutputFile.Items[_selectedIndex].ToString());
+                else
+                    AddTestCasesToMainForm("");
+            }
             ShowTestCasePanels();
         }
 
